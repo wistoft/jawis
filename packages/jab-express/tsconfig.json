@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jab-express",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }, { "path": "../jab-node" }]
+}

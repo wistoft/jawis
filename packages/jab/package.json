@@ -1,0 +1,12 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jab",
+  "description": "Collection of basic utilities for JavaScript",
+  "dependencies": {},
+  "keywords": [
+    "util",
+    "utilities",
+    "stdlib"
+  ]
+}

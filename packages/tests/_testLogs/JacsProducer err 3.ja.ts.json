@@ -1,0 +1,1 @@
+{"user":{"imp":[{"controlArray":["TypedArray",{"type":"Int32Array","length":5,"base64":"AQIRAQQ="}],"dataArray":["TypedArray",{"type":"Uint8Array","length":40,"base64":"ZmFpbGVkOiBzb21lIGZpbGUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=="}]}]},"err":["failed: some file","expected own state to be ready, was: error"]}

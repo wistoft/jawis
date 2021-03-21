@@ -1,0 +1,1 @@
+{"user":{},"err":["Error: upsa","You asked for nightmare"],"return":["value",[["promise",{"reject":{"msg":"You asked for nightmare","info":["value",[]],"stack":"filtered"}}],["promise",{"reject":{"msg":"Error: upsa","info":["value",[]],"stack":"filtered"}}],["promise",{"resolve":{"hello":"dav"}}]]]}

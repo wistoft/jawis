@@ -1,0 +1,1 @@
+{"user":{"imp":[["object",{"protoChain":["JabError","Error","Object"],"fields":{"clonedInfo":["value",["new info"]],"jabMessage":"new message"},"toStringValue":"Error: new message\nnew info"}],{"msg":"new message","info":["value",["new info"]],"stack":"filtered"}]}}

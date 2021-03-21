@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "default-common",
+  "description": "Common for Jade view and router"
+}

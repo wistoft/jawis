@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/dev",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../config" },
+    { "path": "../default-api" },
+    { "path": "../default-section" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../jab-react" },
+    { "path": "../jadev-console" },
+    { "path": "../jacs" },
+    { "path": "../jarun" },
+    { "path": "../jagos" },
+    { "path": "../jagov" },
+    { "path": "../jatec" },
+    { "path": "../jates" },
+    { "path": "../jatev" },
+    { "path": "../javi" },
+    { "path": "../jawis-mess" },
+    { "path": "../tests" }
+  ]
+}

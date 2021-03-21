@@ -1,0 +1,1 @@
+{"user":{"nodeWs":["close"]},"err":["Error: Had to kill NodeWs (state:opening)","Error: WebSocket was closed before the connection was established"]}

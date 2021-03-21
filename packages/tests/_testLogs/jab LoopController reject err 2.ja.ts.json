@@ -1,0 +1,1 @@
+{"user":{},"err":["Error: no no"],"return":["value",[["promise",{"resolve":"cancelled"}],["promise",{"reject":{"msg":"Error: no no","info":["value",[]],"stack":"filtered"}}]]]}

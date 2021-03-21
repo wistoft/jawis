@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./build-alpha",
+    "paths": {
+      "^*": ["*"]
+    },
+    "outDir": "./build-alpha"
+  }
+}

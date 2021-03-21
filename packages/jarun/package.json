@@ -1,0 +1,12 @@
+{
+  "sideEffects": [
+    "./JarunProcessMain.ts"
+  ],
+  "version": "0.0.0",
+  "name": "~jarun",
+  "description": "Jarun test runner",
+  "dependencies": {
+    "@types/deep-equal": "^1.0.1",
+    "deep-equal": "^2.0.5"
+  }
+}

@@ -1,0 +1,5 @@
+/build
+/build-alpha
+/build-tsc
+/packages/tests/_testLogs
+/packages/dev/devServer/testsuite/_testLogs

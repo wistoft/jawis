@@ -1,0 +1,1 @@
+{"user":{},"err":["Could not parse tsconfig.json: Compiler option 'isolatedModules' requires a value of type boolean.\n"]}

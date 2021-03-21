@@ -1,0 +1,9 @@
+{
+  "name": "ts-project",
+  "main": "./library.ts",
+  "sideEffects": false,
+  "dependencies": {
+    "@types/deep-equal": "*",
+    "deep-equal": "*"
+  }
+}

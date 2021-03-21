@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jagos",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jagoc" },
+    { "path": "../jab" },
+    { "path": "../jab-express" },
+    { "path": "../jab-node" },
+    { "path": "../jawis-util" }
+  ]
+}

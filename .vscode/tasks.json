@@ -1,0 +1,52 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "watch - jadev",
+      "group": "build",
+      "type": "typescript",
+      "tsconfig": "./tsconfig.json",
+      "option": "watch",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe"
+        },
+        "env": {
+          "TSC_NONPOLLING_WATCHER": "true"
+        }
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "presentation": {
+        "reveal": "never",
+        "showReuseMessage": false
+      },
+      "auto": true
+    },
+    {
+      "label": "lint",
+      "group": "build",
+      "type": "npm",
+      "script": "lint",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe"
+        }
+      },
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": " "
+    },
+    {
+      "label": "lint fix",
+      "group": "build",
+      "type": "npm",
+      "script": "lint:fix",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe"
+        }
+      },
+      "problemMatcher": ["$eslint-stylish"],
+      "detail": " "
+    }
+  ]
+}

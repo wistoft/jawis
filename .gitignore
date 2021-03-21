@@ -1,0 +1,13 @@
+
+# ignore in any subfolder
+node_modules
+
+# mess
+mintty.exe.stackdump
+yarn-error.log
+lerna-debug.log
+
+#more
+/build
+/build-alpha
+/build-tsc

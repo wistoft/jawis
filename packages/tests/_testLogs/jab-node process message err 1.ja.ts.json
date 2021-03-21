@@ -1,0 +1,1 @@
+{"user":{"child.stdout":["hello\n"]},"err":["Error: Can't send. Process not running. (state:stopped)"]}

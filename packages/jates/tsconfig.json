@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jates",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-express" },
+    { "path": "../jab-node" },
+    { "path": "../jatec" },
+    { "path": "../jawis-util" }
+  ]
+}

@@ -1,0 +1,1 @@
+{"user":{},"return":{"cur":{"user":{},"err":["value",[{"msg":"dav","info":["value",[]],"stack":"filtered"}]],"return":["value",["value",["value",[["value",["promise",{"resolve":"hej"}]],["value",["promise",{"reject":{"msg":"dav","info":["value",["value",["value",[]]]],"stack":"filtered"}}]]]]]]}}}

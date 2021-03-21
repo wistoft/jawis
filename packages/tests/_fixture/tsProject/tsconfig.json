@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "baseUrl": "../../../",
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "paths": {
+      "^myAliasForJabs": ["jab"]
+    },
+    "target": "ES6"
+  }
+}

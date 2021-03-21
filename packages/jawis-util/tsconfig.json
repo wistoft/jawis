@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jawis-util",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../jab-react" }
+  ]
+}

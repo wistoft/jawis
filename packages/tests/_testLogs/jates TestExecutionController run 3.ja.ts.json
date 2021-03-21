@@ -1,0 +1,1 @@
+{"user":{"TestFramework":["onTestRunnerStarts.","onTestStarts: first.test","onTestDone: first.test",{"cur":{"user":{"return":"first result"}}},"onTestStarts: more2.test","onTestDone: more2.test",{"cur":{"user":{"return":"more2 result"}}},"onTestRunnerStops."]}}

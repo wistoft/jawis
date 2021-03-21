@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "outDir": "../../build-tsc/tests",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../config" },
+    { "path": "../default-api" },
+    { "path": "../default-common" },
+    { "path": "../default-section" },
+    { "path": "../jab" },
+    { "path": "../jab-express" },
+    { "path": "../jab-node" },
+    { "path": "../jab-react" },
+    { "path": "../jatec" },
+    { "path": "../jadev-console" },
+    { "path": "../jacs" },
+    { "path": "../jagos" },
+    { "path": "../jagoc" },
+    { "path": "../jagov" },
+    { "path": "../jarun" },
+    { "path": "../jates" },
+    { "path": "../jatev" },
+    { "path": "../javi" },
+    { "path": "../jawis-mess" }
+  ],
+  "exclude": ["_fixture/testsuite", "_fixture/tsProject"]
+}

@@ -1,0 +1,1 @@
+{"user":{},"return":["value",[["value",["value",["value",[false,["value",["value",["value",[]]]]]]]],["value",["promise",{"resolve":["value",["value",["value",[true,"hej"]]]]}]],{"err":["value",["promise",{"reject":{"msg":"ups","info":["value",["value",["value",[]]]],"stack":"filtered"}}]]}]]}

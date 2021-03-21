@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jawis-mess",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-react" },
+    { "path": "../jacs" },
+    { "path": "../jagoc" },
+    { "path": "../jatec" }
+  ]
+}

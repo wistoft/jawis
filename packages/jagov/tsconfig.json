@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jagov",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jagoc" },
+    { "path": "../jab" },
+    { "path": "../jab-react" },
+    { "path": "../jadev-console" },
+    { "path": "../jawis-util" }
+  ]
+}

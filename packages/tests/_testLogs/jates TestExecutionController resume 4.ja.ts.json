@@ -1,0 +1,1 @@
+{"user":{"TestFramework":["onTestRunnerStarts.","onTestStarts: first.test","onTestDone: first.test",{"cur":{"user":{"return":"first result"}}},"onTestStarts: more1.test","onTestDone: more1.test",{"cur":{"user":{"return":"more1 result"}}},"onTestRunnerStops."],"imp":[["value",["running","pausing","pausing-newTests","test-done","running","test-done","idle","exec-done"]]]}}

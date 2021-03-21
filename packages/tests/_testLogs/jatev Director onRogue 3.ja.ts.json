@@ -1,0 +1,1 @@
+{"user":{"test with empty test logs":[{"id":"test 1","status":0,"testLogs":["value",[{"type":"err","name":"err","exp":["value",[]],"cur":["value",[{"msg":"Error message","info":["value",[]],"stack":"some stack"}]]},{"type":"err","name":"rogue.err","exp":["value",[]],"cur":["value",[{"msg":"Error message","info":["value",[]],"stack":"some stack"}]]}]],"rogue":true}]}}

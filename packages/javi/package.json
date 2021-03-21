@@ -1,0 +1,27 @@
+{
+  "sideEffects": [
+    "**/*.css",
+    "./server/javiServerMain.ts"
+  ],
+  "version": "0.0.0",
+  "name": "~javi",
+  "bin": {
+    "javi": "./server/javiServerMain.js"
+  },
+  "dependencies": {
+    "@types/react": "^16.14.4",
+    "@types/react-dom": "^16.9.11",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
+  },
+  "keywords": [
+    "development",
+    "monitor",
+    "watch",
+    "autoload",
+    "reload",
+    "restart",
+    "typescript",
+    "ts"
+  ]
+}

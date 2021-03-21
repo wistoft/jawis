@@ -1,0 +1,104 @@
+/* #ff9c9c
+#ff9c45
+#ff8cb8
+#45a29e
+#8ee4af
+#fcc288
+#609cfc */
+
+:root {
+  --green: #438a31;
+  --red: #bd3535;
+  --blue: #57649e;
+  --lilla: #a253c4;
+
+  --other-green: #438a31;
+  --dark-blue: #5962db;
+  --turquoise: rgb(0, 144, 131);
+
+  --other-red: rgb(189, 88, 88);
+  --color2: rgb(140, 140, 255);
+
+  --text-color: rgb(140, 140, 140);
+
+  --text-color-faded: rgb(110, 110, 110);
+  --link-color: var(--blue);
+
+  --jatev-executing-test-color: #49bb2d;
+  --jatev-test-done-color: var(--text-color-faded);
+  --jatev-unknown-test-status-color: rgb(155, 155, 155);
+
+  --jatev-test-log-only-current: var(--dark-blue);
+  --jatev-test-log-only-expected: var(--dark-blue);
+  --jatev-test-log-match: var(--dark-blue);
+  --jatev-test-log-different: var(--dark-blue);
+
+  --jadev-console-text-color: rgb(161, 144, 131);
+}
+
+body {
+  margin: 0;
+  font-size: 18px;
+  font-family: "Segoe UI";
+  color: var(--text-color);
+  scrollbar-color: rgb(40, 40, 40) rgb(35, 35, 35);
+}
+
+h1 {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+a:visited {
+  color: var(--link-color);
+}
+
+.jab-js-link {
+  text-decoration: none;
+  color: var(--link-color);
+}
+
+.jab-js-link:visited {
+  color: var(--link-color);
+}
+
+nav > a {
+  color: var(--link-color);
+}
+
+nav > a:visited {
+  color: var(--link-color);
+}
+
+del {
+  color: var(--red);
+  text-decoration: none;
+}
+
+ins {
+  color: var(--green);
+  text-decoration: none;
+}
+
+pre {
+  font-size: 15px;
+  font-family: consolas;
+
+  tab-size: 2;
+  -moz-tab-size: 2;
+
+  margin: 0;
+}
+
+.divPre {
+  font-size: 15px;
+  font-family: consolas;
+  white-space: pre;
+  tab-size: 2;
+  -moz-tab-size: 2;
+}

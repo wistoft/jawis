@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jatev",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-react" },
+    { "path": "../jatec" },
+    { "path": "../jawis-util" }
+  ]
+}

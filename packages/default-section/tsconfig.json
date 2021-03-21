@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/default-section",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../default-common" },
+    { "path": "../jab" },
+    { "path": "../jab-react" }
+  ]
+}
