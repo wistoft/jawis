@@ -1,4 +1,4 @@
-export * from "./createApp";
+export * from "./makeApp";
 export * from "./startServer";
 export * from "./types";
 export * from "./util";

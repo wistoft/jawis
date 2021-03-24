@@ -1,7 +1,7 @@
 import express, { Application } from "express";
 import expressWs from "express-ws";
 
-import { ServerDeps, ServerWaiter } from "^jab-node";
+import { Deps, ServerWaiter } from "^jab-node";
 import { TestProvision } from "^jarun";
 
 import { getDefaultServerConf } from ".";
@@ -9,7 +9,7 @@ import { getDefaultServerConf } from ".";
 /**
  *
  */
-export const getServer = (prov: TestProvision, serverDeps: ServerDeps) => {
+export const getServer = (prov: TestProvision, serverDeps: Deps) => {
   const server = new ServerWaiter(serverDeps);
 
   prov.finally(server.killIfRunning);
@@ -23,7 +23,7 @@ export const getServer = (prov: TestProvision, serverDeps: ServerDeps) => {
 export const getServer_chatty = (
   prov: TestProvision,
   logPrefix = "",
-  extraDeps: Partial<ServerDeps> & {
+  extraDeps: Partial<Deps> & {
     app: Application;
   }
 ) => {
@@ -40,7 +40,7 @@ export const getServer_chatty = (
 export const getServer_test_app = (
   prov: TestProvision,
   logPrefix = "",
-  extraDeps?: Partial<ServerDeps>
+  extraDeps?: Partial<Deps>
 ) => {
   const server = new ServerWaiter(
     getServerDeps(prov, logPrefix, { ...extraDeps, app: getTestApp(prov) })
@@ -57,8 +57,8 @@ export const getServer_test_app = (
 export const getServerDeps_test_app = (
   prov: TestProvision,
   logPrefix = "",
-  extraDeps?: Partial<ServerDeps>
-): ServerDeps =>
+  extraDeps?: Partial<Deps>
+): Deps =>
   getServerDeps(prov, logPrefix, {
     ...extraDeps,
     app: getTestApp(prov),
@@ -70,10 +70,10 @@ export const getServerDeps_test_app = (
 export const getServerDeps = (
   prov: TestProvision,
   logPrefix = "",
-  extraDeps: Partial<ServerDeps> & {
+  extraDeps: Partial<Deps> & {
     app: Application;
   }
-): ServerDeps => ({
+): Deps => ({
   port: getDefaultServerConf().port,
 
   log: (msg: string) => {

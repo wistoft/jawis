@@ -47,6 +47,8 @@ export const director = (deps: Deps) => {
     err("testLogFolder must be absolute");
   }
 
+  deps.finally(() => behavior.onShutdown()); //trick to register onShutdown, before it has been defined.
+
   const wsPool = new WsPoolController<ServerMessage, ClientMessage>({
     ...deps,
     onError: deps.onError,
@@ -136,6 +138,5 @@ export const director = (deps: Deps) => {
 
   return {
     onWsUpgrade,
-    onShutdown: behavior.onShutdown,
   };
 };

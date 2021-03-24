@@ -6,18 +6,6 @@ import type expressWs from "express-ws";
 import type { FinallyFunc, LogProv } from "^jab";
 import type { MainProv, NodeWS, SocketData } from "^jab-node";
 
-export type ServerAppOld = {
-  app: express.Application;
-  onUncaughtException?: NodeJS.UncaughtExceptionListener;
-  onUnhandledPromiseRejection?: NodeJS.UnhandledRejectionListener;
-  onShutdown?: () => Promise<void>;
-};
-
-export type ServerApp = {
-  app: express.Application;
-  onShutdown?: () => Promise<void>;
-};
-
 export type ServerAppRouter = {
   router: express.Router;
   onShutdown?: () => Promise<void>;
@@ -27,7 +15,7 @@ export type ServerAppRouter = {
 // div
 //
 
-export type MakeServerApp = (deps: MainProv) => ServerApp;
+export type MakeServerApp = (deps: MainProv) => express.Application;
 
 export type MakeServerAppRouter = (
   deps: MainProv & { makeRouter: () => WsRouter; wsServer: WebSocket.Server }

@@ -1,7 +1,7 @@
 # Jadev
 
 JavaScript development tools is a multirepo for several npm packages, for
-intance:
+instance:
 
 - [Javi](https://github.com/wistoft/jadev/tree/master/packages/javi#readme). A
   GUI for running tests and scripts, with out of the box support for TypeScript.
@@ -11,17 +11,33 @@ intance:
 ### Clone
 
 ```
-git clone git@github.com:wistoft/jadev.git
+git clone https://github.com/wistoft/jadev.git
 
 cd jadev
 
 yarn
 ```
 
+Now it's posible to use the commands below.
+
+### Run tests
+
+Start javi
+
+```
+yarn start
+```
+
+Open in browser
+
+```
+localhost:3003/all
+```
+
 ### Serve dev site
 
-Jadev repo is setup to use javi to run tests and dev server. Webpack will serve
-the dev client.
+Jadev repo is setup to use javi to run tests and the dev server. Webpack will
+serve the dev client.
 
 - `yarn start`<br/> Serve using published version of javi.
 - `yarn alpha:start`<br/> Serve using local alpha build of javi.
@@ -30,6 +46,15 @@ the dev client.
 
 To get type errors during development run the vscode task: `watch - jadev`. To
 automatically start this task install the extentions: `AutoLaunch`
+
+### Pre build
+
+- Run all tests
+- Commit working tree to git
+- `yarn lint:fix`
+  - Running the vscode tasks makes the errors available in vscode.
+  - Review, because there's a bug, that removes comments after imports
+- `yarn pretty:fix`
 
 ### Build
 
@@ -43,9 +68,9 @@ automatically start this task install the extentions: `AutoLaunch`
 
 ## Known issues
 
-- It's developed on windows, and not tried elsewhere. Some things don't work,
-  yet.
-  - vscode tasks are configured to use `powershell.exe`
+- vscode tasks are configured to use `powershell.exe`. Hence only work on
+  Windows.
+- There is a problem with ambiant types in builded `d.ts` files.
 
 ## Licence
 

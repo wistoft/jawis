@@ -1,6 +1,6 @@
 import { Application } from "express";
 
-import { NodeWS, NodeWsDeps, ServerDeps, SocketData } from "^jab-node";
+import { NodeWS, NodeWsDeps, Deps, SocketData } from "^jab-node";
 import { TestProvision } from "^jarun";
 
 import { getDefaultServerConf, getServer_chatty } from ".";
@@ -12,7 +12,7 @@ export const getServerAndNodeWs = (
   prov: TestProvision,
   logPrefix = "",
   extraNodeWsDeps: Partial<NodeWsDeps>,
-  extraServerDeps: Partial<ServerDeps> & {
+  extraServerDeps: Partial<Deps> & {
     app: Application;
   }
 ) =>

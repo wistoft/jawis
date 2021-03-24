@@ -2,7 +2,7 @@
   "private": true,
   "description": "Jadev repository",
   "scripts": {
-    "start": "concurrently --kill-others \"yarn -s pub:start\" \"yarn -s start:client\"",
+    "start": "concurrently --kill-others \"yarn -s javi\" \"yarn -s start:client\"",
     "start:client": "webpack serve  -c packages/dev/devClient/webpack.dev.js",
     "": "",
     "lint": "eslint packages",
@@ -13,7 +13,6 @@
     "compile": "yarn -s tsc -b",
     "compile:clean": "rimraf build-tsc && yarn -s tsc -b",
     "..": "",
-    "pub:start": "javi",
     "pub:build": "gulp build && yarn -s pub:build:extra && yarn -s pub:build:client",
     "pub:build:extra": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-javi.ts",
     "pub:build:client": "webpack -o build/publish/javi/client/compiled -c packages/javi/client/webpack.javi.js",

@@ -1,0 +1,1 @@
+{"user":{"console.log":["onError: ","dummy error","onError: ",["object",{"protoChain":["Error","Object"],"fields":{},"toStringValue":"Error: hello"}],"onError: ",["object",{"protoChain":["Error","Object"],"fields":{},"toStringValue":"Error: there's more"}],"\n","[\n.\there it is\n]"]}}

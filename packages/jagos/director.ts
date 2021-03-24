@@ -23,6 +23,8 @@ export type Deps = Readonly<{
  *
  */
 export const director = (deps: Deps) => {
+  deps.finally(() => behaviorProv.onShutdown()); //trick to register onShutdown, before it has been defined.
+
   //read scripts
 
   const defs = [...loadScripts(deps.scriptFolders), ...(deps.scripts || [])];
@@ -68,6 +70,5 @@ export const director = (deps: Deps) => {
 
   return {
     onWsUpgrade,
-    onShutdown: behaviorProv.onShutdown,
   };
 };

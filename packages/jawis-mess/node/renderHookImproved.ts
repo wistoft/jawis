@@ -32,7 +32,7 @@ export function renderHookImproved<H extends (...a: any[]) => any>(
 
   //provision
 
-  let rerender = (...args: any) => {
+  const rerender = (...args: any) => {
     if (args.length !== 0) {
       argsQuickFix = args;
     }

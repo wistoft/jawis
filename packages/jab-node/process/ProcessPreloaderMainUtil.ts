@@ -1,6 +1,10 @@
 import { assertNever } from "^jab";
 
-import { nodeRequire, registerRejectionHandlers } from "..";
+import {
+  makeOnErrorToConsole,
+  nodeRequire,
+  registerRejectionHandlers,
+} from "..";
 
 import {
   makeSend,
@@ -16,7 +20,7 @@ import {
 export const ppMain = () => {
   //quick fix - should be optional
 
-  registerRejectionHandlers();
+  registerRejectionHandlers(makeOnErrorToConsole());
 
   //worker or process
 

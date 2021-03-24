@@ -7,15 +7,19 @@ import { makeOnRequest } from "./onRequest";
 import { Behavior } from "./Behavior";
 import { ActionProvider } from "./ActionProvider";
 import { makeOnClientMesssage } from "./onClientMesssage";
+import { FinallyFunc } from "^jab";
 
 export type Deps = Readonly<{
   wsServer: WebSocket.Server;
+  finally: FinallyFunc;
 }>;
 
 /**
  *
  */
 export const director = (deps: Deps) => {
+  deps.finally(() => behaviorProv.onShutdown()); //trick to register onShutdown, before it has been defined.
+
   const wsService = new WsServerService(deps);
 
   const actionProv = new ActionProvider({ wsService });
@@ -38,7 +42,6 @@ export const director = (deps: Deps) => {
   return {
     onWsMessage,
     requestHandler,
-    onShutdown: behaviorProv.onShutdown,
   };
 };
 //

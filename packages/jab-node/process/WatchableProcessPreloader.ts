@@ -5,8 +5,12 @@ import { def } from "^jab";
 
 import type { BeeListeners } from "..";
 
-import { RequireSenderMessage } from ".";
-import { ProcessPreloaderDeps, ProcessPreloader, getFileToRequire } from ".";
+import {
+  RequireSenderMessage,
+  ProcessPreloaderDeps,
+  ProcessPreloader,
+  getFileToRequire,
+} from ".";
 
 export type WatchableProcessPreloaderDeps = ProcessPreloaderDeps & {
   onRestartNeeded: () => void;

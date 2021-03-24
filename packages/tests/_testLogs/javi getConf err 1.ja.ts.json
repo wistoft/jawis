@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: Javi: config file not found: dontExist\\javi.conf"]}
+{"user":{},"err":["Error: Javi: config file must export an object. Exported: object"]}

@@ -1,4 +1,4 @@
-import { assertNever, err } from "^jab";
+import { assertNever } from "^jab";
 import { makeSend, nodeRequire, registerOnMessage } from "^jab-node";
 
 import { errorToTestLog, RogueData } from "^jatec";

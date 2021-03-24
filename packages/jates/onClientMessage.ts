@@ -1,4 +1,4 @@
-import { assertNever, err } from "^jab";
+import { assertNever } from "^jab";
 import { ServerMessage, ClientMessage } from "^jatec";
 import { compareFiles, handleOpenFileInVsCode } from "^jawis-util/node";
 import { WsMessageListener } from "^jab-express";

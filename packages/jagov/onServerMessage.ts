@@ -1,4 +1,4 @@
-import { assertNever, tos, tryProp, tryPropString } from "^jab";
+import { assertNever, tos, tryPropString } from "^jab";
 import { ConsoleEntry } from "^jadev-console";
 import { JagoLogEntry, ServerMessage } from "^jagoc";
 import { StateCallbacks } from ".";
@@ -23,6 +23,7 @@ export const makeOnServerMessage = (deps: Deps) => (msg: ServerMessage) => {
           data: msg.data,
         },
       ]);
+      break;
 
     case "control":
       deps.addConsoleData([

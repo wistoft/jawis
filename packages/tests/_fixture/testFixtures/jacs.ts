@@ -15,6 +15,7 @@ import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 
 import { syntheticWait } from ".";
+import { assertString } from "^jab";
 
 /**
  *
@@ -130,9 +131,22 @@ export const getConsumer = (
   return { controlArray, dataArray, consumer };
 };
 
-export const filterTsConfig = (conf: CompilerOptions) => ({
-  ...conf,
-  baseUrl: conf.baseUrl && path.relative(projectConf.projectRoot, conf.baseUrl),
-  outDir: conf.outDir && path.relative(projectConf.projectRoot, conf.outDir),
-  rootDir: conf.rootDir && path.relative(projectConf.projectRoot, conf.rootDir),
-});
+/**
+ *
+ */
+export const filterTsConfig = (conf: CompilerOptions) => {
+  //quick fix: only supports string value.
+  const pathsBasePath =
+    conf.pathsBasePath &&
+    path
+      .relative(projectConf.projectRoot, assertString(conf.pathsBasePath))
+      .replace(/\\/g, "/");
+
+  return {
+    ...conf,
+    baseUrl: conf.baseUrl && path.relative(projectConf.projectRoot, conf.baseUrl).replace(/\\/g, "/"), // prettier-ignore
+    outDir: conf.outDir && path.relative(projectConf.projectRoot, conf.outDir).replace(/\\/g, "/"), // prettier-ignore
+    rootDir: conf.rootDir && path.relative(projectConf.projectRoot, conf.rootDir).replace(/\\/g, "/"), // prettier-ignore
+    pathsBasePath,
+  };
+};

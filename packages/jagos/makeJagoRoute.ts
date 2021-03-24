@@ -1,6 +1,5 @@
 import cors from "cors";
 import express from "express";
-import { err, JabError } from "^jab";
 
 import { expressErrorsThrow, ServerAppRouter } from "^jab-express";
 
@@ -18,7 +17,7 @@ export const makeJagosRoute = (deps: DirectorDeps): ServerAppRouter => {
 
   // create app structure
 
-  const { onWsUpgrade, onShutdown } = director(deps);
+  const { onWsUpgrade } = director(deps);
 
   // web socket
 
@@ -30,6 +29,5 @@ export const makeJagosRoute = (deps: DirectorDeps): ServerAppRouter => {
 
   return {
     router,
-    onShutdown,
   };
 };

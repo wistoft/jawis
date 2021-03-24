@@ -34,10 +34,15 @@ export const getDefaultServerConf = (): WsUrl => ({
 export const getUnusedPort = () => 6666;
 
 /**
- *
+ * - ensure it exists, because it might get deleted.
  */
-export const getScratchPath = (script?: string) =>
-  path.join(__dirname, "../scratchFolder", script || "");
+export const getScratchPath = (script?: string) => {
+  const folder = path.join(__dirname, "../scratchFolder");
+
+  fse.ensureDir(folder);
+
+  return path.join(folder, script || "");
+};
 
 /**
  *
@@ -114,7 +119,7 @@ export const getLogProv = (prov: TestProvision, logPrefix = ""): LogProv => ({
  *
  */
 export const writeScriptFileThatChanges2 = (value: number) => {
-  writeScriptFileThatChanges(value, "./FileThatChanges2.js");
+  writeScriptFileThatChanges(value, "FileThatChanges2.js");
 };
 
 /**
@@ -122,10 +127,10 @@ export const writeScriptFileThatChanges2 = (value: number) => {
  */
 export const writeScriptFileThatChanges = (
   value: number,
-  name = "./FileThatChanges.js"
+  name = "FileThatChanges.js"
 ) => {
   const code = "module.exports = " + value + ";";
-  fs.writeFileSync(getScriptPath(name), code);
+  fs.writeFileSync(getScratchPath(name), code);
 };
 
 /**
@@ -144,3 +149,8 @@ export class ThrowInToString {
     throw new Error("thrown in toString");
   }
 }
+
+/**
+ *
+ */
+export const removeCarriageReturn = (data: string) => data.replace(/\r/g, "");

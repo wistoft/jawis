@@ -1,18 +1,23 @@
+import { out } from "^jab-node";
+
 export {};
 
-//
-const e = new Error("ups");
+out("hello");
+console.log({ fido: 1 });
 
-// console.log(e.stack);
+// //
+// const e = new Error("ups");
 
-throw e;
-//
+// // console.log(e.stack);
 
-// const start = Date.now();
-// while (Date.now() - start < 2000) {
-//   /* no op*/
-// }
+// throw e;
+// //
 
-// sleeping(2000);
+// // const start = Date.now();
+// // while (Date.now() - start < 2000) {
+// //   /* no op*/
+// // }
 
-// require("asdf");
+// // sleeping(2000);
+
+// // require("asdf");

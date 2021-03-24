@@ -1,6 +1,4 @@
-import { assertNever, EventStream } from "^jab";
-
-import { ClientMessage, ServerMessage } from "^jatec";
+import { ClientMessage } from "^jatec";
 
 type Deps = {
   onCloseTestCase: () => void;

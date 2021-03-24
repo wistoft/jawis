@@ -1,5 +1,4 @@
 import React from "react";
-import RTR from "react-test-renderer";
 
 import {
   ClientTestReport,
@@ -14,11 +13,10 @@ import {
   makeToAtomizedString,
   makeReplaceAtoms,
 } from "^jab-react";
-import { getHtmlRTR, rendererTos, renderHookImproved } from "^jawis-mess/node";
+import { getHtmlRTR, renderHookImproved } from "^jawis-mess/node";
 import { asyncClone, clone } from "^jab";
 
 import { ViewTest } from "^jatev/ViewTest";
-import { ViewProps, View } from "^jatev/View";
 import {
   makeRogueUpdater,
   makeTestCaseUpdater,

@@ -2,7 +2,7 @@ import http from "http";
 
 import { err, safeRace, sleepingValue } from "^jab";
 
-import { ServerDeps } from "./Server";
+import { Deps } from "./Server";
 
 export type WaiterServerSignalTypes = "open" | "data" | "close" | "never";
 
@@ -12,7 +12,7 @@ export type WaiterServerSignalTypes = "open" | "data" | "close" | "never";
 export const getServerWaiter = (
   server: http.Server,
   onError: (error: unknown) => void,
-  deps: ServerDeps
+  deps: Deps
 ) => {
   const waiter = new ServerCustomWaiter(onError, deps);
 
@@ -41,10 +41,7 @@ export class ServerCustomWaiter {
   /**
    * onError is for when the signal came after timeout.
    */
-  constructor(
-    private onError: (error: unknown) => void,
-    public deps: ServerDeps
-  ) {}
+  constructor(private onError: (error: unknown) => void, public deps: Deps) {}
 
   /**
    *

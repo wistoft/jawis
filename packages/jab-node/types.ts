@@ -2,8 +2,10 @@ import type { FinallyFunc, FinallyProvider, LogProv, Waiter } from "^jab";
 
 import type { JabShutdownMessage } from ".";
 
+export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
+
 export type MainProv = {
-  onError: (error: unknown) => void;
+  onError: OnError;
 
   finalProv: FinallyProvider;
   finally: FinallyProvider["finally"]; //covenience

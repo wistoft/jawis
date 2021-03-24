@@ -31,8 +31,9 @@ export const makeDefaultRoute = (deps: Deps): ServerAppRouter => {
 
   // create app structure
 
-  const { requestHandler, onWsMessage, onShutdown } = director({
+  const { requestHandler, onWsMessage } = director({
     wsServer: deps.wsServer,
+    finally: deps.finally,
   });
 
   // http
@@ -55,6 +56,5 @@ export const makeDefaultRoute = (deps: Deps): ServerAppRouter => {
 
   return {
     router,
-    onShutdown,
   };
 };

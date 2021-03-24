@@ -1,25 +1,23 @@
-import React, { memo, useMemo, useRef, useState } from "react";
-
-import { EventStream } from "^jab";
-import { ClientMessage, ServerMessage } from "^jatec";
+import React, { useRef, useState } from "react";
 
 import {
-  ErrorBoundary,
+  ClientMessage,
+  ServerMessage,
+  ClientTestReport,
+  RogueData,
+} from "^jatec";
+
+import {
   useMemoDep,
   makeUseFunction,
-  SetStateFunctionCorrect,
-  ComponentMenu,
   WebSocketProv,
   useKeyListener,
-  PartialSetState,
   HookSetState,
   makeSetPartialState,
 } from "^jab-react";
-import { ClientTestReport, RogueData } from "^jatec";
 
 import { OpenFile } from "^jawis-util";
 
-import { View } from "./View";
 import { makeOnServerMessage } from "./onServerMessage";
 import { ViewAction, Props as ViewActionProps } from "./ViewAction";
 import { ViewControls } from "./ViewControls";

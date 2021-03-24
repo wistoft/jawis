@@ -1,33 +1,39 @@
 #!/usr/bin/env node
 import path from "path";
+import { MainProv, mainWrapper } from "^jab-node";
 import { startJaviServer } from "^javi/server/util";
 
 import { getJaviConf } from "./getConf";
 
-//conf
+const main = (mainProv: MainProv) => {
+  //conf
 
-const conf = getJaviConf(process.cwd());
+  const conf = getJaviConf(process.cwd());
 
-//start
+  //start
 
-startJaviServer({
-  name: "Javi",
-  serverPort: conf.port,
-  staticWebFolder: path.join(__dirname, "../client/compiled"),
-  clientConf: {
-    projectRoot: conf.projectRoot,
-    removePathPrefix: conf.removePathPrefix,
-    initialShowSystemFrames: conf.initialShowSystemFrames,
-    showClearLink: conf.showClearLink,
-  },
+  startJaviServer({
+    name: "Javi",
+    mainProv,
+    serverPort: conf.port,
+    staticWebFolder: path.join(__dirname, "../client/compiled"),
+    clientConf: {
+      projectRoot: conf.projectRoot,
+      removePathPrefix: conf.removePathPrefix,
+      initialShowSystemFrames: conf.initialShowSystemFrames,
+      showClearLink: conf.showClearLink,
+    },
 
-  jates: {
-    absTestFolder: conf.absTestFolder,
-    absTestLogFolder: conf.absTestLogFolder,
-  },
+    jates: {
+      absTestFolder: conf.absTestFolder,
+      absTestLogFolder: conf.absTestLogFolder,
+    },
 
-  jago: {
-    scriptFolders: conf.scriptFolders,
-    scripts: conf.scripts,
-  },
-});
+    jago: {
+      scriptFolders: conf.scriptFolders,
+      scripts: conf.scripts,
+    },
+  });
+};
+
+mainWrapper("Javi.", main, "console", true);

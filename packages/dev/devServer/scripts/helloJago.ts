@@ -1,12 +1,4 @@
-import {
-  JabShutdownMessage,
-  makeSend,
-  out,
-  registerOnMessage,
-  outHtml,
-  outLink,
-  outImg,
-} from "^jab-node";
+import { outHtml, outLink, outImg } from "^jab-node";
 
 // makeSend()({ hello: "asdf" });
 outHtml("<b>hej</b>");

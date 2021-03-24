@@ -1,10 +1,4 @@
-import {
-  clone,
-  ClonedValue,
-  tos,
-  unknownToErrorData,
-  fixErrorInheritence,
-} from "^jab";
+import { clone, ClonedValue, tos, fixErrorInheritence } from "^jab";
 
 /**
  *

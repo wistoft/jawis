@@ -11,7 +11,14 @@ import {
   unknownToErrorData,
 } from "^jab";
 
-import { flushAndExit, MainProv, makeSend } from ".";
+import {
+  flushAndExit,
+  JabShutdownMessage,
+  MainProv,
+  makeSend,
+  OnError,
+  registerOnMessage,
+} from ".";
 
 //hacky
 let parentSend: (entry: JagoLogEntry) => void;
@@ -101,9 +108,7 @@ export const makeLogServiceToConsole: () => LogProv = () => {
   };
 
   return {
-    log: (...args) => {
-      console.log(...args);
-    },
+    log: console.log,
     logStream: (type, data: string | Uint8Array) => {
       if (type.length > largestType) {
         largestType = type.length;
@@ -148,24 +153,16 @@ export class UserMessage extends Error {
 
 /**
  *
- * todo
- *  Should support parent
  */
-export const mainProvToConsole = (logPrefix = "") => {
+export const mainProvToConsole = (logPrefix = ""): MainProv => {
+  const onError = makeOnErrorToConsole(logPrefix);
+  const finalProv = new FinallyProvider({ onError });
   const logProv = makeLogServiceToConsole();
 
-  const onError = (error: unknown) => {
-    console.log(logPrefix + "onError: ", error);
-  };
-
-  const finalProv = new FinallyProvider({ onError });
-
   return {
-    onError: onError,
-
+    onError,
     finalProv,
     finally: finalProv.finally,
-
     logProv,
     log: logProv.log,
     logStream: logProv.logStream,
@@ -174,21 +171,77 @@ export const mainProvToConsole = (logPrefix = "") => {
 
 /**
  *
- * todo
- *  Should this allow exit. If so, don't use rejection handlers.
+ */
+// eslint-disable-next-line unused-imports/no-unused-vars-ts
+export const mainProvToJago = (logPrefix = "") => {
+  throw new Error("not impl");
+};
+
+/**
+ *
+ */
+export const makeOnErrorToConsole = (logPrefix = ""): OnError => (
+  error,
+  extraInfo
+) => {
+  if (extraInfo) {
+    console.log(logPrefix + "onError: ", error, "\n", tos(extraInfo));
+  } else {
+    console.log(logPrefix + "onError: ", error);
+  }
+};
+
+/**
+ * Wrap main logic
+ *
+ * - Catch exceptions and report. But don't exit.
+ * - An UserMessage will not cause an exit. The message is just logged to console.
+ *    - The work will of cause cancel, because it threw an exception.
+ *    - The UserMessage is only relevant for sync phase. The possibly following async phase want be watch.
+ *        I.e. exceptions in setTimeout or promise rejections.
+ * - Execute finally functions before exit.
+ *   - But not if process.exit is called. There's no way to register a handler for that.
+ * - Flush std io before exit. This allows finally functions to use std io.
+ * - Send output to either console or jago.
+ * - registerOnShutdown means to explicit exit, when: Jab sends an ipc message to exit.
+ *    - This keeps the process running, even if everything else has finished.
+ *        So can't be used with a process, that exits by itself.
+ *
+ * worker compat?
+ *  - Does finally run if exit because event loop empties.
  */
 export const mainWrapper = (
   logPrefix: string,
-  work: (prov: MainProv) => void
+  main: (mainProv: MainProv) => void,
+  type: "console" | "jago" = "console",
+  registerOnShutdown = false
 ) => {
-  registerRejectionHandlers();
+  const mainProv =
+    type === "console"
+      ? mainProvToConsole(logPrefix)
+      : mainProvToJago(logPrefix);
+
+  registerRejectionHandlers(mainProv.onError);
+
+  process.on("beforeExit", () => {
+    mainProv.finalProv.runFinally();
+  });
+
+  if (registerOnShutdown) {
+    registerOnMessage((msg: JabShutdownMessage) => {
+      if (msg.type === "shutdown") {
+        Promise.resolve()
+          .then(mainProv.finalProv.runFinally)
+          .finally(flushAndExit);
+      }
+    });
+  }
 
   try {
-    work(mainProvToConsole(logPrefix));
+    main(mainProv);
   } catch (e) {
     if (e instanceof UserMessage) {
-      console.log(e.getUserMessage());
-      flushAndExit();
+      mainProv.log(e.getUserMessage());
     } else {
       throw e;
     }
@@ -198,18 +251,12 @@ export const mainWrapper = (
 /**
  *
  */
-export const registerRejectionHandlers = () => {
-  const onUnhandledPromiseRejection: NodeJS.UnhandledRejectionListener = (
-    reason
-  ) => {
-    onError(reason, ["uh-promise"]);
-  };
-
-  const onUncaughtException = (error: Error) => {
+export const registerRejectionHandlers = (onError: OnError) => {
+  process.on("uncaughtException", (error) => {
     onError(error, ["uh-exception"]);
-  };
+  });
 
-  process.on("uncaughtException", onUncaughtException);
-  process.on("unhandledRejection", onUnhandledPromiseRejection);
+  process.on("unhandledRejection", (reason) => {
+    onError(reason, ["uh-promise"]);
+  });
 };
-//

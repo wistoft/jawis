@@ -46,6 +46,12 @@ export const isArray = (value: unknown): value is Array<unknown> =>
 
 /**
  *
+ */
+export const isObject = (value: unknown): value is { [_: string]: unknown } =>
+  typeof value === "object" && value !== null;
+
+/**
+ *
  * - The `in` operator can't be used with all values. This can.
  */
 export const hasProp = (value: unknown, propertyName: string | number) =>

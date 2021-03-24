@@ -1,0 +1,1 @@
+{"user":{"console.error":["The above error occurred in the <ThrowInRender> component:\n    in ThrowInRender\n\nConsider adding an error boundary to your tree to customize error handling behavior.\nVisit https://fb.me/react-error-boundaries to learn more about error boundaries."]},"err":["Error: you asked"]}

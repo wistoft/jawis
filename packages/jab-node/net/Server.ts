@@ -3,7 +3,7 @@ import http from "http";
 
 import { Socket } from "net";
 
-export type ServerDeps = {
+export type Deps = {
   port: number;
   app: Application;
   log: (msg: string) => void;
@@ -28,7 +28,7 @@ export class Server {
   /**
    *
    */
-  constructor(private deps: ServerDeps) {
+  constructor(private deps: Deps) {
     this.server = deps.app.listen(deps.port, () => {
       this.deps.log("listen callback");
       this.state = "running";

@@ -6,7 +6,6 @@ import {
   assert,
   err,
   clonedArrayEntriesTos,
-  tryPropString,
   tryProp,
   ClonedValue,
   clonedTos,

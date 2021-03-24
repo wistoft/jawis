@@ -1,0 +1,1 @@
+{"user":{"console.log":["export function factorial(n): number {\n    if (n <= 1) {\n        return 1;\n    }\n    return n * factorial(n - 1);\n}\n"]}}

@@ -1,12 +1,10 @@
 import { err } from "^jab";
 
 import {
-  ZippedTestLog,
   RogueData,
   mergeTestLogsAndRogue,
   testLogStatus,
   zipTestLogs,
-  testLogOrder,
 } from "^jatec";
 
 import { TestState, State, TestStateUpdate } from ".";

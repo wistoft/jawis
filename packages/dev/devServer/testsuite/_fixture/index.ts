@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { sleeping, tryProp } from "^jab";
+import { sleeping } from "^jab";
 
 export const SLOWNESS = 0;
 

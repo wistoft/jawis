@@ -1,7 +1,7 @@
 // - require files, so WPP can change them, and test its reloading.
 
-const library = require("./FileThatChanges");
-const library2 = require("./FileThatChanges2");
+const library = require("../scratchFolder/FileThatChanges");
+const library2 = require("../scratchFolder/FileThatChanges2");
 
 //values that can change in files
 

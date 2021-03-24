@@ -1,6 +1,6 @@
 import path from "path";
 
-import { ProcessDeps, Process } from "^jab-node";
+import { ProcessDeps, Process, TS_TIMEOUT } from "^jab-node";
 import { makeTsNodeJabProcess } from "^jawis-util/node";
 
 import { getScriptPath, TestMainProv } from ".";
@@ -42,6 +42,26 @@ export const getJabTsProcess = (
   extraDeps?: Partial<ProcessDeps<any>>,
   logPrefix?: string
 ) => makeTsNodeJabProcess(getJabProcessDeps(prov, extraDeps, logPrefix));
+
+/**
+ *
+ */
+export const getJabTsProcess_ready = (
+  prov: TestMainProv,
+  extraDeps?: Partial<ProcessDeps<any>>,
+  logPrefix?: string
+) => {
+  const proc = getJabTsProcess(
+    prov,
+    {
+      filename: getScriptPath("ipcSendAndWait.js"),
+      ...extraDeps,
+    },
+    logPrefix
+  );
+
+  return proc.waiter.await("message", TS_TIMEOUT).then(() => proc);
+};
 
 /**
  *

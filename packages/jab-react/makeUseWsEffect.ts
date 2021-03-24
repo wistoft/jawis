@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { BrowserWebSocket, WsStates } from "^jab-react";
+import { BrowserWebSocket } from "^jab-react";
 import { EventStream } from "^jab";
 
 export type UseWsEffectArgs<ServerMessage> = {

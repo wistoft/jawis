@@ -2,8 +2,8 @@ import path from "path";
 
 import projectConf from "^config/project.conf";
 import { WsPoolProv } from "^jab-express";
-import { BeeDeps, SocketData, NodeWS } from "^jab-node";
-import { RequireSenderMessage } from "^jab-node";
+import { BeeDeps, SocketData, NodeWS, RequireSenderMessage } from "^jab-node";
+
 import { TestProvision } from "^jarun";
 
 import { getScriptPath, TestMainProv } from ".";
@@ -55,7 +55,11 @@ export class WsPoolMock<MS extends SocketData, MR extends SocketData>
 export const logRequireMessage = (msg: RequireSenderMessage) => {
   console.log({
     ...msg,
-    file: path.relative(projectConf.packageFolder, msg.file),
-    source: msg.source && path.relative(projectConf.packageFolder, msg.source),
+    file: path
+      .relative(projectConf.packageFolder, msg.file)
+      .replace(/\\/g, "/"),
+    source:
+      msg.source &&
+      path.relative(projectConf.packageFolder, msg.source).replace(/\\/g, "/"),
   });
 };

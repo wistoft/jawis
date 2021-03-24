@@ -17,7 +17,7 @@ export const makeJatesRoute = (deps: DirectorDeps): ServerAppRouter => {
 
   // create app structure
 
-  const { onWsUpgrade, onShutdown } = director(deps);
+  const { onWsUpgrade } = director(deps);
 
   // ws
 
@@ -29,6 +29,5 @@ export const makeJatesRoute = (deps: DirectorDeps): ServerAppRouter => {
 
   return {
     router,
-    onShutdown,
   };
 };

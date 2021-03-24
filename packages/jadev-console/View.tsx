@@ -4,7 +4,6 @@ import { JsLink } from "^jab-react";
 
 import { JadevStateProv } from "./useJadevState";
 import { ViewEntry, Props as ViewEntryProps } from "./ViewEntry";
-import { UiEntry } from ".";
 
 export type Props = { showClearLink?: boolean } & Pick<
   JadevStateProv,

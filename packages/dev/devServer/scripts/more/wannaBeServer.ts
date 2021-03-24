@@ -1,12 +1,4 @@
-import {
-  JabShutdownMessage,
-  makeSend,
-  out,
-  registerOnMessage,
-  outHtml,
-  outLink,
-  outImg,
-} from "^jab-node";
+import { JabShutdownMessage, registerOnMessage } from "^jab-node";
 
 registerOnMessage((msg: JabShutdownMessage) => {
   switch (msg.type) {
