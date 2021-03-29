@@ -7,6 +7,6 @@ import { makeMakeJacsWorkerBee } from "@wistoft/jacs";
 
 const mainProv = mainProvToConsole("jacs.");
 
-export const makeJacsBee = (makeMakeJacsWorkerBee(
+export const makeJacsWorker = (makeMakeJacsWorkerBee(
   mainProv
 ) as unknown) as MakeBee; //bug: there is a different between dev/released version.

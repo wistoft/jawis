@@ -62,4 +62,6 @@ const main = (mainProv: MainProv) => {
   });
 };
 
-mainWrapper("Dev.", main, "console", true);
+//no rejection handlers, because jago does that, and it always manages this script.
+
+mainWrapper("Dev.", main, "jago", true, false);

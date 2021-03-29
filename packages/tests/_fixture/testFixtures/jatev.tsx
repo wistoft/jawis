@@ -37,6 +37,10 @@ import {
   stateWithTestReports,
   stateWithTests,
 } from ".";
+import {
+  ViewTestLogContent,
+  Props as ViewTestLogContentProps,
+} from "^jatev/ViewTestLogContent";
 
 export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.
 
@@ -93,6 +97,21 @@ export const getViewTestLog = (
     testId={"testId"}
     rogue={false}
     apiSend={() => {}}
+    projectRoot={"C:\\packages\\"}
+    openFile={() => {}}
+    {...props}
+  />
+);
+
+/**
+ *
+ */
+export const getViewTestLogContent = (
+  props: Partial<ViewTestLogContentProps> &
+    Pick<ViewTestLogContentProps, "testLog">
+) => (
+  <ViewTestLogContent
+    showTestLogType={"cmp"}
     projectRoot={"C:\\packages\\"}
     openFile={() => {}}
     {...props}

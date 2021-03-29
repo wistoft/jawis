@@ -1,3 +1,5 @@
+console.log("Argh, Sisyphus");
+
 process.on("message", () => {
   console.log("I want die!");
 });

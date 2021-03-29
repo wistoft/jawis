@@ -7,7 +7,7 @@ import { SpawnResult } from ".";
 // Convenience functions for doing simple things. typically when
 //  interaction with the process is unneeded.
 //
-//  TypeScript supports by settings args, and be in same workdir as tsconfig.json
+//  TypeScript supported by settings args, and be in same workdir as tsconfig.json
 //        [
 //          "-r",
 //          "ts-node/register/transpile-only",

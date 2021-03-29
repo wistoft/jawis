@@ -10,7 +10,7 @@ import {
   getJabProcessDeps,
   getScriptPath,
   makeDormentInMemoryBee,
-  makeJacsBee,
+  makeJacsWorker,
 } from ".";
 
 /**
@@ -67,7 +67,7 @@ export const getJabProcessPreloaderDeps = (
 
   return {
     ...procDeps,
-    makeBee: makeJacsBee,
+    makeBee: makeJacsWorker,
     logProv: getLogProv(prov, ""),
   };
 };

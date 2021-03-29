@@ -1,15 +1,11 @@
 import path from "path";
 import { StdioOptions, Serializable } from "child_process";
 
-import { assert, getPromise, FinallyFunc, err } from "^jab";
+import { getPromise, FinallyFunc, err } from "^jab";
 
-import {
-  MakeJabProcess,
-  makePlainJabProcess,
-  Process,
-  ProcessDeps,
-  SpawnResult,
-} from ".";
+import { BeeResult, Process, ProcessDeps } from ".";
+import { ExecBee } from "./types";
+import { MakeBee } from "^jab-node/types";
 
 //
 // Similar to `exec.ts`
@@ -18,79 +14,60 @@ import {
 // - TypeScript only possible with ts-node: @see `jsExecTsNodeConditonally`
 
 /**
- * Similar to exec(), but allows ts compile.
  *
- * onMessage not implemented.
+ *
+ * - Resolve, when the process ends.
+ * - Return stdout, err and messages.
  *
  */
-export const jsExec = (
+export const execBee: ExecBee = <
+  MR extends Serializable,
+  MS extends Serializable
+>(
   script: string,
-  args: string[] | undefined = undefined,
-  makeJabProcess: MakeJabProcess = makePlainJabProcess,
-  finallyFunc: FinallyFunc = () => {}
+  finallyFunc: FinallyFunc,
+  makeJabProcess: MakeBee
 ) => {
-  assert(args === undefined, "not impl");
-
-  const prom = getPromise<SpawnResult>();
+  const prom = getPromise<BeeResult<MR>>();
 
   // state
 
   let stdout = "";
   let stderr = "";
+  const messages: MR[] = [];
 
-  let exitHandled = false;
-
-  //
   // handlers
-  //
-
-  const onStdout = (data: Buffer) => {
-    stdout += data.toString();
-  };
-
-  const onStderr = (data: Buffer) => {
-    stderr += data.toString();
-  };
 
   const onExit = (status: number | null) => {
-    exitHandled = true;
-
     prom.resolve({
       stdout,
       stderr,
       status,
+      messages,
     });
   };
 
-  const onClose = () => {
-    if (!exitHandled) {
-      console.log("Process.onClose: Expected exit already happend.");
-    }
-  };
+  //  process/worker
 
-  //
-  //  process
-  //
-
-  makeJabProcess({
+  const bee = makeJabProcess<MS, MR>({
     filename: script,
-    execArgv: args,
     onMessage: (msg) => {
-      console.log("Process.onMessage: Unexpected message.", msg);
+      messages.push(msg);
     },
-    onStdout,
-    onStderr,
+    onStdout: (data: Buffer) => {
+      stdout += data.toString();
+    },
+    onStderr: (data: Buffer) => {
+      stderr += data.toString();
+    },
     onError: prom.reject as (error: unknown) => void,
     onExit,
-    onClose,
     finally: finallyFunc,
   });
 
-  //
   // return
-  //
 
-  return prom.promise;
+  return { bee, promise: prom.promise };
 };
 
 /**
@@ -102,7 +79,7 @@ export const jsExec = (
  * 2. IPC by default.
  * 3. Everything noisy. Add listeners to suppress.
  */
-export const jsExecNoisy = (
+export const nodeExecNoisy = (
   filename: string,
   args: string[] = [],
   cwd: string | undefined = undefined

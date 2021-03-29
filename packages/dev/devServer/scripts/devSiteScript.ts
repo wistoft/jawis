@@ -1,23 +1,30 @@
-import { out } from "^jab-node";
-
 export {};
 
-out("hello");
-console.log({ fido: 1 });
+// out(undefined);
 
-// //
-// const e = new Error("ups");
+// // console.log(1, process.listenerCount("unhandledRejection"));
+// // console.log(2, process.listenerCount("uncaughtException"));
 
-// // console.log(e.stack);
+// out(new Error("sf"));
 
-// throw e;
-// //
+// // // console.log(e.stack);
 
-// // const start = Date.now();
-// // while (Date.now() - start < 2000) {
-// //   /* no op*/
-// // }
+// // throw e;
+// // //
 
-// // sleeping(2000);
+// // // const start = Date.now();
+// // // while (Date.now() - start < 2000) {
+// // //   /* no op*/
+// // // }
 
-// // require("asdf");
+// // // sleeping(2000);
+
+// // // require("asdf");
+
+// setInterval(() => {
+//   // throw new Error("ups");
+//   // prej("ups");
+// }, 1000);
+
+console.log("script", process.listenerCount("uncaughtException"));
+// throw new Error("hej");

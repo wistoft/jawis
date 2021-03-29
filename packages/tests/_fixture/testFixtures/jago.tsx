@@ -1,7 +1,7 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { ServerMessage } from "^jagoc";
+import { JagoLogEntry, ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^jab-react";
 import { renderHookImproved } from "^jawis-mess/node";
 
@@ -41,4 +41,22 @@ export const renderUseJagoDirector = (prov: TestProvision) => {
   });
 
   return { ...hookProv, ...useWsEffectArgs };
+};
+
+export const makeJagoSend = (prov: TestProvision) => (msg: JagoLogEntry) => {
+  prov.log("postMessage", filterJagoLog(msg));
+};
+
+/**
+ *
+ */
+export const filterJagoLog = (entry: JagoLogEntry) => {
+  if (entry.type === "error") {
+    return {
+      ...entry,
+      data: { ...entry.data, stack: "filtered" },
+    };
+  }
+
+  return entry;
 };

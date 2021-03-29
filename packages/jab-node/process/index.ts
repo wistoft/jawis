@@ -1,5 +1,5 @@
 export * from "./exec";
-export * from "./execJab";
+export * from "./execProcess";
 export * from "./InMemoryBee";
 export * from "./JabWorker";
 export * from "./Process";
@@ -9,4 +9,5 @@ export * from "./Queen";
 export * from "./ReusableWPP";
 export * from "./types";
 export * from "./util";
+export * from "./WatchableProcessMainUtil";
 export * from "./WatchableProcessPreloader";

@@ -1,16 +1,14 @@
-const path = require("path");
 const { src, dest, series } = require("gulp");
 const gts = require("gulp-typescript");
 const del = require("del");
 const jeditor = require("gulp-json-editor");
 const replace = require("gulp-replace");
-const named = require("vinyl-named");
 const gulpif = require("gulp-if");
 const merge = require("merge2");
 
 //conf
 
-const npmVersion = "0.0.15";
+const npmVersion = "0.0.17";
 
 const projectConf = require("./packages/config/project.conf");
 

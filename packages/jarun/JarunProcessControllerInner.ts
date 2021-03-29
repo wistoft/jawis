@@ -7,6 +7,7 @@ import {
   PromiseTriple,
   LogProv,
   Waiter,
+  clone,
 } from "^jab";
 import { OnRequire, RequireSenderMessage } from "^jab-node";
 
@@ -111,51 +112,6 @@ export class JarunProcessControllerInner {
     }
   };
 
-  /**
-   *
-   */
-  public onUnexpectedExit = () => {
-    // output the cache io.
-
-    if (this.curStdout || this.curStderr) {
-      console.log({
-        panic_stdout: this.curStdout,
-        panic_stderr: this.curStderr,
-      });
-    }
-
-    //
-
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "ready":
-        this.deps.logProv.log(
-          "Unexpected exit: JarunProcessMain, when: " + state
-        );
-
-        this.waiter.set("error");
-        return;
-
-      case "testing":
-        def(this.testProm).reject(
-          new Error("Unexpected exit: JarunProcessMain, when: " + state)
-        );
-
-        this.waiter.set("error");
-        return;
-
-      case "error":
-        this.deps.logProv.log(
-          "Impossible: onUnexpectedExit, when: " + state + "."
-        );
-        return;
-
-      default:
-        return assertNever(state);
-    }
-  };
-
   public onStdout = (data: Buffer) => {
     if (this.waiter.is("testing")) {
       this.curStdout += data.toString();
@@ -216,8 +172,76 @@ export class JarunProcessControllerInner {
         this.deps.onRequire(msg);
         break;
 
+      default: {
+        // eslint-disable-next-line unused-imports/no-unused-vars-ts
+        const nev: never = msg; // we want exhaustive check, but not to throw.
+
+        //send rogue report
+
+        const testId = this.waiter.is("testing")
+          ? def(this.curTestId)
+          : "unknown";
+
+        this.deps.onRogueTest({
+          data: {
+            user: {
+              onMessage: [
+                {
+                  ["Recieved while this test executed"]: testId,
+                  msg: clone(msg),
+                },
+              ],
+            },
+          },
+        });
+
+        break;
+      }
+    }
+  };
+
+  /**
+   *
+   */
+  public onUnexpectedExit = () => {
+    // output the cache io.
+
+    if (this.curStdout || this.curStderr) {
+      console.log({
+        panic_stdout: this.curStdout,
+        panic_stderr: this.curStderr,
+      });
+    }
+
+    //
+
+    const state = this.waiter.getState();
+
+    switch (state) {
+      case "ready":
+        this.deps.logProv.log(
+          "Unexpected exit: JarunProcessMain, when: " + state
+        );
+
+        this.waiter.set("error");
+        return;
+
+      case "testing":
+        def(this.testProm).reject(
+          new Error("Unexpected exit: JarunProcessMain, when: " + state)
+        );
+
+        this.waiter.set("error");
+        return;
+
+      case "error":
+        this.deps.logProv.log(
+          "Impossible: onUnexpectedExit, when: " + state + "."
+        );
+        return;
+
       default:
-        return assertNever(msg, "Unknown message.");
+        return assertNever(state);
     }
   };
 }

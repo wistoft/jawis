@@ -14,6 +14,7 @@ import {
   makePlainWorkerBee,
   MakeBee,
   BeeListeners,
+  getFileToRequire,
 } from "^jab-node";
 
 import { ActionProv } from "./ActionProvider";
@@ -234,9 +235,14 @@ export class ScriptPoolController implements ScriptPoolProv {
         ? this.deps.makeTsBee
         : makePlainWorkerBee;
 
+    //custom main
+
+    const customBooter = getFileToRequire(__dirname, "ScriptWrapperMain");
+
     //create
 
     return new WatchableProcessPreloader({
+      customBooter,
       filename: script,
       onRestartNeeded: () => {
         if (autoRestart) {

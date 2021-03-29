@@ -1,12 +1,3 @@
-import { plugIntoModuleLoad } from "..";
-import { makeRequireSender, makeSend } from ".";
+import { wppMain } from "./WatchableProcessMainUtil";
 
-import { ppMain } from "./ProcessPreloaderMainUtil";
-
-//process preloader
-
-ppMain();
-
-//register require last, to avoid noise
-
-plugIntoModuleLoad(makeRequireSender(makeSend()));
+wppMain();

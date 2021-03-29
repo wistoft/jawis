@@ -1,0 +1,1 @@
+{"user":{"postMessage":[{"type":"error","data":{"msg":"Error: hello","info":["value",[]],"stack":"filtered"}},{"type":"error","data":{"msg":"Error: there's more","info":["value",["here it is"]],"stack":"filtered"}},{"type":"log","data":["value",["hello","there",["value",["undefined"]]]],"logName":""}]}}

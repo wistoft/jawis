@@ -4,6 +4,7 @@ import type { JabShutdownMessage } from ".";
 
 export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
 
+//covenience: duplicates some properties to be compatible with TestMainProv
 export type MainProv = {
   onError: OnError;
 
@@ -11,8 +12,8 @@ export type MainProv = {
   finally: FinallyProvider["finally"]; //covenience
 
   logProv: LogProv;
-  log: LogProv["log"];
-  logStream: LogProv["logStream"];
+  log: LogProv["log"]; //covenience
+  logStream: LogProv["logStream"]; //covenience
 };
 
 //

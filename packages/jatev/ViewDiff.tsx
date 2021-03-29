@@ -13,22 +13,24 @@ export type Props = {
  * Show diff between two strings.
  *
  * - Underline white space at boundary of inserted/deleted text.
+ * - Replace atoms in the strings. (Could be generalized as a replacer function: str => Element)
  *
  * impl
  *  - a little hacky to remove underline from the first ins/del.
  *    But it is to avoid underlining the indent, that is inserted for layout reasons.
  */
 export const ViewDiff: React.FC<Props> = memo(({ left, right }) => {
-  const d = diff(left, right).map((entryWithAtoms, index) => {
+  const k = diff(left, right);
+  const d = k.map((entryWithAtoms, index) => {
     const entry = entryWithAtoms;
 
     if (typeof entry === "string") {
       return replaceAtoms(entry);
     } else if (entry[0] === "ins") {
-      const a = index === 0 ? entry[1] : wrapWhitespace(entry[1]);
+      const a = index === 0 ? replaceAtoms(entry[1]) : wrapWhitespace(entry[1]);
       return <ins key={index}>{a}</ins>;
     } else if (entry[0] === "del") {
-      const a = index === 0 ? entry[1] : wrapWhitespace(entry[1]);
+      const a = index === 0 ? replaceAtoms(entry[1]) : wrapWhitespace(entry[1]);
       return <del key={index}>{a}</del>;
     } else {
       throw err("Impossible.");

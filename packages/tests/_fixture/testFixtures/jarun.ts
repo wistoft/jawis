@@ -9,11 +9,13 @@ import {
   MakeTestCase,
   JarunTestRunnerDeps,
   JarunEqAssertation,
+  BeeRunner,
 } from "^jarun";
 import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
 import { filterTestLogs, filterTestResult } from ".";
+import { makeTsNodeJabProcess } from "^jawis-util/node";
 
 /**
  *
@@ -134,4 +136,28 @@ export const newJarunPromise = <T>(
   const JarunPromise = getJarunPromiseClass(prov);
 
   return new JarunPromise(executor);
+};
+
+/**
+ *
+ */
+export const getProcessRunner = (prov: TestProvision) =>
+  new BeeRunner({
+    finally: prov.finally,
+    makeBee: makeTsNodeJabProcess,
+  });
+
+/**
+ *
+ */
+export const prRunTest = (prov: TestProvision, absTestFile: string) => {
+  const pr = getProcessRunner(prov);
+
+  return {
+    pr,
+    promise: pr.runTest("testId unused", absTestFile).then((data) => {
+      data.execTime = "removed" as any;
+      return data;
+    }),
+  };
 };

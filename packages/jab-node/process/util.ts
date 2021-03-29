@@ -29,6 +29,14 @@ export const makePlainWorkerBee: MakeBee = (deps) =>
   new JabWorker({ ...deps, makeWorker: makePlainWorker });
 
 /**
+ *  identity implementation.
+ */
+export const makePlainWorker: MakeNodeWorker = (
+  filename: string,
+  options?: WorkerOptions
+) => new Worker(filename, options);
+
+/**
  *
  */
 export const makeMakeTsJabProcessConditonally = (
@@ -40,14 +48,6 @@ export const makeMakeTsJabProcessConditonally = (
     return makePlainJabProcess(deps);
   }
 };
-
-/**
- *  identity implementation.
- */
-export const makePlainWorker: MakeNodeWorker = (
-  filename: string,
-  options?: WorkerOptions
-) => new Worker(filename, options);
 
 /**
  * Get files required, even though they've already been loaded.

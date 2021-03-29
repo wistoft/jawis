@@ -7,7 +7,7 @@ import {
   MakeJabProcess,
   MakeNodeWorker,
   Process,
-  jsExec,
+  execBee,
   JabWorker,
   JabWorkerDeps,
   MakeBee,
@@ -98,8 +98,7 @@ export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
 /**
  * ubrugt
  */
-export const jsExecTsNodeConditonally = (
+export const nodeExecTsNodeConditonally = (
   script: string,
-  args: string[] = [],
   finallyFunc: FinallyFunc = () => {}
-) => jsExec(script, args, makeTsNodeJabProcessConditonally, finallyFunc);
+) => execBee(script, finallyFunc, makeTsNodeJabProcessConditonally);

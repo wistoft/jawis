@@ -88,16 +88,6 @@ export class JarunProcessMainImpl {
    *
    */
   private registerHandlers = () => {
-    //quick fix: allow existing handlers.
-
-    if (process.listenerCount("uncaughtException") !== 0) {
-      process.removeAllListeners("uncaughtException");
-    }
-
-    if (process.listenerCount("unhandledRejection") !== 0) {
-      process.removeAllListeners("unhandledRejection");
-    }
-
     //there can be only one
 
     if (process.listenerCount("uncaughtException") !== 0) {

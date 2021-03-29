@@ -11,7 +11,7 @@ import {
   getScriptPath,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
-  makeJacsBee,
+  makeJacsWorker,
 } from ".";
 
 /**
@@ -105,7 +105,7 @@ export const getJabWatchbleProcessPreloaderDeps = (
 
     ...procDeps,
 
-    makeBee: makeJacsBee,
+    makeBee: makeJacsWorker,
     logProv: getLogProv(prov, logPrefix),
   };
 };

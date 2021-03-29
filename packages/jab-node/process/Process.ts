@@ -1,7 +1,6 @@
 import cp, {
   ChildProcess,
   StdioOptions,
-  SpawnOptions,
   Serializable,
   ForkOptions,
 } from "child_process";
@@ -29,7 +28,7 @@ export type ProcessListeners<MR extends Serializable> = {
   onStderr: (data: Buffer) => void;
   onError: (error: unknown) => void;
   onExit: (status: number | null) => void;
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 type States = "running" | "stopping" | "stopped";
@@ -37,14 +36,8 @@ type Events = "message";
 
 /**
  * Only for node processes.
- * execArgv not supported.
  *
- * TODO
- *  when executable doesn't exists, the creation succees, but fails right away.
- *     1. It's hard to see how to do a clean shutdown/kill.
- *     2. It's hard to determine who owns the problem. Process or user.
- *     3. Process could detect the error, and reject "normal" commands, like "send".
- *     4. Can Process determine if the process is dead or not?
+ * - execArgv is default [], not process.execArgv.
  */
 export class Process<MR extends Serializable, MS extends Serializable> {
   public cp: ChildProcess;
@@ -65,7 +58,7 @@ export class Process<MR extends Serializable, MS extends Serializable> {
 
     //start process
 
-    this.cp = this.getStartedProcessByFork();
+    this.cp = this.getStartedProcess();
 
     this.addOwnListeners();
 
@@ -136,11 +129,9 @@ export class Process<MR extends Serializable, MS extends Serializable> {
   };
 
   /**
-   * - execArgv is default [], not process.execArgv.
+   *
    */
-  private getStartedProcessByFork = () => {
-    //options
-
+  private getStartedProcess = () => {
     const options: ForkOptions = {
       execArgv: this.deps.execArgv || [],
       stdio: this.deps.stdio || ["pipe", "pipe", "pipe", "ipc"],
@@ -155,29 +146,6 @@ export class Process<MR extends Serializable, MS extends Serializable> {
     }
 
     return cp.fork(this.deps.filename, [], options);
-  };
-
-  /**
-   * delete
-   */
-  private getStartedProcessBySpawn = () => {
-    //args
-
-    const args = this.deps.execArgv
-      ? [...this.deps.execArgv, this.deps.filename]
-      : [this.deps.filename];
-
-    //options
-
-    const options: SpawnOptions = {
-      stdio: this.deps.stdio || ["pipe", "pipe", "pipe", "ipc"],
-    };
-
-    if (this.deps.cwd) {
-      options.cwd = this.deps.cwd;
-    }
-
-    return cp.spawn("node", args, options);
   };
 
   /**
@@ -212,7 +180,10 @@ export class Process<MR extends Serializable, MS extends Serializable> {
 
     this.cp.on("error", listeners.onError);
     this.cp.on("exit", listeners.onExit);
-    this.cp.on("close", listeners.onClose);
+
+    if (listeners.onClose) {
+      this.cp.on("close", listeners.onClose);
+    }
   };
 
   /**

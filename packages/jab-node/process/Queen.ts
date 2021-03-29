@@ -1,5 +1,7 @@
 import { parentPort, isMainThread } from "worker_threads";
 
+export type MakeSend = <M extends {}>() => (msg: M) => void;
+
 //
 // for communicating with a parent process via ipc or via worker api.
 //
@@ -35,9 +37,10 @@ export const removeOnMessage = (listener: (msg: any) => void) => {
 };
 
 /**
- * todo: no need for making this.
+ * - No real need for making. Except for asserting everything is fine at 'load'
+ *    rather than at send.
  */
-export const makeSend = <M extends {}>() => {
+export const makeSend: MakeSend = () => {
   //quick fix
   if (isMainThread) {
     if (!process.send) {
@@ -49,7 +52,7 @@ export const makeSend = <M extends {}>() => {
     }
   }
 
-  return (msg: M) => {
+  return (msg) => {
     if (isMainThread) {
       if (!process.send) {
         throw new Error("Ipc should be active in main thread.");

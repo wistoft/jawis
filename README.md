@@ -47,15 +47,6 @@ serve the dev client.
 To get type errors during development run the vscode task: `watch - jadev`. To
 automatically start this task install the extentions: `AutoLaunch`
 
-### Pre build
-
-- Run all tests
-- Commit working tree to git
-- `yarn lint:fix`
-  - Running the vscode tasks makes the errors available in vscode.
-  - Review, because there's a bug, that removes comments after imports
-- `yarn pretty:fix`
-
 ### Build
 
 - `yarn alpha:build`<br/> Build a version, that can run locally without
@@ -64,6 +55,14 @@ automatically start this task install the extentions: `AutoLaunch`
 
 ### Publish to npm
 
+- Run all tests
+- Commit working tree to git
+- `yarn lint:fix`
+  - Running the vscode tasks makes the errors available in vscode.
+  - Review, because there's a bug, that removes comments after imports
+- `yarn pretty:fix`
+- Bump version number in `gulpfile.js`
+- `yarn pub:build`
 - `lerna publish from-package`
 
 ## Known issues

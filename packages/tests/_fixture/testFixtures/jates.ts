@@ -2,8 +2,9 @@ import { ErrorData } from "^jab";
 import {
   TestProvision,
   JarunProcessController,
-  ProcessRunner,
+  BeeRunner,
   getDefaultRunnersAssignments,
+  makeProcessRunner,
 } from "^jarun";
 import { TS_TIMEOUT } from "^jab-node";
 import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
@@ -27,7 +28,7 @@ import {
   WsPoolMock,
   absTestFolder,
   absTestLogFolder,
-  makeJacsBee,
+  makeJacsWorker,
   TestFrameworkMock,
 } from ".";
 
@@ -213,21 +214,26 @@ export const getComposedTestFramework = (
 
   const jpc = new JarunProcessController({
     ...deps,
-    makeTsBee: makeJacsBee,
+    makeTsBee: makeJacsWorker,
     onRogueTest: (data) => prov.log("Jate", ["onRogueTest: ", data]),
     onRequire: () => {},
   });
 
-  const pc = new ProcessRunner({
+  const pr = makeProcessRunner({
     ...deps,
     makeTsProcess: makeTsNodeJabProcess,
+  });
+
+  const wo = new BeeRunner({
+    ...deps,
+    makeBee: makeJacsWorker,
   });
 
   return new ComposedTestFramework({
     ...deps,
     absTestFolder,
     subFolderIgnore: ["alsoIgnoreThis"],
-    runners: getDefaultRunnersAssignments(jpc, pc),
+    runners: getDefaultRunnersAssignments(jpc, pr, wo),
   });
 };
 
