@@ -1,4 +1,5 @@
 import { err, FinallyProv, looping } from ".";
+import { assert } from "./error";
 
 /**
  *
@@ -173,11 +174,16 @@ export class FinallyProvider implements FinallyProv {
   constructor(private deps: FinallyProviderDeps) {}
 
   /**
+   *
+   */
+  public isActive = () => this.active;
+
+  /**
    * Register a function to run before shutdown.
    */
   public finally = (func: () => void | undefined | Promise<void>) => {
     if (!this.active) {
-      err("Inactive.");
+      err("Not active.");
     }
 
     this.finallyFuncs.push(func);
@@ -187,6 +193,8 @@ export class FinallyProvider implements FinallyProv {
    * Run all the registered functions serially.
    */
   public runFinally = () => {
+    assert(this.active, "Has already run finally functions.");
+
     this.active = false;
 
     return looping(this.finallyFuncs, (finalTasks) =>

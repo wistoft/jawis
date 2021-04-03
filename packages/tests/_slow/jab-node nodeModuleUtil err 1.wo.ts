@@ -1,9 +1,9 @@
 import { unRegisterTsCompiler } from "^jacs";
 import { registerPrecompiler } from "^jab-node";
 
-unRegisterTsCompiler();
-
 //double register
+
+unRegisterTsCompiler();
 
 registerPrecompiler([".ts"], () => "");
 

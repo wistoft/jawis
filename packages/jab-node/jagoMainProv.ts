@@ -212,7 +212,10 @@ export const mainWrapper = (
   }
 
   process.on("beforeExit", () => {
-    mainProv.finalProv.runFinally();
+    //fx console.log in finally functions will 'reset beforeExit', so we need to protect against being called multiple times.
+    if (mainProv.finalProv.isActive()) {
+      mainProv.finalProv.runFinally();
+    }
   });
 
   if (registerOnShutdown) {
