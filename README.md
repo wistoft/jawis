@@ -51,7 +51,7 @@ automatically start this task install the extentions: `AutoLaunch`
 
 - `yarn alpha:build`<br/> Build a version, that can run locally without
   publishing to npm.
-- `yarn pub:build`<br/> Build a version, that is ready for publishing to npm.
+- `yarn build`<br/> Build a version, that is ready for publishing to npm.
 
 ### Publish to npm
 
@@ -62,7 +62,7 @@ automatically start this task install the extentions: `AutoLaunch`
   - Review, because there's a bug, that removes comments after imports
 - `yarn pretty:fix`
 - Bump version number in `gulpfile.js`
-- `yarn pub:build`
+- `yarn build`
 - `lerna publish from-package`
 
 ## Known issues

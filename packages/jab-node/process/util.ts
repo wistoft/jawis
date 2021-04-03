@@ -66,7 +66,7 @@ export const makeRequireSender = (
 
     parentSend({ type: "require", file: filename, source: parent?.filename });
 
-    const res = this._originalLoad(request, parent, isMain);
+    const res = (this as any)._originalLoad(request, parent, isMain);
 
     return res;
   };

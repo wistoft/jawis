@@ -21,6 +21,7 @@
     { "path": "../jatev" },
     { "path": "../javi" },
     { "path": "../jawis-mess" },
+    { "path": "../jawis-util" },
     { "path": "../tests" }
   ]
 }

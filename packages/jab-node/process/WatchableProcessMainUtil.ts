@@ -1,4 +1,4 @@
-import { plugIntoModuleLoad } from "..";
+import { plugIntoModuleLoadOld } from "..";
 import { makeRequireSender, makeSend } from ".";
 
 import { ppMain } from "./ProcessPreloaderMainUtil";
@@ -10,5 +10,5 @@ export const wppMain = () => {
 
   //register require last, to avoid noise
 
-  plugIntoModuleLoad(makeRequireSender(makeSend()));
+  plugIntoModuleLoadOld(makeRequireSender(makeSend()));
 };

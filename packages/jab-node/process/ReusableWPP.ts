@@ -10,7 +10,7 @@ type States = "ready" | "using" | "stopping" | "done";
 /**
  * Reusable, watchable process proloader
  *
- * - Doesn't preload at 'load', has to use one time, before preloading starts.
+ * - Doesn't preload at 'load. Has to use one time, before preloading starts.
  * - It's reusable serially, only.
  * - Shutdown can't be performed in `using` state.
  * - Kill can be performed in any state. Also in `using` state.
@@ -35,13 +35,6 @@ export class ReusableWPP<MR extends Serializable, MS extends Serializable> {
       stoppingState: "stopping",
       endState: "done",
     });
-
-    // try {
-    //   this.wpp = new WatchableProcessPreloader(deps);
-    // } catch (e) {
-    //   this.waiter.set("done");
-    //   throw e;
-    // }
   }
 
   /**
@@ -73,6 +66,8 @@ export class ReusableWPP<MR extends Serializable, MS extends Serializable> {
    *
    *
    */
+  public cancel = (msg?: string) => def(this.wpp).cancel(msg);
+
   public shutdown = () => {
     if (this.waiter.is("using")) {
       return Promise.reject(
@@ -82,8 +77,6 @@ export class ReusableWPP<MR extends Serializable, MS extends Serializable> {
 
     return this.waiter.shutdown(() => this.wpp?.shutdown(), true);
   };
-
-  public cancel = (msg?: string) => def(this.wpp).cancel(msg);
 
   public kill = () => this.waiter.kill(() => this.wpp?.kill(), true);
 

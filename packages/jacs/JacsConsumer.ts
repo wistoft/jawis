@@ -1,6 +1,6 @@
 import { parentPort } from "worker_threads";
 
-import { registerPrecompiler } from "^jab-node";
+import { registerPrecompilers } from "^jab-node";
 import { Waiter } from "^jab";
 
 import { requestProducerSync, WaitFunc } from "./protocol";
@@ -42,7 +42,7 @@ export class JacsConsumer {
       throw new Error("Already registered.");
     }
 
-    registerPrecompiler([".ts", ".tsx"], this.compile);
+    registerPrecompilers([".ts", ".tsx"], this.compile);
 
     this.registered = true;
   };

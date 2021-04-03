@@ -5,14 +5,16 @@ import {
   LocationProvider,
 } from "@reach/router";
 
-import { DevComponentPanel, DevComponentPanelProps } from "^jawis-mess/web";
 import {
+  InnerPanel,
+  InnerProps as DevComponentPanelProps,
   parseErrorData,
   ViewException,
   ViewExceptionCallStack,
   ViewExceptionCallStackProps,
   ViewExceptionProps,
 } from "^jawis-util/web";
+
 import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 
 import { errorData0 } from ".";
@@ -25,7 +27,7 @@ export const getDevComponentPanel = (
   location = "/"
 ) => (
   <LocationProvider history={createHistory(createMemorySource(location))}>
-    <DevComponentPanel folders={[]} {...props} />
+    <InnerPanel folders={[]} {...props} />
   </LocationProvider>
 );
 

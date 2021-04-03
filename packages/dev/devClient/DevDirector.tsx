@@ -8,8 +8,8 @@ import { ConsoleMain } from "@wistoft/jagov/console/ConsoleMain";
 import { Director } from "^default-section";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";
 import { getApiPath } from "^jawis-util";
-
-import { DevComponents } from "./DevComponents";
+import { DevComponentPanel, DevTemplate } from "^jawis-util/web";
+import { devComponents } from "./devComponents";
 
 type Props = {
   serverPort: number; //mandatory in development, because server is on a different port than client.
@@ -35,7 +35,7 @@ export const DevDirector: React.FC<Props> = ({
   const extraRoutes = [
     {
       name: "Comps",
-      elm: <DevComponents />,
+      elm: <DevComponentPanel contexts={devComponents} />,
     },
     {
       name: "Default",
@@ -52,13 +52,17 @@ export const DevDirector: React.FC<Props> = ({
   );
 
   return (
-    <JaviDirector
-      {...extra}
-      serverPort={serverPort}
+    <DevTemplate
+      mainPanel={
+        <JaviDirector
+          {...extra}
+          serverPort={serverPort}
+          postNav={postNav}
+          routes={extraRoutes}
+          showDtpLink={true}
+        />
+      }
       consolePanel={consolePanel}
-      postNav={postNav}
-      routes={extraRoutes}
-      showDtpLink={true}
     />
   );
 };

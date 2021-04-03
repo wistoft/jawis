@@ -29,7 +29,7 @@ type Events = never;
 export class JarunProcessController implements TestRunner {
   private waiter: Waiter<States, Events>;
 
-  private jpr: ProcessRestarter<
+  private pr: ProcessRestarter<
     JarunProcessMessage,
     JarunProcessControllerMessage
   >;
@@ -54,7 +54,7 @@ export class JarunProcessController implements TestRunner {
 
     this.inner = new JarunProcessControllerInner({
       ...deps,
-      prSend: this.jprSend,
+      prSend: this.prSend,
     });
 
     //pr
@@ -62,7 +62,7 @@ export class JarunProcessController implements TestRunner {
     const filename =
       this.deps.customBooter || getFileToRequire(__dirname, "JarunProcessMain");
 
-    this.jpr = new ProcessRestarter<
+    this.pr = new ProcessRestarter<
       JarunProcessMessage,
       JarunProcessControllerMessage
     >({
@@ -93,21 +93,17 @@ export class JarunProcessController implements TestRunner {
   /**
    * used by the inner controller.
    */
-  public jprSend = (msg: JarunProcessControllerMessage) => this.jpr.send(msg);
+  public prSend = (msg: JarunProcessControllerMessage) => this.pr.send(msg);
 
   /**
    *
    */
-  public kill = () => this.waiter.kill(this.jpr.kill, true);
+  public kill = () => this.waiter.kill(this.pr.kill, true);
 
   /**
    *
    */
   public noisyKill = () =>
-    this.waiter.noisyKill(
-      () => this.jpr.kill(),
-      "JarunProcessController",
-      true
-    );
+    this.waiter.noisyKill(() => this.pr.kill(), "JarunProcessController", true);
 }
 //

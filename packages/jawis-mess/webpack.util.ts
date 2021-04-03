@@ -1,7 +1,5 @@
 import { err } from "^jab";
 
-import { CompDef } from ".";
-
 //quick fix
 type WebpackExternalsFunc = (
   data: { request?: string; context?: string },
@@ -49,30 +47,3 @@ export const nodeExternals: WebpackExternalsFunc = (
 
   err("unknown import", { context, request });
 };
-
-/**
- *
- */
-export const mapContext = (components: __WebpackModuleApi.RequireContext) =>
-  components.keys().map<CompDef>((compName) => {
-    const exports = components(compName);
-
-    //we have the folder, so we could build the path outselfes.
-    const maybePath = components.resolve(compName); // in production, webpack returns a number here.
-
-    const path =
-      typeof maybePath === "string"
-        ? maybePath.replace(/^\.\/packages\//, "")
-        : "unknown path";
-
-    //picks the first export.
-    for (const key in exports) {
-      return {
-        name: compName.replace(/^.*\/(.*)\.tsx?$/, "$1"),
-        path,
-        comp: exports[key] as React.ComponentType<unknown>,
-      };
-    }
-
-    throw new Error("nothing exported");
-  });

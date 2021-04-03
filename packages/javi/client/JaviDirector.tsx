@@ -7,7 +7,7 @@ import { Main as JatevMain, Props as JatevProps } from "^jatev";
 import { Main as JagovMain, Props as JagovProps } from "^jagov";
 import { getApiPath } from "^jawis-util";
 
-import { JaviTemplate, JaviDirectorProps } from ".";
+import { JaviDirectorProps } from ".";
 
 /**
  *
@@ -19,7 +19,6 @@ import { JaviTemplate, JaviDirectorProps } from ".";
  */
 export const JaviDirector: React.FC<JaviDirectorProps> = ({
   serverPort,
-  consolePanel,
   postNav,
   routes,
   ...extra
@@ -38,19 +37,14 @@ export const JaviDirector: React.FC<JaviDirectorProps> = ({
 
   return (
     <ErrorBoundary renderOnError={"Javi failed"}>
-      <JaviTemplate
-        mainPanel={
-          <ComponentMenu
-            provideFirstRouteEffect={true}
-            postNav={postNav}
-            routes={[
-              { name: "Tests", elm: <JatevMain {...jatevProps} /> },
-              { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
-              ...(routes || []),
-            ]}
-          />
-        }
-        consolePanel={consolePanel}
+      <ComponentMenu
+        provideFirstRouteEffect={true}
+        postNav={postNav}
+        routes={[
+          { name: "Tests", elm: <JatevMain {...jatevProps} /> },
+          { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
+          ...(routes || []),
+        ]}
       />
     </ErrorBoundary>
   );
