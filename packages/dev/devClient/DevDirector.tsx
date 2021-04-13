@@ -8,7 +8,7 @@ import { ConsoleMain } from "@wistoft/jagov/console/ConsoleMain";
 import { Director } from "^default-section";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";
 import { getApiPath } from "^jawis-util";
-import { DevComponentPanel, DevTemplate } from "^jawis-util/web";
+import { DevComponentPanel } from "^jawis-util/web";
 import { devComponents } from "./devComponents";
 
 type Props = {
@@ -52,17 +52,13 @@ export const DevDirector: React.FC<Props> = ({
   );
 
   return (
-    <DevTemplate
-      mainPanel={
-        <JaviDirector
-          {...extra}
-          serverPort={serverPort}
-          postNav={postNav}
-          routes={extraRoutes}
-          showDtpLink={true}
-        />
-      }
+    <JaviDirector
+      {...extra}
+      serverPort={serverPort}
+      postNav={postNav}
       consolePanel={consolePanel}
+      routes={extraRoutes}
+      showDtpLink={true}
     />
   );
 };

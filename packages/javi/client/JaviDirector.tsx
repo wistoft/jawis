@@ -8,6 +8,7 @@ import { Main as JagovMain, Props as JagovProps } from "^jagov";
 import { getApiPath } from "^jawis-util";
 
 import { JaviDirectorProps } from ".";
+import { DevTemplate } from "^jawis-util/web";
 
 /**
  *
@@ -16,9 +17,11 @@ import { JaviDirectorProps } from ".";
  *
  * note
  *  - this caters for both production javi and jadev dev sites. (to avoid code duplication.)
+ *  - only uses DevTemplate to get 'indent'.
  */
 export const JaviDirector: React.FC<JaviDirectorProps> = ({
   serverPort,
+  consolePanel,
   postNav,
   routes,
   ...extra
@@ -37,14 +40,19 @@ export const JaviDirector: React.FC<JaviDirectorProps> = ({
 
   return (
     <ErrorBoundary renderOnError={"Javi failed"}>
-      <ComponentMenu
-        provideFirstRouteEffect={true}
-        postNav={postNav}
-        routes={[
-          { name: "Tests", elm: <JatevMain {...jatevProps} /> },
-          { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
-          ...(routes || []),
-        ]}
+      <DevTemplate
+        mainPanel={
+          <ComponentMenu
+            provideFirstRouteEffect={true}
+            postNav={postNav}
+            routes={[
+              { name: "Tests", elm: <JatevMain {...jatevProps} /> },
+              { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
+              ...(routes || []),
+            ]}
+          />
+        }
+        consolePanel={consolePanel}
       />
     </ErrorBoundary>
   );

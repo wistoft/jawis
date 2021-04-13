@@ -12,6 +12,7 @@ import { Props as JatevProps } from "^jatev";
 export type JaviDirectorProps = {
   //for developement
   serverPort?: number;
+  consolePanel?: ReactNode;
   showDtpLink?: boolean;
 } & Partial<Omit<ComponentMenuProps, "provideFirstRouteEffect">> &
   JaviClientConf;

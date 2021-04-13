@@ -8,7 +8,7 @@ const merge = require("merge2");
 
 //conf
 
-const npmVersion = "0.0.20";
+const npmVersion = "0.0.21";
 
 const projectConf = require("./packages/config/project.conf");
 
