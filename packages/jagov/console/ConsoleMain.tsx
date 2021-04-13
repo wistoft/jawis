@@ -16,6 +16,7 @@ export type Props = {
   >;
 
 /**
+ * Component that show the console data from browser and/or server scripts.
  *
  */
 export const ConsoleMain: React.FC<Props> = memo(({ apiPath, ...extra }) => {

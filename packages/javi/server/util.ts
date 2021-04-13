@@ -25,12 +25,17 @@ export type Deps = {
   staticWebFolder: string;
   clientConf: JaviClientConf;
   jates: Partial<JatesDeps> & Pick<JatesDeps, "absTestFolder" | "absTestLogFolder">; // prettier-ignore
-  jago: Partial<JagosDeps> & Pick<JagosDeps, "scriptFolders" | "scripts">; // prettier-ignore
+  jagos: Partial<JagosDeps> & Pick<JagosDeps, "scriptFolders" | "scripts" | "projectRoot">; // prettier-ignore
   makeRoutes?: Route[];
 };
 
 /**
+ * - Configure routes for jates and jagos.
+ * - Add additional routes, defined in deps.
+ * - Start web server
  *
+ * note
+ *  - this caters for both production and dev sites. (to avoid code duplication.)
  */
 export const startJaviServer = (deps: Deps) => {
   const { onError, finalProv, logProv } = deps.mainProv;
@@ -69,7 +74,7 @@ export const startJaviServer = (deps: Deps) => {
         onError,
         finally: finalProv.finally,
         logProv,
-        ...deps.jago,
+        ...deps.jagos,
       }),
   };
 

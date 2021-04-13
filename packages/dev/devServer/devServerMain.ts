@@ -27,10 +27,11 @@ const main = (mainProv: MainProv) => {
       absTestLogFolder: getPackagePath("dev/devServer/testsuite/_testLogs"),
     },
 
-    jago: {
+    jagos: {
       //needed, because dev WatchProcess, Jacs, etc. is used in the subprocesses.
       // so js-scripts can't be started without typescript support.
       alwaysTypeScript: true,
+      projectRoot,
       scriptFolders: [getPackagePath("dev/devServer/scripts")],
       scripts: [
         {

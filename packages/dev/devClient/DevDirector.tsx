@@ -8,7 +8,7 @@ import { ConsoleMain } from "@wistoft/jagov/console/ConsoleMain";
 import { Director } from "^default-section";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";
 import { getApiPath } from "^jawis-util";
-import { DevComponentPanel } from "^jawis-util/web";
+import { Main as DevComponentPanel } from "^jawis-util/web/devComponentPanel";
 import { devComponents } from "./devComponents";
 
 type Props = {
@@ -35,7 +35,12 @@ export const DevDirector: React.FC<Props> = ({
   const extraRoutes = [
     {
       name: "Comps",
-      elm: <DevComponentPanel contexts={devComponents} />,
+      elm: (
+        <DevComponentPanel
+          apiPath={getApiPath(serverPort, "jago")}
+          contexts={devComponents}
+        />
+      ),
     },
     {
       name: "Default",

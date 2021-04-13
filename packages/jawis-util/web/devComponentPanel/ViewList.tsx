@@ -1,0 +1,61 @@
+import { Link } from "@reach/router";
+import React, { memo } from "react";
+
+import { JsLink } from "^jab-react";
+
+import { ComponentDef } from "./Main";
+
+import { toUrl } from "./util";
+
+export type Props = {
+  folders: { folder: string; comps: ComponentDef[] }[];
+  openComponnent: (path: string) => void;
+};
+
+/**
+ * Show a folder with components/functions.
+ */
+export const ViewListFolders: React.FC<Props> = memo(
+  ({ folders, openComponnent }) => (
+    <>
+      <nav>
+        <Link to=".">Home</Link>
+      </nav>
+      <br />
+      {folders.map((def) => (
+        <React.Fragment key={def.folder}>
+          {def.folder}
+          <ViewListComponents
+            key={def.folder}
+            comps={def.comps}
+            openComponnent={openComponnent}
+          />
+        </React.Fragment>
+      ))}
+    </>
+  )
+);
+
+/**
+ * Show individual exports components/functions
+ */
+export const ViewListComponents: React.FC<{
+  comps: ComponentDef[];
+  openComponnent: (path: string) => void;
+}> = memo(({ comps, openComponnent }) => (
+  <div style={{ margin: "10px" }}>
+    {comps.map((def) => (
+      <React.Fragment key={def.name}>
+        <JsLink
+          name={"edit"}
+          onClick={() => {
+            openComponnent(def.path);
+          }}
+        />
+        {" - "}
+        <Link to={toUrl(def.path)}>{def.name}</Link>
+        <br />
+      </React.Fragment>
+    ))}
+  </div>
+));

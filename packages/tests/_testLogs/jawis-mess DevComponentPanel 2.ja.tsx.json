@@ -1,1 +1,1 @@
-{"user":{"imp":["Array [\n  <nav>\n    <a\n      href=\"/\"\n    >\n      Home\n    </a>\n  </nav>,\n  <br />,\n  <div\n    style=\"outline:none\"\n    tabindex=\"-1\"\n  >\n    No Route for: blabla\n  </div>,\n]"]}}
+{"user":{"imp":["<div\n  style=\"outline:none\"\n  tabindex=\"-1\"\n>\n  Component not found\n</div>"]}}

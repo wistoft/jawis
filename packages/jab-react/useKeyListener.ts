@@ -1,5 +1,10 @@
 import { useEffect } from "react";
 
+export type UseKeyListener = (
+  onKeydown: (e: KeyboardEvent) => void,
+  target?: typeof document
+) => void;
+
 /**
  * Remove key listener at unmount.
  */

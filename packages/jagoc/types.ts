@@ -86,6 +86,11 @@ export type ClientMessage =
       type: "openFile";
       file: string;
       line?: number;
+    }
+  | {
+      type: "openRelFile"; //relative to projectRoot
+      file: string;
+      line?: number;
     };
 
 //

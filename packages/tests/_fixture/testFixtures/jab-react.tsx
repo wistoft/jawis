@@ -7,7 +7,10 @@ import {
 
 import {
   InnerPanel,
-  InnerProps as DevComponentPanelProps,
+  Props as DevComponentPanelProps,
+} from "^jawis-util/web/devComponentPanel/InnerPanel";
+
+import {
   parseErrorData,
   ViewException,
   ViewExceptionCallStack,
@@ -27,7 +30,12 @@ export const getDevComponentPanel = (
   location = "/"
 ) => (
   <LocationProvider history={createHistory(createMemorySource(location))}>
-    <InnerPanel folders={[]} {...props} />
+    <InnerPanel
+      folders={[]}
+      {...props}
+      openComponnent={() => {}}
+      useKeyListener={() => {}}
+    />
   </LocationProvider>
 );
 

@@ -16,7 +16,7 @@ import { DevTemplate } from "^jawis-util/web";
  * - mounts jate and jago view.
  *
  * note
- *  - this caters for both production javi and jadev dev sites. (to avoid code duplication.)
+ *  - this caters for both production and dev sites. (to avoid code duplication.)
  *  - only uses DevTemplate to get 'indent'.
  */
 export const JaviDirector: React.FC<JaviDirectorProps> = ({

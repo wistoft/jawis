@@ -8,7 +8,7 @@ import { ScriptPoolProv } from "./ScriptPoolController";
 import { handleOpenFileInVsCode } from "^jawis-util/node";
 import { WsMessageListener } from "^jab-express";
 
-export type Deps = ScriptPoolProv & BehaviorProv;
+export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };
 
 /**
  *
@@ -39,6 +39,10 @@ export const makeOnClientMesssage = (
 
     case "openFile":
       handleOpenFileInVsCode(msg);
+      break;
+
+    case "openRelFile":
+      handleOpenFileInVsCode(msg, deps.projectRoot);
       break;
 
     default:

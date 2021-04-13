@@ -28,10 +28,10 @@ module.exports = {
       version: "detect",
     },
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"]
-      }
-    }
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    },
   },
 
   ignorePatterns: [".vscode/tasks.json"],
@@ -53,7 +53,8 @@ module.exports = {
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/no-var-requires": "off",
     "react/prop-types": "off",
-    "import/no-extraneous-dependencies":["error"],
-    "import/no-duplicates":["error"]
+    "react/display-name": "off",
+    "import/no-extraneous-dependencies": ["error"],
+    "import/no-duplicates": ["error"],
   },
 };

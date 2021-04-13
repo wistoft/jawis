@@ -60,6 +60,8 @@ export const makeUpgradeHandler = <
 
 /**
  * hacky
+ *  - when and where to call end()
+ *  - can't send error object in end() in node 14.
  */
 export const expressErrorsThrow = (
   err: any,
@@ -71,8 +73,6 @@ export const expressErrorsThrow = (
   setTimeout(() => {
     throw err;
   }, 0);
-
-  console.log("expressErrorsThrow called");
 
   //message to developer via GUI
 

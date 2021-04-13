@@ -29,7 +29,8 @@ const main = (mainProv: MainProv) => {
       absTestLogFolder: conf.absTestLogFolder,
     },
 
-    jago: {
+    jagos: {
+      projectRoot: conf.projectRoot,
       scriptFolders: conf.scriptFolders,
       scripts: conf.scripts,
     },

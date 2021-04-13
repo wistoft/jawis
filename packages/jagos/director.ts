@@ -10,6 +10,7 @@ import { loadScripts, ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
 
 export type Deps = Readonly<{
+  projectRoot: string;
   scriptFolders?: string[];
   scripts?: ScriptDefinition[];
   alwaysTypeScript?: boolean; //default false.
