@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { makeUseConsoleStream } from "@wistoft/jadev-console";
+import { makeUseConsoleStream } from "@jawis/console";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ConsoleMain } from "@wistoft/jagov/console/ConsoleMain";
+import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
 
 import { Director } from "^dev-appv";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";

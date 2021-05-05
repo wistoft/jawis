@@ -37,7 +37,7 @@ module.exports = {
   mode: "development",
 
   entry: {
-    consoleCaptureMain: "@wistoft/jadev-console/consoleCaptureMain.js",
+    consoleCaptureMain: "@jawis/console/consoleCaptureMain.js",
     app: path.join(__dirname, "./clientEntry.tsx"),
   },
 

@@ -1,7 +1,6 @@
 import ErrorStackParser from "error-stack-parser";
 import StackTrace from "stacktrace-js";
 import { JabError } from "^jab";
-import { assert } from "@wistoft/jab";
 
 type fido = 1;
 type fido2 = 1;

@@ -28,6 +28,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@jawis/javi": "0.0.23",
     "@octokit/core": "^3.2.5",
     "@types/gulp": "^4.0.8",
     "@types/gulp-bump": "^2.8.1",
@@ -39,7 +40,6 @@
     "@types/stack-trace": "^0.0.29",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
-    "@wistoft/javi": "^0.0.22",
     "concurrently": "^6.0.0",
     "del": "^6.0.0",
     "eslint": "^7.21.0",

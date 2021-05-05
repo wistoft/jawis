@@ -3,7 +3,7 @@
 // import released versions for `devServerMain.ts`
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { makeMakeJacsWorkerBee } from "@wistoft/jacs";
+import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 //import development versions for `devServerMain.ts`
 
