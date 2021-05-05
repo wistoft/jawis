@@ -1,1 +1,1 @@
-{"user":{"TestFramework":["onTestRunnerStarts.","onTestStarts: first.test","onTestDone: first.test",{"cur":{"user":{"return":"first result"}}},"onTestStarts: second.test","onTestDone: second.test",{"cur":{"user":{"return":"second result"}}},"onTestRunnerStops."]}}
+{"user":{"TestFramework":["onTestRunnerStarts.","onTestStarts: first.test","onTestDone: first.test",{"cur":{"user":{"return":"first result"}}},"onTestRunnerStops.","onTestRunnerStarts.","onTestStarts: second.test","onTestDone: second.test",{"cur":{"user":{"return":"second result"}}},"onTestRunnerStops."]}}

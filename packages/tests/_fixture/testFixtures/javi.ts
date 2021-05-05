@@ -1,8 +1,9 @@
 import path from "path";
-
-import projectConf from "^config/project.conf";
+import { nodeRequire } from "^jab-node";
 
 import { FullJaviConf } from "^javi/server/getConf";
+
+const projectConf = require("../../../../project.conf");
 
 /**
  *

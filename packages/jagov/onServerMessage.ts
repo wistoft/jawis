@@ -1,5 +1,5 @@
 import { assertNever, tos, tryPropString } from "^jab";
-import { ConsoleEntry } from "^jadev-console";
+import { ConsoleEntry } from "^console";
 import { JagoLogEntry, ServerMessage } from "^jagoc";
 import { StateCallbacks } from ".";
 

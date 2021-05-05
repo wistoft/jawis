@@ -37,7 +37,7 @@ export const ViewException: React.FC<ViewExceptionProps> = memo(
       style={{
         ...wrapperStyle,
         marginBottom: "10px",
-        color: "var(--jadev-console-text-color)",
+        color: "var(--jawis-console-text-color)",
       }}
       className={"divPre scrollbox"}
     >

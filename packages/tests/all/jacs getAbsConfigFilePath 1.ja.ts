@@ -1,7 +1,10 @@
 import path from "path";
-import projectConf from "^config/project.conf";
+import { nodeRequire } from "^jab-node";
+
 import { getAbsConfigFilePath } from "^jacs";
 import { TestProvision } from "^jarun";
+
+const projectConf = eval("require")("../../../project.conf");
 
 export default (prov: TestProvision) => {
   prov.imp(

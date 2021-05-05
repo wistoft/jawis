@@ -19,7 +19,7 @@ export type Props = {
   testLog: ZippedTestLog;
   rogue: boolean;
   apiSend: ClientApiSendProv["apiSend"];
-} & Omit<ViewTestLogContentProps, "showTestLogType">;
+} & Omit<ViewTestLogContentProps, "showTestLogType" | "testLog">;
 
 /**
  *

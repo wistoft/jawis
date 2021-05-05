@@ -2,7 +2,7 @@ import { TestProvision } from "^jarun";
 
 import { getHtmlRTR } from "^jawis-mess/node";
 import { getViewEntry } from "../_fixture";
-import { UiEntry } from "^jadev-console";
+import { UiEntry } from "^console";
 
 export default ({ log }: TestProvision) => {
   const a: UiEntry = {

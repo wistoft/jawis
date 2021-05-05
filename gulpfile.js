@@ -8,21 +8,21 @@ const merge = require("merge2");
 
 //conf
 
-const npmVersion = "0.0.22";
+const npmVersion = "0.0.23";
 
-const projectConf = require("./packages/config/project.conf");
+const projectConf = require("./project.conf");
 
-const npmScope = "@wistoft";
+const npmScope = "@jawis";
 
 const files = "{README.md,}";
 
 const packages = [
+  "console",
   "jab",
   "jab-express",
   "jab-node",
   "jab-react",
   "jacs",
-  "jadev-console",
   "jagoc",
   "jagos",
   "jagov",
@@ -62,7 +62,7 @@ const makeClean = (outDir) => {
 const makeBuildTs = (outDir, npmPaths) => {
   const buildTs = () => {
     const tsResult = src([
-      "packages/" + packagesPattern + "/**/*.{ts,tsx}",
+      "packages/" + packagesPattern + "/**/*.{js,ts,tsx}",
       "!**/_dev/**",
       "!**/node_modules/**",
     ]).pipe(tsProject());
@@ -124,7 +124,7 @@ const makeBuildPackageJson = (outDir) => {
 
           json.repository = {
             type: "git",
-            url: "https://github.com/wistoft/jadev.git",
+            url: "https://github.com/wistoft/jawis.git",
             directory: "packages/" + packageName,
           };
 
@@ -182,11 +182,6 @@ const getSiblingDeps = (packageName) => {
   if (conf.references) {
     conf.references.forEach((def) => {
       const required = def.path.replace(/^\.\./, npmScope);
-
-      if (required === "@wistoft/config") {
-        //this should not be published
-        return;
-      }
 
       extra[required] = npmVersion;
     });

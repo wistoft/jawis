@@ -1,7 +1,8 @@
 const path = require("path");
 
-const { getPackagePath } = require("../../config/project.conf");
-const { createWebpackBaseConf } = require("../../config/createWebpackBaseConf");
+const { createWebpackBaseConf,} = require("../../jawis-util/node/createWebpackBaseConf"); // prettier-ignore
+
+const { getPackagePath } = eval("require")("../../../project.conf");
 
 //
 // base conf

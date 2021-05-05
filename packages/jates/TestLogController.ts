@@ -48,7 +48,7 @@ export type Deps = {
  * - Perform compatibility mapping of old test log formats, when reading from disk.
  *
  * note
- *  - Assumes test logs are clone for JSON 'safety' by the test framework.
+ *  - Assumes test logs are cloned for JSON 'safety' by the test framework.
  */
 export class TestLogController implements TestLogsProv {
   private curTestLogs: { [_: string]: TestCurLogs | undefined };
@@ -95,12 +95,6 @@ export class TestLogController implements TestLogsProv {
           return flatToTestExpLogs_compat(logs);
         }
       });
-
-  /**
-   *
-   */
-  public tryGetCurLogs = (testId: string): TestCurLogs | undefined =>
-    this.curTestLogs[testId];
 
   /**
    *

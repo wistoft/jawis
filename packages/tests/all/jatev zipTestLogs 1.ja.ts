@@ -50,7 +50,7 @@ export default ({ imp }: TestProvision) => {
         chk: {
           exp: 1,
           cur: 2,
-          stack: "some stack",
+          stack: { type: "node", stack: "some stack" },
         },
         user: {},
       }

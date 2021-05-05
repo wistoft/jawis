@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { getHtmlEnzyme } from "^jawis-mess/node";
-import { parseBacktrace } from "^jawis-util/web";
+import { parseTrace } from "^jawis-util/web";
 
 import { getViewExceptionCallStack } from "../_fixture";
 
@@ -11,8 +11,11 @@ export default ({ imp }: TestProvision) => {
     getHtmlEnzyme(
       getViewExceptionCallStack({
         projectRoot: "C:\\",
-        stack: parseBacktrace(`error message
-        at Object.exports.err (C:\\devSite\\src\\jab\\error.ts:29:9)`),
+        stack: parseTrace({
+          type: "node",
+          stack: `error message
+        at Object.exports.err (C:\\devSite\\src\\jab\\error.ts:29:9)`,
+        }),
       })
     )
   );

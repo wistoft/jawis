@@ -8,7 +8,7 @@
     { "path": "../jagoc" },
     { "path": "../jab" },
     { "path": "../jab-react" },
-    { "path": "../jadev-console" },
+    { "path": "../console" },
     { "path": "../jawis-util" }
   ]
 }

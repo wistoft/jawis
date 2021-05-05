@@ -1,9 +1,8 @@
-# Jadev
+# Jawis
 
-JavaScript development tools is a multirepo for several npm packages, for
-instance:
+Jawis is a multirepo for several npm packages, for instance:
 
-- [Javi](https://github.com/wistoft/jadev/tree/master/packages/javi#readme). A
+- [Javi](https://github.com/wistoft/jawis/tree/master/packages/javi#readme). A
   GUI for running tests and scripts, with out of the box support for TypeScript.
 
 ## Development
@@ -11,9 +10,9 @@ instance:
 ### Clone
 
 ```
-git clone https://github.com/wistoft/jadev.git
+git clone https://github.com/wistoft/jawis.git
 
-cd jadev
+cd jawis
 
 yarn
 ```
@@ -36,7 +35,7 @@ localhost:3003/all
 
 ### Serve dev site
 
-Jadev repo is setup to use javi to run tests and the dev server. Webpack will
+Jawis repo is setup to use javi to run tests and the dev server. Webpack will
 serve the dev client.
 
 - `yarn start`<br/> Serve using published version of javi.
@@ -44,7 +43,7 @@ serve the dev client.
 
 ### Type error
 
-To get type errors during development run the vscode task: `watch - jadev`. To
+To get type errors during development run the vscode task: `watch`. To
 automatically start this task install the extentions: `AutoLaunch`
 
 ### Build

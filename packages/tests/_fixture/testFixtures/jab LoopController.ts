@@ -11,10 +11,12 @@ export const getLoopController = (
   autoStart?: boolean
 ) =>
   new LoopController({
-    arr,
+    initialArray: arr,
     makePromise,
     onError: prov.onError,
     autoStart,
+    onStart: () => prov.imp("onStart"),
+    onStop: () => prov.imp("onStop"),
   });
 
 /**
@@ -45,8 +47,13 @@ export const infiniteLoop = (prov: TestProvision, autoStart?: boolean) =>
 /**
  *
  */
-export const emptyLoop = (prov: TestProvision) =>
-  getLoopController(prov, [], () => {
-    prov.imp("unreach");
-    return Promise.resolve();
-  });
+export const emptyLoop = (prov: TestProvision, autoStart?: boolean) =>
+  getLoopController(
+    prov,
+    [],
+    () => {
+      prov.imp("unreach");
+      return Promise.resolve();
+    },
+    autoStart
+  );

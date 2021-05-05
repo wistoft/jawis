@@ -1,8 +1,7 @@
 import { ClonedValue } from ".";
 
-export type ErrorData = {
-  msg: string;
-  info: Array<ClonedValue>;
+export type UnparsedStack = {
+  type: "node" | "other";
   stack?: string;
 };
 
@@ -11,6 +10,12 @@ export type ParsedStack = {
   file?: string;
   func?: string;
 }[];
+
+export type ErrorData = {
+  msg: string;
+  info: Array<ClonedValue>;
+  stack: UnparsedStack;
+};
 
 export type ParsedErrorData = {
   msg: string;

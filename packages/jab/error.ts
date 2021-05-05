@@ -1,4 +1,6 @@
 import { cloneArrayEntries, ErrorData, JabError } from ".";
+import { UnparsedStack } from "./types";
+import { isNode } from "./util";
 
 /**
  *
@@ -29,6 +31,23 @@ export const assert = (
 };
 
 /**
+ *
+ */
+export const captureStack = (error: { stack?: string }): UnparsedStack => {
+  if (error.stack === undefined) {
+    return {
+      type: "other",
+      stack: "",
+    };
+  } else {
+    return {
+      type: isNode() ? "node" : "other",
+      stack: error.stack,
+    };
+  }
+};
+
+/**
  * Consistent way to convert an error object til structured data.
  *
  * todo
@@ -54,7 +73,7 @@ export const unknownToErrorData = (
     return {
       msg: error.toString(),
       info: cloneArrayEntries(extraInfo),
-      stack: error.stack,
+      stack: captureStack(error),
     };
   } else {
     const wrapper = new JabError("Unknown Error object: ", error);

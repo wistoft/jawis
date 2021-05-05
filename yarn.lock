@@ -1646,6 +1646,11 @@
   dependencies:
     source-map "^0.6.0"
 
+"@types/stack-trace@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/stack-trace/-/stack-trace-0.0.29.tgz#eb7a7c60098edb35630ed900742a5ecb20cfcb4d"
+  integrity sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==
+
 "@types/terser-webpack-plugin@^5.0.1":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@types/terser-webpack-plugin/-/terser-webpack-plugin-5.0.2.tgz#ebc935cfb9a0cc5ef33934ab63202e16cdf6a961"
@@ -1917,159 +1922,159 @@
   resolved "https://registry.yarnpkg.com/@webpack-cli/serve/-/serve-1.3.0.tgz#2730c770f5f1f132767c63dcaaa4ec28f8c56a6c"
   integrity sha512-k2p2VrONcYVX1wRRrf0f3X2VGltLWcv+JzXRBDmvCxGlCeESx4OXw91TsWeKOkp784uNoVQo313vxJFHXPPwfw==
 
-"@wistoft/jab-express@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jab-express/-/jab-express-0.0.21.tgz#07d94be96f45fc821b16cf3f713c47bb07ee5743"
-  integrity sha512-wWdyNC118+BUtzP5cbyNR2bNWoHkOZzIJUKLY7zifh9Ds7+1yfygpmBWLvvtrvGDgWJlgu3nhXytcQ6yl8tKIg==
+"@wistoft/jab-express@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jab-express/-/jab-express-0.0.22.tgz#8515c1ce50d4832235f3cfd5c188b330c82dc5ff"
+  integrity sha512-saEgZuMHwQ1UorCIugqqKMh/hSsuxiLhZ+tbF6mXONWUB4OdgRlItqnxTohJ69+fkIjTDobztBRidIHRBBQFpA==
   dependencies:
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
     "@types/ws" "^7.2.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
     express "^4.17.1"
     express-ws "^4.0.0"
     ws "^7.3.0"
 
-"@wistoft/jab-node@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jab-node/-/jab-node-0.0.21.tgz#5f48b573a98a797ed29f39f79c5dda35b2a6e9a5"
-  integrity sha512-t9VN3Qt1vzfR5DAY4ehpwKg0eXwj+FDcC5oyS0eP/B9VvpRIje7rdJzMWU0p04ol9EAx0Jo1Cd0ckdLoec6eVQ==
+"@wistoft/jab-node@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jab-node/-/jab-node-0.0.22.tgz#ce45216cf35d88dd7b55eac94df76264cfa86eda"
+  integrity sha512-03hLLBGGYRa6WrCwU5Pvh/uXSwXpMxQDurWTek7M22mx+hmpdnNm4brxxSNXsATCJ3FY0tyshmtD+Nly1KhoSA==
   dependencies:
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
     "@types/ws" "^7.2.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jagoc" "0.0.21"
-    "@wistoft/jatec" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jagoc" "0.0.22"
+    "@wistoft/jatec" "0.0.22"
     dateformat "^4.5.1"
     express "^4.17.1"
     express-ws "^4.0.0"
     filewatcher "^3.0.1"
     ws "^7.3.0"
 
-"@wistoft/jab-react@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jab-react/-/jab-react-0.0.21.tgz#cf5f4ede1eba1191883ca095c86e15a5e31bc32a"
-  integrity sha512-nyT3rOY76D/36k9tKXG32hXHZ9jykQUHnqpKXt4UKVXUKL13XpAFpzHsGhReRNTzfrg04EyfwegdtUx6bpHIRA==
+"@wistoft/jab-react@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jab-react/-/jab-react-0.0.22.tgz#93c73a28808964f39ccbcade2b5b1467e96ff1ac"
+  integrity sha512-Fxla+So86nKZJcnshzAH3zG0TUcjiM8n0np6lIrqS5ZQy7DOV0vaouiZhSPf/S0GMoANwJIub81GjQLY0EvZig==
   dependencies:
     "@reach/router" "^1.3.4"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
-    "@wistoft/jab" "0.0.21"
+    "@wistoft/jab" "0.0.22"
     react "^16.14.0"
     shallow-equal "^1.2.1"
 
-"@wistoft/jab@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jab/-/jab-0.0.21.tgz#574e28a26e02fe29ca06a8c6d213effa289096b6"
-  integrity sha512-L+Fy5CqTTY3vxlihdTlQjWj/2bAVyl6pGjDr9ND0Hm0pINObiDqXaxH29i9u2kHADfUjkI4KQiSjG3szdmI/8Q==
+"@wistoft/jab@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jab/-/jab-0.0.22.tgz#5e258f7c5d9035ca16795f9cd4fa1df11619cf7d"
+  integrity sha512-CgPwTvILEtL4/sx0PFjOZd3W6P2H3HhlzQxm1qTCsE/vwyRJ9PChxIU/U24vL29icBXjyIa8d2hA0/PfdAfE0g==
 
-"@wistoft/jacs@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jacs/-/jacs-0.0.21.tgz#a088457f1930381d17881055b60add5e3fdcf3c3"
-  integrity sha512-vv8MLO/8A1HqxLsICWdQYRqH4NxkROgM0h3halS+CNU65gSDv0AXFcK67vH4bi6gbM3BPJfjvOhl8kILFhAEgg==
+"@wistoft/jacs@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jacs/-/jacs-0.0.22.tgz#4075dea2e6d95bf85e05090dcd5bd3156aeee960"
+  integrity sha512-LjmvJMxi4s8Cw2R5J+4L6jeAxMV9wml8OGVWPVG85X/kffPHwWSnf9G6h/lwAZe47wZ48ntwGoqPAdNan7loNA==
   dependencies:
     "@types/source-map-support" "^0.5.3"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
     filewatcher "^3.0.1"
     source-map-support "^0.5.19"
     tsconfig-paths "^3.9.0"
     typescript "^4.2.3"
 
-"@wistoft/jadev-console@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jadev-console/-/jadev-console-0.0.21.tgz#6934a42ace7f0432e3fb250a51b44b89dd1e6710"
-  integrity sha512-uBo6LG3PAYbtfdQ0gA18nn0lT3pRWjJYDHuwpYmuk+G5iEF9eIG01Z2VlqmOEEA32iGKZKSMh8mwlR6iKwWfpw==
+"@wistoft/jadev-console@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jadev-console/-/jadev-console-0.0.22.tgz#0e775bb1434191f4fcf67e839a7a77f4c8a59a4c"
+  integrity sha512-6f0NBnP35vA6pkzUfCOjYvioQMWUzvr/XcMyfD4jqexWhcX3hXLDpAj/dwf37Q/yezd6tuxeyhslWt0h/U+FAw==
   dependencies:
     "@reach/router" "^1.3.4"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-react" "0.0.21"
-    "@wistoft/jagoc" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-react" "0.0.22"
+    "@wistoft/jagoc" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     react "^16.14.0"
 
-"@wistoft/jagoc@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jagoc/-/jagoc-0.0.21.tgz#d36c9435f4ba50413be5bf408238724a87f6647c"
-  integrity sha512-FYgG+q3yft7lvF+RqDfD4e+O+TGE3DJ4g61OI88BRbSlRpHH6fOzflkMFESakAt6UCV0D6Sf0dPoAc/AK/Bbwg==
+"@wistoft/jagoc@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jagoc/-/jagoc-0.0.22.tgz#401905bd3961d1ec1ef4334d86d41e9de8c90d81"
+  integrity sha512-GNcMf7efU7CEvhk1tsv9j2dLLutwYJngfdonRQhgfosfZogguqH5Npq6MRUGDn+Lox6jFfmbOaiZU49k8Lf81w==
   dependencies:
-    "@wistoft/jab" "0.0.21"
+    "@wistoft/jab" "0.0.22"
 
-"@wistoft/jagos@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jagos/-/jagos-0.0.21.tgz#e9b90a3c29271b4d6904c5a0a7a0d58377d775c3"
-  integrity sha512-w6mStqjrQRNDosbIN/IAiEKpgCLTwCH5S1Z7HB91+MJQvcRQuntK6HnjSStrOkhoYucsW091Vy7jordIdhx8fg==
+"@wistoft/jagos@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jagos/-/jagos-0.0.22.tgz#61e155b28aae116bb360c171f7c65f571bb15a5d"
+  integrity sha512-2wk7GXn1/Iij1nhqlSYGh1Ez88mulhvq9NGbgHp+GJxC/MKP8TYHBNSLN1+b/zqg3r1JIUTKdWmf90hr0S7KaQ==
   dependencies:
     "@types/cors" "^2.8.6"
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
     "@types/ws" "^7.2.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-express" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
-    "@wistoft/jagoc" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-express" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
+    "@wistoft/jagoc" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     cors "^2.8.5"
     express "^4.17.1"
     express-ws "^4.0.0"
     ws "^7.3.0"
 
-"@wistoft/jagov@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jagov/-/jagov-0.0.21.tgz#4bbd8739a134278f97ce9d4a0f11c362a75fd019"
-  integrity sha512-jNe3FCwplOqVbsz26hawlk9ViUvetl0tpqCPweOI8xLS5A+4fCUTeSKPtoMYh29h3aWr+x2k9znL1eRZqLmRmQ==
+"@wistoft/jagov@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jagov/-/jagov-0.0.22.tgz#47b62260ca3292516f60dff6c14b0061eaae5ba6"
+  integrity sha512-iUQdzDgXeweIILfm1Ad6IfRCoCpqILJh8jp77YuSdvYaTBL7v/Jqf1MpYNZXa+SO7A3hMqzD0n/7QlvYd/IYSQ==
   dependencies:
     "@reach/router" "^1.3.4"
     "@types/md5" "^2.2.0"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-react" "0.0.21"
-    "@wistoft/jadev-console" "0.0.21"
-    "@wistoft/jagoc" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-react" "0.0.22"
+    "@wistoft/jadev-console" "0.0.22"
+    "@wistoft/jagoc" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     md5 "^2.2.1"
     react "^16.14.0"
 
-"@wistoft/jarun@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jarun/-/jarun-0.0.21.tgz#acf3e33dd41c405336162ff59893ea4a00fadf18"
-  integrity sha512-sX3hSLH1DG8ohikfRNJCCYvRf2v/FMJdWB6zf1PxQZ46aKzsTnWLlQPkT3G5dcOuE21hetoSFGY4aMS8YNOxXw==
+"@wistoft/jarun@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jarun/-/jarun-0.0.22.tgz#0858f80b7b124e38869ca8f8054b97cec62af93f"
+  integrity sha512-D/1+s+xS2KGmYXFOfTWBLO+7DOoLJRXXEmXm4ZYmeWzY4UDaNcZDADo7vMiSYM0OykHuyesNava02A/wH1D0Uw==
   dependencies:
     "@types/deep-equal" "^1.0.1"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
-    "@wistoft/jates" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
+    "@wistoft/jates" "0.0.22"
     deep-equal "^2.0.5"
 
-"@wistoft/jatec@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jatec/-/jatec-0.0.21.tgz#57a3428799477429df350bc96dd17a6f54ec7993"
-  integrity sha512-YeVlNf/BPbRYPNz4TwXkz12G1ebiiaOI/W1EyuAFNgLyNpyiKFyFu6SoPvCqHdnx3EvchUlvJogLsilwuamegg==
+"@wistoft/jatec@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jatec/-/jatec-0.0.22.tgz#e36d8162673b46976e8a49967921b65de2cfd671"
+  integrity sha512-eSZjIuWkdj3w1U4LTnfiKuzGApyNY2REDwV+XJ0eyHVx06VVSYeT3iH3jHLRhpbM7xtf+WTvFsbyVd5esDasZw==
   dependencies:
     "@types/deep-equal" "^1.0.1"
-    "@wistoft/jab" "0.0.21"
+    "@wistoft/jab" "0.0.22"
     deep-equal "^2.0.5"
 
-"@wistoft/jates@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jates/-/jates-0.0.21.tgz#e023497208f19c925301c5dd1e94cb11bf193460"
-  integrity sha512-qheVmMKX81725beDGEVViQxfiktiv6p5RpgCMMX4NZXSFi7jlhdTHLlv9WBzfzPoBLBNUZq5iJS6yp88CK5rEA==
+"@wistoft/jates@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jates/-/jates-0.0.22.tgz#9cf2407796639a36b40124d7281878977f8506b2"
+  integrity sha512-N8OheAkPOb1j4Heeei3LJJ5MKn0qr6ZeuOSlVfTu21oMFcTxpRASfkGw6jqqtduF0udiAPzonnz7KelKtqcWcA==
   dependencies:
     "@types/cors" "^2.8.6"
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
     "@types/fs-readdir-recursive" "^1.0.0"
     "@types/ws" "^7.2.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-express" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
-    "@wistoft/jatec" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-express" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
+    "@wistoft/jatec" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     cors "^2.8.5"
     express "^4.17.1"
     express-ws "^4.0.0"
@@ -2077,57 +2082,57 @@
     fs-readdir-recursive "^1.1.0"
     ws "^7.3.0"
 
-"@wistoft/jatev@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jatev/-/jatev-0.0.21.tgz#306f5c46305b31e75f0a651dc4a33e5bee2fcebc"
-  integrity sha512-FDNd3u39ZQtWCJ2tb/jTLtSg8RGwLccj9Sn+BHFpaSqgO905Gs7e5GDEmoyk4kRJCxLHBNeZU+T5Eq2DQrN26A==
+"@wistoft/jatev@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jatev/-/jatev-0.0.22.tgz#7003adfb60ba1852d188221040211cd1fb849069"
+  integrity sha512-cPiLmZuRxWAy3Imoz9e6VNWxp6LXSCSRIzNYyXz1irr2WZSODLrA7tm1IM2aZJfSbfbd/Q1PtG+vP0xRAftOQw==
   dependencies:
     "@reach/router" "^1.3.4"
     "@types/deep-equal" "^1.0.1"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-react" "0.0.21"
-    "@wistoft/jatec" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-react" "0.0.22"
+    "@wistoft/jatec" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     deep-equal "^2.0.5"
     react "^16.14.0"
 
-"@wistoft/javi@^0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/javi/-/javi-0.0.21.tgz#d7125d6cd92403e757b477b1aafea68693a607cb"
-  integrity sha512-RHhp7t/kMR7HcpG5S5jAECtMk0A6tPBEg2rXN6/vYN+P6xOELJf1k2MFajYUzo4mkLeJGtzOTCUh3bl/t4trBQ==
+"@wistoft/javi@^0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/javi/-/javi-0.0.22.tgz#b96230c5988c72e18948a1c01f46b9668d534b2b"
+  integrity sha512-WhXxzId2N4uT4OjWBI1hW5KC42vd2Shl5Dxpx2HO2Xzv8oEwX9kEonwDphWpYTfdqUFXfiwl5ACsl1SmdNthrQ==
   dependencies:
     "@types/react" "^16.14.4"
     "@types/react-dom" "^16.9.11"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-express" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
-    "@wistoft/jab-react" "0.0.21"
-    "@wistoft/jacs" "0.0.21"
-    "@wistoft/jadev-console" "0.0.21"
-    "@wistoft/jagos" "0.0.21"
-    "@wistoft/jagov" "0.0.21"
-    "@wistoft/jarun" "0.0.21"
-    "@wistoft/jatec" "0.0.21"
-    "@wistoft/jates" "0.0.21"
-    "@wistoft/jatev" "0.0.21"
-    "@wistoft/jawis-util" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-express" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
+    "@wistoft/jab-react" "0.0.22"
+    "@wistoft/jacs" "0.0.22"
+    "@wistoft/jadev-console" "0.0.22"
+    "@wistoft/jagos" "0.0.22"
+    "@wistoft/jagov" "0.0.22"
+    "@wistoft/jarun" "0.0.22"
+    "@wistoft/jatec" "0.0.22"
+    "@wistoft/jates" "0.0.22"
+    "@wistoft/jatev" "0.0.22"
+    "@wistoft/jawis-util" "0.0.22"
     react "^16.14.0"
     react-dom "^16.14.0"
 
-"@wistoft/jawis-util@0.0.21":
-  version "0.0.21"
-  resolved "https://registry.yarnpkg.com/@wistoft/jawis-util/-/jawis-util-0.0.21.tgz#92b1436cc31dce664907490010bffc7aad364f49"
-  integrity sha512-gFmd6Oq8qLOeB3knqIqPi96uBjrCfwFu4Zy4Q4MvRg3P331oNkqloGzwNPKwK9TahdvpumT4QDGVyEAz5lW09Q==
+"@wistoft/jawis-util@0.0.22":
+  version "0.0.22"
+  resolved "https://registry.yarnpkg.com/@wistoft/jawis-util/-/jawis-util-0.0.22.tgz#1103b601e53b359ee2ef198157188e7e2286e980"
+  integrity sha512-de6Z6QTSI9q8XturphKA4rLpiVWxiUviunrZBPyNuW5nkKL6eu1HXCqv0Puh01+xktbPRak3NwSvVRHR/drFGw==
   dependencies:
     "@reach/router" "^1.3.4"
     "@types/node" "^14.14.32"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
-    "@wistoft/jab" "0.0.21"
-    "@wistoft/jab-node" "0.0.21"
-    "@wistoft/jab-react" "0.0.21"
+    "@wistoft/jab" "0.0.22"
+    "@wistoft/jab-node" "0.0.22"
+    "@wistoft/jab-react" "0.0.22"
     css-loader "^5.1.1"
     error-stack-parser "^2.0.6"
     file-loader "^6.0.0"
@@ -10505,7 +10510,7 @@ stack-generator@^2.0.5:
   dependencies:
     stackframe "^1.1.1"
 
-stack-trace@0.0.10:
+stack-trace@0.0.10, stack-trace@^0.0.10:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/stack-trace/-/stack-trace-0.0.10.tgz#547c70b347e8d32b4e108ea1a2a159e5fdde19c0"
   integrity sha1-VHxws0fo0ytOEI6hoqFZ5f3eGcA=

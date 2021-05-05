@@ -1,13 +1,12 @@
 import path from "path";
 
-import { getPackagePath, projectRoot } from "^config/project.conf";
 import { startJaviServer } from "^javi/server/util";
-import { makeDefaultRoute } from "^default-api";
-
-import devApp from "../helloExpress/helloExpress";
+import { makeDefaultRoute } from "^dev-apps";
+import { MainProv, mainWrapper, nodeRequire } from "^jab-node";
 
 import conf from "../dev.conf";
-import { MainProv, mainWrapper } from "^jab-node";
+
+const { getPackagePath, projectRoot } = require("../../../project.conf");
 
 const main = (mainProv: MainProv) => {
   startJaviServer({
@@ -43,11 +42,6 @@ const main = (mainProv: MainProv) => {
     },
 
     makeRoutes: [
-      {
-        type: "express",
-        path: "/helloExpress/",
-        makeHandler: () => devApp,
-      },
       {
         type: "serverApp",
         path: "/default",

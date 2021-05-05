@@ -5,7 +5,7 @@ import { makeUseConsoleStream } from "@wistoft/jadev-console";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ConsoleMain } from "@wistoft/jagov/console/ConsoleMain";
 
-import { Director } from "^default-section";
+import { Director } from "^dev-appv";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";
 import { getApiPath } from "^jawis-util";
 import { Main as DevComponentPanel } from "^jawis-util/web/devComponentPanel";
@@ -37,13 +37,13 @@ export const DevDirector: React.FC<Props> = ({
       name: "Comps",
       elm: (
         <DevComponentPanel
-          apiPath={getApiPath(serverPort, "jago")}
+          apiPath={getApiPath(jagoConsolePortForDev, "jago")}
           contexts={devComponents}
         />
       ),
     },
     {
-      name: "Default",
+      name: "App",
       elm: <Director apiPath={"localhost:" + serverPort + "/default"} />,
     },
   ];

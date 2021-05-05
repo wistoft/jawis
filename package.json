@@ -1,6 +1,6 @@
 {
   "private": true,
-  "description": "Jadev repository",
+  "description": "Jawis repository",
   "scripts": {
     "start": "concurrently --kill-others \"yarn -s javi\" \"yarn -s start:client\"",
     "start:client": "webpack serve  -c packages/dev/devClient/webpack.dev.js",
@@ -36,9 +36,10 @@
     "@types/gulp-replace": "^0.0.31",
     "@types/gulp-sourcemaps": "^0.0.34",
     "@types/merge2": "^1.3.0",
+    "@types/stack-trace": "^0.0.29",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
-    "@wistoft/javi": "^0.0.21",
+    "@wistoft/javi": "^0.0.22",
     "concurrently": "^6.0.0",
     "del": "^6.0.0",
     "eslint": "^7.21.0",
@@ -59,6 +60,7 @@
     "npm-packlist": "1.1.12",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "stack-trace": "^0.0.10",
     "tsc-alias": "^1.2.6",
     "tscpaths": "^0.0.9",
     "typescript": "^4.2.3",

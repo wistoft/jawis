@@ -19,7 +19,12 @@ export default ({ imp, log }: TestProvision) => {
   imp(
     getHtmlEnzyme(
       getViewTestLog({
-        testLog: { type: "err", name: "err", exp: ["hej"], cur: [errorData1] },
+        testLog: {
+          type: "err",
+          name: "err",
+          exp: ["hej"],
+          cur: [errorData1],
+        },
       })
     )
   );

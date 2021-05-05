@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { preserveConsoleEntry } from "^jadev-console/util";
+import { preserveConsoleEntry } from "^console/util";
 
 export default ({ chk, ...prov }: TestProvision) => {
   chk(

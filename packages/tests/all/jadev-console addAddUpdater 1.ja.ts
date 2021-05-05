@@ -1,6 +1,5 @@
 import { TestProvision } from "^jarun";
-
-import { addDataUpdate_empty } from "../_fixture";
+import { addDataUpdate_empty } from "^tests/_fixture";
 
 export default (prov: TestProvision) =>
   addDataUpdate_empty(prov, [

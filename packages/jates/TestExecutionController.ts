@@ -1,6 +1,13 @@
 import path from "path";
 
-import { assertNever, def, Waiter, LoopController, timeRace } from "^jab";
+import {
+  assertNever,
+  def,
+  Waiter,
+  LoopController,
+  timeRace,
+  assert,
+} from "^jab";
 
 import {
   OnRogue,
@@ -13,13 +20,12 @@ import {
 
 import { TestRunner } from ".";
 import { ClientComProv } from "./ClientComController";
-import { TestLogController } from "./TestLogController";
 
 // prov
 
 export type TestExecutionControllerProv = {
-  isRunning: () => void;
   onToggleRunning: () => void;
+  prependTestList: (ids: string[]) => void;
 };
 
 //deps
@@ -28,7 +34,6 @@ export type TestExecutionControllerDeps = {
   absTestFolder: string;
   timeoutms: number;
   tr: TestRunner;
-  tlc: TestLogController;
   onRogueTest: OnRogue;
   onError: (error: unknown) => void;
   onTestResult: OnTestResult;
@@ -37,19 +42,8 @@ export type TestExecutionControllerDeps = {
   "onTestStarts" | "onTestRunnerStarts" | "onTestRunnerStops"
 >;
 
-type States =
-  | "idle"
-  | "running"
-  | "pausing"
-  | "pausing-newTests"
-  | "paused"
-  | "stopping"
-  | "done";
-
-type Events = "exec-done" | "test-done";
-
 /**
- * Runs an ordered test selection.
+ * Runs an ordered list of test.
  *
  *  - Handle a new test list at any time.
  *  - Support pause and resume.
@@ -58,39 +52,29 @@ type Events = "exec-done" | "test-done";
  *  - Know nothing of the test framework practicalities, or how the test list is constructed
  *  - When new tests are set, when paused/pausing, the execution starts.
  *
- * todo
- *  - what to do about shutdown
  */
 export class TestExecutionController implements TestExecutionControllerProv {
-  public waiter: Waiter<States, Events>;
-
-  public lc?: LoopController<string>;
+  public lc: LoopController<string>;
 
   /**
    *
    */
   constructor(private deps: TestExecutionControllerDeps) {
-    this.waiter = new Waiter<States, Events>({
+    this.lc = new LoopController<string>({
+      initialArray: [],
+      makePromise: this.runNextTest,
       onError: this.deps.onError,
-      startState: "idle",
-      stoppingState: "stopping",
-      endState: "done",
+      autoStart: false,
+      onStart: () => this.deps.onTestRunnerStarts(),
+      onStop: () => this.deps.onTestRunnerStops(),
     });
   }
 
   /**
    *
    */
-  public isRunning = () =>
-    this.waiter.is("running") ||
-    this.waiter.is("pausing") ||
-    this.waiter.is("pausing-newTests");
-
-  /**
-   *
-   */
   public onToggleRunning = () => {
-    if (this.isRunning()) {
+    if (this.lc.isRunning()) {
       this.pause();
     } else {
       this.resume();
@@ -100,195 +84,27 @@ export class TestExecutionController implements TestExecutionControllerProv {
   /**
    *
    */
-  public resume = () => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "pausing":
-        def(this.lc).resume();
-        this.waiter.set("running");
-        return;
-
-      case "paused":
-        this.startRunning();
-        return;
-
-      case "idle":
-      case "running":
-      case "pausing-newTests":
-        //nothing to do
-        return;
-
-      case "stopping":
-      case "done":
-        throw new Error("Not active.");
-
-      default:
-        return assertNever(state);
-    }
-  };
+  public resume = () => this.lc.resume();
 
   /**
    *
    */
-  public pause = () => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "pausing-newTests":
-        this.waiter.set("pausing");
-        return;
-
-      case "running":
-        this.waiter.set("pausing");
-        def(this.lc).pause().then(this.onPaused).catch(this.deps.onError);
-        return;
-
-      case "idle":
-        this.waiter.set("paused");
-        return;
-
-      case "pausing":
-      case "paused":
-        //nothing to do
-        return;
-
-      case "stopping":
-      case "done":
-        throw new Error("Not active.");
-
-      default:
-        return assertNever(state);
-    }
-  };
+  public pause = () => this.lc.pause();
 
   /**
    *
    */
-  private onPaused = (lcState: "paused" | "cancelled") => {
-    if (lcState === "cancelled") {
-      return;
-    }
-
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "pausing-newTests":
-        this.startRunning();
-        return;
-
-      case "pausing":
-        this.waiter.set("paused");
-        return;
-
-      case "running":
-      case "paused":
-      case "idle":
-        throw new Error("Impossbile: " + state);
-
-      case "stopping":
-      case "done":
-        throw new Error("Not active.");
-
-      default:
-        return assertNever(state);
-    }
+  public prependTestList = (ids: string[]) => {
+    this.lc.prependArray(ids);
+    this.lc.resume();
   };
 
   /**
    *
    */
   public setTestList = (ids: string[]) => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "running":
-        //pause and fall through. Let the pause-logic startup
-        //  with the new test list, when execution has "stopped".
-        //Is this to hacky?
-        this.pause();
-
-      //fall through
-
-      case "pausing-newTests":
-      case "pausing":
-        this.prepareLc(ids);
-        this.waiter.set("pausing-newTests");
-        return;
-
-      case "paused":
-      case "idle":
-        this.startRunningHelper(ids);
-        return;
-
-      case "stopping":
-      case "done":
-        throw new Error("Not active.");
-
-      default:
-        return assertNever(state);
-    }
-  };
-
-  /**
-   *
-   */
-  private startRunningHelper = (ids: string[]) => {
-    this.deps.onTestRunnerStarts();
-    this.prepareLc(ids);
-    this.startRunning();
-  };
-
-  /**
-   * LC must be ready. But unstarted is okay.
-   */
-  private startRunning = () => {
-    this.waiter.set("running");
-
-    def(this.lc).resume(); //resume covers both start and resume. While start only is allowed for unstarted looper.
-  };
-
-  /**
-   *
-   */
-  private prepareLc = (ids: string[]) => {
-    this.lc = new LoopController<string>({
-      arr: ids,
-      makePromise: this.runNextTest,
-      onError: this.deps.onError,
-      autoStart: false,
-    });
-
-    this.lc.getPromise().then(this.onLoopDone);
-  };
-
-  /**
-   * - note: we may not always reach this, because a new test list, will leave the old unresolved.
-   */
-  private onLoopDone = () => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "running":
-        this.waiter.set("idle");
-        this.deps.onTestRunnerStops();
-        this.waiter.event("exec-done");
-        return;
-
-      case "pausing-newTests":
-      case "pausing":
-        //Impossible because LoopController only resolves the pause-promise.
-        throw new Error("Impossible: " + state);
-
-      case "paused":
-      case "idle":
-      case "stopping":
-      case "done":
-        throw new Error("Impossble: " + state);
-
-      default:
-        return assertNever(state);
-    }
+    this.lc.setArray(ids);
+    this.lc.resume();
   };
 
   /**
@@ -343,26 +159,7 @@ export class TestExecutionController implements TestExecutionControllerProv {
       .then(() => this.wrapRunTest(id))
       .catch(errorToTestResult)
       .then((result) => {
-        const state = this.waiter.getState();
-
-        switch (state) {
-          case "pausing-newTests":
-          case "pausing":
-          case "running":
-            this.deps.onTestResult(id, result);
-
-            this.waiter.event("test-done");
-            return;
-
-          case "paused":
-          case "idle":
-          case "stopping":
-          case "done":
-            throw new Error("Impossble: " + state);
-
-          default:
-            return assertNever(state);
-        }
+        this.deps.onTestResult(id, result);
       });
   };
 }

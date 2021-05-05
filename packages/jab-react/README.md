@@ -1,17 +1,17 @@
-# @wistoft/jab-react
+# @jawis/jab-react
 
 Collection of utilities for working with react.
 
 ## Installation
 
 ```
-yarn add @wistoft/jab-react
+yarn add @jawis/jab-react
 ```
 
 or
 
 ```
-npm i @wistoft/jab-react
+npm i @jawis/jab-react
 ```
 
 ## Known issues

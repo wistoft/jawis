@@ -124,7 +124,7 @@ export const getViewTestLogContent = (
 export const getViewExecutionLevel = (
   props: Partial<ViewExecutionLevelProps> &
     Pick<ViewExecutionLevelProps, "level">
-) => <ViewExecutionLevel onShowTestCase={() => {}} {...props} />;
+) => <ViewExecutionLevel showTestCase={() => {}} {...props} />;
 
 /**
  *

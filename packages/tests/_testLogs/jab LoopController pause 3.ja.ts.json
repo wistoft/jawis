@@ -1,1 +1,1 @@
-{"user":{},"return":"paused"}
+{"user":{"imp":["onStart","onStop"]},"return":"paused"}

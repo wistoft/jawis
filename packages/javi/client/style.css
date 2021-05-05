@@ -9,7 +9,7 @@
 :root {
   --green: #438a31;
   --red: #bd3535;
-  --blue: #57649e;
+  --blue: #6977b9;
   --lilla: #a253c4;
 
   --other-green: #438a31;
@@ -19,9 +19,9 @@
   --other-red: rgb(189, 88, 88);
   --color2: rgb(140, 140, 255);
 
-  --text-color: rgb(140, 140, 140);
+  --text-color: rgb(160, 160, 160);
 
-  --text-color-faded: rgb(110, 110, 110);
+  --text-color-faded: rgb(130, 130, 130);
   --link-color: var(--blue);
 
   --jatev-executing-test-color: #49bb2d;
@@ -33,7 +33,7 @@
   --jatev-test-log-match: var(--dark-blue);
   --jatev-test-log-different: var(--dark-blue);
 
-  --jadev-console-text-color: rgb(161, 144, 131);
+  --jawis-console-text-color: rgb(187, 163, 146);
 }
 
 body {

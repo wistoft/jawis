@@ -5,13 +5,12 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../config" },
-    { "path": "../default-api" },
-    { "path": "../default-section" },
+    { "path": "../dev-apps" },
+    { "path": "../dev-appv" },
     { "path": "../jab" },
     { "path": "../jab-node" },
     { "path": "../jab-react" },
-    { "path": "../jadev-console" },
+    { "path": "../console" },
     { "path": "../jacs" },
     { "path": "../jarun" },
     { "path": "../jagos" },

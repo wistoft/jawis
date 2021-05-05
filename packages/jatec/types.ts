@@ -17,8 +17,8 @@ export type ClientMessage =
       action: "stopRunning" | "runAllTests" | "runCurrentSelection" | "runDtp";
     }
   | {
-      action: "runSingleTest";
-      testId: string;
+      action: "prependTests";
+      ids: string[];
     }
   | {
       action: "acceptTestLogs";

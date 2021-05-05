@@ -2,6 +2,7 @@ import {
   cloneArrayEntries,
   clonedTos,
   ClonedValue,
+  captureStack,
   fixErrorInheritence,
 } from ".";
 
@@ -48,7 +49,7 @@ export class JabError extends Error {
     return {
       msg: this.jabMessage,
       info: [...this.clonedInfo, ...cloneArrayEntries(extraInfo)],
-      stack: this.stack,
+      stack: captureStack(this),
     };
   }
 }

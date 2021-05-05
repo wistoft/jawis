@@ -1,8 +1,10 @@
-import { getPackagePath } from "^config/project.conf";
+import { nodeRequire } from "^jab-node";
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
 
 import { getScratchPath } from "../_fixture";
+
+const { getPackagePath } = require("../../../project.conf");
 
 export default (prov: TestProvision) => {
   const { eq } = prov;

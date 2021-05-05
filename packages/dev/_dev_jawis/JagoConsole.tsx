@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import { JsLink } from "^jab-react";
-import { consoleCapture, makeUseConsoleStream } from "^jadev-console";
+import { consoleCapture, makeUseConsoleStream } from "^console";
 import { ConsoleMain } from "^jagov/console/ConsoleMain";
 
 /**
@@ -14,11 +14,12 @@ import { ConsoleMain } from "^jagov/console/ConsoleMain";
  */
 export const JagoConsole: React.FC = () => {
   const [useConsoleStream] = useState(() => {
-    //weird mount things here. But state depends on them.
+    //hacky to mount things here. But state depends on them.
 
     //use other property. To be able to have live and development capture side-by-side.
+    console.log("her");
 
-    const windowProperty = "__JadevConsoleCapture__development";
+    const windowProperty = "__JawisConsoleCapture__development";
 
     // activate the development version of capture.
 

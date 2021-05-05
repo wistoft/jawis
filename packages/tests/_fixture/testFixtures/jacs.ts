@@ -1,7 +1,6 @@
 import path from "path";
 import { CompilerOptions } from "typescript";
 
-import projectConf from "^config/project.conf";
 import {
   makeMakeJacsWorkerBee,
   MakeMakeJacsBeeDeps,
@@ -14,8 +13,12 @@ import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";
 import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 
-import { syntheticWait } from ".";
 import { assertString } from "^jab";
+import { nodeRequire } from "^jab-node";
+
+import { syntheticWait } from ".";
+
+const projectConf = require("../../../../project.conf");
 
 /**
  *

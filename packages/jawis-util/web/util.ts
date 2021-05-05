@@ -1,6 +1,15 @@
 import ErrorStackParser from "error-stack-parser";
+import NodeStackTrace from "stack-trace";
 import StackTrace from "stacktrace-js";
-import { ErrorData, ParsedErrorData, sleeping } from "^jab";
+import {
+  assert,
+  captureStack,
+  ErrorData,
+  ParsedErrorData,
+  sleeping,
+  UnparsedStack,
+} from "^jab";
+import { base64ToBinary, binaryToBase64, JabError } from "^jab";
 
 export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
 
@@ -9,41 +18,49 @@ export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
  */
 export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
   ...error,
-  parsedStack: parseBacktrace(error.stack),
+  parsedStack: parseTrace(error.stack),
 });
 
 /**
+ *
+ * - parse node stack traces with node-stack-trace, because error-stack-parser is buggy.
+ *
  *
  * note
  *  error-stack-parser has a lot of logic for Opera, but it's outdated. Current Opera
  *    use v8 format. So there is no need to think about capturing anything but the
  *    `error.stack` property. It will work for all (modern) browsers and node.
  */
-export const parseBacktrace = (stack?: string) => {
-  if (!stack) {
+export const parseTrace = (stack: UnparsedStack) => {
+  if (stack.stack === undefined || stack.stack === "") {
     //error-stack-parser can't handle this case
     return [];
   }
 
-  return ErrorStackParser.parse({
-    stack,
-  } as Error).map((elm) => ({
-    line: elm.lineNumber,
-    file: elm.fileName,
-    func: elm.functionName,
-  }));
+  if (stack.type === "node") {
+    return parseNodeTrace(stack.stack);
+  } else {
+    return ErrorStackParser.parse({
+      stack: stack.stack,
+    } as Error).map((elm) => ({
+      line: elm.lineNumber,
+      file: elm.fileName,
+      func: elm.functionName,
+    }));
+  }
 };
 
 /**
  *
- * - It's hacky, but sleeping a bit, makes it more likely, that the message is rendered, and not waiting for the
+ * note
+ *  - It's hacky, but sleeping a bit, makes it more likely, that the message is rendered, and not waiting for the
  *    stack to be ready. It's not a problem on the first parse. In other words, it only
  *    happens, when StackTrace use cached source map.
  */
-export const parseBacktraceAndSourceMap = (stack?: string) =>
+export const parseTraceAndSourceMap = (stack: UnparsedStack) =>
   sleeping(10).then(() =>
     StackTrace.fromError({
-      stack,
+      stack: stack.stack,
     } as Error).then((frames) =>
       frames.map((elm) => ({
         line: elm.lineNumber,
@@ -52,3 +69,53 @@ export const parseBacktraceAndSourceMap = (stack?: string) =>
       }))
     )
   );
+
+/**
+ *
+ */
+export const parseNodeTrace = (stack: string) => {
+  //note parse can't be call alone, it must have 'this === StackTrace'
+  var trace = NodeStackTrace.parse({ stack } as any);
+
+  return trace.map((frame) => {
+    // compose
+
+    let composedFunc;
+
+    if (frame.getTypeName() !== null) {
+      if (frame.getMethodName() !== null) {
+        composedFunc = frame.getTypeName() + "." + frame.getMethodName();
+      } else {
+        composedFunc = frame.getTypeName() + ".<anonymous>";
+      }
+    } else {
+      if (frame.getMethodName() !== null) {
+        composedFunc = frame.getMethodName();
+      } else {
+        composedFunc = "";
+      }
+    }
+
+    //check
+
+    let func = frame.getFunctionName();
+
+    if (func === null) {
+      func = composedFunc;
+      // } else {
+      //   assert(composedFunc === "" || func === composedFunc, undefined, {
+      //     frame,
+      //     func,
+      //     composedFunc,
+      //   });
+    }
+
+    //return
+
+    return {
+      line: frame.getLineNumber(),
+      file: frame.getFileName(),
+      func,
+    };
+  });
+};

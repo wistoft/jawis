@@ -99,7 +99,7 @@ const mapFrame = (
 
   const color = isSystemFrame
     ? "var(--text-color-faded)"
-    : "var(--jadev-console-text-color)";
+    : "var(--jawis-console-text-color)";
 
   //make file relative and trim and remove prefix
 
@@ -147,8 +147,6 @@ const mapFrame = (
   return (
     <React.Fragment key={index}>
       <div style={{ marginTop: "5px" }} />
-      {func}
-      <div />
       <JsLink
         style={{ color: "var(--text-color-faded)" }}
         onClick={() => {
@@ -157,6 +155,8 @@ const mapFrame = (
           }
         }}
       >
+        {func}
+        <br />
         {fileAndLine}
       </JsLink>
       <div />
@@ -173,7 +173,7 @@ const getIsSystemFrame = (frame: StackFrame) =>
   frame.file === "webpack:///webpack/bootstrap" ||
   frame.file?.includes("node_modules") ||
   (frame.func && frame.func === "__webpack_require__") ||
-  frame.file?.indexOf("build-alpha") !== -1; //hacky. This should be custom setting only for jadev repo.
+  frame.file?.indexOf("build-alpha") !== -1; //hacky. This should be custom setting only for jawis repo.
 
 /**
  *

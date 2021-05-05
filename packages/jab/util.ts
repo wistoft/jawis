@@ -83,13 +83,6 @@ export const getRandomRange = (min: number, max: number) =>
 export const getRandomInteger = (max = 1000000) => getRandomRange(0, max);
 
 /**
- *
- */
-export function getRandomString(length: number) {
-  return "" + Math.max(1, Math.round(Math.random() * Math.pow(10, length)));
-}
-
-/**
  * Check whether the runtime is node.js.
  */
 export const isNode = () =>

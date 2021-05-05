@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { act } from "@testing-library/react-hooks";
-import { useConsoleState } from "^jadev-console";
+import { useConsoleState } from "^console";
 import { makeGetRandomInteger } from "../_fixture";
 import { renderHookImproved } from "^jawis-mess/node";
 

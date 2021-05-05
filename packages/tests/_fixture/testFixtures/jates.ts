@@ -105,6 +105,7 @@ export const getTestListController = (
     onError: prov.onError,
 
     tf: new TestFrameworkMock(),
+    ta: getTestAnalytics(prov, absTestFolder),
 
     setTestExecutionList: (tests) => {
       prov.log("TestFramework", "setTestExecutionList:");
@@ -115,8 +116,6 @@ export const getTestListController = (
       prov.log("TestFramework", "onTestSelectionReady:");
       prov.log("TestFramework", tests);
     },
-
-    ta: getTestAnalytics(prov, absTestFolder),
 
     ...extraDeps,
   });
@@ -151,17 +150,6 @@ export const getTestExecutionController_running = (
 /**
  *
  */
-export const getTestExecutionController_paused = (prov: TestProvision) => {
-  const tec = getTestExecutionController_running(prov);
-
-  tec.pause();
-
-  return tec.waiter.await("paused", TS_TIMEOUT).then(() => tec);
-};
-
-/**
- *
- */
 export const getTestExecutionControllerDeps = (
   prov: TestProvision,
   extraDeps?: Partial<TestExecutionControllerDeps>,
@@ -169,8 +157,6 @@ export const getTestExecutionControllerDeps = (
 ): Omit<TestExecutionControllerDeps, "tr"> => ({
   absTestFolder,
   timeoutms: 50,
-
-  tlc: getTestLogController_test_suite(prov),
 
   onTestStarts: (id) =>
     prov.log(logPrefix + "TestFramework", "onTestStarts: " + id),

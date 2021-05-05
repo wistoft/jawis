@@ -1,12 +1,19 @@
 import path from "path";
 
-import projectConf from "^config/project.conf";
 import { WsPoolProv } from "^jab-express";
-import { BeeDeps, SocketData, NodeWS, RequireSenderMessage } from "^jab-node";
+import {
+  BeeDeps,
+  SocketData,
+  NodeWS,
+  RequireSenderMessage,
+  nodeRequire,
+} from "^jab-node";
 
 import { TestProvision } from "^jarun";
 
 import { getScriptPath, TestMainProv } from ".";
+
+const projectConf = require("../../../../project.conf");
 
 export const getBeeDeps = (
   prov: TestMainProv,

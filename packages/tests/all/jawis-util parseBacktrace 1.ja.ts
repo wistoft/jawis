@@ -1,9 +1,8 @@
 import { TestProvision } from "^jarun";
 
-import { parseBacktrace } from "^jawis-util/web";
+import { parseTrace } from "^jawis-util/web";
 
 export default (prov: TestProvision) => {
-  prov.imp(parseBacktrace(undefined));
-  prov.imp(parseBacktrace(""));
-  prov.imp(parseBacktrace("\n"));
+  prov.eq([], parseTrace({ type: "node", stack: "" }));
+  prov.eq([], parseTrace({ type: "node", stack: "\n" }));
 };

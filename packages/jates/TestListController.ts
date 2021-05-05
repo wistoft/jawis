@@ -3,12 +3,12 @@ import { err, assertNever, prej, Waiter } from "^jab";
 import { TestFrameworkProv } from ".";
 
 import { TestAnalytics } from "./TestAnalytics";
+import { TestLogController } from "./TestLogController";
 
 // prov
 
 export type TestListControllerProv = {
   onRunAllTests: () => void;
-  onRunSingleTest: (testId: string) => void;
   onRunCurrentSelection: () => void;
   onRunDtp: () => void;
 };
@@ -77,12 +77,11 @@ export class TestListController implements TestListControllerProv {
         this.waiter.set("fetching");
 
         this.deps.tf.getTestIds().then(this.onFetchDone);
-        return;
+        break;
 
       case "stopping":
       case "done":
-        err("Not active.");
-        return false;
+        throw err("Not active.");
 
       default:
         assertNever(state);
@@ -102,38 +101,14 @@ export class TestListController implements TestListControllerProv {
         this.waiter.set("fetching");
 
         this.deps.tf.getCurrentSelectionTestIds().then(this.onFetchDone);
-        return;
+        break;
 
       case "stopping":
       case "done":
-        err("Not active.");
-        return false;
+        throw err("Not active.");
 
       default:
-        return assertNever(state);
-    }
-  };
-
-  /**
-   * - Does not cause a new TestList to be sent to the browser.
-   * - return is just for test cases.
-   */
-  public onRunSingleTest = (testId: string) => {
-    const state = this.waiter.getState();
-    switch (state) {
-      case "fetching":
-        throw err("not impl.");
-
-      case "idle":
-        return this.deps.setTestExecutionList([testId]);
-
-      case "stopping":
-      case "done":
-        err("Not active: " + state);
-        return false;
-
-      default:
-        return assertNever(state);
+        assertNever(state);
     }
   };
 

@@ -1,9 +1,12 @@
 const path = require("path");
 
-const { createWebpackBaseConf } = require("../../config/createWebpackBaseConf");
-const { getPackagePath } = require("../../config/project.conf");
+const {
+  createWebpackBaseConf,
+} = require("../../jawis-util/node/createWebpackBaseConf");
 
 const conf = require("../dev.conf");
+
+const { getPackagePath } = eval("require")("../../../project.conf");
 
 //
 // base conf

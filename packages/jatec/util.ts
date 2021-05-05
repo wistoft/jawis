@@ -78,7 +78,7 @@ export const errorToTestLog = (
         {
           msg: extraErrorMsg,
           info: [],
-          stack: "dummy",
+          stack: { type: "node", stack: "dummy" },
         },
         data,
       ],
@@ -96,7 +96,7 @@ export const errMsgAndReturnToTestLog = (
 ): TestCurLogs =>
   addReturnToTestLogs(
     {
-      err: [{ msg, info: [], stack: "dummy" }],
+      err: [{ msg, info: [], stack: { type: "node", stack: "dummy" } }],
       user: {},
     },
     testReturn
@@ -127,7 +127,10 @@ export const addErrMsgToTestLog = (
   msg: string
 ): TestCurLogs => ({
   ...testLog,
-  err: [...(testLog.err || []), { msg, info: [], stack: "dummy" }],
+  err: [
+    ...(testLog.err || []),
+    { msg, info: [], stack: { type: "node", stack: "dummy" } },
+  ],
 });
 
 /**

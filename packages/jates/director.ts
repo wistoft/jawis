@@ -37,6 +37,9 @@ export type Deps = Readonly<{
  * Integrate all the controllers.
  *
  * todo: run finally on shutdown.
+ *
+ * state
+ *   cur test logs are only stored if they are different from expected test logs. Note they aren't remove on accept, though.
  */
 export const director = (deps: Deps) => {
   if (!path.isAbsolute(deps.absTestFolder)) {
@@ -58,7 +61,7 @@ export const director = (deps: Deps) => {
     wsPool,
   });
 
-  const tlc = new TestLogController({
+  const testLogController = new TestLogController({
     absTestLogFolder: deps.absTestLogFolder,
     onError: deps.onError,
   });
@@ -84,27 +87,25 @@ export const director = (deps: Deps) => {
     subFolderIgnore: [], //extract to conf
   });
 
-  const onTestResult: OnTestResult = (id: string, result: TestResult) => {
-    tlc.setCurLogs(id, result.cur);
-
-    return tlc.getExpLogs(id).then((exp) => {
+  const onTestResult: OnTestResult = (id: string, result: TestResult) =>
+    testLogController.getExpLogs(id).then((exp) => {
       const report = getJatesTestReport(id, exp, result);
 
       tac.ta.setTestExecTime(report.id, report.result.execTime);
 
       if (report.status === ".") {
         tac.ta.setTestValid(report.id);
+      } else {
+        testLogController.setCurLogs(id, result.cur);
       }
 
       event.onTestReport(report);
     });
-  };
 
   const tec = new TestExecutionController({
     ...event,
     absTestFolder: deps.absTestFolder,
     timeoutms: 20000, //extract to conf
-    tlc,
     tr: tf,
     onError: deps.onError,
     onTestResult,
@@ -112,10 +113,10 @@ export const director = (deps: Deps) => {
 
   const testListController = new TestListController({
     ...event,
-    ta: tac.ta,
-    onError: deps.onError,
     tf,
+    ta: tac.ta,
     setTestExecutionList: tec.setTestList,
+    onError: deps.onError,
   });
 
   const behavior = new Behavior({
@@ -127,7 +128,7 @@ export const director = (deps: Deps) => {
   const onWsUpgrade = wsPool.makeUpgradeHandler(
     makeOnClientMessage({
       ...event,
-      ...tlc,
+      ...testLogController,
       ...tec,
       ...testListController,
       ...behavior,

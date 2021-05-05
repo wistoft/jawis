@@ -3,26 +3,22 @@ import { assertNever, def, getPromise, PromiseTriple, Waiter } from ".";
 // deps
 
 export type LoopControllerDeps<T> = {
-  arr: T[];
+  initialArray: T[];
   makePromise: (elm: T) => Promise<unknown>;
   autoStart?: boolean;
+  onStart?: () => void;
+  onStop?: () => void;
   onError: (error: unknown) => void;
 };
 
-type States =
-  | "unstarted"
-  | "running"
-  | "pausing"
-  | "pausing-resuming"
-  | "paused"
-  | "done";
+type States = "running" | "pausing" | "paused" | "done";
 
-type Events = "iteration-done" | "resume";
+type Events = "iteration-done";
 
 /**
  * Controls serial execution of promises made from elements of an array.
  *
- * This means that given an array, and a function that makes a promise for each element in the array.
+ * This means that given an array, and a function that makes a promise for each element in the array,
  *  LoopController ensures that it's possible to use the following operations:
  *    - pause
  *    - resume
@@ -41,12 +37,12 @@ type Events = "iteration-done" | "resume";
  * impl
  *  - When pausing at last iteration, the state will become "paused", and the loop-promise will not resolve,
  *    until resume is called. Maybe that should change?
- *  - Resume event will not be emitted, when resume is called in unstarted-state. Also not if a pause 'cancels' the resume operation.
  */
 export class LoopController<T> {
   public waiter: Waiter<States, Events>;
 
-  private curIdx?: number;
+  private curIdx: number;
+  private arr: T[];
 
   private loopProm!: PromiseTriple<void>;
   private pauseProm?: PromiseTriple<"paused" | "cancelled">;
@@ -57,23 +53,69 @@ export class LoopController<T> {
   constructor(private deps: LoopControllerDeps<T>) {
     this.waiter = new Waiter<States, Events>({
       onError: this.deps.onError,
-      startState: "unstarted",
-      endState: "done",
+      startState: "paused",
     });
 
     this.curIdx = -1;
+    this.arr = deps.initialArray;
     this.loopProm = getPromise<void>();
 
     if (deps.autoStart === undefined || deps.autoStart === true) {
-      this.start();
+      this.resume();
     }
   }
 
   /**
-   * Return the loop-promise.
+   *
    */
-  public getPromise = () => {
-    return this.loopProm.promise;
+  public isRunning = () =>
+    this.waiter.is("running") || this.waiter.is("pausing");
+
+  /**
+   * Return the loop-promise.
+   *
+   * note
+   *  this is really compatible with: setArray and prependArray. Some semantic needs to be defined.
+   */
+  public getPromise = () => this.loopProm.promise;
+
+  /**
+   * Replace the underlying array.
+   *
+   * - Calling this, will not start execution. Simply call resume to do that.
+   * - If executing, the new array will be used after the current iteration is done.
+   * - A new loop promise is created, because the exsisting elements are dropped. Their loop will never resolve.
+   */
+  public setArray = (arr: T[]) => {
+    this.curIdx = -1;
+    this.arr = arr;
+
+    //go into paused, so it's evident, that there's more elements, and a loop promise to think about.
+
+    if (this.waiter.is("done")) {
+      this.waiter.set("paused");
+    }
+  };
+
+  /**
+   * Prepend an array in front of the remaining elements.
+   *
+   * - The new array will be executed before the remaining elements from the old array.
+   *    The then the old array will continue executed, as originally planed.
+   */
+  public prependArray = (arr: T[]) => {
+    const remaining = this.arr.slice(this.curIdx + 1);
+    this.arr = arr.concat(remaining);
+
+    //set after remaining is calculated.
+
+    this.curIdx = -1;
+
+    //go into paused.
+
+    if (this.waiter.is("done")) {
+      this.waiter.set("paused");
+    }
   };
 
   /**
@@ -89,22 +131,18 @@ export class LoopController<T> {
     const state = this.waiter.getState();
 
     switch (state) {
-      case "unstarted":
+      case "paused":
+      case "done":
         return Promise.resolve("paused");
 
-      case "pausing-resuming":
       case "running":
         this.waiter.set("pausing");
 
         this.pauseProm = getPromise();
         return def(this.pauseProm).promise;
 
-      case "paused":
       case "pausing":
         return def(this.pauseProm).promise;
-
-      case "done":
-        throw new Error("Not active");
 
       default:
         return assertNever(state);
@@ -116,32 +154,26 @@ export class LoopController<T> {
    *
    * - It's okay to resume, when already running, it's a no-op.
    * - Resume resolves the pausing-promise with: "cancelled".
-   * - If the loop isn't running at all, i.e. wasn't auto started, resume will simply start the loop, as `this.start` does.
+   * - If the loop isn't running at all, i.e. wasn't auto-started, resume will simply start the loop.
    */
   public resume = () => {
     const state = this.waiter.getState();
     switch (state) {
-      case "unstarted":
-        this.start();
-        return;
-
       case "pausing":
         def(this.pauseProm).resolve("cancelled");
-        this.waiter.set("pausing-resuming");
+        this.waiter.set("running");
         return;
 
       case "paused":
         this.waiter.set("running");
+        this.deps.onStart && this.deps.onStart();
         this.tryRunNextTest();
         return;
 
-      case "pausing-resuming":
+      case "done":
       case "running":
         //nothing to do
         return;
-
-      case "done":
-        throw new Error("Not active");
 
       default:
         return assertNever(state);
@@ -150,35 +182,22 @@ export class LoopController<T> {
 
   /**
    *
-   */
-  public start = () => {
-    if (!this.waiter.is("unstarted")) {
-      throw new Error("Already started.");
-    }
-
-    this.waiter.set("running");
-
-    this.tryRunNextTest();
-  };
-
-  /**
-   *
+   * important that
+   *  - `this.arr` and `curIdx` is used in one tick only. Because it can change at any time.
    */
   private tryRunNextTest = () => {
-    if (this.curIdx === undefined) {
-      throw new Error("curIdx should be set.");
-    }
-
-    if (this.curIdx + 1 < this.deps.arr.length) {
+    if (this.curIdx + 1 < this.arr.length) {
       this.curIdx++;
 
       this.deps
-        .makePromise(this.deps.arr[this.curIdx])
+        .makePromise(this.arr[this.curIdx])
         .then(this.onIterationDone, this.onIterationError);
     } else {
       //we're done
       this.waiter.set("done");
       this.loopProm.resolve();
+
+      this.deps.onStop && this.deps.onStop();
     }
   };
 
@@ -193,13 +212,14 @@ export class LoopController<T> {
 
       //fall through
 
-      case "pausing-resuming":
       case "running":
         this.waiter.set("done");
+
         this.loopProm.reject(error as Error);
+
+        this.deps.onStop && this.deps.onStop();
         return;
 
-      case "unstarted":
       case "paused":
       case "done":
         throw new Error("Impossible");
@@ -217,23 +237,18 @@ export class LoopController<T> {
 
     const state = this.waiter.getState();
     switch (state) {
-      case "pausing-resuming":
-        this.waiter.set("running");
-        this.tryRunNextTest();
-
-        this.waiter.event("resume");
-        return;
-
       case "pausing":
         this.waiter.set("paused");
+
         def(this.pauseProm).resolve("paused");
+
+        this.deps.onStop && this.deps.onStop();
         return;
 
       case "running":
         this.tryRunNextTest();
         return;
 
-      case "unstarted":
       case "paused":
       case "done":
         throw new Error("Impossible: " + state);

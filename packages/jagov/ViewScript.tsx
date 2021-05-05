@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { basename } from "^jab";
 import { useKeyListener } from "^jab-react";
 import { ScriptStatus } from "^jagoc";
-import { Props as ConsoleProps, View as ConsoleView } from "^jadev-console";
+import { Props as ConsoleProps, View as ConsoleView } from "^console";
 
 import {
   getEditLink,

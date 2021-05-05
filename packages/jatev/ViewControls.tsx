@@ -8,8 +8,9 @@ import { ClientApiSendProv } from "./util";
 export type Props = ClientApiSendProv & {
   isRunning: boolean;
   executingTestId: string | undefined;
-  onShowTestCase: (test: string) => void;
-  onAcceptAllLogs: () => void;
+  runFailedTests: () => void;
+  acceptAllLogs: () => void;
+  showTestCase: (test: string) => void;
 };
 
 export const ViewControls: React.FC<Props> = memo((props) => {
@@ -21,10 +22,18 @@ export const ViewControls: React.FC<Props> = memo((props) => {
     />
   );
 
+  const runFailedLink = (
+    <JsLink
+      name="rft"
+      onClick={props.runFailedTests}
+      title="Run failed tests"
+    />
+  );
+
   const accLink = (
     <JsLink
       name="aal"
-      onClick={props.onAcceptAllLogs}
+      onClick={props.acceptAllLogs}
       title="Accept all test logs"
     />
   );
@@ -32,7 +41,7 @@ export const ViewControls: React.FC<Props> = memo((props) => {
   return (
     <span style={{ color: "var(--link-color)" }}>
       {" - "}
-      {accLink}, {startStopLink},{" "}
+      {startStopLink}, {runFailedLink}, {accLink},{" "}
       <TogglePanel
         linkName="set"
         linkTitle={"Show executing test"}
@@ -43,7 +52,7 @@ export const ViewControls: React.FC<Props> = memo((props) => {
             {", "}
             <JsLink
               name={props.executingTestId}
-              onClick={() => props.onShowTestCase(def(props.executingTestId))}
+              onClick={() => props.showTestCase(def(props.executingTestId))}
               title="Show executing test"
             />
           </>

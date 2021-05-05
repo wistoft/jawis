@@ -1,4 +1,4 @@
-# @wistoft/jacs
+# @jawis/jacs
 
 JavaScript compile service delivers transpiled TypeScript to a node Worker
 Thread.
@@ -6,13 +6,13 @@ Thread.
 ## Installation
 
 ```
-yarn add @wistoft/jacs
+yarn add @jawis/jacs
 ```
 
 or
 
 ```
-npm i @wistoft/jacs
+npm i @jawis/jacs
 ```
 
 ## Limitations

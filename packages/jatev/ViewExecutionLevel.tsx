@@ -8,7 +8,7 @@ export type Props = {
   level: TestState[];
   currentTestId?: string;
   executingTestId?: string;
-  onShowTestCase: (test: string) => void;
+  showTestCase: (test: string) => void;
 };
 
 export const ViewExecutionLevel: React.FC<Props> = memo((props) => (
@@ -58,7 +58,7 @@ export const ViewExecutionLevel: React.FC<Props> = memo((props) => (
           return (
             <JsLink
               key={testcase.id}
-              onClick={() => props.onShowTestCase(testcase.id)}
+              onClick={() => props.showTestCase(testcase.id)}
               title="Show test case"
               href={"Case: " + testcase.id}
               style={style}

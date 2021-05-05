@@ -1,4 +1,4 @@
-# @wistoft/javi
+# @jawis/javi
 
 JavaScript View is tool for running test cases and scripts. Everything is
 presented in the browser, so no CLI needed for running neither test cases nor
@@ -7,19 +7,19 @@ scripts.
 - TypeScript by default.
 - Javi is intended to be agnostic to test framework. One could even use several.
   All test results are presented in the same view. However, it only suppports a
-  new framework called [Jarun](https://www.npmjs.com/package/@wistoft/jarun),
-  for now.
+  new framework called [Jarun](https://www.npmjs.com/package/@jawis/jarun), for
+  now.
 
 ## Installation
 
 ```
-yarn add --dev @wistoft/javi
+yarn add --dev @jawis/javi
 ```
 
 or
 
 ```
-npm i --save-dev @wistoft/javi
+npm i --save-dev @jawis/javi
 ```
 
 ## Usage
@@ -34,8 +34,7 @@ npm i --save-dev @wistoft/javi
 - A development server is just a script. It's started and reloaded by javi, when
   source files change.
 - Output and errors from the server can be shown on the development site, by
-  using [JagoConsole](https://www.npmjs.com/package/@wistoft/jagos) (an
-  extension to JadevConsole)
+  using [JagoConsole](https://www.npmjs.com/package/@jawis/jagos)
 
 ## Configuration
 
@@ -68,15 +67,15 @@ module.exports = {
 
 ## How it works
 
-- [Jacs](https://www.npmjs.com/package/@wistoft/jacs) is used to transpile
+- [Jacs](https://www.npmjs.com/package/@jawis/jacs) is used to transpile
   TypeScript for both test cases and scripts. It transpiles and caches results
   in the same process javi runs in. When a new worker thread starts, it can
   receive the cached source files through shared memory.
 - Changes in test files or files they import are detected by
-  [WatchableProcess](https://www.npmjs.com/package/@wistoft/jab-node). Javi
-  kills processes with old code, and restarts executing test cases, so test
-  results are always from running on a consistent codebase. I.e. it's guaranteed
-  that no file used by the test case changed during execution.
+  [WatchableProcess](https://www.npmjs.com/package/@jawis/jab-node). Javi kills
+  processes with old code, and restarts executing test cases, so test results
+  are always from running on a consistent codebase. I.e. it's guaranteed that no
+  file used by the test case changed during execution.
 
 ## Limitations
 

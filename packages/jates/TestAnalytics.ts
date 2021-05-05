@@ -68,7 +68,7 @@ export class TestAnalytics {
   /**
    * not thought through
    *
-   * - startLevel is the state test case are added with. Default is invalid.
+   * - startLevel is the state test case are added as. Default is 'invalid test result'
    *
    * impl
    *  - careful not to reset the level registered in `this.tests`. I.e. set by `setTestValid`.

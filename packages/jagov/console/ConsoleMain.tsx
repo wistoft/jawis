@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 import { ErrorBoundary, useWebSocketProv } from "^jab-react";
-import { Props as ConsoleProps, View as ConsoleView } from "^jadev-console";
+import { Props as ConsoleProps, View as ConsoleView } from "^console";
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { useDirector, Props as DirectorProps } from "^jagov/useDirector";
 

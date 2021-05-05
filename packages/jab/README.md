@@ -1,4 +1,4 @@
-# @wistoft/jab
+# @jawis/jab
 
 JavaScript basic is a collection of utilities. Can be used in both node and web
 projects.
@@ -6,13 +6,13 @@ projects.
 ## Installation
 
 ```
-yarn add @wistoft/jab
+yarn add @jawis/jab
 ```
 
 or
 
 ```
-npm i @wistoft/jab
+npm i @jawis/jab
 ```
 
 ## Usage

@@ -1,1 +1,1 @@
-{"user":{"imp":[{"type":"error","data":{"msg":"MyComponent rendered to invalid value.","info":["value",[]]},"context":""}]}}
+{"user":{"imp":[{"type":"error","data":{"msg":"MyComponent rendered to invalid value.","info":["value",[]],"stack":{"type":"node","stack":""}},"context":""}]}}

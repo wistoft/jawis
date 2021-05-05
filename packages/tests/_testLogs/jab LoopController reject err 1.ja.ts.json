@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: no no","Error: no no"],"return":["value",[["promise",{"reject":{"msg":"Error: no no","info":["value",[]],"stack":"filtered"}}],["promise",{"reject":{"msg":"Error: no no","info":["value",[]],"stack":"filtered"}}]]]}
+{"user":{"imp":["onStart","onStop"]},"err":["Error: no no","Error: no no"],"return":["value",[["promise",{"reject":{"msg":"Error: no no","info":["value",[]],"stack":"filtered"}}],["promise",{"reject":{"msg":"Error: no no","info":["value",[]],"stack":"filtered"}}]]]}

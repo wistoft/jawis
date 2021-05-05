@@ -20,7 +20,15 @@ export default ({ log }: TestProvision) => {
   log(
     "current of same type, and rogue chk log",
     mergeTestLogsAndRogue(
-      [{ type: "chk", name: "chk", exp: 1, cur: 1, stack: errorData0.stack }],
+      [
+        {
+          type: "chk",
+          name: "chk",
+          exp: 1,
+          cur: 1,
+          stack: errorData0.stack,
+        },
+      ],
       {
         chk: { exp: "rogue", cur: "rogue", stack: errorData0.stack },
         user: {},

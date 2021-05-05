@@ -41,8 +41,8 @@ export const makeOnClientMessage = (
       deps.onRunDtp();
       return;
 
-    case "runSingleTest":
-      deps.onRunSingleTest(msg.testId);
+    case "prependTests":
+      deps.prependTestList(msg.ids);
       return;
 
     case "acceptTestLogs": {

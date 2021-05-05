@@ -44,10 +44,10 @@ export const Main: React.FC<Props> = memo(({ apiPath, contexts }) => {
 
   const openComponnent = useCallback(
     (compPath: string) => {
-      const projectRoot = "E:\\work\\repos\\jawis";
+      // const projectRoot = "E:\\work\\repos\\jawis";
 
-      // apiSend({ type: "openRelFile", file: compPath });
-      apiSend({ type: "openFile", file: path.join(projectRoot, compPath) });
+      apiSend({ type: "openRelFile", file: compPath });
+      // apiSend({ type: "openFile", file: path.join(projectRoot, compPath) });
     },
     [apiSend]
   );

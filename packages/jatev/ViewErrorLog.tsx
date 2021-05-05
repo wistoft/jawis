@@ -22,7 +22,7 @@ export type Props = {
  *
  */
 export const ViewErrorLog: React.FC<Props> = memo(({ testLog, ...extra }) => {
-  const diff = errLogDiff(testLog.exp || [], testLog.cur || []);
+  const diff = errLogDiff(testLog.exp || [], testLog.cur);
 
   const mappedDiff = diff.map((elm, index) => {
     switch (elm[0]) {

@@ -76,7 +76,8 @@ export const useDirector = ({
     openFile,
     onRunCurrentTest,
     onEditCurrentTest,
-    onAcceptAllLogs,
+    runFailedTests,
+    acceptAllLogs,
   } = useMemoDep(
     { stateRef, setState, apiSend, getRandomToken },
     createStructure
@@ -118,8 +119,9 @@ export const useDirector = ({
         apiSend={apiSend}
         isRunning={state.isRunning}
         executingTestId={state.executingTestId}
-        onShowTestCase={callbacks.onShowTestCase}
-        onAcceptAllLogs={onAcceptAllLogs}
+        showTestCase={callbacks.showTestCase}
+        runFailedTests={runFailedTests}
+        acceptAllLogs={acceptAllLogs}
       />
       {wsState === "reconnecting" && " " + wsState}
     </>
@@ -199,8 +201,8 @@ const createStructure = ({
   const onRunCurrentTest = () => {
     if (stateRef.current.currentTest) {
       apiSend({
-        action: "runSingleTest",
-        testId: stateRef.current.currentTest.id,
+        action: "prependTests",
+        ids: [stateRef.current.currentTest.id],
       });
     }
   };
@@ -214,11 +216,20 @@ const createStructure = ({
     }
   };
 
-  const onAcceptAllLogs = () => {
+  const runFailedTests = () => {
+    if (stateRef.current.tests) {
+      apiSend({
+        action: "prependTests",
+        ids: getTestLogsThatDiffer(stateRef.current.tests.tests, true),
+      });
+    }
+  };
+
+  const acceptAllLogs = () => {
     if (stateRef.current.tests) {
       apiSend({
         action: "acceptTestLogs",
-        testIds: getTestLogsThatDiffer(stateRef.current.tests.tests),
+        testIds: getTestLogsThatDiffer(stateRef.current.tests.tests, false),
       });
     }
   };
@@ -230,7 +241,8 @@ const createStructure = ({
     openFile,
     onRunCurrentTest,
     onEditCurrentTest,
-    onAcceptAllLogs,
+    runFailedTests,
+    acceptAllLogs,
   };
 };
 
@@ -273,7 +285,7 @@ export const getCallbacks = (
     // user events
     //
 
-    onShowTestCase: (testId: string) => {
+    showTestCase: (testId: string) => {
       setPartialState(makeShowTestUpdater(testId, getRandomToken));
     },
 

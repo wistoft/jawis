@@ -13,5 +13,9 @@ export default (prov: TestProvision) => {
     [{ id: "test 21" }],
   ];
 
-  prov.eq(["test 2"], getTestLogsThatDiffer(tests));
+  prov.eq(["test 2"], getTestLogsThatDiffer(tests, false));
+
+  //including rogue
+
+  prov.eq(["test 2", "test 3"], getTestLogsThatDiffer(tests, true));
 };

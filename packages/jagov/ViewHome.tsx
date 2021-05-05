@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { Props as ConsoleProps, View as ConsoleView } from "^jadev-console";
+import { Props as ConsoleProps, View as ConsoleView } from "^console";
 
 import { ViewProcessOverview, Props as P1 } from "./ViewProcessOverview";
 import { ApiProv } from ".";

@@ -7,7 +7,7 @@ export type Props = {
   tests?: TestState[][];
   currentTestId?: string;
   executingTestId?: string;
-  onShowTestCase: (test: string) => void;
+  showTestCase: (test: string) => void;
 };
 
 /**

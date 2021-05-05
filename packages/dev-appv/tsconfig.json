@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/dev-appv",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../dev-appc" },
+    { "path": "../jab" },
+    { "path": "../jab-react" }
+  ]
+}

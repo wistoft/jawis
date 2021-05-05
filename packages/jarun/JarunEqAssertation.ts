@@ -1,4 +1,10 @@
-import { clone, ClonedValue, tos, fixErrorInheritence } from "^jab";
+import {
+  clone,
+  ClonedValue,
+  tos,
+  fixErrorInheritence,
+  captureStack,
+} from "^jab";
 
 /**
  *
@@ -24,7 +30,7 @@ export class JarunEqAssertation extends Error {
     return {
       exp: this.exp,
       cur: this.cur,
-      stack: this.stack,
+      stack: captureStack(this),
     };
   }
 }

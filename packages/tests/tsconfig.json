@@ -6,16 +6,12 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../config" },
-    { "path": "../default-api" },
-    { "path": "../default-common" },
-    { "path": "../default-section" },
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
     { "path": "../jab-react" },
     { "path": "../jatec" },
-    { "path": "../jadev-console" },
+    { "path": "../console" },
     { "path": "../jacs" },
     { "path": "../jagos" },
     { "path": "../jagoc" },

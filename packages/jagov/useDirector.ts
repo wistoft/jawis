@@ -1,11 +1,7 @@
 import { useState } from "react";
 
 import { getRandomInteger } from "^jab";
-import {
-  ConsoleEntry,
-  UseConsoleStream,
-  useConsoleState,
-} from "^jadev-console";
+import { ConsoleEntry, UseConsoleStream, useConsoleState } from "^console";
 
 import {
   useMemoDep,
@@ -38,7 +34,7 @@ export const useDirector = ({
 
   useAssertStatic({ useWsEffect, useConsoleStream });
 
-  //jadev console state
+  //console state
 
   const consoleState = useConsoleState(getRandomInteger);
 

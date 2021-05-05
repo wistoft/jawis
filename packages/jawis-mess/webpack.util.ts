@@ -23,7 +23,7 @@ export const nodeExternals: WebpackExternalsFunc = (
     return callback();
   }
 
-  // quick fix for import aliases in jadev.
+  // quick fix for import aliases in jawis.
   if (request.startsWith("^")) {
     return callback();
   }

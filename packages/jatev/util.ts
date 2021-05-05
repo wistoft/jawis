@@ -121,24 +121,28 @@ export const sortTestLogs = (testLogs: ZippedTestLog[]) =>
   });
 
 /**
- * Used in accept all test logs.
+ * Used in 'accept all test logs' and 'run failed tests'
  *
  * - If there's no status, there's nothing to accept.
  * - If test pass, there's no need to accept. Nothing would happen.
- * - rogue is simply ignored. They can never be accepted.
  *
  * note
- *  - these are computed on client, because the server doesn't know the test selection.
+ *  - these are computed on the client, because the server doesn't know the test selection.
  *      I.e. tests not shown, will not have their test logs accepted.
  */
-export const getTestLogsThatDiffer = (tests: TestState[][]) =>
+export const getTestLogsThatDiffer = (
+  tests: TestState[][],
+  includeRogue: boolean
+) =>
   tests.reduce<string[]>(
     (acc, cur) =>
       acc.concat(
         cur
           .filter(
             (test) =>
-              test.status !== undefined && test.status !== "." && !test.rogue
+              test.status !== undefined &&
+              test.status !== "." &&
+              (includeRogue || !test.rogue)
           )
           .map((test) => test.id)
       ),

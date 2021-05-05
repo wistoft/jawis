@@ -5,13 +5,13 @@ import { errLogDiff } from "^jatev/util";
 const hejError: ErrorData = {
   msg: "hej",
   info: [],
-  stack: "dummy" as any,
+  stack: { type: "node", stack: "dummy" },
 };
 
 const davError: ErrorData = {
   msg: "dav",
   info: [],
-  stack: "dummy" as any,
+  stack: { type: "node", stack: "dummy" },
 };
 
 export default ({ eq }: TestProvision) => {

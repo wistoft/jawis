@@ -29,7 +29,7 @@ export const View: React.FC<ViewProps> = memo(
         tests={state.tests?.tests}
         currentTestId={state.currentTest?.id}
         executingTestId={state.executingTestId}
-        onShowTestCase={callbacks.onShowTestCase}
+        showTestCase={callbacks.showTestCase}
       />
 
       {state.currentTest && (
