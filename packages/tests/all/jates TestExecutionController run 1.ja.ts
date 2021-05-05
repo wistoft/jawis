@@ -1,4 +1,3 @@
-import { sleeping } from "^jab";
 import { TestProvision } from "^jarun";
 
 import { getTestExecutionController } from "../_fixture";

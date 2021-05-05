@@ -14,7 +14,6 @@ import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 
 import { assertString } from "^jab";
-import { nodeRequire } from "^jab-node";
 
 import { syntheticWait } from ".";
 

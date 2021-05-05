@@ -1,4 +1,3 @@
-import { captureStack } from "^jab";
 import { ErrorEntry } from "^jagoc";
 import { parseTrace, parseTraceAndSourceMap } from "^jawis-util/web";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";

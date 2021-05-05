@@ -6,7 +6,6 @@ import {
   getDefaultRunnersAssignments,
   makeProcessRunner,
 } from "^jarun";
-import { TS_TIMEOUT } from "^jab-node";
 import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
 import { makeTsNodeJabProcess } from "^jawis-util/node";
 import { ComposedTestFramework } from "^jates";

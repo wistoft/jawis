@@ -1,4 +1,3 @@
-import { nodeRequire } from "^jab-node";
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
 

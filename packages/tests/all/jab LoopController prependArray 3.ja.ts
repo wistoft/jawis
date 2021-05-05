@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { emptyLoop, getLoopController, littleLoop } from "../_fixture";
+import { getLoopController } from "../_fixture";
 
 //prepend array, when unstarted (empty array)
 

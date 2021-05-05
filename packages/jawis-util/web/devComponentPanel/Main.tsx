@@ -1,5 +1,5 @@
 import React, { memo, useCallback } from "react";
-import path from "path-browserify";
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ClientMessage, ServerMessage } from "@jawis/jagoc";
 

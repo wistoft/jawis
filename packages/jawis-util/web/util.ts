@@ -1,15 +1,16 @@
 import ErrorStackParser from "error-stack-parser";
 import NodeStackTrace from "stack-trace";
-import StackTrace from "stacktrace-js";
+import StackTrace, { StackFrame } from "stacktrace-js";
+import StackTraceGPS from "stacktrace-gps";
+
 import {
-  assert,
-  captureStack,
   ErrorData,
+  isNode,
   ParsedErrorData,
+  ParsedStackFrame,
   sleeping,
   UnparsedStack,
 } from "^jab";
-import { base64ToBinary, binaryToBase64, JabError } from "^jab";
 
 export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
 
@@ -51,13 +52,51 @@ export const parseTrace = (stack: UnparsedStack) => {
 };
 
 /**
+ * parse and use source map to find original file and line number.
+ *
+ * - Avoid using StackTraceGPS's "enhanced function name", because it's buggy.
+ *
+ * note
+ *  StackTraceGPS does a lot of good work. So if the function name enhancing could be disabled,
+ *    we could just use StackTrace.fromError().
+ */
+export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
+  const gps = new StackTraceGPS();
+
+  const frames = ErrorStackParser.parse({
+    stack: stack.stack,
+  } as Error);
+
+  if (isNode()) {
+    //quick fix: To avoid XHR in test cases.
+    return Promise.resolve(
+      frames.map((elm) => ({
+        line: elm.lineNumber,
+        file: elm.fileName,
+        func: elm.functionName,
+      }))
+    );
+  }
+
+  return Promise.all<ParsedStackFrame>(
+    frames.map((frame) =>
+      gps.pinpoint(frame).then((res: StackFrame) => ({
+        line: res.lineNumber,
+        file: res.fileName,
+        func: frame.functionName,
+      }))
+    )
+  );
+};
+
+/**
  *
  * note
  *  - It's hacky, but sleeping a bit, makes it more likely, that the message is rendered, and not waiting for the
  *    stack to be ready. It's not a problem on the first parse. In other words, it only
  *    happens, when StackTrace use cached source map.
  */
-export const parseTraceAndSourceMap = (stack: UnparsedStack) =>
+export const parseTraceAndSourceMapOld = (stack: UnparsedStack) =>
   sleeping(10).then(() =>
     StackTrace.fromError({
       stack: stack.stack,
@@ -75,7 +114,7 @@ export const parseTraceAndSourceMap = (stack: UnparsedStack) =>
  */
 export const parseNodeTrace = (stack: string) => {
   //note parse can't be call alone, it must have 'this === StackTrace'
-  var trace = NodeStackTrace.parse({ stack } as any);
+  const trace = NodeStackTrace.parse({ stack } as any);
 
   return trace.map((frame) => {
     // compose
@@ -102,12 +141,6 @@ export const parseNodeTrace = (stack: string) => {
 
     if (func === null) {
       func = composedFunc;
-      // } else {
-      //   assert(composedFunc === "" || func === composedFunc, undefined, {
-      //     frame,
-      //     func,
-      //     composedFunc,
-      //   });
     }
 
     //return

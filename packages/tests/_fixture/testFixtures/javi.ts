@@ -1,5 +1,4 @@
 import path from "path";
-import { nodeRequire } from "^jab-node";
 
 import { FullJaviConf } from "^javi/server/getConf";
 

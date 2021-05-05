@@ -1,13 +1,7 @@
 import path from "path";
 
 import { WsPoolProv } from "^jab-express";
-import {
-  BeeDeps,
-  SocketData,
-  NodeWS,
-  RequireSenderMessage,
-  nodeRequire,
-} from "^jab-node";
+import { BeeDeps, SocketData, NodeWS, RequireSenderMessage } from "^jab-node";
 
 import { TestProvision } from "^jarun";
 

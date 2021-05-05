@@ -5,11 +5,13 @@ export type UnparsedStack = {
   stack?: string;
 };
 
-export type ParsedStack = {
+export type ParsedStackFrame = {
   line?: number;
   file?: string;
   func?: string;
-}[];
+};
+
+export type ParsedStack = ParsedStackFrame[];
 
 export type ErrorData = {
   msg: string;

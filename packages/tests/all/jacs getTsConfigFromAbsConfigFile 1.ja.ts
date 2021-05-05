@@ -1,4 +1,3 @@
-import { nodeRequire } from "^jab-node";
 import { getTsConfigFromAbsConfigFile } from "^jacs";
 import { TestProvision } from "^jarun";
 import { filterTsConfig, getTsProjectPath } from "^tests/_fixture";

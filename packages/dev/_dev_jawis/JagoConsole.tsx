@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { JsLink } from "^jab-react";
 import { consoleCapture, makeUseConsoleStream } from "^console";
 import { ConsoleMain } from "^jagov/console/ConsoleMain";
+import { entry } from "^dev/_dev_hello_web/_hello";
 
 /**
  * note
@@ -17,7 +18,6 @@ export const JagoConsole: React.FC = () => {
     //hacky to mount things here. But state depends on them.
 
     //use other property. To be able to have live and development capture side-by-side.
-    console.log("her");
 
     const windowProperty = "__JawisConsoleCapture__development";
 
@@ -35,14 +35,15 @@ export const JagoConsole: React.FC = () => {
       <JsLink
         name="log"
         onClick={() => {
-          console.log("real");
+          console.log("some log message");
         }}
       />
       ,{" "}
       <JsLink
         name="throw"
         onClick={() => {
-          throw new Error("real");
+          entry();
+          throw new Error("ups");
         }}
       />
       <i> - note: live console disabled</i>

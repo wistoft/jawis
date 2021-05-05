@@ -2,7 +2,7 @@ import path from "path";
 
 import { startJaviServer } from "^javi/server/util";
 import { makeDefaultRoute } from "^dev-apps";
-import { MainProv, mainWrapper, nodeRequire } from "^jab-node";
+import { MainProv, mainWrapper } from "^jab-node";
 
 import conf from "../dev.conf";
 

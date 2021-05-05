@@ -3,7 +3,6 @@ import { err, assertNever, prej, Waiter } from "^jab";
 import { TestFrameworkProv } from ".";
 
 import { TestAnalytics } from "./TestAnalytics";
-import { TestLogController } from "./TestLogController";
 
 // prov
 
