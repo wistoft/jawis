@@ -1,5 +1,5 @@
 import { cloneArrayEntries, ErrorData, JabError } from ".";
-import { UnparsedStack } from "./types";
+import { ParsedStackFrame, UnparsedStack } from "./types";
 import { isNode } from "./util";
 
 /**
@@ -33,8 +33,16 @@ export const assert = (
 /**
  *
  */
-export const captureStack = (error: { stack?: string }): UnparsedStack => {
-  if (error.stack === undefined) {
+export const captureStack = (error: {
+  stack?: string;
+  __jawisNodeStack?: ParsedStackFrame[];
+}): UnparsedStack => {
+  if (error.__jawisNodeStack !== undefined) {
+    return {
+      type: "node-parsed",
+      stack: error.__jawisNodeStack,
+    };
+  } else if (error.stack === undefined) {
     return {
       type: "other",
       stack: "",

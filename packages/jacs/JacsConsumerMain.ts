@@ -3,8 +3,11 @@ import { parentPort, workerData } from "worker_threads";
 import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
-import { def } from "^jab";
-import { nodeRequire } from "^jab-node";
+import { def, ErrorWithParsedNodeStack } from "^jab";
+import {
+  extractStackTraceInfo,
+  nodeRequire,
+} from "^jab-node";
 
 import { unRegisterTsCompiler, WorkerData } from ".";
 import { JacsConsumer } from "./JacsConsumer";
@@ -36,13 +39,30 @@ if (shared.absBaseUrl && shared.paths) {
   });
 }
 
-//setup source map
+//A better default, because it will give all information.
+
+Error.stackTraceLimit = Infinity;
+
+//install source map
 
 sourceMapSupport.install({
   handleUncaughtExceptions: false,
   environment: "node",
   hookRequire: true,
 });
+
+//replace source-map-support's prepareStackTrace - to get more information.
+
+Error.prepareStackTrace = (
+  error: ErrorWithParsedNodeStack,
+  stackTraces: NodeJS.CallSite[]
+) => {
+  const { stack, fullInfo } = extractStackTraceInfo(error, stackTraces);
+
+  error.__jawisNodeStack = fullInfo;
+
+  return stack;
+};
 
 //setup jacs
 

@@ -68,8 +68,8 @@ export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
   } as Error);
 
   if (isNode()) {
-    //quick fix: To avoid XHR in test cases.
-    return Promise.resolve(
+    //quick fix: To avoid XHR in tests.
+    return Promise.resolve<ParsedStackFrame[]>(
       frames.map((elm) => ({
         line: elm.lineNumber,
         file: elm.fileName,
