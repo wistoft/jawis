@@ -67,6 +67,9 @@ automatically start this task install the extentions: `AutoLaunch`
 
 ## Known issues
 
+- Web socket in development sites reconnect too eager, and the browser is
+  obliged to block further connections for a while. There's no feadback from the
+  browser, that this happens.
 - vscode tasks are configured to use `powershell.exe`. Hence only work on
   Windows.
 - There is a problem with ambiant types in builded `d.ts` files.

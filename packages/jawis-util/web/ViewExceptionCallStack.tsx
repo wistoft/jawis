@@ -1,15 +1,9 @@
 import React, { memo, useState } from "react";
 import path from "path-browserify";
 
-import { ParsedStack, basename } from "^jab";
+import { ParsedStack, basename, ParsedStackFrame } from "^jab";
 import { JsLink } from "^jab-react";
 import { OpenFile } from "^jawis-util";
-
-type StackFrame = {
-  line?: number;
-  file?: string;
-  func?: string;
-};
 
 //props
 
@@ -80,7 +74,7 @@ const mapFrame = (
   normalizedProjectRoot: string,
   normalizedRemovePathPrefix: string
   // eslint-disable-next-line react/display-name
-) => (frame: StackFrame, index: number) => {
+) => (frame: ParsedStackFrame, index: number) => {
   const isSystemFrame = getIsSystemFrame(frame);
 
   if (!showSystemFrames && isSystemFrame) {
@@ -167,7 +161,7 @@ const mapFrame = (
 /**
  *
  */
-const getIsSystemFrame = (frame: StackFrame) =>
+const getIsSystemFrame = (frame: ParsedStackFrame) =>
   frame.file?.startsWith("internal") ||
   frame.file === "events.js" ||
   frame.file === "webpack:///webpack/bootstrap" ||
@@ -211,7 +205,7 @@ export const getFile = (
 /**
  *
  */
-export const getFunc = (frame: StackFrame) => {
+export const getFunc = (frame: ParsedStackFrame) => {
   if (!frame.func) {
     return "ano";
   }

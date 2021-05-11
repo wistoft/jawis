@@ -1,10 +1,8 @@
 import { TestProvision } from "^jarun";
 import { sleeping } from "^jab";
 
-import {
-  writeScriptFileThatChanges,
-  getJabWatchableProcess_nonIpc_changeable,
-} from "../_fixture";
+import { getJabWatchableProcess_nonIpc_changeable } from "../_fixture";
+import { writeScriptFileThatChanges } from "^tests/_fixture/util/diverse";
 
 // change after script ended itself. That should have no effect.
 

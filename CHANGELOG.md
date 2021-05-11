@@ -1,3 +1,11 @@
+# 0.0.27
+
+## :tada: Enhancements
+
+- Jacs supports uninstall.
+- `Jacs.install` makes jacs usable programmatically.
+- `JacsConsumer.unregiter` is implemented.
+
 # 0.0.26
 
 7 May 2021

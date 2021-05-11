@@ -8,6 +8,7 @@
   "bin": {
     "javi": "./server/javiServerMain.js"
   },
+  "description": "JavaScript View is tool for running test cases and scripts. Everything is presented in the browser",
   "dependencies": {
     "@types/react": "^16.14.4",
     "@types/react-dom": "^16.9.11",

@@ -3,8 +3,8 @@
 //listener
 
 process.on("uncaughtException", (error: any) => {
-  //removes all files in jawis codebase, because they change too often.
-  // except this file.
+  //removes all files in jawis codebase, except this file.
+  //  Because they change too often.
 
   console.log(
     error.__jawisNodeStack.filter(

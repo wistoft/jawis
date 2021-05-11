@@ -1,7 +1,7 @@
 {
   "version": "0.0.0",
   "name": "~jagov",
-  "description": "Jago section.",
+  "description": "Jago view",
   "dependencies": {
     "@reach/router": "^1.3.4",
     "@types/md5": "^2.2.0",

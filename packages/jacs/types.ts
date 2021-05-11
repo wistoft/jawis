@@ -4,7 +4,8 @@ export type WorkerData = {
   controlArray: Int32Array;
   dataArray: Uint8Array;
   timeout: number;
-  beeFilename: string;
+  beeFilename?: string;
+  stackTraceLimit?: number;
 
   //for development
   unregister: boolean;

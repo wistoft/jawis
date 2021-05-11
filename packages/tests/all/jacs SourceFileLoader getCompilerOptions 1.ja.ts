@@ -1,7 +1,6 @@
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
-
-import { getScratchPath } from "../_fixture";
+import { getScratchPath } from "^tests/_fixture/util/diverse";
 
 export default (prov: TestProvision) => {
   const { eq } = prov;

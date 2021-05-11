@@ -23,13 +23,13 @@ import { ClientComController } from "^jates/ClientComController";
 
 import {
   getLogProv,
-  getScratchPath,
   WsPoolMock,
   absTestFolder,
   absTestLogFolder,
-  makeJacsWorker,
   TestFrameworkMock,
 } from ".";
+import { makeJacsWorker } from "../util/diverse jacs compile";
+import { getScratchPath } from "../util/diverse";
 
 /**
  *

@@ -1,10 +1,11 @@
 import path from "path";
-import { CompilerOptions } from "typescript";
+import type { CompilerOptions } from "typescript";
 
 import {
   makeMakeJacsWorkerBee,
   MakeMakeJacsBeeDeps,
   SourceFileLoader,
+  WorkerData,
 } from "^jacs";
 import { makeTsNodeWorker } from "^jawis-util/node";
 import { TestProvision } from "^jarun";
@@ -15,7 +16,10 @@ import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 
 import { assertString } from "^jab";
 
-import { syntheticWait } from ".";
+import { syntheticWait } from "./jacs protocol";
+
+// import { uninstall } from "@jawis/jacs";
+const { uninstall } = require("../../../../build-alpha/jacs"); //quick fix, for testing jacs
 
 const projectConf = require("../../../../project.conf");
 
@@ -104,6 +108,25 @@ export const makeProducerOnCompile = (
 /**
  *
  */
+export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
+  const controlArray = getControlArray();
+
+  const dataArray = new Uint8Array(new SharedArrayBuffer(40));
+
+  return {
+    controlArray,
+    dataArray,
+    timeout: 0,
+    unregister: false,
+    absBaseUrl: "E:\\work\\repos\\jawis",
+    paths: { "^*": ["./packages/*"] },
+    ...extraDeps,
+  };
+};
+
+/**
+ *
+ */
 export const getConsumer = (
   prov: TestProvision,
   extraDeps?: Partial<JacsConsumerDeps>,
@@ -151,4 +174,12 @@ export const filterTsConfig = (conf: CompilerOptions) => {
     rootDir: conf.rootDir && path.relative(projectConf.projectRoot, conf.rootDir).replace(/\\/g, "/"), // prettier-ignore
     pathsBasePath,
   };
+};
+
+/**
+ * It's needed to use uninstall from 'live' jacs. In order to test the development version.
+ *  And live might be '@jawis/jacs' or 'alpha build jacs'
+ */
+export const uninstallLiveJacs = () => {
+  uninstall();
 };

@@ -1,3 +1,4 @@
+export * from "./JacsConsumerMainImpl";
 export * from "./util";
 export * from "./ts-util";
 export * from "./SourceFileLoader";

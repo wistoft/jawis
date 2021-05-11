@@ -1,7 +1,4 @@
 import path from "path";
-import fs from "fs";
-import fse from "fs-extra";
-
 import { RequestOptions } from "http";
 
 import { TestProvision } from "^jarun";
@@ -32,22 +29,6 @@ export const getDefaultServerConf = (): WsUrl => ({
  * So please dont' use this port number for anything.
  */
 export const getUnusedPort = () => 6666;
-
-/**
- * - ensure it exists, because it might get deleted.
- */
-export const getScratchPath = (script?: string) => {
-  const folder = path.join(__dirname, "../scratchFolder");
-
-  fse.ensureDir(folder);
-
-  return path.join(folder, script || "");
-};
-
-/**
- *
- */
-export const emptyScratchFolder = () => fse.emptyDirSync(getScratchPath());
 
 /**
  *
@@ -114,24 +95,6 @@ export const getLogProv = (prov: TestProvision, logPrefix = ""): LogProv => ({
     prov.log(logPrefix + "log", type + " is " + status);
   },
 });
-
-/**
- *
- */
-export const writeScriptFileThatChanges2 = (value: number) => {
-  writeScriptFileThatChanges(value, "FileThatChanges2.js");
-};
-
-/**
- *
- */
-export const writeScriptFileThatChanges = (
-  value: number,
-  name = "FileThatChanges.js"
-) => {
-  const code = "module.exports = " + value + ";";
-  fs.writeFileSync(getScratchPath(name), code);
-};
 
 /**
  *

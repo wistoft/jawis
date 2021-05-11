@@ -1,4 +1,3 @@
-export * from "./diverse jacs compile";
 export * from "./diverse";
 export * from "./dtp";
 export * from "./jab ReusableWPP";

@@ -1,6 +1,8 @@
+import { nodeRequire , registerPrecompilers } from "^jab-node";
+
 import { parentPort } from "worker_threads";
 
-import { registerPrecompilers } from "^jab-node";
+
 import { Waiter } from "^jab";
 
 import { requestProducerSync, WaitFunc } from "./protocol";
@@ -52,10 +54,13 @@ export class JacsConsumer {
    */
   public unregister = () => {
     if (!this.registered) {
-      throw new Error("Not registered.");
+      throw new Error("Can't unregister. JacsConsumer not registered.");
     }
 
-    throw new Error("Not impl.");
+    //this should work, because it's checked, that nothing is registered, when jacs is registered.
+
+    delete nodeRequire.extensions[".ts"];
+    delete nodeRequire.extensions[".tsx"];
   };
 
   /**

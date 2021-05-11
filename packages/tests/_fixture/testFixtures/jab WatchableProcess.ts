@@ -5,14 +5,12 @@ import {
   WatchableProcessPreloader,
 } from "^jab-node";
 
+import { getJabProcessDeps, getLogProv, getScriptPath } from ".";
+import { makeJacsWorker } from "../util/diverse jacs compile";
 import {
-  getJabProcessDeps,
-  getLogProv,
-  getScriptPath,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
-  makeJacsWorker,
-} from ".";
+} from "../util/diverse";
 
 /**
  *

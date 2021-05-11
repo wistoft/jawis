@@ -1,6 +1,6 @@
 import { unRegisterTsCompiler } from "^jacs";
 import { registerPrecompilers } from "^jab-node";
-import { getScriptPath } from "../_fixture";
+import { getScriptPath } from "../_fixture/testFixtures/diverse";
 
 //returns exactly the code, that the preCompiler decides.
 

@@ -10,8 +10,8 @@ import {
   getJabProcessDeps,
   getScriptPath,
   makeDormentInMemoryBee,
-  makeJacsWorker,
 } from ".";
+import { makeJacsWorker } from "../util/diverse jacs compile";
 
 /**
  *

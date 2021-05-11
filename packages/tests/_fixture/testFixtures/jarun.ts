@@ -14,8 +14,9 @@ import {
 import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
-import { filterTestLogs, filterTestResult } from ".";
 import { makeTsNodeJabProcess } from "^jawis-util/node";
+
+import { filterTestResult, filterTestLogs } from "./jates";
 
 /**
  *

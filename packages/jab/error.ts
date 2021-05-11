@@ -37,17 +37,24 @@ export const captureStack = (error: {
   stack?: string;
   __jawisNodeStack?: ParsedStackFrame[];
 }): UnparsedStack => {
-  if (error.__jawisNodeStack !== undefined) {
-    return {
-      type: "node-parsed",
-      stack: error.__jawisNodeStack,
-    };
-  } else if (error.stack === undefined) {
+  //ensure `Error.prepareStackTrace` is by accessing `error.stack`
+
+  if (error.stack === undefined) {
     return {
       type: "other",
       stack: "",
     };
-  } else {
+  }
+
+  //now `error.__jawisNodeStack` is ensured to be set, if it's going to be.
+
+  // if (error.__jawisNodeStack !== undefined) {
+  //   return {
+  //     type: "node-parsed",
+  //     stack: error.__jawisNodeStack,
+  //   };
+  // } else
+  {
     return {
       type: isNode() ? "node" : "other",
       stack: error.stack,

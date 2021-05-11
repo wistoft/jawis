@@ -1,4 +1,4 @@
-import { Application } from "express";
+import type { Application } from "express";
 
 import { NodeWS, NodeWsDeps, Deps, SocketData } from "^jab-node";
 import { TestProvision } from "^jarun";
