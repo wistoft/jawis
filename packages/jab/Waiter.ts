@@ -192,7 +192,7 @@ export class Waiter<States, Events = never> {
   /**
    * Set the state to a new value.
    *
-   * - it's also posible to use onClose() for the close state.
+   * - it's also possible to use onClose() for the close state.
    */
   public set = (newState: States) => {
     if (newState === this.deps.endState) {

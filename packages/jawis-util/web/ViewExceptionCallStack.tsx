@@ -270,8 +270,6 @@ export const getOpenInfo = (
   // that should be used to open files.
   // it's possible only to have rawLine. In case the filename is the same in dev and prod.
 
-  console.log(frame.file);
-
   if (frame.file?.includes("node_modules")) {
     if (frame.rawFile) {
       file = frame.rawFile;

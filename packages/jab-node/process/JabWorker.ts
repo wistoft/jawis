@@ -32,7 +32,7 @@ type Events = "message";
  *      This alleviates the requirement, that filenames must have the file ending ".js", they wont be resolve like for processes.
  *
  * - If stdout/stderr handlers aren't specified will the streams go to this process's streams. And be intermixed :(
- * - If stdout/stderr handlers are specified, it won't be posible to unref the worker. :(
+ * - If stdout/stderr handlers are specified, it won't be possible to unref the worker. :(
  * - The thread must handle a JabShutdownMessage
  * - execArgv not supported.
  */

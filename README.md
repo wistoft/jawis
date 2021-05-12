@@ -17,7 +17,7 @@ cd jawis
 yarn
 ```
 
-Now it's posible to use the commands below.
+Now it's possible to use the commands below.
 
 ### Run tests
 

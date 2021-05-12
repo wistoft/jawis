@@ -67,11 +67,20 @@ export const makeTestCaseUpdater = (
     testLogs: sortTestLogs(unsortedTest.testLogs),
   };
 
-  // main thing
-
   if (old.tests === undefined) {
     throw err("There should be tests, when updating test case.");
   }
+
+  //quick fix: ensure we know the test. The test result could be from an old test selection, that is in progress of stopping.
+  // otherwise `getTestUpdate` will throw.
+
+  const knownTest = old.tests.flatIds.some((id) => id === testCase.id);
+
+  if (!knownTest) {
+    return {};
+  }
+
+  //do it
 
   const update1 = { tests: old.tests.getTestUpdate(testCase) };
 

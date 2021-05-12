@@ -48,7 +48,7 @@ export const testSelectionToCollection = (
  */
 const methods: Methods = {
   /**
-   * Teturns a new collection, with the test case updated.
+   * Returns a new collection, with the test case updated.
    */
   getTestUpdate: function (this, test) {
     assert(test.status !== undefined);

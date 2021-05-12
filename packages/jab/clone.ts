@@ -122,7 +122,7 @@ const internalClone = (
 
 /**
  *
- * Best effort deep clone, for preserving as much information as posible.
+ * Best effort deep clone, for preserving as much information as possible.
  */
 const cloneReal = (
   value: unknown,

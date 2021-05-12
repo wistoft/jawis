@@ -1,10 +1,19 @@
+# 0.0.29
+
+## :bug: Bug fixes
+
+- Don't throw when `jatev` receives the result of an unknown test. It can occur
+  when test selection is changed in the view, and the result from an old test
+  selection is received.
+- Remove unintended `console.log` in `ViewExceptionCallStack`
+
 # 0.0.28
 
 ## :tada: Enhancements
 
 - `console` handles the new stack type in `UnparsedStack`.
 - When `console` opens stack frames in vscode, files in node_modules, that have
-  source-map, is opened correctly, by not using source-mapping in this case.
+  source-map, are opened correctly, by not using source-mapping in this case.
 
 ## :boom: Breaking changes
 
