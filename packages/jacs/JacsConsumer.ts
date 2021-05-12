@@ -1,7 +1,6 @@
-import { nodeRequire , registerPrecompilers } from "^jab-node";
+import { nodeRequire, registerPrecompilers } from "^jab-node";
 
 import { parentPort } from "worker_threads";
-
 
 import { Waiter } from "^jab";
 

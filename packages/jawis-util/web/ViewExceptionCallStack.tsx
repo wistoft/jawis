@@ -136,7 +136,7 @@ const mapFrame = (
 
   // for opening files
 
-  const absFile = getAbsFile(normalizedProjectRoot, frame.file);
+  const openInfo = getOpenInfo(normalizedProjectRoot, frame);
 
   return (
     <React.Fragment key={index}>
@@ -144,8 +144,8 @@ const mapFrame = (
       <JsLink
         style={{ color: "var(--text-color-faded)" }}
         onClick={() => {
-          if (absFile) {
-            openFile({ file: absFile, line: frame.line });
+          if (openInfo) {
+            openFile(openInfo);
           }
         }}
       >
@@ -248,11 +248,55 @@ export const partitionFile = (file?: string) => {
 };
 
 /**
+ * Return the file and line to open.
+ *
+ * - Files in node_modules are opened as non-source mapped. Because that's how they are to this project.
+ * - If line is missing, the file is just opened, without specifying the line.
+ *
+ * note
+ *  - webpack remakes source-maps, so in the browser the non-mapped file/line should not be used. It would
+ *    point to the webpack bundle. But webpack also changes `frame.line` to be something link `webpack:///`
+ *    , without node_modules in the file path. In all it also works for webpack bundles to check for
+ *    'node_modules', when deciding if source-map should be disregared in locating the call site.
+ */
+export const getOpenInfo = (
+  normalizedProjectRoot: string,
+  frame: ParsedStackFrame
+) => {
+  let file = frame.file;
+  let line = frame.line;
+
+  //for files in node_modules, if the have non-source-mapped file or line,
+  // that should be used to open files.
+  // it's possible only to have rawLine. In case the filename is the same in dev and prod.
+
+  console.log(frame.file);
+
+  if (frame.file?.includes("node_modules")) {
+    if (frame.rawFile) {
+      file = frame.rawFile;
+    }
+
+    if (frame.rawLine) {
+      line = frame.rawLine;
+    }
+  }
+
+  if (!file) {
+    return;
+  }
+
+  const absFile = getAbsFile(normalizedProjectRoot, file);
+
+  return { file: absFile, line };
+};
+
+/**
  *
  */
 export const getAbsFile = (projectRoot: string, file?: string) => {
   if (!file) {
-    return undefined;
+    return;
   }
 
   const relPath = file

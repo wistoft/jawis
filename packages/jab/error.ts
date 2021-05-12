@@ -48,13 +48,12 @@ export const captureStack = (error: {
 
   //now `error.__jawisNodeStack` is ensured to be set, if it's going to be.
 
-  // if (error.__jawisNodeStack !== undefined) {
-  //   return {
-  //     type: "node-parsed",
-  //     stack: error.__jawisNodeStack,
-  //   };
-  // } else
-  {
+  if (error.__jawisNodeStack !== undefined) {
+    return {
+      type: "node-parsed",
+      stack: error.__jawisNodeStack,
+    };
+  } else {
     return {
       type: isNode() ? "node" : "other",
       stack: error.stack,

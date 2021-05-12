@@ -1,11 +1,11 @@
 import { TestProvision } from "^jarun";
 import { sleeping } from "^jab";
 
-import { getJabWatchableProcess_ipc_changeable } from "../_fixture";
 import {
+  getJabWatchableProcess_ipc_changeable,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
-} from "^tests/_fixture/util/diverse";
+} from "../_fixture";
 
 // two different files change
 

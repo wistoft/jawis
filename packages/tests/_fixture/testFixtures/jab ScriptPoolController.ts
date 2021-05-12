@@ -3,8 +3,7 @@ import { ScriptPoolController, Deps } from "^jagos/ScriptPoolController";
 import { mapScriptFilesToDefault } from "^jagos";
 import { basename } from "^jab";
 
-import { getLogProv, getScriptPath } from ".";
-import { makeJacsWorker } from "../util/diverse jacs compile";
+import { getLogProv, getScriptPath, makeJacsWorker } from ".";
 
 /**
  *

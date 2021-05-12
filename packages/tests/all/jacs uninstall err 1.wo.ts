@@ -1,6 +1,4 @@
-import {
-  uninstallLiveJacs,
-} from "../_fixture/testFixtures/jacs";
+import { uninstallLiveJacs } from "../_fixture/testFixtures/jacs";
 import { uninstall } from "^jacs";
 
 uninstallLiveJacs();

@@ -30,6 +30,8 @@ export type ExecBee = <MR extends {}, MS extends {}>(
 
 /**
  * URL for filename not supported, yet.
+ *
+ *  - Abstract to allow same interface plain and workers supporting ts compile.
  */
 export type MakeNodeWorker = (
   filename: string,

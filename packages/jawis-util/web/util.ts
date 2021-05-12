@@ -32,7 +32,7 @@ export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
  *    use v8 format. So there is no need to think about capturing anything but the
  *    `error.stack` property. It will work for all (modern) browsers and node.
  */
-export const parseTrace = (stack: UnparsedStack) => {
+export const parseTrace = (stack: UnparsedStack): ParsedStackFrame[] => {
   if (stack.stack === undefined || stack.stack === "") {
     //error-stack-parser can't handle this case
     return [];
@@ -40,6 +40,8 @@ export const parseTrace = (stack: UnparsedStack) => {
 
   if (stack.type === "node") {
     return parseNodeTrace(stack.stack);
+  } else if (stack.type === "node-parsed") {
+    return stack.stack;
   } else {
     return ErrorStackParser.parse({
       stack: stack.stack,

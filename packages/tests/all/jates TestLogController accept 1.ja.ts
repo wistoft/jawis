@@ -1,7 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getTestLogController_scratch } from "../_fixture";
-import { emptyScratchFolder } from "^tests/_fixture/util/diverse";
+import { emptyScratchFolder, getTestLogController_scratch } from "../_fixture";
 
 //accept a user log
 

@@ -1,6 +1,9 @@
 import { assert } from "^jab";
 import { install } from "^jacs";
-import { getWorkerData, uninstallLiveJacs } from "^tests/_fixture";
+import {
+  getWorkerData,
+  uninstallLiveJacs,
+} from "^tests/_fixture/testFixtures/jacs";
 
 uninstallLiveJacs();
 

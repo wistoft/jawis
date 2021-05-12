@@ -19,5 +19,5 @@ uninstall();
 try {
   require("^jab");
   console.log("expected to throw");
-  // eslint-disable-next-line import/no-empty
+  // eslint-disable-next-line no-empty
 } catch (error) {}

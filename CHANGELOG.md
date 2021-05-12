@@ -1,3 +1,16 @@
+# 0.0.28
+
+## :tada: Enhancements
+
+- `console` handles the new stack type in `UnparsedStack`.
+- When `console` opens stack frames in vscode, files in node_modules, that have
+  source-map, is opened correctly, by not using source-mapping in this case.
+
+## :boom: Breaking changes
+
+- When errors are serialized, 'parsed trace' from jacs is captured. Widening the
+  `UnparsedStack` type.
+
 # 0.0.27
 
 ## :tada: Enhancements

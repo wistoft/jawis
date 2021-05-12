@@ -62,8 +62,8 @@ automatically start this task install the extentions: `AutoLaunch`
 - `yarn pretty:fix`
 - Bump version number in `gulpfile.js`
 - `yarn build`
-- Clean up git history and tag commit.
 - `lerna publish from-package`
+- Clean up git history and tag commit.
 
 ## Known issues
 

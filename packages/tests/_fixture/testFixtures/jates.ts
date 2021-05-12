@@ -27,9 +27,9 @@ import {
   absTestFolder,
   absTestLogFolder,
   TestFrameworkMock,
+  makeJacsWorker,
+  getScratchPath,
 } from ".";
-import { makeJacsWorker } from "../util/diverse jacs compile";
-import { getScratchPath } from "../util/diverse";
 
 /**
  *

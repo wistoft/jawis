@@ -1,6 +1,9 @@
 import path from "path";
 import type { CompilerOptions } from "typescript";
 
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { uninstall } from "@jawis/jacs";
+
 import {
   makeMakeJacsWorkerBee,
   MakeMakeJacsBeeDeps,
@@ -17,9 +20,6 @@ import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 import { assertString } from "^jab";
 
 import { syntheticWait } from "./jacs protocol";
-
-// import { uninstall } from "@jawis/jacs";
-const { uninstall } = require("../../../../build-alpha/jacs"); //quick fix, for testing jacs
 
 const projectConf = require("../../../../project.conf");
 
@@ -178,7 +178,7 @@ export const filterTsConfig = (conf: CompilerOptions) => {
 
 /**
  * It's needed to use uninstall from 'live' jacs. In order to test the development version.
- *  And live might be '@jawis/jacs' or 'alpha build jacs'
+ *  Live might be '@jawis/jacs' or 'alpha build jacs'
  */
 export const uninstallLiveJacs = () => {
   uninstall();

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { JsLink } from "^jab-react";
 import { consoleCapture, makeUseConsoleStream } from "^console";
 import { ConsoleMain } from "^jagov/console/ConsoleMain";
-import { entry } from "^dev/_dev_hello_web/_hello";
 
 /**
  * note
@@ -42,7 +41,6 @@ export const JagoConsole: React.FC = () => {
       <JsLink
         name="throw"
         onClick={() => {
-          entry();
           throw new Error("ups");
         }}
       />

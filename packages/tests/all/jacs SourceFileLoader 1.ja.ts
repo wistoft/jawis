@@ -3,8 +3,7 @@ import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
 import { sleeping } from "^jab";
 
-import { removeCarriageReturn } from "../_fixture";
-import { getScratchPath } from "^tests/_fixture/util/diverse";
+import { getScratchPath, removeCarriageReturn } from "../_fixture";
 
 export default (prov: TestProvision) => {
   const sfl = new SourceFileLoader({ onError: prov.onError });
