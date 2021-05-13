@@ -18,7 +18,10 @@ import { MakeBee } from "^jab-node/types";
  *
  * - Resolve, when the process ends.
  * - Return stdout, err and messages.
+ * - Return errors occuring during execution, when onexit is called.
  *
+ * note
+ *  assumes that `onExit` is always called.
  */
 export const execBee: ExecBee = <
   MR extends Serializable,
@@ -26,7 +29,7 @@ export const execBee: ExecBee = <
 >(
   script: string,
   finallyFunc: FinallyFunc,
-  makeJabProcess: MakeBee
+  makeBee: MakeBee
 ) => {
   const prom = getPromise<BeeResult<MR>>();
 
@@ -35,6 +38,7 @@ export const execBee: ExecBee = <
   let stdout = "";
   let stderr = "";
   const messages: MR[] = [];
+  const errors: unknown[] = [];
 
   // handlers
 
@@ -44,12 +48,13 @@ export const execBee: ExecBee = <
       stderr,
       status,
       messages,
+      errors,
     });
   };
 
   //  process/worker
 
-  const bee = makeJabProcess<MS, MR>({
+  const bee = makeBee<MS, MR>({
     filename: script,
     onMessage: (msg) => {
       messages.push(msg);
@@ -60,7 +65,9 @@ export const execBee: ExecBee = <
     onStderr: (data: Buffer) => {
       stderr += data.toString();
     },
-    onError: prom.reject as (error: unknown) => void,
+    onError: (error) => {
+      errors.push(error);
+    },
     onExit,
     finally: finallyFunc,
   });

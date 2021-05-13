@@ -11,5 +11,5 @@ export default (prov: TestProvision) => {
 
   tec.setTestList(["late.reject.test"]);
 
-  return tec.lc.waiter.await("done").then(() => sleeping(200));
+  return tec.lc.waiter.await("paused").then(() => sleeping(200));
 };

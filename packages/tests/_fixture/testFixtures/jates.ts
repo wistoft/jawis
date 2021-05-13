@@ -181,6 +181,8 @@ export const getTestExecutionControllerDeps = (
 
   onError: prov.onError,
 
+  DateNow: () => 1,
+
   ...extraDeps,
 });
 

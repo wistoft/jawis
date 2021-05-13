@@ -2,6 +2,7 @@ import deepEqual from "deep-equal";
 
 import {
   assertNever,
+  cloneArrayEntries,
   ClonedValue,
   def,
   err,
@@ -124,12 +125,17 @@ export const addReturnToTestLogs = (
  */
 export const addErrMsgToTestLog = (
   testLog: TestCurLogs,
-  msg: string
+  msg: string,
+  info: Array<unknown> = []
 ): TestCurLogs => ({
   ...testLog,
   err: [
     ...(testLog.err || []),
-    { msg, info: [], stack: { type: "node", stack: "dummy" } },
+    {
+      msg,
+      info: cloneArrayEntries(info),
+      stack: { type: "node", stack: "dummy" },
+    },
   ],
 });
 

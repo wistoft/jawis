@@ -14,9 +14,9 @@ import {
 import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
-import { makeTsNodeJabProcess } from "^jawis-util/node";
 
 import { filterTestResult, filterTestLogs } from "./jates";
+import { makeJacsWorker } from ".";
 
 /**
  *
@@ -142,21 +142,21 @@ export const newJarunPromise = <T>(
 /**
  *
  */
-export const getProcessRunner = (prov: TestProvision) =>
+export const getBeeRunner = (prov: TestProvision) =>
   new BeeRunner({
     finally: prov.finally,
-    makeBee: makeTsNodeJabProcess,
+    makeBee: makeJacsWorker,
   });
 
 /**
  *
  */
-export const prRunTest = (prov: TestProvision, absTestFile: string) => {
-  const pr = getProcessRunner(prov);
+export const brRunTest = (prov: TestProvision, absTestFile: string) => {
+  const br = getBeeRunner(prov);
 
   return {
-    pr,
-    promise: pr.runTest("testId unused", absTestFile).then((data) => {
+    br,
+    promise: br.runTest("testId unused", absTestFile).then((data) => {
       data.execTime = "removed" as any;
       return data;
     }),

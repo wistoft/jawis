@@ -24,7 +24,7 @@ export type Deps = {
   serverPort: number;
   staticWebFolder: string;
   clientConf: JaviClientConf;
-  jates: Partial<JatesDeps> & Pick<JatesDeps, "absTestFolder" | "absTestLogFolder">; // prettier-ignore
+  jates: Partial<JatesDeps> & Pick<JatesDeps, "absTestFolder" | "absTestLogFolder" | "tecTimeout">; // prettier-ignore
   jagos: Partial<JagosDeps> & Pick<JagosDeps, "scriptFolders" | "scripts" | "projectRoot">; // prettier-ignore
   makeRoutes?: Route[];
 };

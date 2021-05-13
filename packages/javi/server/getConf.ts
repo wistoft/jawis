@@ -14,6 +14,7 @@ export type FullJaviConf = {
   //jate
   absTestFolder: string;
   absTestLogFolder: string;
+  tecTimeout: number;
 
   //jago
   scriptFolders: string[];
@@ -110,6 +111,14 @@ export const getFullConf = (
     port = a(conf.port, isInt, "Javi: port must be integer, was: " + conf.port);
   }
 
+  //tecTimeout
+
+  let tecTimeout = 30000;
+
+  if (conf.tecTimeout !== undefined) {
+    tecTimeout = a(conf.tecTimeout, isInt, "Javi: tecTimeout must be number, was: " + conf.tecTimeout); // prettier-ignore
+  }
+
   //removePathPrefix
 
   let removePathPrefix = "";
@@ -168,6 +177,7 @@ export const getFullConf = (
   return {
     port,
     projectRoot: confFileDir,
+    tecTimeout,
     removePathPrefix,
     initialShowSystemFrames: false,
     showClearLink: true,

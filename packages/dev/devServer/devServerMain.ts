@@ -24,6 +24,7 @@ const main = (mainProv: MainProv) => {
     jates: {
       absTestFolder: getPackagePath("dev/devServer/testsuite"),
       absTestLogFolder: getPackagePath("dev/devServer/testsuite/_testLogs"),
+      tecTimeout: 20000,
     },
 
     jagos: {

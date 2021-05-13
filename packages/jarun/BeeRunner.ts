@@ -1,4 +1,4 @@
-import { clone, FinallyFunc } from "^jab";
+import { clone, FinallyFunc, unknownToErrorData } from "^jab";
 import { TestRunner } from "^jates";
 import { execBee, Bee, MakeBee } from "^jab-node";
 import { TestResult, UserTestLogs } from "^jatec";
@@ -33,30 +33,40 @@ export class BeeRunner implements TestRunner {
 
     return promise.then(
       (data): TestResult => {
-        const log: UserTestLogs = {};
+        const userLog: UserTestLogs = {};
 
         if (data.stdout !== "") {
-          log.stdout = [data.stdout];
+          userLog.stdout = [data.stdout];
         }
 
         if (data.stderr !== "") {
-          log.stderr = [data.stderr];
+          userLog.stderr = [data.stderr];
         }
 
         if (data.status !== 0) {
-          log.exitCode = [data.status];
+          userLog.exitCode = [data.status];
         }
 
         if (data.messages.length !== 0) {
-          log.messages = data.messages.map((msg) => clone(msg));
+          userLog.messages = data.messages.map((msg) => clone(msg));
         }
 
-        return {
+        //the rest
+
+        const result: TestResult = {
           cur: {
-            user: log,
+            user: userLog,
           },
           execTime: Date.now() - startTime,
         };
+
+        if (data.errors.length !== 0) {
+          result.cur.err = data.errors.map((error) =>
+            unknownToErrorData(error)
+          );
+        }
+
+        return result;
       }
     );
   };

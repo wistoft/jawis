@@ -1,3 +1,17 @@
+# 0.0.30
+
+## :tada: Enhancements
+
+- `Jates` stops test execution if test frameworks reject in `runTest`. Because
+  it's a system error, and `TestExecutionController` has no way to recover.
+- Timeout in `TestExecutionController` is configurable in `javi.conf`.
+
+## :boom: Breaking changes
+
+- `execBee` resolves rather than reject, when there are errors. So it's possible
+  to return the other information from the bee. Like stdout.
+- `BeeRunner`: When the tests throw, stdout, etc. is also logged.
+
 # 0.0.29
 
 ## :bug: Bug fixes

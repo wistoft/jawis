@@ -59,11 +59,11 @@ export class JacsProducer {
         );
       },
       safeCatch(this.deps.onError, (error) => {
-        const data = unknownToErrorData(error); //only error message for the consumer.
+        const errorData = unknownToErrorData(error);
 
         signalConsumerSync(
           "error",
-          data.msg,
+          errorData.msg, //only error message for the consumer.
           controlArray,
           dataArray,
           this.deps.notify

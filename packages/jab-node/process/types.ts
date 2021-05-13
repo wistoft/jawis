@@ -20,6 +20,7 @@ export type BeeResult<MR> = {
   stderr: string;
   status: number | null;
   messages: MR[];
+  errors: unknown[];
 };
 
 export type ExecBee = <MR extends {}, MS extends {}>(

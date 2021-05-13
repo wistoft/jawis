@@ -30,6 +30,10 @@ export type TestExecutionControllerDeps = {
   onRogueTest: OnRogue;
   onError: (error: unknown) => void;
   onTestResult: OnTestResult;
+
+  //for testing
+
+  DateNow: () => number;
 } & Pick<
   ClientComProv,
   "onTestStarts" | "onTestRunnerStarts" | "onTestRunnerStops"
@@ -105,8 +109,11 @@ export class TestExecutionController implements TestExecutionControllerProv {
    *
    * - Sets timeout for the test framework.
    * - Reports test resolve/reject after timeout as rogue.
+   * - No robustness. `runNextTest` handles that.
    */
   private wrapRunTest = (id: string) => {
+    const startTime = this.deps.DateNow();
+
     const fallback = (prom: Promise<TestResult>) =>
       prom
         .then((testLogs) => {
@@ -114,7 +121,8 @@ export class TestExecutionController implements TestExecutionControllerProv {
             id,
             data: addErrMsgToTestLog(
               testLogs.cur,
-              "Test resolved after timeout (in TEC)."
+              "Test resolved after timeout (in TEC).",
+              [{ time: this.deps.DateNow() - startTime }]
             ),
           });
         })
@@ -123,7 +131,7 @@ export class TestExecutionController implements TestExecutionControllerProv {
             id,
             data: errorToTestLog(
               error,
-              [],
+              [{ time: this.deps.DateNow() - startTime }],
               "Test rejected after timeout (in TEC)."
             ),
           });
@@ -138,6 +146,7 @@ export class TestExecutionController implements TestExecutionControllerProv {
   };
 
   /**
+   * - Pause execution, if errors are thrown. They are internal errors.
    * - Guard against wrapRunTest throws sync.
    * - Add timeout rejections to the test log.
    *    They may be user or internal errors. Impossible to tell the difference.
@@ -150,7 +159,11 @@ export class TestExecutionController implements TestExecutionControllerProv {
 
     return Promise.resolve()
       .then(() => this.wrapRunTest(id))
-      .catch(errorToTestResult)
+      .catch((error) => {
+        this.pause();
+
+        return errorToTestResult(error);
+      })
       .then((result) => {
         this.deps.onTestResult(id, result);
       });

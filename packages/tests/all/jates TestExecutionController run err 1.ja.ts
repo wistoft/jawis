@@ -9,5 +9,5 @@ export default (prov: TestProvision) => {
 
   tec.setTestList(["throws.test"]);
 
-  return tec.lc.waiter.await("done");
+  return tec.lc.waiter.await("paused");
 };

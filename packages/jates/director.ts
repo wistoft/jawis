@@ -23,6 +23,7 @@ import { TestListController } from "./TestListController";
 export type Deps = Readonly<{
   absTestFolder: string;
   absTestLogFolder: string;
+  tecTimeout: number;
 
   createTestRunners: CreateTestRunners;
   makeTsProcess: MakeJabProcess;
@@ -105,10 +106,12 @@ export const director = (deps: Deps) => {
   const tec = new TestExecutionController({
     ...event,
     absTestFolder: deps.absTestFolder,
-    timeoutms: 20000, //extract to conf
+    timeoutms: deps.tecTimeout,
     tr: tf,
     onError: deps.onError,
     onTestResult,
+
+    DateNow: Date.now,
   });
 
   const testListController = new TestListController({

@@ -27,6 +27,7 @@ const main = (mainProv: MainProv) => {
     jates: {
       absTestFolder: conf.absTestFolder,
       absTestLogFolder: conf.absTestLogFolder,
+      tecTimeout: conf.tecTimeout,
     },
 
     jagos: {
