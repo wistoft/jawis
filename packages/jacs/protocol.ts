@@ -2,7 +2,7 @@ import { TextDecoder, TextEncoder } from "util";
 
 import { assert, assertNever, err } from "^jab";
 
-import { ConsumerMessage } from ".";
+import { ConsumerMessage, getDebugSummary } from ".";
 
 export const ControlArrayLength = 5; //must match CaIndex
 
@@ -66,14 +66,18 @@ export const getControlArray = () => {
 
 /**
  * Ask for getting a file compiled (synchronously by sleeping)
+ *
+ * - softTimeout is optional.
  */
 export const requestProducerSync = (
   file: string,
   controlArray: Int32Array,
   dataArray: Uint8Array,
   timeout: number,
+  softTimeout: number | undefined,
   postMessage: (msg: ConsumerMessage) => void,
-  wait: WaitFunc = Atomics.wait
+  wait: WaitFunc = Atomics.wait,
+  DateNow: () => number
 ): string => {
   assert(controlArray.length === ControlArrayLength, "controlArray has wrong length:", controlArray.length ); // prettier-ignore
 
@@ -110,16 +114,34 @@ export const requestProducerSync = (
   // sleep if needed
 
   let val: "ok" | "timed-out" | "not-equal";
+  const startTime = DateNow();
+  let actualTimeout: number | undefined = softTimeout || timeout;
+  let hasBeenSoftTimeout = false;
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    val = wait(controlArray, CaIndex.sleep_bit, ConsumerShould.sleep, timeout);
+    val = wait(controlArray, CaIndex.sleep_bit, ConsumerShould.sleep, actualTimeout); // prettier-ignore
+
+    //give warning on first timeout
+
+    if (val === "timed-out" && softTimeout && !hasBeenSoftTimeout) {
+      //give warning
+
+      console.log("Soft timeout in consumer.", getDebugSummary(file, controlArray, timeout, softTimeout) ); // prettier-ignore
+
+      //setup to wait for next timeout
+
+      actualTimeout = timeout - softTimeout;
+      hasBeenSoftTimeout = true;
+      continue;
+    }
+
+    //protect against spurious wake
 
     if (
       val === "ok" &&
       controlArray[CaIndex.sleep_bit] === ConsumerShould.sleep
     ) {
-      //spurious wake
       continue;
     }
 
@@ -130,28 +152,23 @@ export const requestProducerSync = (
 
   const resultType = controlArray[CaIndex.result_type] as ResultType; // prettier-ignore
   const dataLength = controlArray[CaIndex.data_length];
-  const consumerState = ConsumerStates[controlArray[CaIndex.consumer_state]]; // prettier-ignore
-  const postProducerState = ProducerStates[controlArray[CaIndex.producer_state]]; // prettier-ignore
-  const shouldSleep = ConsumerShould[controlArray[CaIndex.sleep_bit]];
-
-  const debug_summary = {
-    file,
-    consumerState,
-    producerState: postProducerState,
-    resultType: ResultType[resultType],
-    dataLength,
-    shouldSleep,
-    timeout,
-  };
 
   switch (val) {
     // not-equal can happen if producer has finished, before we have a chance to sleep.
     case "not-equal":
     case "ok": {
+      //tell if producer responsed between first and second timeout
+
+      if (hasBeenSoftTimeout) {
+        console.log(
+          "Producer responded late, time: " + (DateNow() - startTime)
+        );
+      }
+
       // check the part of result.
 
       if (dataLength === NoDataLength) {
-        err("producer didn't set data length.", debug_summary);
+        err("producer didn't set data length.", getDebugSummary(file, controlArray, timeout, softTimeout)); // prettier-ignore
       }
 
       //handle result
@@ -179,7 +196,7 @@ export const requestProducerSync = (
     case "timed-out":
       Atomics.store(controlArray, CaIndex.consumer_state, ConsumerStates.timed_out); // prettier-ignore
 
-      throw err("Timeout in consumer.", debug_summary);
+      throw err("Timeout in consumer.", getDebugSummary(file, controlArray, timeout, softTimeout)); // prettier-ignore
 
     default:
       return assertNever(val, "Unknown value from Atomics.wait()");

@@ -69,8 +69,8 @@ export const getJacsProducer = (
   const dataArray = new Uint8Array(new SharedArrayBuffer(maxSourceFileSize));
 
   const producer = new JacsProducer({
-    producerTimeout: 0,
     consumerTimeout: 0,
+    consumerSoftTimeout: 0,
     maxSourceFileSize,
     sfl: getSourceFileLoaderMock(),
     onError: prov.onError,
@@ -117,6 +117,7 @@ export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
     controlArray,
     dataArray,
     timeout: 0,
+    softTimeout: 0,
     unregister: false,
     absBaseUrl: "E:\\work\\repos\\jawis",
     paths: { "^*": ["./packages/*"] },
@@ -140,6 +141,7 @@ export const getConsumer = (
     controlArray,
     dataArray,
     timeout: 0,
+    softTimeout: 0,
   };
 
   const consumer = new JacsConsumer({

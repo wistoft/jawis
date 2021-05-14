@@ -1,3 +1,11 @@
+# 0.0.31
+
+## :boom: Breaking changes
+
+- Increase timeout in jacs to `10s`.
+- Introduce soft timeout is jacs. It gives a warning, but waits for producer to
+  respond. Default `1s`.
+
 # 0.0.30
 
 ## :tada: Enhancements

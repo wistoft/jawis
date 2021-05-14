@@ -8,7 +8,10 @@ import { requestProducerSync, WaitFunc } from "./protocol";
 import type { ConsumerMessage, WorkerData } from ".";
 
 export type JacsConsumerDeps = {
-  shared: Pick<WorkerData, "controlArray" | "dataArray" | "timeout">;
+  shared: Pick<
+    WorkerData,
+    "controlArray" | "dataArray" | "timeout" | "softTimeout"
+  >;
   onError: (error: unknown) => void;
 
   //for development
@@ -71,7 +74,9 @@ export class JacsConsumer {
       this.deps.shared.controlArray,
       this.deps.shared.dataArray,
       this.deps.shared.timeout,
+      this.deps.shared.softTimeout,
       this.deps.postMessage || ((msg) => parentPort!.postMessage(msg)),
-      this.deps.wait
+      this.deps.wait,
+      Date.now
     );
 }

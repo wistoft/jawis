@@ -60,6 +60,7 @@ automatically start this task install the extentions: `AutoLaunch`
   - Running the vscode tasks makes the errors available in vscode.
   - Review, because there's a bug, that removes comments after imports
 - `yarn pretty:fix`
+- Update change log.
 - Bump version number in `gulpfile.js`
 - `yarn build`
 - `lerna publish from-package`

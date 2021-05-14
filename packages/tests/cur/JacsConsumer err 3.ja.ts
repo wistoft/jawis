@@ -7,6 +7,6 @@ export default (prov: TestProvision) => {
   const { consumer } = getConsumer(prov, { wait: () => "timed-out" });
 
   prov.catch(() => consumer.compile("some file"));
-  consumer.compile("some file");
+
+  consumer.compile("other file");
 };
-//

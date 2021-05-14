@@ -24,6 +24,7 @@ export default (prov: TestProvision) => {
 
         return "timed-out";
       },
+      noSoftTimeout: true,
     })
   );
 

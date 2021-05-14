@@ -22,8 +22,8 @@ export type MakeMakeJacsBeeDeps = Partial<
 export const makeMakeJacsWorkerBee: (deps: MakeMakeJacsBeeDeps) => MakeBee = (
   deps
 ) => {
-  const producerTimeout = 2000;
-  const consumerTimeout = 1000;
+  const consumerTimeout = 10000; //throws
+  const consumerSoftTimeout = 1000; //gives warning, but continues to wait for producer.
   const maxSourceFileSize = 256 * 1000;
 
   const sfl = new SourceFileLoader(deps);
@@ -31,8 +31,8 @@ export const makeMakeJacsWorkerBee: (deps: MakeMakeJacsBeeDeps) => MakeBee = (
   const producer = new JacsProducer({
     sfl,
     maxSourceFileSize,
-    producerTimeout,
     consumerTimeout,
+    consumerSoftTimeout,
     ...deps,
   });
 

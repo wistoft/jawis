@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: paths must be set, when absBaseUrl"]}
+{"user":{"exitCode":[1]},"err":["Error: paths must be set, when absBaseUrl"]}

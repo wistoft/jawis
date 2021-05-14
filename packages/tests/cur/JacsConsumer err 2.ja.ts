@@ -11,7 +11,7 @@ export default (prov: TestProvision) => {
   holder.wait = () => {
     consumer.compile("second file");
 
-    return "timed-out";
+    throw new Error("unreach");
   };
 
   consumer.compile("some file");

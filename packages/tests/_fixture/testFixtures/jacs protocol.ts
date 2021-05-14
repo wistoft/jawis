@@ -47,8 +47,11 @@ export const requestProducerSync_test = (
   extraDeps?: {
     controlArray?: Int32Array;
     dataArray?: Uint8Array;
+    timeout?: number;
+    softTimeout?: number;
     postMessage?: (msg: ConsumerMessage) => void;
     wait?: WaitFunc;
+    noSoftTimeout?: boolean;
   }
 ) => {
   const controlArray = extraDeps?.controlArray || getControlArray();
@@ -56,14 +59,19 @@ export const requestProducerSync_test = (
   const dataArray =
     extraDeps?.dataArray || new Uint8Array(new SharedArrayBuffer(1000));
 
+  const softTimeout = extraDeps?.noSoftTimeout
+    ? undefined
+    : extraDeps?.softTimeout || 10;
+
   const res = requestProducerSync(
     "myfile",
     controlArray,
     dataArray,
-    /* timeout */ 10,
+    extraDeps?.timeout || 20,
+    softTimeout,
     extraDeps?.postMessage || (() => {}),
-
-    extraDeps?.wait || syntheticWait("success", controlArray, dataArray)
+    extraDeps?.wait || syntheticWait("success", controlArray, dataArray),
+    /* DateNow */ () => 1
   );
 
   prov.eq("ready", ConsumerStates[controlArray[CaIndex.consumer_state]]);

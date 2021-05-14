@@ -1,1 +1,1 @@
-{"user":{},"err":["Timeout in consumer."]}
+{"user":{"console.log":["Soft timeout in consumer.",{"file":"myfile","consumerState":"requesting","producerState":"ready","resultType":"none","dataLength":-1,"shouldSleep":"sleep","timeout":100,"softTimeout":9}],"imp":[9,91]},"err":["Timeout in consumer."]}

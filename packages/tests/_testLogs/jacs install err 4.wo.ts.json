@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: BaseUrl must exist: dontExist"]}
+{"user":{"exitCode":[1]},"err":["Error: BaseUrl must exist: dontExist"]}

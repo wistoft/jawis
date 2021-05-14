@@ -24,9 +24,9 @@
   --text-color-faded: rgb(130, 130, 130);
   --link-color: var(--blue);
 
-  --jatev-executing-test-color: #49bb2d;
+  --jatev-executing-test-color: #5af334;
   --jatev-test-done-color: var(--text-color-faded);
-  --jatev-unknown-test-status-color: rgb(155, 155, 155);
+  --jatev-unknown-test-status-color: rgb(175, 175, 175);
 
   --jatev-test-log-only-current: var(--dark-blue);
   --jatev-test-log-only-expected: var(--dark-blue);

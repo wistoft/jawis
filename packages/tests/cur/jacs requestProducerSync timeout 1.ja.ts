@@ -5,6 +5,11 @@ import { requestProducerSync_test } from "../_fixture";
 
 export default (prov: TestProvision) => {
   requestProducerSync_test(prov, {
-    wait: () => "timed-out",
+    timeout: 100,
+    softTimeout: 9,
+    wait: (typedArray, index, value, timeout) => {
+      prov.imp(timeout);
+      return "timed-out";
+    },
   });
 };

@@ -14,7 +14,7 @@ import { ConsumerMessage, WorkerData } from ".";
 
 export type JacsProducerDeps = {
   consumerTimeout: number;
-  producerTimeout: number;
+  consumerSoftTimeout: number;
   maxSourceFileSize: number;
   customBooter?: string;
   sfl: Pick<SourceFileLoader, "load" | "getTsConfigPaths">;
@@ -91,6 +91,7 @@ export class JacsProducer {
       controlArray: getControlArray(),
       dataArray,
       timeout: this.deps.consumerTimeout,
+      softTimeout: this.deps.consumerSoftTimeout,
       beeFilename: beeDeps.filename,
       ...this.deps.sfl.getTsConfigPaths(beeDeps.filename),
 
