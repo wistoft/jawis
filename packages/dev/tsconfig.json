@@ -21,6 +21,7 @@
     { "path": "../javi" },
     { "path": "../misc" },
     { "path": "../util" },
+    { "path": "../util-dev" },
     { "path": "../tests" }
   ]
 }

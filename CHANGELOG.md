@@ -1,3 +1,9 @@
+# 0.0.34
+
+## :boom: Breaking changes
+
+- Move `createWebpackBaseConf` from `util` package to `util-dev`
+
 # 0.0.32
 
 ## :boom: Breaking changes
