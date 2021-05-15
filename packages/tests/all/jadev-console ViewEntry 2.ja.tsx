@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^jawis-mess/node";
+import { getHtmlRTR } from "^misc/node";
 import { getViewEntry } from "../_fixture";
 import { UiEntry } from "^console";
 

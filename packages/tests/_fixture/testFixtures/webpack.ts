@@ -3,7 +3,7 @@ import fs from "fs";
 import os from "os";
 import prettier from "prettier";
 
-import { getNodeWebpackConf, webpackCompile } from "^jawis-mess/node";
+import { getNodeWebpackConf, webpackCompile } from "^misc/node";
 
 /**
  *

@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^jawis-mess/node";
+import { getHtmlEnzyme } from "^misc/node";
 import { getViewExecutionLevel } from "../_fixture";
 
 export default (prov: TestProvision) => {

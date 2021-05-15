@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { getHtmlRTR } from "^jawis-mess/node";
+import { getHtmlRTR } from "^misc/node";
 import { plainHtmlElement } from "../_fixture";
 
 export default (prov: TestProvision) => {

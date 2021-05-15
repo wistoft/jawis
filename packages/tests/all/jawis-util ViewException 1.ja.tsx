@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { getHtmlEnzyme } from "^jawis-mess/node";
+import { getHtmlEnzyme } from "^misc/node";
 
 import { getViewException } from "../_fixture";
 

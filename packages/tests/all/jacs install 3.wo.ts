@@ -23,8 +23,6 @@ assert((error as any).__jawisNodeStack === undefined);
 
 error.stack; //the magic
 
-console.log(
-  (error as any).__jawisNodeStack.filter(
-    (elm: any) => !elm.file.includes("jawis\\packages")
-  )
-);
+if (!("__jawisNodeStack" in error)) {
+  throw new Error("__jawisNodeStack not set");
+}

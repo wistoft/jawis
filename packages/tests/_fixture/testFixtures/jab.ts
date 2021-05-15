@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { ClonedValue, clonedTosGeneral, ErrorData, sleeping } from "^jab";
-import { diff, dynamicDiff } from "^jawis-util/algs";
+import { diff, dynamicDiff } from "^util/algs";
 
 export const errorData = (msg: string): ErrorData => ({
   msg,

@@ -1,5 +1,5 @@
 import path from "path";
-import { webpackCompile, getNodeWebpackConf } from "^jawis-mess/node";
+import { webpackCompile, getNodeWebpackConf } from "^misc/node";
 
 const projectConf = eval("require")("../../../../project.conf");
 

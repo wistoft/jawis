@@ -20,7 +20,7 @@
     { "path": "../jates" },
     { "path": "../jatev" },
     { "path": "../javi" },
-    { "path": "../jawis-mess" }
+    { "path": "../misc" }
   ],
   "exclude": ["_fixture/testsuite", "_fixture/tsProject"]
 }

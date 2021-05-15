@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^jawis-mess/node";
+import { getHtmlEnzyme } from "^misc/node";
 import { clone } from "^jab";
 import { errorData1, getViewTestLog } from "../_fixture";
 

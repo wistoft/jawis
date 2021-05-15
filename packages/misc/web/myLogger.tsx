@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { shallowEqualObjects } from "shallow-equal";
-import { getDiffAsString } from "^jawis-mess";
+import { getDiffAsString } from "^misc";
 
 /**
  * Log react of life-cycles.

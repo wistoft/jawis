@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { makeMeasure } from "^jawis-mess";
+import { makeMeasure } from "^misc";
 
 //work throws, but measure still gives result
 

@@ -1,4 +1,4 @@
-import { extractDeps } from "^jawis-util/dtp";
+import { extractDeps } from "^util/dtp";
 import { TestProvision } from "^jarun";
 import {
   getInMemoryCompilerHost,

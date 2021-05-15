@@ -9,6 +9,6 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../console" },
-    { "path": "../jawis-util" }
+    { "path": "../util" }
   ]
 }

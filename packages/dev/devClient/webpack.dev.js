@@ -2,7 +2,7 @@ const path = require("path");
 
 const {
   createWebpackBaseConf,
-} = require("../../jawis-util/node/createWebpackBaseConf");
+} = require("../../util/node/createWebpackBaseConf");
 
 const conf = require("../dev.conf");
 

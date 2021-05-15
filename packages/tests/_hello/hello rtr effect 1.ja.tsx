@@ -3,7 +3,7 @@ import React from "react";
 import RTR from "react-test-renderer";
 import { TestProvision } from "^jarun";
 
-import { rendererTos } from "^jawis-mess/node";
+import { rendererTos } from "^misc/node";
 
 import { HelloEffect } from "../_fixture";
 import { sleeping } from "^jab";

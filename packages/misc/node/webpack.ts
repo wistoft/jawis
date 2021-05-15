@@ -5,7 +5,7 @@ import webpack from "webpack";
 
 import { getPromise, JabError } from "^jab";
 import { getAbsConfigFilePath } from "^jacs";
-import { nodeExternals } from "^jawis-mess";
+import { nodeExternals } from "^misc";
 
 /**
  *

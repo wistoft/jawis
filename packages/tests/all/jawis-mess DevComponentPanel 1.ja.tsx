@@ -1,7 +1,7 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { getHtmlEnzyme } from "^jawis-mess/node";
+import { getHtmlEnzyme } from "^misc/node";
 import { getDevComponentPanel } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {

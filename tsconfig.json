@@ -20,8 +20,8 @@
     { "path": "./packages/jates" },
     { "path": "./packages/jatev" },
     { "path": "./packages/javi" },
-    { "path": "./packages/jawis-mess" },
-    { "path": "./packages/jawis-util" },
+    { "path": "./packages/misc" },
+    { "path": "./packages/util" },
     { "path": "./packages/tests" }
   ]
 }

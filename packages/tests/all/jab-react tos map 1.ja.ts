@@ -1,5 +1,5 @@
 import { objMap } from "^jab";
-import { getHtmlRTR } from "^jawis-mess/node";
+import { getHtmlRTR } from "^misc/node";
 import { TestProvision } from "^jarun";
 import { defaultConf } from "../_fixture";
 

@@ -9,9 +9,3 @@ const data = captureStack(new Error("hej"));
 if (data.type !== "node-parsed") {
   throw err("expected 'node-parsed', was: ", data);
 }
-
-// remove frames in this codebase, they change too often.
-
-console.log(
-  data.stack.filter((elm: any) => !elm.file.includes("jawis\\packages"))
-);

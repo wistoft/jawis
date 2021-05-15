@@ -1,8 +1,8 @@
 import path from "path";
 
-import { dfs } from "^jawis-util/algs";
+import { dfs } from "^util/algs";
 
-import { dtp } from "^jawis-util/dtp";
+import { dtp } from "^util/dtp";
 
 type Deps = {
   absTestFolder: string;

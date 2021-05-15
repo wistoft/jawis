@@ -5,10 +5,10 @@ import { renderUseJagoDirector } from "^tests/_fixture";
 // throws if props change
 
 export default (prov: TestProvision) => {
-  const { rerender } = renderUseJagoDirector(prov);
+  const { hook } = renderUseJagoDirector(prov);
 
   //function are checked by reference, so they have changed.
-  rerender({
+  hook({
     apiSend: () => {},
     useWsEffect: () => {},
   });

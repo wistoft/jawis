@@ -1,4 +1,4 @@
-import { runScaleExp } from "^jawis-mess";
+import { runScaleExp } from "^misc";
 import { mainProvToConsole, TS_TIMEOUT } from "^jab-node";
 
 import { getScriptPath, getJabTsProcess } from "^tests/_fixture";

@@ -1,10 +1,10 @@
-import { renderHookImproved } from "^jawis-mess/node";
+import { wrapHook } from "^misc/node";
 import { TestProvision } from "^jarun";
 
 //throws in first render
 
 export default (prov: TestProvision) => {
-  renderHookImproved(() => {
+  wrapHook(() => {
     throw new Error("ups");
   });
 };

@@ -17,6 +17,6 @@
     { "path": "../jagov" },
     { "path": "../jates" },
     { "path": "../jatev" },
-    { "path": "../jawis-util" }
+    { "path": "../util" }
   ]
 }

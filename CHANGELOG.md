@@ -1,3 +1,9 @@
+# 0.0.32
+
+## :boom: Breaking changes
+
+- Renamed package `jawis-util` to `util`.
+
 # 0.0.31
 
 ## :boom: Breaking changes

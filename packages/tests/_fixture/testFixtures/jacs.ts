@@ -10,7 +10,7 @@ import {
   SourceFileLoader,
   WorkerData,
 } from "^jacs";
-import { makeTsNodeWorker } from "^jawis-util/node";
+import { makeTsNodeWorker } from "^util/node";
 import { TestProvision } from "^jarun";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";

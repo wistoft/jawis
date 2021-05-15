@@ -8,7 +8,7 @@ const merge = require("merge2");
 
 //conf
 
-const npmVersion = "0.0.31";
+const npmVersion = "0.0.32";
 
 const projectConf = require("./project.conf");
 
@@ -31,7 +31,7 @@ const packages = [
   "jates",
   "jatev",
   "javi",
-  "jawis-util",
+  "util",
 ];
 
 //derived

@@ -14,7 +14,7 @@ import {
 } from "^jab-node";
 
 /**
- * ubrugt, snart
+ *
  */
 export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
   if (deps.execArgv && deps.execArgv.length > 0) {
@@ -78,14 +78,14 @@ export const makeTsNodeWorker: MakeNodeWorker = (filename, options = {}) => {
 };
 
 /**
- * ubrugt
+ *
  */
 export const makeTsNodeWorkerBee: MakeBee = <MR, WD>(
   deps: Omit<JabWorkerDeps<MR, WD>, "makeWorker">
 ) => new JabWorker({ ...deps, makeWorker: makeTsNodeWorker });
 
 /**
- * ubrugt
+ *
  */
 export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
   if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
@@ -96,7 +96,7 @@ export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
 };
 
 /**
- * ubrugt
+ *
  */
 export const nodeExecTsNodeConditonally = (
   script: string,

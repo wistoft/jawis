@@ -1,6 +1,6 @@
 {
   "version": "0.0.0",
-  "name": "~jawis-util",
+  "name": "~util",
   "description": "Utilities for jawis",
   "dependencies": {
     "path-browserify": "^1.0.1",

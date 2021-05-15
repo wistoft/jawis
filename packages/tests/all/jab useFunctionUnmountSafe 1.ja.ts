@@ -1,14 +1,14 @@
 import { TestProvision } from "^jarun";
 
 import { useUnmountSafeFunction } from "^jab-react";
-import { renderHookImproved } from "^jawis-mess/node";
+import { wrapHook } from "^misc/node";
 
 export default ({ eq, chk }: TestProvision) => {
   const innerFunc = (x: string) => x;
   // eslint-disable-next-line unused-imports/no-unused-vars-ts
   const innerFunc2 = (x: string) => "new";
 
-  const { result, unmount, rerender } = renderHookImproved(
+  const { result, unmount, hook, rerender } = wrapHook(
     useUnmountSafeFunction,
     innerFunc
   );
@@ -25,7 +25,7 @@ export default ({ eq, chk }: TestProvision) => {
 
   // make new function, when input changes
 
-  const res2 = rerender(innerFunc2);
+  const res2 = hook(innerFunc2);
 
   eq("new", res2("hej"));
   chk(safedFunc !== res2);

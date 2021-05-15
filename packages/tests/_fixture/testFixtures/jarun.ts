@@ -14,7 +14,6 @@ import {
 import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
-
 import { filterTestResult, filterTestLogs } from "./jates";
 import { makeJacsWorker } from ".";
 

@@ -1,17 +1,17 @@
-import { renderHookImproved } from "^jawis-mess/node";
+import { wrapHook } from "^misc/node";
 import { useAssertStatic } from "^jab-react";
 import { TestProvision } from "^jarun";
 
 //hello
 
 export default (prov: TestProvision) => {
-  const { rerender } = renderHookImproved(useAssertStatic, { a: "dummy" });
+  const { hook } = wrapHook(useAssertStatic, { a: "dummy" });
 
   //no problem
 
-  prov.imp(rerender({ a: "dummy" }));
+  prov.imp(hook({ a: "dummy" }));
 
   //throws
 
-  rerender({ a: "other dummy" });
+  hook({ a: "other dummy" });
 };

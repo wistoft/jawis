@@ -3,12 +3,12 @@ import { TestProvision } from "^jarun";
 import { act } from "@testing-library/react-hooks";
 import { useConsoleState } from "^console";
 import { makeGetRandomInteger, uiEntries } from "../_fixture";
-import { renderHookImproved } from "^jawis-mess/node";
+import { wrapHook } from "^misc/node";
 
 //
 
 export default ({ imp, eq }: TestProvision) => {
-  const { result, rerender } = renderHookImproved(() =>
+  const { result, rerender } = wrapHook(() =>
     useConsoleState(makeGetRandomInteger(), uiEntries)
   );
 

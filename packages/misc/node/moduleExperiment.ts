@@ -4,7 +4,7 @@ import {
   plugIntoModuleLoad,
   registerExtensions,
 } from "^jab-node";
-import { makeMeasure } from "^jawis-mess";
+import { makeMeasure } from "^misc";
 
 /**
  *

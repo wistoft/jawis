@@ -1,5 +1,5 @@
 import { clearModuleCache, clearResolveCache } from "^jab-node";
-import { makeExpriment } from "^jawis-mess/node";
+import { makeExpriment } from "^misc/node";
 
 clearModuleCache();
 clearResolveCache();

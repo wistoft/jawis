@@ -7,7 +7,7 @@ import {
   parseErrorData,
   ViewException,
   ViewExceptionProps,
-} from "^jawis-util/web";
+} from "^util/web";
 
 import { errLogDiff } from "./util";
 

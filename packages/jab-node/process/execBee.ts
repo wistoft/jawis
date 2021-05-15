@@ -1,9 +1,9 @@
 import path from "path";
 import { StdioOptions, Serializable } from "child_process";
 
-import { getPromise, FinallyFunc, err } from "^jab";
+import { getPromise, FinallyFunc } from "^jab";
 
-import { BeeResult, Process, ProcessDeps } from ".";
+import { BeeResult, ProcessDeps } from ".";
 import { ExecBee } from "./types";
 import { MakeBee } from "^jab-node/types";
 
@@ -75,33 +75,6 @@ export const execBee: ExecBee = <
   // return
 
   return { bee, promise: prom.promise };
-};
-
-/**
- * ubrugt
- *
- * doesn't work: because Process doesn't implement args, it's actually execArgs.
- *
- * 1. Only for node scripts.
- * 2. IPC by default.
- * 3. Everything noisy. Add listeners to suppress.
- */
-export const nodeExecNoisy = (
-  filename: string,
-  args: string[] = [],
-  cwd: string | undefined = undefined
-) => {
-  if (args.length !== 0) {
-    err("not impl");
-  }
-
-  return new Process(
-    createNoisyProcessDeps({
-      filename,
-      execArgv: args,
-      cwd,
-    })
-  );
 };
 
 /**

@@ -8,7 +8,7 @@ import {
 import {
   InnerPanel,
   Props as DevComponentPanelProps,
-} from "^jawis-util/web/devComponentPanel/InnerPanel";
+} from "^util/web/devComponentPanel/InnerPanel";
 
 import {
   parseErrorData,
@@ -16,7 +16,7 @@ import {
   ViewExceptionCallStack,
   ViewExceptionCallStackProps,
   ViewExceptionProps,
-} from "^jawis-util/web";
+} from "^util/web";
 
 import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 

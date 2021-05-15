@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { dtp } from "^jawis-util/dtp";
+import { dtp } from "^util/dtp";
 
 //cycle in dependencies
 

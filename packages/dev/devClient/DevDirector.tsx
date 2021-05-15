@@ -7,8 +7,8 @@ import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
 
 import { Director } from "^dev-appv";
 import { JaviDirector, JaviDirectorProps } from "^javi/client";
-import { getApiPath } from "^jawis-util";
-import { Main as DevComponentPanel } from "^jawis-util/web/devComponentPanel";
+import { getApiPath } from "^util";
+import { Main as DevComponentPanel } from "^util/web/devComponentPanel";
 import { devComponents } from "./devComponents";
 
 type Props = {

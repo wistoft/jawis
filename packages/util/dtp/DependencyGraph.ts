@@ -1,5 +1,5 @@
 import { assert, assertNever, err } from "^jab";
-import { dfs } from "^jawis-util/algs";
+import { dfs } from "^util/algs";
 
 import { DependencyInfo, ReExport } from "./extractDeps";
 

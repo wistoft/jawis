@@ -1,5 +1,5 @@
 import path from "path";
-import { runScaleExp } from "^jawis-mess";
+import { runScaleExp } from "^misc";
 import { Process, registerOnMessage, TS_TIMEOUT } from "^jab-node";
 
 import { getJacsBee } from "./util/bee";

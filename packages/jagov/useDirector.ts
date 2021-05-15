@@ -11,7 +11,7 @@ import {
   WebSocketProv,
   useAssertStatic,
 } from "^jab-react";
-import { OpenFile } from "^jawis-util";
+import { OpenFile } from "^util";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { makeOnServerMessage } from "./onServerMessage";

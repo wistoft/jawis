@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getFile } from "^jawis-util/web";
+import { getFile } from "^util/web";
 
 export default ({ eq }: TestProvision) => {
   eq(

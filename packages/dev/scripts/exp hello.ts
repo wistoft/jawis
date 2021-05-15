@@ -1,5 +1,5 @@
 import * as d3 from "d3";
-import { runSelfScaleExp } from "^jawis-mess";
+import { runSelfScaleExp } from "^misc";
 
 // allocate ArrayBuffer
 

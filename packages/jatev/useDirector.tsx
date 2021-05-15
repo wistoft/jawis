@@ -16,7 +16,7 @@ import {
   makeSetPartialState,
 } from "^jab-react";
 
-import { OpenFile } from "^jawis-util";
+import { OpenFile } from "^util";
 
 import { makeOnServerMessage } from "./onServerMessage";
 import { ViewAction, Props as ViewActionProps } from "./ViewAction";

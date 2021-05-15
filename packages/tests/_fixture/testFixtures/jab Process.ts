@@ -1,7 +1,7 @@
 import path from "path";
 
 import { ProcessDeps, Process, TS_TIMEOUT } from "^jab-node";
-import { makeTsNodeJabProcess } from "^jawis-util/node";
+import { makeTsNodeJabProcess } from "^util/node";
 
 import { getScriptPath, TestMainProv } from ".";
 

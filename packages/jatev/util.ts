@@ -8,7 +8,7 @@ import {
   ReturnLog,
   testLogOrder,
 } from "^jatec";
-import { dynamicDiff } from "^jawis-util/algs";
+import { dynamicDiff } from "^util/algs";
 import { assertNever, ErrorData } from "^jab";
 import { TestState } from "^jatev";
 

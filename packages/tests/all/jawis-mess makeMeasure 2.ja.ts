@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { makeMeasure } from "^jawis-mess";
+import { makeMeasure } from "^misc";
 
 //nested measure
 

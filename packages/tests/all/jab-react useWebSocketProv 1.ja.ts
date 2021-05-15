@@ -1,11 +1,11 @@
-import { renderHookImproved } from "^jawis-mess/node";
+import { wrapHook } from "^misc/node";
 import { useWebSocketProv } from "^jab-react";
 import { TestProvision } from "^jarun";
 
 //hello
 
 export default (prov: TestProvision) => {
-  const { result } = renderHookImproved(useWebSocketProv, {
+  const { result } = wrapHook(useWebSocketProv, {
     URL: "dummy",
     reconnect: true,
   });
