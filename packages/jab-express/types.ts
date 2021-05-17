@@ -3,7 +3,9 @@ import type { PathParams } from "express-serve-static-core";
 import type express from "express";
 import type expressWs from "express-ws";
 
-import type { MainProv, NodeWS, SocketData } from "^jab-node";
+import type { MainProv } from "^jab-node";
+
+import type { NodeWS, SocketData } from ".";
 
 export type ServerAppRouter = {
   router: express.Router;

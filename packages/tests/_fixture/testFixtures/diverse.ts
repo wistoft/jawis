@@ -1,13 +1,12 @@
 import path from "path";
 import { RequestOptions } from "http";
 import fs from "fs";
-
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
 import { LogProv, tryProp, FinallyFunc, ErrorData } from "^jab";
-
-import { httpRequest, WsUrl } from "^jab-node";
+import { httpRequest } from "^jab-node";
+import { WsUrl } from "^jab-express";
 
 /**
  *

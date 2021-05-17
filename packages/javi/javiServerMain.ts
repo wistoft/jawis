@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 import path from "path";
-import { MainProv, mainWrapper } from "^jab-node";
-import { startJaviServer } from "^javi/server/util";
 
+import { MainProv, mainWrapper } from "^jab-node";
+
+import { startJaviServer } from "./util";
 import { getJaviConf } from "./getConf";
 
 const main = (mainProv: MainProv) => {
@@ -16,7 +17,7 @@ const main = (mainProv: MainProv) => {
     name: "Javi",
     mainProv,
     serverPort: conf.port,
-    staticWebFolder: path.join(__dirname, "../client/compiled"),
+    staticWebFolder: path.join(__dirname, "client"),
     clientConf: {
       projectRoot: conf.projectRoot,
       removePathPrefix: conf.removePathPrefix,

@@ -2,14 +2,12 @@ import { Express } from "express-serve-static-core";
 import express from "express";
 import expressWs from "express-ws";
 import WebSocket from "ws";
-
 import path from "path";
 
-import { expressErrorsThrow, ServerAppRouter } from ".";
-
-import { assertNever, Json } from "^jab";
+import { assertNever, err, Json } from "^jab";
 import { MainProv } from "^jab-node";
-import { err } from "^jab/error";
+
+import { expressErrorsThrow, ServerAppRouter } from ".";
 
 export type RouteDeps = {
   mainProv: MainProv;
@@ -28,7 +26,7 @@ export type Route =
       makeHandler: (deps: RouteDeps) => Express;
     };
 
-export type DevAppDeps = {
+export type Deps = {
   staticWebFolder: string;
   clientConf?: {
     variable: string;
@@ -46,7 +44,7 @@ export type DevAppDeps = {
  * - enable history api fallback for reach router.
  *
  */
-export const makeApp = (deps: DevAppDeps): express.Application => {
+export const makeApp = (deps: Deps): express.Application => {
   const showdownHandlers: (() => Promise<void>)[] = [];
 
   //create

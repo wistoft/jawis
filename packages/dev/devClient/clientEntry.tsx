@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { getClientConf } from "^javi/client";
+import { getClientConf } from "^javi-client";
 
 import { DevDirector } from "./DevDirector";
 import { getDevClientConf } from "./getDevClientConf";

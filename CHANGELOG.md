@@ -1,3 +1,19 @@
+# 0.0.36
+
+## :tada: Enhancements
+
+- Clean up dependencies in `javi` and `jab-node`.
+
+## :bug: Bug fixes
+
+- Add `ts-node` dependency to `util` package.
+
+## :boom: Breaking changes
+
+- Move `NodeWS` and `Server` from `jab-node` to `jab-express`.
+- Move `getFunctionNameFromFrame` and `extractStackTraceInfo` from `jab-node` to
+  `jacs`.
+
 # 0.0.35
 
 ## :tada: Enhancements

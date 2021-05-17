@@ -19,6 +19,7 @@
     { "path": "../jates" },
     { "path": "../jatev" },
     { "path": "../javi" },
+    { "path": "../javi-client" },
     { "path": "../misc" },
     { "path": "../util" },
     { "path": "../util-dev" },

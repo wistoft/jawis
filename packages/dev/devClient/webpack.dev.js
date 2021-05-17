@@ -13,7 +13,7 @@ const { getPackagePath } = eval("require")("../../../project.conf");
 //
 
 const baseWebpackConf = createWebpackBaseConf({
-  template: getPackagePath("javi/client/index.ejs"),
+  template: getPackagePath("javi-client/index.ejs"),
   tsConfigFile: path.join(__dirname, "../tsconfig.json"),
   defineHtml: {
     __pageTitle: "Dev",
@@ -38,7 +38,7 @@ module.exports = {
 
   entry: {
     consoleCaptureMain: "@jawis/console/consoleCaptureMain.js",
-    app: path.join(__dirname, "./clientEntry.tsx"),
+    app: path.join(__dirname, "clientEntry.tsx"),
   },
 
   output: {

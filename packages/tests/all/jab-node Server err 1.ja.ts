@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { ServerWaiter } from "^jab-node";
+import { ServerWaiter } from "^jab-express";
 
 import { getServerDeps_test_app } from "../_fixture";
 

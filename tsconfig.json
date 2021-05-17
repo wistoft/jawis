@@ -20,6 +20,7 @@
     { "path": "./packages/jates" },
     { "path": "./packages/jatev" },
     { "path": "./packages/javi" },
+    { "path": "./packages/javi-client" },
     { "path": "./packages/misc" },
     { "path": "./packages/util" },
     { "path": "./packages/tests" }

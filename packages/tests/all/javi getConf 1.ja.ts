@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { getJaviConf } from "^javi/server/getConf";
+import { getJaviConf } from "^javi/getConf";
 
 import { filterConfig, getFixturePath } from "^tests/_fixture";
 

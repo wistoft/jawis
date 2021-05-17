@@ -1,13 +1,12 @@
-import { Server, Deps } from "./Server";
-import { getServerWaiter, ServerCustomWaiter } from "./ServerCustomWaiter";
+import { getServerWaiter, ServerCustomWaiter, Server, ServerDeps } from ".";
 
 /**
- *
+ * hacky
  */
 export class ServerWaiter extends Server {
   public waiter: ServerCustomWaiter;
 
-  constructor(deps: Deps) {
+  constructor(deps: ServerDeps) {
     super(deps);
 
     this.waiter = getServerWaiter(this.server, deps.onError, deps);

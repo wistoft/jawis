@@ -13,22 +13,7 @@ import {
 import { nodeRequire, UserMessage } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
-export type FullJaviConf = {
-  port: number;
-  projectRoot: string;
-  removePathPrefix: string;
-  initialShowSystemFrames: boolean;
-  showClearLink: boolean;
-
-  //jate
-  absTestFolder: string;
-  absTestLogFolder: string;
-  tecTimeout: number;
-
-  //jago
-  scriptFolders: string[];
-  scripts: ScriptDefinition[];
-};
+import { FullJaviConf } from "./types";
 
 /**
  * Read javi config file from disk.

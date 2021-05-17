@@ -4,14 +4,10 @@ import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
 import { def, ErrorWithParsedNodeStack } from "^jab";
-import {
-  CompileFunction,
-  extractStackTraceInfo,
-  FullNativeModule,
-  nodeRequire,
-} from "^jab-node";
+import { CompileFunction, FullNativeModule, nodeRequire } from "^jab-node";
 
 import {
+  extractStackTraceInfo,
   unRegisterSourceMapSupport,
   unRegisterTsCompiler,
   WorkerData,

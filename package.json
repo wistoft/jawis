@@ -15,20 +15,23 @@
     "..": "",
     "build": "gulp build && yarn -s build:extra && yarn -s build:client",
     "build:extra": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-javi.ts",
-    "build:client": "webpack -o build/publish/javi/client/compiled -c packages/javi/client/webpack.javi.js",
+    "build:client": "webpack -o build/publish/javi/client -c packages/javi-client/webpack.javi.js",
     "...": "",
     "alpha:start": "concurrently --kill-others \"yarn -s alpha:start:alone\" \"yarn -s start:client\"",
-    "alpha:start:alone": "echo alpha && node build-alpha/javi/server/javiServerMain",
+    "alpha:start:alone": "echo alpha && node build-alpha/javi/javiServerMain",
     "alpha:build": "gulp buildAlpha && yarn -s alpha:build:paths && yarn -s alpha:build:extra && yarn -s alpha:build:client",
     "alpha:build:paths": "yarn -s tscpaths -p tsconfig.alpha.paths.json -s ./packages -o ./build-alpha | grep -vE \"replaced\"",
     "alpha:build:extra": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-javi-alpha.ts",
-    "alpha:build:client": "webpack -o build-alpha/javi/client/compiled -c packages/javi/client/webpack.javi.js"
+    "alpha:build:client": "webpack -o build-alpha/javi/client -c packages/javi-client/webpack.javi.js"
   },
   "workspaces": [
     "packages/*"
   ],
   "dependencies": {
-    "@jawis/javi": "^0.0.35",
+    "@jawis/javi": "^0.0.36-dev",
+    "@jawis/jacs": "^0.0.36-dev",
+    "@jawis/console": "^0.0.36-dev",
+    "@jawis/jagov": "^0.0.36-dev",
     "@octokit/core": "^3.2.5",
     "@types/gulp": "^4.0.8",
     "@types/gulp-bump": "^2.8.1",

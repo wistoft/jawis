@@ -29,12 +29,12 @@ export type SocketData = {};
 // export type SocketData = WebSocket.Data | {};
 
 /**
- * 1. All callbacks mandatory, so they wont be forgot.
- * 2. Typed callbacks, so it's convenient.
- * 3. Safe callbacks, so they can throw without concern.
- * 4. Callbacks in promise style.
- * 5. Stringent state management. I.e. hard fail, if methods called in wrong state.
- * 6. Kill functionality. Useful for also closing resource, when errors happen.
+ *  All callbacks mandatory, so they wont be forgot.
+ *  Typed callbacks, so it's convenient.
+ *  Safe callbacks, so they can throw without concern.
+ *  Callbacks in promise style.
+ *  Stringent state management. I.e. hard fail, if methods called in wrong state.
+ *  Kill functionality. Useful for also closing resource, when errors happen.
  */
 export class NodeWS<MS extends SocketData, MR extends SocketData> {
   public ws: WebSocket;

@@ -1,5 +1,5 @@
-import { WsPoolProv } from "^jab-express";
-import { SocketData, NodeWS } from "^jab-node";
+import { WsPoolProv , SocketData, NodeWS } from "^jab-express";
+
 
 import { TestProvision } from "^jarun";
 

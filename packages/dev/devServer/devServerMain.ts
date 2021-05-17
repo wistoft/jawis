@@ -1,6 +1,6 @@
 import path from "path";
 
-import { startJaviServer } from "^javi/server/util";
+import { startJaviServer } from "^javi/util";
 import { makeDefaultRoute } from "^dev-apps";
 import { MainProv, mainWrapper } from "^jab-node";
 

@@ -2,9 +2,9 @@ import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
 
 import { FinallyFunc, LogProv, safeAll } from "^jab";
-import { NodeWS, SocketData } from "^jab-node";
 
-import { makeUpgradeHandler, WsMessageListener } from ".";
+import { NodeWS, SocketData , makeUpgradeHandler, WsMessageListener } from ".";
+
 
 export type WsPoolProv<
   MS extends SocketData,

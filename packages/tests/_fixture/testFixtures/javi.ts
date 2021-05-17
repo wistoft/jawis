@@ -1,6 +1,6 @@
 import path from "path";
 
-import { FullJaviConf } from "^javi/server/getConf";
+import { FullJaviConf } from "^javi/types";
 
 const projectConf = require("../../../../project.conf");
 

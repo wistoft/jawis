@@ -1,8 +1,6 @@
 const path = require("path");
 
-const { createWebpackBaseConf   } = eval("require")("../../util-dev/node/createWebpackBaseConf"); // prettier-ignore
-
-const { getPackagePath } = eval("require")("../../../project.conf");
+const { createWebpackBaseConf   } = eval("require")("../util-dev/node/createWebpackBaseConf"); // prettier-ignore
 
 //
 // base conf
@@ -10,7 +8,7 @@ const { getPackagePath } = eval("require")("../../../project.conf");
 
 const baseWebpackConf = createWebpackBaseConf({
   template: path.join(__dirname, "index.ejs"),
-  tsConfigFile: path.join(__dirname, "../tsconfig.json"),
+  tsConfigFile: path.join(__dirname, "tsconfig.json"),
   defineHtml: {
     __pageTitle: "Javi",
     __conf_url: "/conf.js", // so the client loads this configuration files.
@@ -27,7 +25,7 @@ module.exports = {
   mode: "production",
 
   entry: {
-    app: getPackagePath("javi/client/app.tsx"),
+    app: path.join(__dirname, "app.tsx"),
   },
 
   output: {

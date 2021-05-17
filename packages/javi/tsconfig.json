@@ -1,5 +1,5 @@
 {
-  "extends": "../../tsconfig.base.web.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "../../build-tsc/javi",
     "rootDir": "."
@@ -8,15 +8,10 @@
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
-    { "path": "../jab-react" },
-    { "path": "../jatec" },
-    { "path": "../console" },
     { "path": "../jacs" },
     { "path": "../jarun" },
     { "path": "../jagos" },
-    { "path": "../jagov" },
     { "path": "../jates" },
-    { "path": "../jatev" },
     { "path": "../util" }
   ]
 }

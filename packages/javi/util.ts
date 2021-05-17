@@ -16,7 +16,7 @@ import { Deps as JatesDeps } from "^jates/director";
 import { Deps as JagosDeps } from "^jagos/director";
 import { MainProv, MakeBee } from "^jab-node";
 
-import { JaviClientConf } from "../client";
+import { JaviClientConf } from "./types";
 
 export type Deps = {
   name: string;

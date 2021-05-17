@@ -150,27 +150,27 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
-"@jawis/console@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/console/-/console-0.0.35.tgz#7d063ef988d923961c0f7fdbf28bb68fb243287c"
-  integrity sha512-klDiAXkd1XI3+n+AeyOdJ0S2nVIB7R6OnK3zN9yy9Sngy8dVhrJZYLi4wVUY85KNvRf2qHerGBCFomCW/9RfIQ==
+"@jawis/console@0.0.36-dev", "@jawis/console@^0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/console/-/console-0.0.36-dev.tgz#f59a1b82a78350329d4be51f582773d7023d9fad"
+  integrity sha512-JVj+6Y+jiTe6AqKVA1eoTGffSistsuuYZsc6NmuQjYaVhpJCwE9F/KkhEqg7oPT/IypfvYARjjioI357q6crJw==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-react" "0.0.35"
-    "@jawis/jagoc" "0.0.35"
-    "@jawis/util" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-react" "0.0.36-dev"
+    "@jawis/jagoc" "0.0.36-dev"
+    "@jawis/util" "0.0.36-dev"
     "@reach/router" "^1.3.4"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
     react "^16.14.0"
 
-"@jawis/jab-express@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jab-express/-/jab-express-0.0.35.tgz#c19f69927ee8b5b34fd0468808c86807c729b6da"
-  integrity sha512-4D+FWcURMpKDRyi7s01uU5h9zH1BrLIphxsTZ+Vm7oPKTRmKsgRmJOUqmkG44DKXJLCJ4xnkSnxG81kAk21J5g==
+"@jawis/jab-express@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-express/-/jab-express-0.0.36-dev.tgz#4d820877d7ec8fccdaeb7fdff5d1db43f0b27db9"
+  integrity sha512-48XbepRK14g0rzUw7rNHB/S2k/GcXodshvcV+VslvU6AU9aEd5V9tlLkhPgb+h8Z0NYRFLdkzOuu8qHeyyNwEQ==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
     "@types/ws" "^7.2.4"
@@ -178,71 +178,63 @@
     express-ws "^4.0.0"
     ws "^7.3.0"
 
-"@jawis/jab-node@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jab-node/-/jab-node-0.0.35.tgz#753731c6e2d32b9d4b872a9d7235350842c8da3d"
-  integrity sha512-+N2GnoQ4lIxwtJQLgndnxMXjXfO+x+Tnu990cdjaiRzvBlV2BhOsMP/sz4f+e86BgItzYWrh6g28QhTEJbGcIw==
+"@jawis/jab-node@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-node/-/jab-node-0.0.36-dev.tgz#131cc8c9d8915350bdfe2a5e8692745dbeaf4d30"
+  integrity sha512-jyILcaa2jAU5oFA/jFLqSD8mMTr+d3ZIdKECEUwxarDbvUGZDkqjeoByTPdVVi3F96EwG46miMYdx+82rHiZwA==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jagoc" "0.0.35"
-    "@types/express" "^4.17.11"
-    "@types/express-ws" "^3.0.0"
-    "@types/source-map-support" "^0.5.3"
-    "@types/ws" "^7.2.4"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jagoc" "0.0.36-dev"
     dateformat "^4.5.1"
-    express "^4.17.1"
-    express-ws "^4.0.0"
     filewatcher "^3.0.1"
-    source-map-support "^0.5.19"
-    ws "^7.3.0"
 
-"@jawis/jab-react@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jab-react/-/jab-react-0.0.35.tgz#c6a6025c72004c05c9373eab35de7b02954bcc22"
-  integrity sha512-PYLUuKKF5lmRWmCM7BxP2Ut0jP/Vuqvm799xQ7194mNgB90tRPgbPFu0GIzk7XGaaPSjloLUcNR4Bxw+liwcCw==
+"@jawis/jab-react@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-react/-/jab-react-0.0.36-dev.tgz#2bb9b369f4e1d681050ae25044d3dd7690629184"
+  integrity sha512-GvhD9kZ59G5/tEjF0RlNx0pmgtErXwD/1ErK8wF+DAxgdAK9j7s7ii4gQtbFQtou223O/sALRuRezrVqTrQuMw==
   dependencies:
-    "@jawis/jab" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
     "@reach/router" "^1.3.4"
     "@types/reach__router" "^1.3.7"
     "@types/react" "^16.14.4"
     react "^16.14.0"
     shallow-equal "^1.2.1"
 
-"@jawis/jab@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jab/-/jab-0.0.35.tgz#f2c7ab930d260232baadb32223b3cc0a178025fe"
-  integrity sha512-GpEvmnzvekjG4Vma2YqW5US3elO0UyHyDaWhqlOJaV92KkudKhN3Es7Jp8DQux85CRwotreVKdf8pXGy9VG4bQ==
+"@jawis/jab@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab/-/jab-0.0.36-dev.tgz#c9b479b082a432d64b47f4867e1346503b6843eb"
+  integrity sha512-oJifyMa/+Lp6eKunWRubR2Hu5GrKzc7PRad2Vb9WX6GNYx2Kt4UZxyC2h1G+aM/mvU3eyNe++09SX1FUnKBX8g==
 
-"@jawis/jacs@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jacs/-/jacs-0.0.35.tgz#94516937596b877dd7ffdc21f7438f6c047b5976"
-  integrity sha512-y79DtEHSyNEBHtYx1xGR5OiidNhWMLWKqCxKOCPgYSlqr3eTwavShG6oBj40dfezekRJ1dhopBa7rrtXCYyTqQ==
+"@jawis/jacs@^0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jacs/-/jacs-0.0.36-dev.tgz#b26910bc0e2fa1541bc56e3d615cbfd67ad3db65"
+  integrity sha512-6X7EI3Wdba4qp0S3Ojk7YviMzMVSitpdNOUbl2fsX7QsGkavCV0+X4bO1/xo0XUn9x/4wDtreAE0dbXhdsA2Hg==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
     "@types/source-map-support" "^0.5.3"
     filewatcher "^3.0.1"
     source-map-support "^0.5.19"
     tsconfig-paths "^3.9.0"
     typescript "^4.2.3"
 
-"@jawis/jagoc@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jagoc/-/jagoc-0.0.35.tgz#69c6a5006c9d97c4bf4c370fea28960a08a67e43"
-  integrity sha512-eeRTE1y3Jxu6Zv9ydIxrY31/voR8kZKJbY2Dua/eG0fHIZGtQEqR2Bn7O9D76QEmT8z4V2dceP3PIsZSqDfJ8g==
+"@jawis/jagoc@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagoc/-/jagoc-0.0.36-dev.tgz#a4b3b4d74958b2402a1b5012546a73001cfba30b"
+  integrity sha512-OmryTMuxApd2rSqrPVY3LAUIBTpUB1lfcsALHwqw4FVHoljR8KUefA+PJOsdWF93gcQw642jY1JS709vtcYhNg==
   dependencies:
-    "@jawis/jab" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
 
-"@jawis/jagos@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jagos/-/jagos-0.0.35.tgz#c9ed7acb18d2bc1604724e82af8086e1a0e4ec2e"
-  integrity sha512-3FoIgzMAQxeFbXsFG9solaAXjqufUbh3VYhBdX+WWQsXOKBKU9RzxdF2414auDCNK7E/AoIdosbkeotiYgP6Xw==
+"@jawis/jagos@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagos/-/jagos-0.0.36-dev.tgz#a2585587fc4be7b61924c5de98d311996d4e4519"
+  integrity sha512-dosXD+3wVwdjlgmF4Pe/TwKgnm24dFiv/6gc/z/MyrRYVpQ8YRYtyLmK+7ZjoVXW2JKqbZ+UzcZEAljV9NI1ig==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-express" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
-    "@jawis/jagoc" "0.0.35"
-    "@jawis/util" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-express" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
+    "@jawis/jagoc" "0.0.36-dev"
+    "@jawis/util" "0.0.36-dev"
     "@types/cors" "^2.8.6"
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
@@ -252,16 +244,16 @@
     express-ws "^4.0.0"
     ws "^7.3.0"
 
-"@jawis/jagov@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jagov/-/jagov-0.0.35.tgz#71b38b959bf02b50fd5c28a0b4e9379f1cdb28af"
-  integrity sha512-0zNJXEAwcBaHAfJriNdfTaIiwFbpM4UkNFuEtoD8LE/4NZ5xmOQdKpNeH0SFv+GeG+D/Yven9P65AEgBa1/QXA==
+"@jawis/jagov@^0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagov/-/jagov-0.0.36-dev.tgz#5424816c7146e9b93ff92a2be82b4e61b334e2e6"
+  integrity sha512-q6RpBBYw9n4rBWsbZ6lWIjuz7ls+YF8HYz4LtDyiRjukuj7fp7ppBB/JXlBEjGR3lAOfhgXiR0QDOBt0yYuTVA==
   dependencies:
-    "@jawis/console" "0.0.35"
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-react" "0.0.35"
-    "@jawis/jagoc" "0.0.35"
-    "@jawis/util" "0.0.35"
+    "@jawis/console" "0.0.36-dev"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-react" "0.0.36-dev"
+    "@jawis/jagoc" "0.0.36-dev"
+    "@jawis/util" "0.0.36-dev"
     "@reach/router" "^1.3.4"
     "@types/md5" "^2.2.0"
     "@types/reach__router" "^1.3.7"
@@ -269,36 +261,36 @@
     md5 "^2.2.1"
     react "^16.14.0"
 
-"@jawis/jarun@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jarun/-/jarun-0.0.35.tgz#f8d55709afadd196bc317fd1ee43b4d155bc0ead"
-  integrity sha512-vsddYyPmM1h1LOxceDKh/3PYo3nMcbhvjmqztFMirX8Cn/GNc06W8Iq+quGqeTJ9txzzMKI9xW8o+qi8/R+QgQ==
+"@jawis/jarun@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jarun/-/jarun-0.0.36-dev.tgz#fde6c36f5abdc1e65c6e6899fe7016ffe5790baa"
+  integrity sha512-9lDwVemsUCRs9KotEZl9WQpGDmjhFdXRgMdadlXn/v7IPh7BuL9edeusde9GWLL3JX33BRqJ3DGLHaMgne9fvQ==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
-    "@jawis/jates" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
+    "@jawis/jates" "0.0.36-dev"
     "@types/deep-equal" "^1.0.1"
     deep-equal "^2.0.5"
 
-"@jawis/jatec@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jatec/-/jatec-0.0.35.tgz#28b0ee17ff2dec86686b39a104650b785709649e"
-  integrity sha512-3G3xaKLacVWo3LVl3oAMOMZ8WvX8xrGih4UROAH02JSA9SOI3OqESDIZRS1m1skzVsX9wggg2xw8xbNHkTN6NQ==
+"@jawis/jatec@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jatec/-/jatec-0.0.36-dev.tgz#bb0b752f39cc3dc074c4c1b46aa1f90b0bdb5cb6"
+  integrity sha512-zT8PqJOBkUOS+p6ydJG8o7MR8UbO6nrysW12TGJXuqFnrTQt/SjcICI8Vp995mew5RAbUcYOnjoPCbxbAGmzeg==
   dependencies:
-    "@jawis/jab" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
     "@types/deep-equal" "^1.0.1"
     deep-equal "^2.0.5"
 
-"@jawis/jates@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jates/-/jates-0.0.35.tgz#2c04a21399a14bf97934dad21b7ef1022c3a94ec"
-  integrity sha512-j/4h8Ao8Wig8Hb3AsyFmYnXWgHGEf1ZiWsuRomPjKAcVhR72XnLU1F9UqXsXX/KQ+7YNyRZBCj728VdeDh857A==
+"@jawis/jates@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jates/-/jates-0.0.36-dev.tgz#1b8ded12ace271ac8065fd853c5f265bf4ac1e87"
+  integrity sha512-srlPrmNmrvYVO/LF0ocKeK2q6IZwsYiBBuYOlR4O5u4f/Qg0QKZFsDlVsVy2ZkN3yh+HGOkADf0cYlA7Cz2HRw==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-express" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
-    "@jawis/jatec" "0.0.35"
-    "@jawis/util" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-express" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
+    "@jawis/jatec" "0.0.36-dev"
+    "@jawis/util" "0.0.36-dev"
     "@types/cors" "^2.8.6"
     "@types/express" "^4.17.11"
     "@types/express-ws" "^3.0.0"
@@ -313,53 +305,27 @@
     fs-readdir-recursive "^1.1.0"
     ws "^7.3.0"
 
-"@jawis/jatev@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/jatev/-/jatev-0.0.35.tgz#4852cacebd082e871097fcddcba8631bbb328b80"
-  integrity sha512-U6ODGGjm6rZGI7/q6u94rvvKhel/IWF+49tqSvXxU5NG2zVUQXHQl2zeAtoEVb7q3+bbBnJ/cS+XAeIDf7+j9A==
+"@jawis/javi@^0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/javi/-/javi-0.0.36-dev.tgz#e27e72ca874c75bdfb3c1959c2f6d79c6c6262ee"
+  integrity sha512-y64I4O5rObjpDzMIg32rtYV05nacA3IFnpl/CtnvpjXWT4gZwEGQPT8Ywy0JMYOElLAkqUZCM5ZCgGRHoF1RWA==
   dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-react" "0.0.35"
-    "@jawis/jatec" "0.0.35"
-    "@jawis/util" "0.0.35"
-    "@reach/router" "^1.3.4"
-    "@types/deep-equal" "^1.0.1"
-    "@types/reach__router" "^1.3.7"
-    "@types/react" "^16.14.4"
-    deep-equal "^2.0.5"
-    react "^16.14.0"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-express" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
+    "@jawis/jagos" "0.0.36-dev"
+    "@jawis/jarun" "0.0.36-dev"
+    "@jawis/jates" "0.0.36-dev"
+    "@jawis/util" "0.0.36-dev"
 
-"@jawis/javi@^0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/javi/-/javi-0.0.35.tgz#53a7db66fda4ea383e93bac3a15e47325cad71aa"
-  integrity sha512-UR9qkuM8re1vYpudr+sBJEc88zS7ubkRbMYmTWlCUnmUcBvS8xqzzad5X2GRUe9q1/DmmnNMm/UJjBwgOZs7ig==
+"@jawis/util@0.0.36-dev":
+  version "0.0.36-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/util/-/util-0.0.36-dev.tgz#9a9afdd2126ef39ce62b868d8a46cb9e0b15c292"
+  integrity sha512-CGU/csID5p83hUnHQNuc2BTqFRWkFR1ir/T/DAza9V6YLtextSDCHj+8Y9hcIJCLISBeAYqLHJ9/t+O7umgJqA==
   dependencies:
-    "@jawis/console" "0.0.35"
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-express" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
-    "@jawis/jab-react" "0.0.35"
-    "@jawis/jacs" "0.0.35"
-    "@jawis/jagos" "0.0.35"
-    "@jawis/jagov" "0.0.35"
-    "@jawis/jarun" "0.0.35"
-    "@jawis/jatec" "0.0.35"
-    "@jawis/jates" "0.0.35"
-    "@jawis/jatev" "0.0.35"
-    "@jawis/util" "0.0.35"
-    "@types/react" "^16.14.4"
-    "@types/react-dom" "^16.9.11"
-    react "^16.14.0"
-    react-dom "^16.14.0"
-
-"@jawis/util@0.0.35":
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/@jawis/util/-/util-0.0.35.tgz#1586bf09983ba4eb7a26836a0ea29b8cbefece85"
-  integrity sha512-xtwsrlKgz5e+xhghAsaWJpLY40+546jEJQ4jQuylOhOVJ80deYNoB33vocAVM9oay5ZgJOHGQU6l145ezW9xNA==
-  dependencies:
-    "@jawis/jab" "0.0.35"
-    "@jawis/jab-node" "0.0.35"
-    "@jawis/jab-react" "0.0.35"
+    "@jawis/jab" "0.0.36-dev"
+    "@jawis/jab-node" "0.0.36-dev"
+    "@jawis/jab-react" "0.0.36-dev"
     "@reach/router" "^1.3.4"
     "@types/node" "^14.14.32"
     "@types/reach__router" "^1.3.7"
@@ -371,6 +337,7 @@
     stack-trace "^0.0.10"
     stacktrace-gps "^3.0.4"
     stacktrace-js "^2.0.2"
+    ts-node "^8.8.2"
     typescript "^4.2.3"
 
 "@jest/types@^26.6.2":

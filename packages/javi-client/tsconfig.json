@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/javi-client",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-react" },
+    { "path": "../jagov" },
+    { "path": "../jatev" },
+    { "path": "../util" }
+  ]
+}
