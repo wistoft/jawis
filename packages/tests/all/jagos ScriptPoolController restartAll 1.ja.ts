@@ -10,8 +10,6 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartAllScripts()
-    .then(() => {
-      return sleeping(100); //to allow the script to run.
-    })
+    .then(() => sleeping(100)) //to allow the script to run.
     .then(pool.shutdown);
 };

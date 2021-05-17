@@ -1,0 +1,1 @@
+{"user":{"stdout":["Error: Cannot find module 'dontExist'\nRequire stack:\n- E:\\work\\repos\\jawis\\packages\\tests\\all\\jab-node mainWrapper err 4.wo.ts\n- E:\\work\\repos\\jawis\\node_modules\\@jawis\\jacs\\compiled\\JacsConsumerMain.js\n    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:982:15)\n{ info: [ 'uh-exception' ] }\n"]}}

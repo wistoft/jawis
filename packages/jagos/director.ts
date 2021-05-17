@@ -1,4 +1,4 @@
-import { WsPoolController } from "^jab-express";
+import { WsPoolController, WsPoolProv } from "^jab-express";
 import { FinallyFunc, LogProv } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { MakeBee } from "^jab-node";
@@ -18,6 +18,9 @@ export type Deps = Readonly<{
   onError: (error: unknown) => void;
   finally: FinallyFunc;
   logProv: LogProv;
+
+  //optional and abstract for testing
+  wsPool?: WsPoolProv<ServerMessage, ClientMessage>;
 }>;
 
 /**
@@ -34,7 +37,8 @@ export const director = (deps: Deps) => {
 
   //setup
 
-  const wsPool = new WsPoolController<ServerMessage, ClientMessage>(deps);
+  const wsPool =
+    deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps);
 
   const actionProv = new ActionProvider({
     scripts,
@@ -57,19 +61,21 @@ export const director = (deps: Deps) => {
     wsPool,
     ...actionProv,
     scriptPool: poolProv,
-
     onError: deps.onError,
   });
 
-  const onWsUpgrade = wsPool.makeUpgradeHandler(
-    makeOnClientMesssage({
-      ...deps,
-      ...poolProv,
-      ...behaviorProv,
-    })
-  );
+  const onClientMessage = makeOnClientMesssage({
+    ...deps,
+    ...poolProv,
+    ...behaviorProv,
+  });
+
+  const onWsUpgrade = wsPool.makeUpgradeHandler(onClientMessage);
 
   return {
     onWsUpgrade,
+
+    //for testing
+    onClientMessage,
   };
 };

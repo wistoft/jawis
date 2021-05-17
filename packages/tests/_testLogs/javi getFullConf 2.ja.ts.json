@@ -1,1 +1,1 @@
-{"user":{"imp":[{"port":3003,"projectRoot":"folder","tecTimeout":30000,"removePathPrefix":"","initialShowSystemFrames":false,"showClearLink":true,"absTestFolder":"folder","absTestLogFolder":"folder/_testLogs","scriptFolders":["value",[""]],"scripts":["value",[{"script":"folder/dummy","autoStart":false}]]}]}}
+{"user":{"imp":[["value",[{"script":"packages/tests/_fixture/scripts/hello.js","autoStart":false}]]]}}

@@ -1,8 +1,7 @@
-# @jawis/javi
+# JavaScript View
 
-JavaScript View is tool for running test cases and scripts. Everything is
-presented in the browser, so no CLI needed for running neither test cases nor
-scripts.
+A is tool for running test cases and scripts. Everything is presented in the
+browser, so no CLI needed for running neither test cases nor scripts.
 
 - TypeScript by default.
 - Javi is intended to be agnostic to test framework. One could even use several.
@@ -25,16 +24,18 @@ npm i --save-dev @jawis/javi
 ## Usage
 
 - Create a configuration file in the root of your project.
-- Run `yarn javi` or `npm javi` depending on your installation.
+- Run `yarn javi` or `npx javi` depending on your installation.
 - Open a browser at `http://localhost:3003`
 - Explore how the view works.
 
-### Development server
+### Example: Development server
 
 - A development server is just a script. It's started and reloaded by javi, when
   source files change.
-- Output and errors from the server can be shown on the development site, by
-  using [JagoConsole](https://www.npmjs.com/package/@jawis/jagos)
+- Output and errors is shown in the browser. This for instance makes it easy to
+  open stack frame in the editor.
+- Output and errors can be shown on the development site, by using
+  [JagoConsole](https://www.npmjs.com/package/@jawis/jagos)
 
 ## Configuration
 
@@ -47,10 +48,6 @@ module.exports = {
   //Folder containing test cases.
   testFolder: "packages/tests",
 
-  //This prefix is removed in stack traces.
-  //It's relative to position of configuration file.
-  removePathPrefix: "packages",
-
   //Scripts in this folder can be executed in javi > scripts.
   scriptFolders: ["packages/dev/scripts/"],
 
@@ -62,6 +59,25 @@ module.exports = {
       autoRestart: true,
     },
   ],
+};
+```
+
+Default configuration (When nothing else specified)
+
+```js
+module.exports = {
+  testFolder: ".",
+  //The place test logs are stored.
+  testLogFolder: "./_testLogs",
+  //The javi is served from.
+  port: "3003",
+  //timeout in `TestExecutionController`.
+  tecTimeout: "30000",
+  //This prefix is removed in stack traces.
+  //It's relative to position of configuration file.
+  removePathPrefix: "",
+  scriptFolders: ["."],
+  scripts: [],
 };
 ```
 
@@ -102,6 +118,8 @@ module.exports = {
 - Open files for merge is hardcoded to WinMerge.
 - Test paths are ignored. So 'path/test.ja.js' has same test log file as
   'other/path/test.ja.js'
+- Output form scripts can only be own in the view. Opt-in to show it in the same
+  console as javi runs, would be great.
 
 ## Future work
 

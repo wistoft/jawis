@@ -3,7 +3,6 @@ import type { PathParams } from "express-serve-static-core";
 import type express from "express";
 import type expressWs from "express-ws";
 
-import type { FinallyFunc, LogProv } from "^jab";
 import type { MainProv, NodeWS, SocketData } from "^jab-node";
 
 export type ServerAppRouter = {
@@ -34,12 +33,6 @@ export type WsMessageListener<MS extends SocketData, MR extends SocketData> = (
   message: MR,
   nws: NodeWS<MS, MR>
 ) => void;
-
-export type MakeUpgradeHandlerDeps = {
-  onError: (error: unknown) => void;
-  logProv: LogProv;
-  finally: FinallyFunc;
-};
 
 export type WsRouter = expressWs.Router & {
   wsMessage: <MS extends SocketData, MR extends SocketData>(

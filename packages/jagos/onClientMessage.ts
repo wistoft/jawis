@@ -30,8 +30,8 @@ export const makeOnClientMesssage = (
       break;
 
     case "restartScript":
-      deps.restartScript(msg.script);
-      break;
+      //return for testing
+      return deps.restartScript(msg.script);
 
     case "stopScript":
       deps.ensureScriptStopped(msg.script);

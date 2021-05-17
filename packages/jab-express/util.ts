@@ -1,10 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 import { PathParams } from "express-serve-static-core";
 import { WebsocketRequestHandler } from "express-ws";
+import { LogProv, FinallyFunc } from "^jab";
 
 import { NodeWS, SocketData } from "^jab-node";
 
-import { MakeUpgradeHandlerDeps, WsMessageListener, WsRouter } from ".";
+import { WsMessageListener, WsRouter } from ".";
+
+export type MakeUpgradeHandlerDeps = {
+  onError: (error: unknown) => void;
+  logProv: LogProv;
+  finally: FinallyFunc;
+};
 
 /**
  * todo: delete this.

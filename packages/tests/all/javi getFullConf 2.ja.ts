@@ -1,16 +1,16 @@
 import { TestProvision } from "^jarun";
 import { getFullConf } from "^javi/server/getConf";
-import { filterConfig } from "^tests/_fixture";
+import { filterConfig, getFixturePath } from "^tests/_fixture";
 
-//default conf
+//script are made absolute
 
 export default (prov: TestProvision) => {
   prov.imp(
     filterConfig(
       getFullConf(
-        { scripts: [{ script: "dummy", autoStart: false }] },
-        "folder"
+        { scripts: [{ script: "scripts/hello.js", autoStart: false }] },
+        getFixturePath()
       )
-    )
+    ).scripts
   );
 };

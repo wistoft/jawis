@@ -11,10 +11,14 @@ import {
 } from "^jab-express";
 
 import { director } from "./director";
+import { LogProv, FinallyFunc } from "^jab";
 
 export type Deps = {
   wsServer: WebSocket.Server;
-} & MakeUpgradeHandlerDeps;
+  onError: (error: unknown) => void;
+  logProv: LogProv;
+  finally: FinallyFunc;
+};
 
 /**
  *

@@ -27,7 +27,7 @@ Start javi
 yarn start
 ```
 
-Open in browser
+Open in browser, and run all tests.
 
 ```
 localhost:3003/all
@@ -65,6 +65,22 @@ automatically start this task install the extentions: `AutoLaunch`
 - `yarn build`
 - `lerna publish from-package`
 - Clean up git history and tag commit.
+
+## Packages
+
+- `dev` contains code useful just for development of jawis.
+- `misc` has where things that don't fit anywhere, fit in.
+- `javi` contains the 'mounts' for production/released javi.
+
+### Naming conventions
+
+- `jago` and `jate` have 3 parts: server, view and common. They are separated
+  into their packages, denoted by the postfix chars. E.g. `s` in `jagos`.
+- Packages prefixed `jab` have general usefulness outside jawis. Their postfix
+  indicate what they are utilities for. E.g. `jab-express` contains utilities
+  for [express framework](https://expressjs.com/). Another way to think of it,
+  is that the postfix indicate which dependencies the package have.
+- Packages prefixed `util` contain utilities useful specifically for jawis.
 
 ## Known issues
 

@@ -136,7 +136,7 @@ export const useDirector = ({
         <>
           {" "}
           <br />
-          To run tests: click <i>cur</i> or <i>all</i>, and reload.
+          To run tests: click <i>cur</i> or <i>all</i>, and reload page.
         </>
       ),
     },
@@ -263,8 +263,12 @@ export const getCallbacks = (
     },
 
     setTestSelection: (data: string[][]) => {
-      //maybe server could do this
-      const mapped = data.map((level) => level.map((id) => ({ id })));
+      //maybe server could map do these things.
+      //filter empty levels away.
+      // A quick fix, needed to detect when there's no test in `ViewExecutionList`
+      const mapped = data
+        .map((level) => level.map((id) => ({ id })))
+        .filter((level) => level.length > 0);
 
       setPartialState({ tests: testSelectionToCollection(mapped) });
     },

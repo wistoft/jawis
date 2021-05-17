@@ -23,7 +23,7 @@ export const makeMakeJacsWorkerBee: (deps: MakeMakeJacsBeeDeps) => MakeBee = (
   deps
 ) => {
   const consumerTimeout = 10000; //throws
-  const consumerSoftTimeout = 1000; //gives warning, but continues to wait for producer.
+  const consumerSoftTimeout = 3000; //gives warning, but continues to wait for producer.
   const maxSourceFileSize = 256 * 1000;
 
   const sfl = new SourceFileLoader(deps);

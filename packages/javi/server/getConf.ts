@@ -1,6 +1,15 @@
 import path from "path";
+import fs from "fs";
 
-import { tryProp, isString, isInt, isArray, isObject, isBoolean } from "^jab";
+import {
+  tryProp,
+  isString,
+  isInt,
+  isArray,
+  isObject,
+  isBoolean,
+  assert,
+} from "^jab";
 import { nodeRequire, UserMessage } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
@@ -66,7 +75,8 @@ export const getJaviConf = (
   const fullConf = getFullConf(conf, confFileDir);
 
   if (typeof fullConf === "string") {
-    throw new UserMessage(fullConf);
+    throw new Error("not used, right.");
+    // throw new UserMessage(fullConf);
   } else {
     return fullConf;
   }
@@ -75,14 +85,22 @@ export const getJaviConf = (
 /**
  * Fill out the end-user conf to be useful for javi.
  *
+ * - the conf file schema is implicitly defined by the functions.
+ * - throw if folders doesn't exist.
+ *    - except test logs folder. It will be created lazily, when accepting test logs.
+ *
  * default
- *  work dir is testFolder
- *  work dir is scriptFolder.
+ *  testFolder is conf dir
+ *  scriptFolder is conf dir
  */
 export const getFullConf = (
-  conf: { [_: string]: unknown },
+  inConf: { [_: string]: unknown },
   confFileDir: string
 ) => {
+  assert(path.isAbsolute(confFileDir), "confFileDir must be absolute, was: " + confFileDir ); // prettier-ignore
+
+  const conf = { ...inConf };
+
   //test folder
 
   let testFolder = "";
@@ -92,6 +110,12 @@ export const getFullConf = (
   }
 
   const absTestFolder = path.join(confFileDir, testFolder);
+
+  if (!fs.existsSync(absTestFolder)) {
+    throw new UserMessage( "Javi: testFolder must exist: " + absTestFolder ); // prettier-ignore
+  }
+
+  delete conf.testFolder;
 
   //test log folder
 
@@ -103,6 +127,8 @@ export const getFullConf = (
 
   const absTestLogFolder = path.join(confFileDir, testLogFolder);
 
+  delete conf.absTestLogFolder;
+
   //port
 
   let port = 3003;
@@ -110,6 +136,8 @@ export const getFullConf = (
   if (conf.port !== undefined) {
     port = a(conf.port, isInt, "Javi: port must be integer, was: " + conf.port);
   }
+
+  delete conf.port;
 
   //tecTimeout
 
@@ -119,6 +147,8 @@ export const getFullConf = (
     tecTimeout = a(conf.tecTimeout, isInt, "Javi: tecTimeout must be number, was: " + conf.tecTimeout); // prettier-ignore
   }
 
+  delete conf.tecTimeout;
+
   //removePathPrefix
 
   let removePathPrefix = "";
@@ -127,20 +157,30 @@ export const getFullConf = (
     removePathPrefix = a(conf.removePathPrefix, isString, "Javi: removePathPrefix must be string, was: " + conf.removePathPrefix); // prettier-ignore
   }
 
+  delete conf.removePathPrefix;
+
   //scriptFolders
 
-  let scriptFolders: string[] = [""];
+  let scriptFolders: string[] = [confFileDir];
 
   if (conf.scriptFolders !== undefined) {
     const relativeScriptFolders = a(conf.scriptFolders, isArray, "Javi: scriptFolders must be array, was: " + conf.scriptFolders ) as unknown[]; // prettier-ignore
 
-    scriptFolders = relativeScriptFolders.map((folder, index) =>
-      path.join(
+    scriptFolders = relativeScriptFolders.map((folder, index) => {
+      const file = path.join(
         confFileDir,
-        a(folder, isString, "Javi: scriptFolders[" + index + "] must be string, was: " + folder) // prettier-ignore
-      )
-    );
+        a(folder, isString, "Javi: scriptFolders[" + index + "] must be string, was: " + folder ) // prettier-ignore
+      );
+
+      if (!fs.existsSync(file)) {
+        throw new UserMessage( "Javi: scriptFolders[" + index + "] must exist: " + file ); // prettier-ignore
+      }
+
+      return file;
+    });
   }
+
+  delete conf.scriptFolders;
 
   //scripts
 
@@ -168,9 +208,21 @@ export const getFullConf = (
         res.autoRestart = a( def.autoRestart,  isBoolean, prefix + ".autoRestart must be boolean, was: " + def.autoRestart ); // prettier-ignore
       }
 
+      if (!fs.existsSync(res.script)) {
+        throw new UserMessage(prefix + " must exist: " + res.script);
+      }
+
       return res;
     });
   }
+
+  delete conf.scripts;
+
+  // warn about unknown properties
+
+  Object.keys(conf).map((key) =>
+    console.log("Javi: Unknown configuration: " + key)
+  );
 
   //return
 

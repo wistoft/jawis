@@ -7,7 +7,6 @@ import {
   fixErrorInheritence,
   indent,
   LogProv,
-  tos,
   unknownToErrorData,
 } from "^jab";
 
@@ -103,9 +102,9 @@ export const makeJagoLogProv = (
  *
  */
 export const mainProvToConsole = (logPrefix = ""): MainProv => {
-  const onError = makeOnErrorToConsole(logPrefix);
+  const onError = makeOnErrorToConsole();
   const finalProv = new FinallyProvider({ onError });
-  const logProv = makeLogServiceToConsole();
+  const logProv = makeLogServiceToConsole(logPrefix);
 
   return {
     onError,
@@ -119,39 +118,69 @@ export const mainProvToConsole = (logPrefix = ""): MainProv => {
 
 /**
  *
+ * - errors are printed slightly different, than node would.
  */
-export const makeOnErrorToConsole = (logPrefix = ""): OnError => (
-  error,
-  extraInfo
-) => {
+export const makeOnErrorToConsole = (): OnError => (error: any, extraInfo) => {
+  if (!(error instanceof Error)) {
+    console.log("Threw non-error:");
+    console.log(error);
+    return;
+  }
+
+  const clone = { ...error } as any;
+
+  //extra info
+
   if (extraInfo) {
-    console.log(logPrefix + "onError: ", error, "\n", tos(extraInfo));
-  } else {
-    console.log(logPrefix + "onError: ", error);
+    clone.info = extraInfo;
+  }
+
+  //jab
+
+  delete clone.__jawisNodeStack; //not really sure how mainWrapper and jacs interact.
+  delete clone.jabMessage; //not needed, when printing to console.
+  delete clone.clonedInfo; //not needed, when printing to console.
+
+  //system
+
+  if (clone.code === "MODULE_NOT_FOUND") {
+    delete clone.code;
+    delete clone.requireStack;
+  }
+
+  //output
+
+  console.log(error.stack);
+
+  if (Object.keys(clone).length !== 0) {
+    console.log(clone);
   }
 };
 
 /**
  * Tries to batch stream data, so it at least gets less mixed between different streams.
+ *
+ * - Only first line of a log-section has the prefix.
+ * - Additional newlines are introduced. But there's really no way to avoid that.
  */
-export const makeLogServiceToConsole = (): LogProv => {
+export const makeLogServiceToConsole = (
+  logPrefix = "",
+  delay = 250
+): LogProv => {
   let streamData: any = {};
   let timeoutHandle: any;
   let largestType = 0;
 
   const emitStream = () => {
     Object.entries(streamData).forEach(([type, data]) => {
-      const prefix = type.padEnd(largestType, " ") + ": ";
+      const firstPrefix = (logPrefix + type).padEnd(largestType, " ") + " : ";
+      const nextPrefix = "".padEnd(largestType, " ") + " : ";
 
       //send
-      console.log(
-        prefix + indent(data as string, 1, "".padEnd(largestType, " ") + ": ")
-      );
+      console.log(firstPrefix + indent(data as string, 1, nextPrefix));
 
       //reset
       streamData = {};
-
-      //manage
       timeoutHandle = undefined;
     });
   };
@@ -159,8 +188,8 @@ export const makeLogServiceToConsole = (): LogProv => {
   return {
     log: console.log,
     logStream: (type, data) => {
-      if (type.length > largestType) {
-        largestType = type.length;
+      if (logPrefix.length + type.length > largestType) {
+        largestType = logPrefix.length + type.length;
       }
 
       if (streamData[type]) {
@@ -170,7 +199,7 @@ export const makeLogServiceToConsole = (): LogProv => {
       }
 
       if (!timeoutHandle) {
-        timeoutHandle = setTimeout(emitStream, 250);
+        timeoutHandle = setTimeout(emitStream, delay);
       }
     },
     status: (type, status) => {
@@ -203,9 +232,7 @@ export const mainWrapper = (
   doRegisterRejectionHandlers = true
 ) => {
   const mainProv =
-    type === "console"
-      ? mainProvToConsole(logPrefix)
-      : mainProvToJago(makeSend());
+    type === "console" ? mainProvToConsole() : mainProvToJago(makeSend());
 
   if (doRegisterRejectionHandlers) {
     registerRejectionHandlers(mainProv.onError);

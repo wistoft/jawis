@@ -1,1 +1,1 @@
-{"user":{"stdout":["sync done\nid.onError:  JabError: ups\n    at Object.prej (E:\\work\\repos\\jawis\\packages\\jab\\error.ts:16:18) {\n  clonedInfo: [],\n  jabMessage: 'ups'\n} \n [\n.\tuh-promise\n]\nfinally done\n"]}}
+{"user":{"stdout":["sync done\nError: ups\n    at Object.prej (E:\\work\\repos\\jawis\\packages\\jab\\error.ts:16:18)\n{ info: [ 'uh-promise' ] }\nfinally done\n"]}}

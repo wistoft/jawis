@@ -5,5 +5,5 @@ import { getFixturePath } from "^tests/_fixture";
 //json config file contains wrong type. Should be object.
 
 export default (prov: TestProvision) => {
-  getJaviConf(getFixturePath(""), "javi.conf.err");
+  getJaviConf(getFixturePath(), "javi.conf.err");
 };

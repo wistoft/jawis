@@ -36,8 +36,8 @@ export const getUnusedPort = () => 6666;
 /**
  *
  */
-export const getScriptPath = (script: string) =>
-  path.join(__dirname, "../scripts", script);
+export const getScriptPath = (script?: string) =>
+  path.join(__dirname, "../scripts", script || "");
 
 /**
  *
@@ -48,8 +48,8 @@ export const getTsProjectPath = (file: string) =>
 /**
  *
  */
-export const getFixturePath = (file: string) =>
-  path.join(__dirname, "..", file);
+export const getFixturePath = (file?: string) =>
+  path.join(__dirname, "..", file || "");
 
 /**
  *
@@ -135,7 +135,12 @@ export const getScratchPath = (script?: string) => {
 /**
  *
  */
-export const emptyScratchFolder = () => fse.emptyDirSync(getScratchPath());
+export const emptyScratchFolder = () => {
+  const folder = getScratchPath();
+  fse.emptyDirSync(folder);
+
+  return folder;
+};
 
 /**
  *

@@ -1,10 +1,10 @@
 module.exports = {
-  testFolder: "testFolder",
+  testFolder: "testsuite",
   removePathPrefix: "prefixToRemove",
-  scriptFolders: ["scriptFolder"],
+  scriptFolders: ["scripts"],
   scripts: [
     {
-      script: "someScript.ts",
+      script: "scripts/hello.js",
       autoStart: true,
       autoRestart: true,
     },

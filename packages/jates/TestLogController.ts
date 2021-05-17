@@ -1,5 +1,6 @@
 import os from "os";
 import fs from "fs";
+import fse from "fs-extra";
 import path from "path";
 
 import {
@@ -53,6 +54,9 @@ export type Deps = {
 export class TestLogController implements TestLogsProv {
   private curTestLogs: { [_: string]: TestCurLogs | undefined };
 
+  //to avoid doing the IO all the time.
+  private ensuredTestDir = false;
+
   constructor(private deps: Deps) {
     this.curTestLogs = {};
   }
@@ -60,8 +64,17 @@ export class TestLogController implements TestLogsProv {
   /**
    *
    */
-  public setExpLogs = (id: string, testLogs: TestExpLogs) =>
-    fs.promises.writeFile(this.getExpFilename(id), JSON.stringify(testLogs));
+  public setExpLogs = (id: string, testLogs: TestExpLogs) => {
+    if (!this.ensuredTestDir) {
+      fse.ensureDir(this.deps.absTestLogFolder);
+      this.ensuredTestDir = true;
+    }
+
+    return fs.promises.writeFile(
+      this.getExpFilename(id),
+      JSON.stringify(testLogs)
+    );
+  };
 
   /**
    *

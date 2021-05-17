@@ -1,9 +1,6 @@
 import path from "path";
 
-import { WsPoolProv } from "^jab-express";
-import { BeeDeps, SocketData, NodeWS, RequireSenderMessage } from "^jab-node";
-
-import { TestProvision } from "^jarun";
+import { BeeDeps, RequireSenderMessage } from "^jab-node";
 
 import { getScriptPath, TestMainProv } from ".";
 
@@ -29,26 +26,6 @@ export const getBeeDeps = (
   finally: prov.finally,
   ...extraDeps,
 });
-
-/**
- *
- */
-export class WsPoolMock<MS extends SocketData, MR extends SocketData>
-  implements WsPoolProv<MS, MR> {
-  constructor(private prov: TestProvision) {}
-
-  public send = (data: MS) => {
-    this.prov.log("WsPoolMock", "send");
-    this.prov.log("WsPoolMock", data);
-  };
-
-  public forAll = (cb: (client: NodeWS<MS, MR>) => void) => {
-    this.prov.log("WsPoolMock", "forAll");
-    this.prov.log("WsPoolMock", cb);
-  };
-
-  public shutdown = () => Promise.resolve();
-}
 
 /**
  *

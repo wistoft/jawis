@@ -1,14 +1,10 @@
 import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
 
-import { safeAll } from "^jab";
+import { FinallyFunc, LogProv, safeAll } from "^jab";
 import { NodeWS, SocketData } from "^jab-node";
 
-import {
-  makeUpgradeHandler,
-  MakeUpgradeHandlerDeps,
-  WsMessageListener,
-} from ".";
+import { makeUpgradeHandler, WsMessageListener } from ".";
 
 export type WsPoolProv<
   MS extends SocketData,
@@ -16,10 +12,15 @@ export type WsPoolProv<
 > = Readonly<{
   send: (data: MS) => void;
   forAll: (cb: (nws: NodeWS<MS, MR>) => void) => void;
+  makeUpgradeHandler: ( onMessage: WsMessageListener<MS, MR> ) => WebsocketRequestHandler; // prettier-ignore
   shutdown: () => Promise<void>;
 }>;
 
-type Deps = Readonly<MakeUpgradeHandlerDeps>;
+type Deps = {
+  onError: (error: unknown) => void;
+  logProv: LogProv;
+  finally: FinallyFunc;
+};
 
 /**
  * Manage the WebSocket connection for a single express route.
@@ -55,9 +56,7 @@ export class WsPoolController<MS extends SocketData, MR extends SocketData>
   /**
    *
    */
-  public makeUpgradeHandler = (
-    onMessage: WsMessageListener<MS, MR>
-  ): WebsocketRequestHandler => {
+  public makeUpgradeHandler = (onMessage: WsMessageListener<MS, MR>) => {
     const onOpen = (nws: NodeWS<MS, MR>) => {
       this.clients.add(nws);
 

@@ -1,3 +1,30 @@
+# 0.0.35
+
+## :tada: Enhancements
+
+- When files/folders specified in `javi.conf` doesn't exist a useful message is
+  printed to the console. Except for `test log folder`, it will be created, when
+  the user accepts a test log.
+- `makeLogServiceToConsole` has optional logPrefix. And delay is now
+  configurable.
+- Better output from `jab-node.makeOnErrorToConsole`.
+
+## :bug: Bug fixes
+
+- `jatev` filters empty levels in test selection away, so it's easy to
+  determine, when there's no test cases.
+- Default scriptFolders in `javi.conf.js` is correctly set to current work dir.
+- Don't throw when `jatev` has no test selection and receives a test result. It
+  can occur when a page is reloaded, and an old test report is received before
+  the test selection arrives.
+- Only show js and ts-files in `jago`.
+
+## :boom: Breaking changes
+
+- Increase jacs soft timeout to `3s`.
+- When unknown properties in `javi.conf` are specified, an error is thrown.
+- Removed logPrefix from `jab-node.makeOnErrorToConsole`
+
 # 0.0.34
 
 ## :boom: Breaking changes
@@ -15,7 +42,7 @@
 ## :boom: Breaking changes
 
 - Increase timeout in jacs to `10s`.
-- Introduce soft timeout is jacs. It gives a warning, but waits for producer to
+- Introduce soft timeout in jacs. It gives a warning, but waits for producer to
   respond. Default `1s`.
 
 # 0.0.30
