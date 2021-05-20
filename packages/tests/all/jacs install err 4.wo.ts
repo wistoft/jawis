@@ -8,4 +8,4 @@ uninstallLiveJacs();
 
 //absBaseUrl must exist
 
-install(getWorkerData({ absBaseUrl: "dontExist" }));
+install(getWorkerData({ tsPaths: { baseUrl: "dontExist" } } as any));

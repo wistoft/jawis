@@ -53,7 +53,7 @@ export const getSourceFileLoaderMock = (): Pick<
   "load" | "getTsConfigPaths"
 > => ({
   load: (file) => Promise.resolve("code for: " + file),
-  getTsConfigPaths: () => ({}),
+  getTsConfigPaths: () => undefined,
 });
 
 /**
@@ -119,8 +119,10 @@ export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
     timeout: 0,
     softTimeout: 0,
     unregister: false,
-    absBaseUrl: "E:\\work\\repos\\jawis",
-    paths: { "^*": ["./packages/*"] },
+    tsPaths: {
+      baseUrl: "E:\\work\\repos\\jawis",
+      paths: { "^*": ["./packages/*"] },
+    },
     ...extraDeps,
   };
 };

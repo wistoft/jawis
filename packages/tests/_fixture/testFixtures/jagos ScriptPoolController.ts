@@ -1,65 +1,74 @@
 import { TestProvision } from "^jarun";
 import { ScriptPoolController, Deps } from "^jagos/ScriptPoolController";
-import { mapScriptFilesToDefault } from "^jagos";
+
 import { basename } from "^jab";
 
 import { getLogProv, getScriptPath, makeJacsWorker } from ".";
+import { ScriptDefinition } from "^jagos";
 
 /**
  *
  */
 export const getJabScriptPoolController = (
   prov: TestProvision,
-  logPrefix = "",
+  extraDeps?: Partial<Deps>
+) => new ScriptPoolController(getJabScriptPoolControllerDeps(prov, extraDeps));
+
+/**
+ *
+ */
+export const getJabScriptPoolController_one = (
+  prov: TestProvision,
   extraDeps?: Partial<Deps>
 ) =>
   new ScriptPoolController(
-    getJabScriptPoolControllerDeps(prov, logPrefix, extraDeps)
+    getJabScriptPoolControllerDeps(prov, {
+      scriptsDefs: mapScriptFilesToDefault([getScriptPath("hello.js")]),
+      ...extraDeps,
+    })
   );
-
 /**
  *
  */
 export const getJabScriptPoolController_many = (
   prov: TestProvision,
-  logPrefix = "",
   extraDeps?: Partial<Deps>
-) => {
-  const scripts = [
-    getScriptPath("beeSendAndWait.js"),
-    getScriptPath("stderrWithExit0.js"),
-    getScriptPath("hello.js"),
-  ];
-
-  return getJabScriptPoolController(prov, logPrefix, {
-    ...extraDeps,
-    scriptsDefs: mapScriptFilesToDefault(scripts),
-  });
-};
+) =>
+  new ScriptPoolController(
+    getJabScriptPoolControllerDeps(prov, {
+      scriptsDefs: mapScriptFilesToDefault([
+        getScriptPath("beeSendAndWait.js"),
+        getScriptPath("stderrWithExit0.js"),
+        getScriptPath("hello.js"),
+      ]),
+      ...extraDeps,
+    })
+  );
 
 /**
  *
  */
 export const getJabScriptPoolControllerDeps = (
   prov: TestProvision,
-  logPrefix = "",
   extraDeps?: Partial<Deps>
 ): Deps => {
-  const logProv = getLogProv(prov, logPrefix);
+  const logProv = getLogProv(prov);
 
   return {
-    scriptsDefs: mapScriptFilesToDefault([getScriptPath("hello.js")]),
+    onStatusChange: (script, status) => {
+      prov.log(basename(script), status);
+    },
 
-    onProcessStatusChange: (script, status) => {
-      prov.log(logPrefix + basename(script), status);
+    sendProcessStatus: () => {
+      //just ignored
     },
 
     onScriptOutput: (script, output) => {
-      prov.log(logPrefix + basename(script) + "." + output.type, output.data);
+      prov.log(basename(script) + "." + output.type, output.data);
     },
 
     onControlMessage: (script, data) => {
-      prov.log(logPrefix + basename(script) + ".control", data);
+      prov.log(basename(script) + ".control", data);
     },
 
     alwaysTypeScript: true, //development needs typescript for the preloader.
@@ -73,3 +82,13 @@ export const getJabScriptPoolControllerDeps = (
     ...extraDeps,
   };
 };
+
+/**
+ *
+ */
+export const mapScriptFilesToDefault = (scripts: string[]) =>
+  scripts.map(
+    (script): ScriptDefinition => ({
+      script,
+    })
+  );

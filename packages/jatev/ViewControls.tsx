@@ -24,7 +24,7 @@ export const ViewControls: React.FC<Props> = memo((props) => {
 
   const runFailedLink = (
     <JsLink
-      name="rft"
+      name="run-failed"
       onClick={props.runFailedTests}
       title="Run failed tests"
     />
@@ -32,7 +32,7 @@ export const ViewControls: React.FC<Props> = memo((props) => {
 
   const accLink = (
     <JsLink
-      name="aal"
+      name="accept-all"
       onClick={props.acceptAllLogs}
       title="Accept all test logs"
     />

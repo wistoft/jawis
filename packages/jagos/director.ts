@@ -6,7 +6,7 @@ import { MakeBee } from "^jab-node";
 import { Behavior } from "./Behavior";
 import { ScriptPoolController } from "./ScriptPoolController";
 import { ActionProvider } from "./ActionProvider";
-import { loadScripts, ScriptDefinition } from "./util";
+import { ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
 
 export type Deps = Readonly<{
@@ -29,26 +29,18 @@ export type Deps = Readonly<{
 export const director = (deps: Deps) => {
   deps.finally(() => behaviorProv.onShutdown()); //trick to register onShutdown, before it has been defined.
 
-  //read scripts
-
-  const defs = [...loadScripts(deps.scriptFolders), ...(deps.scripts || [])];
-
-  const scripts = defs.map((def) => def.script);
-
-  //setup
-
   const wsPool =
     deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps);
 
   const actionProv = new ActionProvider({
-    scripts,
     wsPool,
   });
 
   const poolProv = new ScriptPoolController({
-    scriptsDefs: defs,
-    alwaysTypeScript: deps.alwaysTypeScript,
+    scriptFolders: deps.scriptFolders,
+    scripts: deps.scripts,
     makeTsBee: deps.makeTsBee,
+    alwaysTypeScript: deps.alwaysTypeScript,
 
     onError: deps.onError,
     finally: deps.finally,
@@ -60,6 +52,7 @@ export const director = (deps: Deps) => {
   const behaviorProv = new Behavior({
     wsPool,
     ...actionProv,
+    ...poolProv,
     scriptPool: poolProv,
     onError: deps.onError,
   });

@@ -1,13 +1,16 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController, getScriptPath } from "../_fixture";
+import {
+  getJabScriptPoolController_one,
+  getScriptPath,
+  mapScriptFilesToDefault,
+} from "../_fixture";
 import { sleeping } from "^jab";
-import { mapScriptFilesToDefault } from "^jagos";
 
 //shutdown, when script is ipc.
 
 export default (prov: TestProvision) => {
-  const pool = getJabScriptPoolController(prov, "", {
+  const pool = getJabScriptPoolController_one(prov, {
     scriptsDefs: mapScriptFilesToDefault([getScriptPath("beeSendAndWait.js")]),
   });
 

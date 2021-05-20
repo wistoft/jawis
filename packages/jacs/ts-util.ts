@@ -1,11 +1,11 @@
 import fs from "fs";
-import { def, err, JabError, tos } from "^jab";
+import { err, JabError, tos } from "^jab";
 import path from "path";
 import ts, { Diagnostic, DiagnosticMessageChain, MapLike } from "typescript";
 
-export type TsConfigPaths = {
-  absBaseUrl?: string;
-  paths?: MapLike<string[]>;
+export type TsPathsConfig = {
+  baseUrl: string;
+  paths: MapLike<string[]>;
 };
 
 /**
@@ -94,77 +94,52 @@ export function dianosticChainToString(diag: DiagnosticMessageChain): string {
 }
 
 /**
- * Checks the path-info.
  *
+ * - Make baseUrl absolute for ts-config-paths.
+ * - Make some checks the configuration.
  */
-export const getRelevantConfig = (
+export const getTsPathsConfig = (
   compilerOptions: ts.CompilerOptions,
   absConfigFilePath: string
-): TsConfigPaths => {
+): TsPathsConfig | undefined => {
   if (!fs.existsSync(absConfigFilePath)) {
-    err("Jacs: config file must exist: ", absConfigFilePath);
-  }
-
-  if (!("baseUrl" in compilerOptions)) {
-    err("quick fix: tsconfig file must contain baseUrl: ", absConfigFilePath);
-  }
-
-  if (!("paths" in compilerOptions)) {
-    err("quick fix: tsconfig file must contain paths: ", absConfigFilePath);
+    err("config file must exist: ", absConfigFilePath);
   }
 
   const projectRoot = path.dirname(absConfigFilePath);
 
   //make conf for tsconfig-paths absolute, so it doesn't do any magic. Maybe unneeded.
 
-  const absBaseUrl = path.resolve(projectRoot, def(compilerOptions.baseUrl));
+  const baseUrl = path.resolve(projectRoot, compilerOptions.baseUrl || "");
 
-  if (!fs.existsSync(absBaseUrl)) {
-    err("Jacs: BaseUrl must exist:", absBaseUrl);
+  if (!fs.existsSync(baseUrl)) {
+    err("Jacs: BaseUrl must exist:", baseUrl);
   }
 
-  //Give some debugging info.
+  //when no import aliases.
 
-  const absPaths: {
-    [_: string]: string[];
-  } = {};
+  if (compilerOptions.paths === undefined) {
+    return;
+  }
+
+  //verify that paths without wildcard exist.
 
   for (const pathEntry in compilerOptions.paths) {
-    const relReplaceArray = compilerOptions.paths[pathEntry];
-
-    //map each path
-
-    const absReplaceArray = relReplaceArray.map((rel) => {
-      const abs = path.resolve(absBaseUrl, rel);
-
-      //verify that paths without wildcard exist.
-
-      //  maybe also check with * set to empty string. That should exist too.
-
+    for (const rel of compilerOptions.paths[pathEntry]) {
       if (!pathEntry.includes("*")) {
+        const abs = path.resolve(baseUrl, rel);
+
         if (!fs.existsSync(abs)) {
-          console.log(
-            "Jacs: The path replacement does not exist:",
-            pathEntry,
-            abs
-          );
+          throw new JabError( "Jacs: The path replacement does not exist:", pathEntry + " => " + abs ); // prettier-ignore
         }
       }
-
-      //return
-
-      return abs;
-    });
-
-    //store
-
-    absPaths[pathEntry] = absReplaceArray;
+    }
   }
 
   //return
 
   return {
-    absBaseUrl,
+    baseUrl,
     paths: compilerOptions.paths,
   };
 };

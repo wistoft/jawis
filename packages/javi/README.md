@@ -72,7 +72,7 @@ module.exports = {
   //The javi is served from.
   port: "3003",
   //timeout in `TestExecutionController`.
-  tecTimeout: "30000",
+  tecTimeout: 30000,
   //This prefix is removed in stack traces.
   //It's relative to position of configuration file.
   removePathPrefix: "",
@@ -120,6 +120,8 @@ module.exports = {
   'other/path/test.ja.js'
 - Output form scripts can only be own in the view. Opt-in to show it in the same
   console as javi runs, would be great.
+- TypeScript is fixed to a certain version. It should be a peer dependency,
+  instead.
 
 ## Future work
 

@@ -112,7 +112,7 @@ export const getFullConf = (
 
   const absTestLogFolder = path.join(confFileDir, testLogFolder);
 
-  delete conf.absTestLogFolder;
+  delete conf.testLogFolder;
 
   //port
 

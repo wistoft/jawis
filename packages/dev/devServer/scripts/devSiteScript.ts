@@ -1,3 +1,5 @@
 export {};
 
-throw new Error("upd");
+setInterval(() => {
+  console.log("dav");
+}, 1000);

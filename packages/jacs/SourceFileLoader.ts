@@ -14,7 +14,7 @@ import { basename, JabError, prej, tos } from "^jab";
 
 import {
   dianosticToString,
-  getRelevantConfig,
+  getTsPathsConfig,
   getTsConfigFromAbsConfigFile,
 } from ".";
 
@@ -196,11 +196,11 @@ export class SourceFileLoader {
     const file = this.getConfFile(absScriptPath);
 
     if (file === null) {
-      return {};
+      return undefined;
     }
 
     const options = this.getCompilerOptions(absScriptPath);
 
-    return getRelevantConfig(options, file);
+    return getTsPathsConfig(options, file);
   };
 }

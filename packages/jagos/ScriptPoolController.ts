@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import {
   paralleling,
   def,
@@ -5,8 +7,8 @@ import {
   FinallyFunc,
   Waiter,
   unknownToErrorData,
+  err,
 } from "^jab";
-
 import {
   TS_TIMEOUT,
   WatchableProcessPreloader,
@@ -16,9 +18,10 @@ import {
   BeeListeners,
   getFileToRequire,
 } from "^jab-node";
+import { ScriptStatus, ScriptStatusTypes } from "^jagoc";
 
 import { ActionProv } from "./ActionProvider";
-import { ScriptDefinition } from "./util";
+import { loadScriptFolders, ScriptDefinition } from "./util";
 
 const DO_PRELOAD_FOR_ACTIVE_SCRIPTS = true;
 
@@ -27,6 +30,8 @@ const MAX_PROC_COUNT = 1000;
 let procCount = 0;
 
 export type ScriptPoolProv = {
+  updateScripts: () => void;
+  getScriptStatus: () => ScriptStatus[];
   restartAllScripts: () => void;
   ensureAllScriptsStopped: () => Promise<void>;
   ensureScriptStopped: (script: string) => void;
@@ -35,16 +40,21 @@ export type ScriptPoolProv = {
 };
 
 export type Deps = {
-  logProv: LogProv;
-  scriptsDefs: ScriptDefinition[];
-  alwaysTypeScript?: boolean; //default false.
+  scriptFolders?: string[];
+  scripts?: ScriptDefinition[];
   makeTsBee: MakeBee;
+  alwaysTypeScript?: boolean; //default false.
 
   onError: (error: unknown) => void;
   finally: FinallyFunc;
+  logProv: LogProv;
+
+  //for testing
+  scriptsDefs?: ScriptDefinition[];
+  onStatusChange?: (script: string, status: ScriptStatusTypes) => void;
 } & Pick<
   ActionProv,
-  "onProcessStatusChange" | "onControlMessage" | "onScriptOutput"
+  "sendProcessStatus" | "onControlMessage" | "onScriptOutput"
 >;
 
 type ScriptState = {
@@ -52,6 +62,11 @@ type ScriptState = {
   autoRestart?: boolean;
   preload?: WatchableProcessPreloader<any, any>;
   process?: Bee<any>;
+  dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
+};
+
+type ScriptStatusExtra = ScriptStatus & {
+  dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
 };
 
 type States = "ready" | "stopping" | "stopped";
@@ -66,9 +81,13 @@ type States = "ready" | "stopping" | "stopped";
  * - preloads processes. For minimizing compile startup-delay.
  *
  * bug: need to be protected against events while async work hasn't finished
+ *
+ * todo
+ *  there's no need for both `this.state` and `this.status`, they should just be merged.
  */
 export class ScriptPoolController implements ScriptPoolProv {
   private state: Map<string, ScriptState> = new Map();
+  private status: ScriptStatusExtra[] = [];
 
   private waiter: Waiter<States, never>;
 
@@ -91,21 +110,134 @@ export class ScriptPoolController implements ScriptPoolProv {
    *
    */
   private initScripts = () => {
-    this.deps.scriptsDefs.forEach((def) => {
-      //state
+    loadScriptFolders(this.deps.scriptFolders).forEach(this.addScript(true));
 
-      this.state.set(def.script, {
-        ...def,
-        preload: undefined,
+    this.deps.scripts?.forEach(this.addScript(false));
+
+    this.deps.scriptsDefs?.forEach(this.addScript(false));
+  };
+
+  /**
+   *
+   */
+  private addScript = (dynamicallyLoaded: boolean) => (
+    def: ScriptDefinition
+  ) => {
+    //status
+
+    this.status.push({
+      id: crypto.createHash("md5").update(def.script).digest("hex"),
+      script: def.script,
+      status: "stopped",
+      dynamicallyLoaded,
+    });
+
+    //state
+
+    this.state.set(def.script, {
+      ...def,
+      dynamicallyLoaded,
+    });
+
+    //auto start
+
+    if (def.autoStart) {
+      //depends on state being set.
+      this.restartScript(def.script);
+    }
+  };
+
+  /**
+   * Read scriptFolders again to find new script, and deleted scripts.
+   *
+   * - Preserve script status, that are non-stopped.
+   * - Script state doesn't need to be pruned. It can linger. Actually, not really.
+   * - Scripts definitions in `deps.scripts` will just stay the same.
+   *
+   * impl
+   *  1. Find dynamically loaded scripts that is still running.
+   *  2. Remove all dynamically loaded scripts from `status`
+   *  3. Load new scritps and add them one by one.
+   *      - Use old status, if any.
+   *      - Keep track of running scritps, that are readded, because they still exist.
+   *  4. Add all running scripts, that was deleted.
+   */
+  public updateScripts = () => {
+    const nonStopped = this.status.filter(
+      (def) => def.dynamicallyLoaded && def.status !== "stopped"
+    );
+
+    this.status = this.status.filter((def) => !def.dynamicallyLoaded);
+
+    //load
+
+    const defs = loadScriptFolders(this.deps.scriptFolders);
+
+    defs.forEach((def) => {
+      const oldIndex = nonStopped.findIndex((x) => x.script === def.script);
+
+      let old: any = undefined;
+
+      if (oldIndex !== -1) {
+        old = nonStopped[oldIndex];
+
+        nonStopped[oldIndex].script = "script-readded";
+      }
+
+      //status
+
+      this.status.push({
+        id: crypto.createHash("md5").update(def.script).digest("hex"),
+        script: def.script,
+        status: old?.status || "stopped",
+        dynamicallyLoaded: true,
       });
 
-      //auto start
+      //create states for new scripts.
 
-      if (def.autoStart) {
-        //depends on state being set.
-        this.restartScript(def.script);
+      const oldState = this.state.get(def.script);
+
+      if (oldState === undefined) {
+        this.state.set(def.script, { ...def, dynamicallyLoaded: true });
       }
     });
+
+    for (const def of nonStopped) {
+      if (def.script !== "script-readded") {
+        this.status.push(def);
+      }
+    }
+  };
+
+  /**
+   *
+   */
+  public getScriptStatus = (): ScriptStatus[] =>
+    this.status.map((elm) => ({
+      id: elm.id,
+      script: elm.script,
+      status: elm.status,
+    }));
+
+  /**
+   *
+   */
+  public onStatusChange = (script: string, status: ScriptStatusTypes) => {
+    const index = this.status.findIndex((x) => x.script === script);
+
+    if (index === -1) {
+      throw err("script not found in state: ", script);
+    }
+
+    this.status[index].status = status;
+
+    //just send all of it.
+
+    this.deps.sendProcessStatus(this.getScriptStatus());
+
+    //for testing, because all that information is too much
+
+    this.deps.onStatusChange && this.deps.onStatusChange(script, status);
   };
 
   /**
@@ -115,8 +247,8 @@ export class ScriptPoolController implements ScriptPoolProv {
    */
   public restartAllScripts = () =>
     paralleling(
-      this.deps.scriptsDefs,
-      (def) => this.restartScript(def.script),
+      Array.from(this.state.values()),
+      (state) => this.restartScript(state.script),
       this.deps.onError
     );
 
@@ -126,7 +258,7 @@ export class ScriptPoolController implements ScriptPoolProv {
   public ensureAllScriptsStopped = () =>
     paralleling(
       Array.from(this.state.values()),
-      (state) => Promise.resolve(state.process?.shutdown()),
+      (state) => this.ensureScriptStoppedByState(state),
       this.deps.onError
     ).then(() => {}); //just for typing
 
@@ -141,7 +273,11 @@ export class ScriptPoolController implements ScriptPoolProv {
       return Promise.reject(new Error("max proc count."));
     }
 
-    const state = def(this.state.get(script));
+    const state = this.state.get(script);
+
+    if (state === undefined) {
+      return Promise.reject(new Error("Script not found: " + script));
+    }
 
     return this.ensureScriptStoppedByState(state)
       .then(() => this.getStartedProcess(state))
@@ -172,7 +308,8 @@ export class ScriptPoolController implements ScriptPoolProv {
       if (Waiter.isTimeout(error)) {
         //it's a timeout - so the process is killed.
 
-        this.deps.onControlMessage(state.script, "Had to kill script.");
+        //it seems to noisy to emit this message
+        // this.deps.onControlMessage(state.script, "Had to kill script.");
 
         return state.process?.kill();
       } else {
@@ -229,9 +366,7 @@ export class ScriptPoolController implements ScriptPoolProv {
     // depends on script, not preloader, so default `makeTsProcessConditonally` can't be used.
 
     const makeTsBeeConditonally =
-      this.deps.alwaysTypeScript ||
-      script.endsWith(".ts") ||
-      script.endsWith(".tsx")
+      this.deps.alwaysTypeScript || script.endsWith(".ts")
         ? this.deps.makeTsBee
         : makePlainWorkerBee;
 
@@ -250,7 +385,7 @@ export class ScriptPoolController implements ScriptPoolProv {
         }
       },
       onScriptRequired: () => {
-        this.deps.onProcessStatusChange(script, "listening");
+        this.onStatusChange(script, "listening");
       },
 
       timeout: 2 * TS_TIMEOUT, //for jacs compiler.
@@ -316,7 +451,7 @@ export class ScriptPoolController implements ScriptPoolProv {
       },
       onExit: () => {
         this.checkIfStopped();
-        this.deps.onProcessStatusChange(script, "stopped");
+        this.onStatusChange(script, "stopped");
       },
     };
 
@@ -324,10 +459,10 @@ export class ScriptPoolController implements ScriptPoolProv {
       state.preload = this.makePreloader(state);
     }
 
-    this.deps.onProcessStatusChange(script, "preloading");
+    this.onStatusChange(script, "preloading");
 
     return state.preload.useProcess(procConf).then((process) => {
-      this.deps.onProcessStatusChange(script, "running");
+      this.onStatusChange(script, "running");
 
       return {
         ...state,

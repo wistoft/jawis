@@ -56,7 +56,7 @@ export class JarunProcessMainImpl {
    */
   private wrapRunTest = (id: string, absTestFile: string) =>
     Promise.resolve().then(() =>
-      this.jtr.runTest(id, () => nodeRequire(absTestFile).default)
+      this.jtr.runTest(id, () => nodeRequire(absTestFile))
     );
 
   /**

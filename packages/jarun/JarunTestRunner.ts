@@ -16,9 +16,9 @@ import {
 
 import {
   createJarunSetTimeout,
-  MakeTestCase,
   TestFunction,
   awaitPromises,
+  TestFileExport,
 } from "./util";
 import { JarunTestProvision } from "./JarunTestProvision";
 import { createJarunPromise } from "./JarunPromise";
@@ -71,7 +71,7 @@ export class JarunTestRunner {
    */
   public runTest = (
     testId: string,
-    makeTest: MakeTestCase
+    makeTest: () => TestFileExport
   ): Promise<TestResult> => {
     const prov = new JarunTestProvision({
       testId,
@@ -160,6 +160,10 @@ export class JarunTestRunner {
 
   /**
    *
+   * - Handle tests that export
+   *    - export.module = () => {}
+   *    - export default = () => {}
+   *
    * impl
    *  - load and interpret test export.
    *  - run finally functions
@@ -167,7 +171,7 @@ export class JarunTestRunner {
    */
   public runTestFile = (
     testId: string,
-    makeTest: MakeTestCase,
+    makeTest: () => TestFileExport,
     prov: JarunTestProvision
   ): Promise<{
     testReturn: ClonedValue | undefined;
@@ -177,13 +181,24 @@ export class JarunTestRunner {
     Promise.resolve().then(() => {
       const requireStartTime = Date.now();
 
-      let testMod;
+      let testMod: TestFileExport;
+      let testFunc: TestFunction;
 
       try {
         testMod = makeTest();
 
-        if (typeof testMod !== "function") {
-          throw new JabError("Unknown default-export from test case.", testMod);
+        if (
+          typeof testMod === "object" &&
+          testMod !== null &&
+          "default" in testMod
+        ) {
+          testFunc = testMod.default;
+        } else {
+          testFunc = testMod;
+        }
+
+        if (typeof testFunc !== "function") {
+          throw new JabError( "Unknown export from test case.", testMod ); // prettier-ignore
         }
       } catch (e) {
         prov.onError(e);
@@ -192,7 +207,7 @@ export class JarunTestRunner {
 
       const testStartTime = Date.now();
 
-      return this.runTestAndClone(testId, testMod, prov)
+      return this.runTestAndClone(testId, testFunc, prov)
         .catch(prov.onError) // handles sync throw in the test. Resolve as if test returned undefined.
         .finally(prov.runFinally)
         .finally(() => awaitPromises(prov))

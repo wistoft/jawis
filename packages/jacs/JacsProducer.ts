@@ -93,7 +93,7 @@ export class JacsProducer {
       timeout: this.deps.consumerTimeout,
       softTimeout: this.deps.consumerSoftTimeout,
       beeFilename: beeDeps.filename,
-      ...this.deps.sfl.getTsConfigPaths(beeDeps.filename),
+      tsPaths: this.deps.sfl.getTsConfigPaths(beeDeps.filename),
 
       //for developement
       unregister: this.deps?.unregisterTsInWorker || false,

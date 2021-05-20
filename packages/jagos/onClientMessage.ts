@@ -15,10 +15,10 @@ export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };
  */
 export const makeOnClientMesssage = (
   deps: Deps
-): WsMessageListener<ServerMessage, ClientMessage> => (msg, nws) => {
+): WsMessageListener<ServerMessage, ClientMessage> => (msg) => {
   switch (msg.type) {
     case "startListen":
-      deps.onStartListen(nws.ws);
+      deps.onStartListen();
       break;
 
     case "restartAll":

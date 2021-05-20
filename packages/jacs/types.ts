@@ -1,4 +1,4 @@
-import { TsConfigPaths } from "./ts-util";
+import { TsPathsConfig } from "./ts-util";
 
 export type WorkerData = {
   controlArray: Int32Array;
@@ -7,10 +7,11 @@ export type WorkerData = {
   softTimeout: number;
   beeFilename?: string;
   stackTraceLimit?: number;
+  tsPaths?: TsPathsConfig;
 
   //for development
   unregister: boolean;
-} & TsConfigPaths;
+};
 
 export type ConsumerMessage = {
   type: "jacs-compile"; // this will clash with user's messages

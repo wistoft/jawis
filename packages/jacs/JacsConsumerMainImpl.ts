@@ -55,22 +55,12 @@ export const install = (shared: WorkerData) => {
 
   //setup ts paths
 
-  if (shared.absBaseUrl && shared.paths) {
-    if (!fs.existsSync(shared.absBaseUrl)) {
-      throw new Error("BaseUrl must exist: " + shared.absBaseUrl);
+  if (shared.tsPaths) {
+    if (!fs.existsSync(shared.tsPaths.baseUrl)) {
+      throw new Error("BaseUrl must exist: " + shared.tsPaths.baseUrl);
     }
 
-    uninstallInfo.tsConfigPaths = tsConfigPaths.register({
-      baseUrl: shared.absBaseUrl,
-      paths: shared.paths,
-    });
-  } else {
-    if (shared.paths === undefined) {
-      throw new Error("paths must be set, when absBaseUrl");
-    }
-    if (shared.absBaseUrl === undefined) {
-      throw new Error("absBaseUrl must be set, when paths");
-    }
+    uninstallInfo.tsConfigPaths = tsConfigPaths.register(shared.tsPaths);
   }
 
   //install source map

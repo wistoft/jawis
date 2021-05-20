@@ -1,9 +1,9 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController } from "../_fixture";
+import { getJabScriptPoolController_one } from "../_fixture";
 
 //doesn't return
 
 export default (prov: TestProvision) => {
-  getJabScriptPoolController(prov);
+  getJabScriptPoolController_one(prov);
 };

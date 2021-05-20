@@ -10,36 +10,29 @@ export type ScriptDefinition = {
 /**
  *
  */
-export const loadScripts = (folders?: string[]) => {
+export const loadScriptFolders = (folders?: string[]) => {
   if (!folders) {
     return [];
   }
 
-  let script = [] as string[];
+  let scripts: ScriptDefinition[] = [];
 
   folders.forEach((folder) => {
-    const scriptFiles = fs
-      .readdirSync(folder)
-      .map((file) => path.join(folder, file))
-      .filter(
-        (file) =>
-          fs.lstatSync(file).isFile() &&
-          (file.endsWith(".js") || file.endsWith(".ts"))
-      );
-
-    script = script.concat(scriptFiles);
+    scripts = scripts.concat(
+      fs
+        .readdirSync(folder)
+        .map(
+          (file): ScriptDefinition => ({
+            script: path.join(folder, file),
+          })
+        )
+        .filter(
+          ({ script }) =>
+            fs.lstatSync(script).isFile() &&
+            (script.endsWith(".js") || script.endsWith(".ts"))
+        )
+    );
   });
 
-  return mapScriptFilesToDefault(script);
+  return scripts;
 };
-
-/**
- *
- */
-export const mapScriptFilesToDefault = (scripts: string[]) =>
-  scripts.map(
-    (script): ScriptDefinition => ({
-      script,
-      autoRestart: false,
-    })
-  );

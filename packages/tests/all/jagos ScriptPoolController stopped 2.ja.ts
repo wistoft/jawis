@@ -1,20 +1,16 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController } from "../_fixture";
+import { getJabScriptPoolController_one } from "../_fixture";
 import { sleeping } from "^jab";
 
 //stop all scripts, when script (probably) have stopped.
 
 export default (prov: TestProvision) => {
-  const pool = getJabScriptPoolController(prov);
+  const pool = getJabScriptPoolController_one(prov);
 
   return pool
     .restartAllScripts()
-    .then(() => {
-      //to allow the script to run.
-      return sleeping(100);
-    })
-    .then(() => {
-      return pool.ensureAllScriptsStopped().then(pool.shutdown);
-    });
+    .then(() => sleeping(100)) //to allow the script to run.
+    .then(pool.ensureAllScriptsStopped)
+    .then(pool.shutdown);
 };

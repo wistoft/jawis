@@ -3,11 +3,16 @@ import {
   uninstallLiveJacs,
 } from "../_fixture/testFixtures/jacs";
 import { install } from "^jacs";
+import { def } from "^jab";
 
 uninstallLiveJacs();
 
 //can set custom import alias
 
-install(getWorkerData({ paths: { "myPrefix/*": ["./packages/*"] } }));
+const data = getWorkerData();
+
+def(data.tsPaths).paths["myPrefix/*"] = ["./packages/*"];
+
+install(data);
 
 require("myPrefix/jab");

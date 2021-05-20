@@ -45,11 +45,18 @@ export class ComposedTestFramework implements TestFrameworkProv {
   /**
    *
    */
-  public getCurrentSelectionTestIds = () =>
-    fs.promises
-      .readdir(path.join(this.deps.absTestFolder, "cur"))
+  public getCurrentSelectionTestIds = () => {
+    const folder = path.join(this.deps.absTestFolder, "cur");
+
+    if (!fs.existsSync(folder)) {
+      return Promise.resolve([]);
+    }
+
+    return fs.promises
+      .readdir(folder)
       .then((list) => list.map((file) => path.join("cur", file)))
       .then((list) => list.filter(this.registeredTest));
+  };
 
   /**
    * Returns true if a filename is a test case.

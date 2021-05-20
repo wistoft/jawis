@@ -18,6 +18,10 @@ const showStateAsText = false;
  *
  */
 export const ViewProcessOverview: React.FC<Props> = memo((props) => {
+  if (props.processStatus && props.processStatus.length === 0) {
+    return <>No scripts.</>;
+  }
+
   const status =
     props.processStatus &&
     props.processStatus.map((entry) => {

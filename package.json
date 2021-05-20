@@ -28,10 +28,9 @@
     "packages/*"
   ],
   "dependencies": {
-    "@jawis/javi": "^0.0.36-dev",
-    "@jawis/jacs": "^0.0.36-dev",
-    "@jawis/console": "^0.0.36-dev",
-    "@jawis/jagov": "^0.0.36-dev",
+    "@jawis/javi": "^0.0.36",
+    "@jawis/console": "^0.0.36",
+    "@jawis/jagov": "^0.0.36",
     "@octokit/core": "^3.2.5",
     "@types/gulp": "^4.0.8",
     "@types/gulp-bump": "^2.8.1",

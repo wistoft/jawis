@@ -1,3 +1,24 @@
+# 1.0.0
+
+## :tada: Enhancements
+
+- `Jarun` handles tests, that export: `module.exports = () => {}`, as one would
+  do in js-files.
+- `Jago` shows 'No scripts', when appropriate, instead of blank page.
+- Removed `@reach/router` dependency in `console`.
+
+## :bug: Bug fixes
+
+- `Jacs` worker failed when both `baseUrl` and `paths` are undefined.
+- `Jates` threw when cur-test-folder doesn't exist.
+- `Javi` didn't recognize `testLogFolder` in `javi.conf` correctly.
+- `Jacs` threw if `baseUrl` was unspecified in `tsconfig.json`. Now it uses
+  `tsconfig.json`'s position as `baseUrl`.
+- When jago stops all scripts, it will kill scripts that doesn't respond to
+  shutdown signal. Just like `jago` does when killing a single script.
+
+## :boom: Breaking changes
+
 # 0.0.36
 
 ## :tada: Enhancements

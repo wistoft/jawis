@@ -6,10 +6,10 @@ import {
   TestProvision,
   JarunTestRunner,
   createJarunPromise,
-  MakeTestCase,
   JarunTestRunnerDeps,
   JarunEqAssertation,
   BeeRunner,
+  TestFileExport,
 } from "^jarun";
 import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
@@ -52,7 +52,7 @@ export const getJarunTestRunner = (
  */
 export const jtrRunTest = (
   prov: TestProvision,
-  makeTest: MakeTestCase,
+  makeTest: () => TestFileExport,
   extraDeps?: Partial<JarunTestRunnerDeps>,
   logPrefix = ""
 ) => {

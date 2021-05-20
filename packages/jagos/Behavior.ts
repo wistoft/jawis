@@ -1,4 +1,3 @@
-import WebSocket from "ws";
 
 import { WsPoolProv } from "^jab-express";
 
@@ -11,17 +10,16 @@ import { safeAll } from "^jab";
 // prov
 
 export type BehaviorProv = {
-  onStartListen: (ws: WebSocket) => void;
+  onStartListen: () => void;
 };
 
 // deps
 
-export type BehaviorDeps = ActionProv & {
+export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
   scriptPool: ScriptPoolProv;
-
   onError: (error: unknown) => void;
-};
+} & Pick<ActionProv, "sendProcessStatus">;
 
 /**
  *
@@ -33,7 +31,8 @@ export class Behavior implements BehaviorProv {
    *
    */
   public onStartListen = () => {
-    this.deps.sendProcessStatus();
+    this.deps.scriptPool.updateScripts();
+    this.deps.sendProcessStatus(this.deps.scriptPool.getScriptStatus());
   };
 
   /**

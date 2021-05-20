@@ -10,7 +10,7 @@ import { MakeJabProcess, makeMakeTsJabProcessConditonally } from "^jab-node";
 
 export type TestFunction = (prov: TestProvision) => unknown;
 
-export type MakeTestCase = () => TestFunction;
+export type TestFileExport = TestFunction | { default: TestFunction };
 
 export type SetTimeoutFunction = (
   callback: (...args: any[]) => void,

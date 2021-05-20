@@ -1,12 +1,12 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController, getScriptPath } from "../_fixture";
+import { getJabScriptPoolController_one, getScriptPath } from "../_fixture";
 import { sleeping } from "^jab";
 
 //start single script
 
 export default (prov: TestProvision) => {
-  const pool = getJabScriptPoolController(prov);
+  const pool = getJabScriptPoolController_one(prov);
 
   return pool
     .restartScript(getScriptPath("hello.js"))
