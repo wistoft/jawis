@@ -80,7 +80,8 @@ export const getJaviConf = (
  */
 export const getFullConf = (
   inConf: { [_: string]: unknown },
-  confFileDir: string
+  confFileDir: string,
+  onlyBasenameInErrors = false //for testing
 ) => {
   assert(path.isAbsolute(confFileDir), "confFileDir must be absolute, was: " + confFileDir ); // prettier-ignore
 
@@ -97,7 +98,10 @@ export const getFullConf = (
   const absTestFolder = path.join(confFileDir, testFolder);
 
   if (!fs.existsSync(absTestFolder)) {
-    throw new UserMessage( "Javi: testFolder must exist: " + absTestFolder ); // prettier-ignore
+    const file = onlyBasenameInErrors
+      ? path.basename(absTestFolder)
+      : absTestFolder;
+    throw new UserMessage( "Javi: testFolder must exist: " + file ); // prettier-ignore
   }
 
   delete conf.testFolder;
@@ -158,7 +162,9 @@ export const getFullConf = (
       );
 
       if (!fs.existsSync(file)) {
-        throw new UserMessage( "Javi: scriptFolders[" + index + "] must exist: " + file ); // prettier-ignore
+        const fileForError = onlyBasenameInErrors ? path.basename(file) : file;
+
+        throw new UserMessage( "Javi: scriptFolders[" + index + "] must exist: " + fileForError ); // prettier-ignore
       }
 
       return file;
@@ -194,7 +200,11 @@ export const getFullConf = (
       }
 
       if (!fs.existsSync(res.script)) {
-        throw new UserMessage(prefix + " must exist: " + res.script);
+        const fileForError = onlyBasenameInErrors
+          ? path.basename(res.script)
+          : res.script;
+
+        throw new UserMessage(prefix + " must exist: " + fileForError);
       }
 
       return res;

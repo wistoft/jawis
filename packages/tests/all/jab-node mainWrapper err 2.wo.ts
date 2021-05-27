@@ -1,5 +1,5 @@
-import { prej } from "^jab";
 import { mainWrapper } from "^jab-node";
+import { getErrorForPrint } from "^tests/_fixture";
 
 Error.stackTraceLimit = 1; //to avoid noisy in test log
 
@@ -7,7 +7,8 @@ Error.stackTraceLimit = 1; //to avoid noisy in test log
 
 mainWrapper("id.", (mainProv) => {
   mainProv.finally(() => console.log("finally done"));
-  prej("ups");
+
+  Promise.reject(getErrorForPrint());
 });
 
 console.log("sync done");

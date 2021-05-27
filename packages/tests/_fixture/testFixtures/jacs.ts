@@ -9,6 +9,7 @@ import {
   MakeMakeJacsBeeDeps,
   SourceFileLoader,
   WorkerData,
+  TsPathsConfig,
 } from "^jacs";
 import { makeTsNodeWorker } from "^util/node";
 import { TestProvision } from "^jarun";
@@ -120,7 +121,7 @@ export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
     softTimeout: 0,
     unregister: false,
     tsPaths: {
-      baseUrl: "E:\\work\\repos\\jawis",
+      baseUrl: projectConf.projectRoot,
       paths: { "^*": ["./packages/*"] },
     },
     ...extraDeps,
@@ -178,6 +179,20 @@ export const filterTsConfig = (conf: CompilerOptions) => {
     rootDir: conf.rootDir && path.relative(projectConf.projectRoot, conf.rootDir).replace(/\\/g, "/"), // prettier-ignore
     pathsBasePath,
   };
+};
+
+/**
+ *
+ */
+export const filterTsPathConfig = (conf: TsPathsConfig | undefined) => {
+  if (conf) {
+    return {
+      ...conf,
+      baseUrl: conf.baseUrl && path.relative(projectConf.projectRoot, conf.baseUrl).replace(/\\/g, "/"), // prettier-ignore
+    };
+  } else {
+    return undefined;
+  }
 };
 
 /**

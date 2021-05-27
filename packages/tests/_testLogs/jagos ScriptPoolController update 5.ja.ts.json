@@ -1,1 +1,1 @@
-{"user":{"beeSendAndWait.js":["preloading","running","listening","stopped"],"beeSendAndWait.js.message":[{"type":"msg","value":"hello"}],"imp":[["value",[{"id":"26b80b106025d4fb31ffa9c180ed11d7","script":"E:\\work\\repos\\jawis\\packages\\tests\\_fixture\\scripts\\beeSendAndWait.js","status":"running"}]]]}}
+{"user":{"beeSendAndWait.js":["preloading","running","listening","stopped"],"beeSendAndWait.js.message":[{"type":"msg","value":"hello"}],"imp":[["value",[{"id":"filtered","script":"packages/tests/_fixture/scripts/beeSendAndWait.js","status":"running"}]]]}}

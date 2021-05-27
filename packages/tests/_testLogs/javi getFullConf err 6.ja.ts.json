@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: Javi: scriptFolders[0] must exist: E:\\work\\repos\\jawis\\packages\\tests\\_fixture\\dontExist"]}
+{"user":{},"err":["Error: Javi: scriptFolders[0] must exist: dontExist"]}

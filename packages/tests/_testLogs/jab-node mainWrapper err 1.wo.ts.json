@@ -1,1 +1,1 @@
-{"user":{"stdout":["Error: ups\n    at E:\\work\\repos\\jawis\\packages\\tests\\all\\jab-node mainWrapper err 1.wo.ts:10:9\n{ info: [ 'uh-exception' ] }\nfinally done\n"]}}
+{"user":{"stdout":["Error message and stack filtered\n{ info: [ 'uh-exception' ] }\nfinally done\n"]}}

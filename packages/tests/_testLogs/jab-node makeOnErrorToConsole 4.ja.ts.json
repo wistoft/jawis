@@ -1,1 +1,1 @@
-{"user":{"console.log":["Error: there's more\n    at func (E:\\work\\repos\\jawis\\packages\\tests\\all\\jab-node makeOnErrorToConsole 4.ja.ts:7:11)\n    at E:\\work\\repos\\jawis\\node_modules\\@jawis\\jarun\\compiled\\webpack:\\packages\\jarun\\JarunTestRunner.ts:236:19",{"info":["value",["here it is"]]}]}}
+{"user":{"console.log":["Error message and stack filtered",{"info":["value",["here it is"]]}]}}

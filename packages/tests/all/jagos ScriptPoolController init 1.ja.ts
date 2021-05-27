@@ -1,4 +1,5 @@
 import { TestProvision } from "^jarun";
+import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
 
 import { getFixturePath, getJabScriptPoolController_one } from "../_fixture";
 
@@ -9,7 +10,7 @@ export default (prov: TestProvision) => {
     scriptFolders: [getFixturePath("tsProject")],
   });
 
-  prov.imp(pool.getScriptStatus());
+  prov.imp(filterScriptStatuses(pool.getScriptStatus()));
 
   return pool.shutdown();
 };

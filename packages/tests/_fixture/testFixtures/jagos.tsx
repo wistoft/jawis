@@ -1,9 +1,13 @@
+import path from "path";
 import { TestProvision } from "^jarun";
-import { ClientMessage, ServerMessage } from "^jagoc";
+import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
 import { director, Deps as DirectorDeps } from "^jagos/director";
 import { NodeWS } from "^jab-express";
 
 import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
+import { assertNever } from "^jab";
+
+const projectConf = require("../../../../project.conf");
 
 /**
  *
@@ -19,7 +23,10 @@ export const getJagosDirector = (
     onError: prov.onError,
     finally: prov.finally,
     logProv: getLogProv(prov),
-    wsPool: new WsPoolMock(prov),
+    wsPool: new WsPoolMock({
+      log: prov.log,
+      filterMessage: filterJagosMessage,
+    }),
     ...extraDeps,
   });
 
@@ -45,4 +52,48 @@ export const getJagosDirector_with_script = (
   getJagosDirector(prov, {
     scripts: [{ script: getScriptPath("hello.js") }],
     ...extraDeps,
+  });
+
+/**
+ *
+ */
+export const filterJagosMessage = (msg: ServerMessage) => {
+  switch (msg.type) {
+    case "processStatus": {
+      return {
+        ...msg,
+        data: filterScriptStatuses(msg.data),
+      };
+    }
+    case "stdout":
+    case "stderr":
+      return {
+        ...msg,
+        script: path.relative(projectConf.projectRoot, msg.script).replace(/\\/g, "/"), // prettier-ignore
+      };
+
+    case "control":
+    case "message":
+      return msg;
+
+    default:
+      throw assertNever(msg, "Unknown server message.");
+  }
+};
+
+/**
+ *
+ */
+export const filterScriptStatuses = (data: ScriptStatus[]) =>
+  data.map((status) => {
+    const newStatus = {
+      ...status,
+      script: path.relative(projectConf.projectRoot, status.script).replace(/\\/g, "/"), // prettier-ignore
+    };
+
+    if ("id" in newStatus) {
+      newStatus.id = "filtered";
+    }
+
+    return newStatus;
   });

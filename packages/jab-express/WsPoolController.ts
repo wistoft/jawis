@@ -3,8 +3,7 @@ import WebSocket from "ws";
 
 import { FinallyFunc, LogProv, safeAll } from "^jab";
 
-import { NodeWS, SocketData , makeUpgradeHandler, WsMessageListener } from ".";
-
+import { NodeWS, SocketData, makeUpgradeHandler, WsMessageListener } from ".";
 
 export type WsPoolProv<
   MS extends SocketData,

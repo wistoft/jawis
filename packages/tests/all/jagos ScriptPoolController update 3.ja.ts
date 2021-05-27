@@ -1,4 +1,5 @@
 import { TestProvision } from "^jarun";
+import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
 
 import {
   emptyScratchFolder,
@@ -14,7 +15,7 @@ export default (prov: TestProvision) => {
 
   pool.updateScripts();
 
-  prov.imp(pool.getScriptStatus());
+  prov.imp(filterScriptStatuses(pool.getScriptStatus()));
 
   return pool.shutdown();
 };

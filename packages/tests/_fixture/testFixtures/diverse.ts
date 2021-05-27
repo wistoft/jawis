@@ -109,6 +109,14 @@ export const filterErrorDataStack = (err: ErrorData) => ({
 /**
  *
  */
+export const getErrorForPrint = (error?: Error) => {
+  const e = error || new Error("ups");
+  e.stack = "Error message and stack filtered";
+  return e;
+};
+/**
+ *
+ */
 export class ThrowInToString {
   public toString() {
     throw new Error("thrown in toString");
