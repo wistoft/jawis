@@ -90,6 +90,7 @@ automatically start this task install the extentions: `AutoLaunch`
 - vscode tasks are configured to use `powershell.exe`. Hence only work on
   Windows.
 - There is a problem with ambiant types in builded `d.ts` files.
+- Minimal `node` version is `12.11.0`.
 
 ## Licence
 
