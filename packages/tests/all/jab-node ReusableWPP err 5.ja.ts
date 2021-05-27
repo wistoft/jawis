@@ -1,9 +1,16 @@
+import util from "util";
 import { TestProvision } from "^jarun";
 
 import { getReusableWPPAndDeps } from "../_fixture";
 
-export default (prov: TestProvision) => {
-  const [angel, deps] = getReusableWPPAndDeps(prov, { filename: 144 as any });
+//wrong type
 
-  return angel.useProcess(deps);
+export default (prov: TestProvision) => {
+  try {
+    getReusableWPPAndDeps(prov, { filename: 144 as any });
+
+    console.log("din't throw");
+  } catch (error) {
+    prov.eq("ERR_INVALID_ARG_TYPE", error.code);
+  }
 };
