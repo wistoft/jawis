@@ -60,11 +60,13 @@ automatically start this task install the extentions: `AutoLaunch`
   - Running the vscode tasks makes the errors available in vscode.
   - Review, because there's a bug, that removes comments after imports
 - `yarn pretty:fix`
-- Update change log.
-- Bump version number in `gulpfile.js`
+- Clean up git history.
+- `yarn bump`
+  - Bumps package versions according to `conventional commits`
+  - Generates changelogs for each package
 - `yarn build`
-- `lerna publish from-package`
-- Clean up git history and tag commit.
+- `yarn release`
+  - Publishes to npm
 
 ## Packages
 

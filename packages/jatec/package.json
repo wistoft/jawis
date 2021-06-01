@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "name": "~jatec",
   "description": "Common for jate view and server.",
   "dependencies": {

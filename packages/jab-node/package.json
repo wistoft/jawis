@@ -3,7 +3,7 @@
     "./process/ProcessPreloaderMain.ts",
     "./process/WatchableProcessMain.ts"
   ],
-  "version": "0.0.0",
+  "version": "1.0.0",
   "name": "~jab-node",
   "description": "Utilities for node environment.",
   "dependencies": {

@@ -8,7 +8,7 @@ yarn-error.log
 lerna-debug.log
 
 #more
-/build
+/build/publish
 /build-alpha
 /build-tsc
 /packages/tests/_fixture/scratchFolder

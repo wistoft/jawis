@@ -2,6 +2,7 @@
   "sideEffects": [
     "**/*.css"
   ],
+  "private": true,
   "version": "0.0.0",
   "name": "~javi-client",
   "description": "Source for building the javi client.",
