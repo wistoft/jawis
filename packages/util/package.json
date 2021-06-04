@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "~util",
+  "name": "util-javi",
   "description": "Utilities for jawis/javi",
   "dependencies": {
     "path-browserify": "^1.0.1",

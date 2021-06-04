@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "~jates",
+  "name": "jates",
   "description": "Jate server",
   "dependencies": {
     "@types/cors": "^2.8.6",

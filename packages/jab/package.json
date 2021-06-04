@@ -1,7 +1,7 @@
 {
   "sideEffects": false,
   "version": "1.0.0",
-  "name": "~jab",
+  "name": "jab",
   "description": "Collection of basic utilities for JavaScript",
   "dependencies": {},
   "keywords": [

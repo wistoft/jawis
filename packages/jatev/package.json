@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "~jatev",
+  "name": "jatev",
   "description": "Jate view",
   "dependencies": {
     "@reach/router": "^1.3.4",

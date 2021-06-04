@@ -3,7 +3,7 @@
     "./consoleCaptureMain.ts"
   ],
   "version": "1.0.0",
-  "name": "~console",
+  "name": "console",
   "description": "Console output from both node and browser shown in the browser",
   "dependencies": {
     "@types/react": "^16.14.4",

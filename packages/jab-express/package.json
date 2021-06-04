@@ -1,7 +1,7 @@
 {
   "sideEffects": false,
   "version": "1.0.0",
-  "name": "~jab-express",
+  "name": "jab-express",
   "description": "Utilities for express apps.",
   "dependencies": {
     "@types/express": "^4.17.11",

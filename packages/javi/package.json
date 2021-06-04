@@ -3,7 +3,7 @@
     "./server/javiServerMain.ts"
   ],
   "version": "1.0.0",
-  "name": "~javi",
+  "name": "javi",
   "bin": {
     "javi": "./javiServerMain.js"
   },

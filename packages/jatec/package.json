@@ -1,7 +1,7 @@
 {
   "sideEffects": false,
   "version": "1.0.0",
-  "name": "~jatec",
+  "name": "jatec",
   "description": "Common for jate view and server.",
   "dependencies": {
     "@types/deep-equal": "^1.0.1",
