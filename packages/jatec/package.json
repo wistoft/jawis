@@ -4,6 +4,7 @@
   "name": "jatec",
   "description": "Common for jate view and server.",
   "dependencies": {
+    "@jawis/jab": "1.0.0",
     "@types/deep-equal": "^1.0.1",
     "deep-equal": "^2.0.5"
   }

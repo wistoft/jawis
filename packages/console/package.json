@@ -6,6 +6,10 @@
   "name": "console",
   "description": "Console output from both node and browser shown in the browser",
   "dependencies": {
+    "@jawis/jab": "1.0.0",
+    "@jawis/jab-react": "1.0.0",
+    "@jawis/jagoc": "1.0.0",
+    "@jawis/util-javi": "1.0.0",
     "@types/react": "^16.14.4",
     "react": "^16.14.0"
   }

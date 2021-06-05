@@ -6,6 +6,11 @@
   "name": "jagos",
   "description": "Jago server",
   "dependencies": {
+    "@jawis/jagoc": "1.0.0",
+    "@jawis/jab": "1.0.0",
+    "@jawis/jab-express": "1.0.0",
+    "@jawis/jab-node": "1.0.0",
+    "@jawis/util-javi": "1.0.0",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",

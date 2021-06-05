@@ -115,8 +115,7 @@ const makeBuildPackageJson = (outDir) => {
     ])
       .pipe(
         jeditor((json) => {
-          const packageName = json.name.replace(/^~/, "");
-          json.version = npmVersion;
+          const packageName = json.name;
 
           json.name = npmScope + "/" + packageName;
 
@@ -133,6 +132,19 @@ const makeBuildPackageJson = (outDir) => {
           json.publishConfig = {
             access: "public",
           };
+
+          const localDeps = getSiblingDeps(packageName);
+
+          for (const key in localDeps) {
+            if (
+              json.dependencies === undefined ||
+              json.dependencies[key] === undefined
+            ) {
+              console.log(
+                "Error: " + json.name + " is missing dependency: " + key
+              );
+            }
+          }
 
           try {
             json.dependencies = {
@@ -184,7 +196,7 @@ const getSiblingDeps = (packageName) => {
     conf.references.forEach((def) => {
       const required = def.path.replace(/^\.\./, npmScope);
 
-      extra[required] = npmVersion;
+      extra[required] = "dummy";
     });
   }
 
@@ -195,5 +207,6 @@ module.exports = {
   build: makeBuild("build/publish"),
   clean: makeClean("build/publish"),
   buildAlpha: makeBuildAlpha(projectConf.alphaBuildFolder),
+  buildPackageJson: makeBuildPackageJson("build/publish"),
   files: makeCopyFiles("build/publish"),
 };

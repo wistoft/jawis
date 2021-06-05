@@ -9,6 +9,8 @@
     "node": ">=12.11.0"
   },
   "dependencies": {
+    "@jawis/jab": "1.0.0",
+    "@jawis/jab-node": "1.0.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.3",
     "source-map-support": "^0.5.19",
