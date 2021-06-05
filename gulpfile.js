@@ -135,6 +135,8 @@ const makeBuildPackageJson = (outDir) => {
 
           const localDeps = getSiblingDeps(packageName);
 
+          //check all local dependencies in tsconfig.json is also in package.json
+
           for (const key in localDeps) {
             if (
               json.dependencies === undefined ||
@@ -144,17 +146,16 @@ const makeBuildPackageJson = (outDir) => {
                 "Error: " + json.name + " is missing dependency: " + key
               );
             }
-          }
 
-          try {
-            json.dependencies = {
-              ...getSiblingDeps(packageName),
-              ...json.dependencies,
-            };
-          } catch (e) {
-            setTimeout(() => {
-              throw e;
-            }, 0);
+            //add dependency with npm scope, and trim the caret, that lerna adds, when it updates cross dependencies.
+
+            json.dependencies[npmScope + "/" + key] = json.dependencies[
+              key
+            ].replace(/^\^/, "");
+
+            //delete dependency entry without scope.
+
+            delete json.dependencies[key];
           }
 
           json.license = "MIT";
@@ -194,7 +195,7 @@ const getSiblingDeps = (packageName) => {
 
   if (conf.references) {
     conf.references.forEach((def) => {
-      const required = def.path.replace(/^\.\./, npmScope);
+      const required = def.path.replace(/^\.\.\//, "");
 
       extra[required] = "dummy";
     });
