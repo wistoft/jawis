@@ -7,7 +7,7 @@ import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 //import development versions for `devServerMain.ts`
 
-import { makeTsNodeJabProcess } from "^util/node";
+import { makeTsNodeJabProcess } from "^util-javi/node";
 import { createDefaultTestRunners } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";

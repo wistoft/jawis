@@ -9,6 +9,6 @@
     { "path": "../jab-express" },
     { "path": "../jab-node" },
     { "path": "../jatec" },
-    { "path": "../util" }
+    { "path": "../util-javi" }
   ]
 }

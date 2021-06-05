@@ -6,7 +6,7 @@ import { toAtomizedString, replaceAtoms } from "^jab-react";
 
 import { ViewDiff } from "./ViewDiff";
 import { ViewErrorLog, Props as ViewErrorLogProps } from "./ViewErrorLog";
-import { parseErrorData, ViewException } from "^util/web";
+import { parseErrorData, ViewException } from "^util-javi/web";
 
 export type ShowType = "cmp" | "exp" | "cur";
 

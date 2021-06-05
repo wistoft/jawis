@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.web.json",
   "compilerOptions": {
-    "outDir": "../../build-tsc/util",
+    "outDir": "../../build-tsc/util-javi",
     "rootDir": "."
   },
   "references": [

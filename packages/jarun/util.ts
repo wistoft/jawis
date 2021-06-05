@@ -5,7 +5,7 @@ import { CreateTestRunners } from "^jates";
 import { JarunTestProvision, TestProvision } from "./JarunTestProvision";
 import { BeeRunner } from "./BeeRunner";
 import { JarunProcessController } from ".";
-import { makeTsNodeJabProcess } from "^util/node";
+import { makeTsNodeJabProcess } from "^util-javi/node";
 import { MakeJabProcess, makeMakeTsJabProcessConditonally } from "^jab-node";
 
 export type TestFunction = (prov: TestProvision) => unknown;

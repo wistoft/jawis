@@ -3,7 +3,7 @@ import path from "path-browserify";
 
 import { ParsedStack, basename, ParsedStackFrame } from "^jab";
 import { JsLink } from "^jab-react";
-import { OpenFile } from "^util";
+import { OpenFile } from "^util-javi";
 
 //props
 

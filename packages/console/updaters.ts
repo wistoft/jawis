@@ -1,5 +1,5 @@
 import { ErrorEntry } from "^jagoc";
-import { parseTrace, parseTraceAndSourceMap } from "^util/web";
+import { parseTrace, parseTraceAndSourceMap } from "^util-javi/web";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
 import { State } from "./useConsoleState";
 import { mapConsoleEntry, preserveConsoleEntry } from "./util";

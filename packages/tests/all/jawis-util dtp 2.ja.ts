@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { dtp } from "^util/dtp";
+import { dtp } from "^util-javi/dtp";
 
 //cycle in dependencies
 

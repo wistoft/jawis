@@ -2,7 +2,7 @@ import React, { memo } from "react";
 
 import { err, splitSurroundingWhitespace } from "^jab";
 import { replaceAtoms } from "^jab-react";
-import { diff } from "^util/algs";
+import { diff } from "^util-javi/algs";
 
 export type Props = {
   left: string;

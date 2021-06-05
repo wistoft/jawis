@@ -11,7 +11,7 @@ import {
   WorkerData,
   TsPathsConfig,
 } from "^jacs";
-import { makeTsNodeWorker } from "^util/node";
+import { makeTsNodeWorker } from "^util-javi/node";
 import { TestProvision } from "^jarun";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";

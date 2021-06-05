@@ -22,7 +22,8 @@
     { "path": "./packages/javi" },
     { "path": "./packages/javi-client" },
     { "path": "./packages/misc" },
-    { "path": "./packages/util" },
+    { "path": "./packages/util-dev" },
+    { "path": "./packages/util-javi" },
     { "path": "./packages/tests" }
   ]
 }

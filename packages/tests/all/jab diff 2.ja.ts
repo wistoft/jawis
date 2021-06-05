@@ -1,4 +1,4 @@
-import { diff } from "^util/algs";
+import { diff } from "^util-javi/algs";
 import { TestProvision } from "^jarun";
 
 export default ({ imp }: TestProvision) => {

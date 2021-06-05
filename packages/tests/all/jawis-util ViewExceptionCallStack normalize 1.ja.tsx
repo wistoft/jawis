@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { normalize } from "^util/web";
+import { normalize } from "^util-javi/web";
 
 export default ({ eq }: TestProvision) => {
   eq("/", normalize("/"));

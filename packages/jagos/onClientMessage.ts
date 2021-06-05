@@ -5,7 +5,7 @@ import { ClientMessage, ServerMessage } from "^jagoc";
 import { BehaviorProv } from "./Behavior";
 import { ScriptPoolProv } from "./ScriptPoolController";
 
-import { handleOpenFileInVsCode } from "^util/node";
+import { handleOpenFileInVsCode } from "^util-javi/node";
 import { WsMessageListener } from "^jab-express";
 
 export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };

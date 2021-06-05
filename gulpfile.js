@@ -31,7 +31,7 @@ const packages = [
   "jates",
   "jatev",
   "javi",
-  "util",
+  "util-javi",
   "util-dev",
 ];
 

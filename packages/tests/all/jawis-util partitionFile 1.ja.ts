@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { partitionFile } from "^util/web";
+import { partitionFile } from "^util-javi/web";
 
 export default ({ eq }: TestProvision) => {
   //no folder

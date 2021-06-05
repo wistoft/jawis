@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 
-import { ViewException, ViewExceptionProps } from "^util/web";
+import { ViewException, ViewExceptionProps } from "^util-javi/web";
 import { assertNever } from "^jab";
 
 import { ConsoleStateProv } from "./useConsoleState";

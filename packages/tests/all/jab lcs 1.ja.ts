@@ -1,4 +1,4 @@
-import { longestCommonSubstring } from "^util/algs";
+import { longestCommonSubstring } from "^util-javi/algs";
 import { TestProvision } from "^jarun";
 
 export default ({ eq }: TestProvision) => {
