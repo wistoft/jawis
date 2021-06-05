@@ -2,15 +2,15 @@
   "sideEffects": [
     "./consoleCaptureMain.ts"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "console",
   "description": "Console output from both node and browser shown in the browser",
   "dependencies": {
-    "jab": "1.0.1",
-    "jab-react": "1.0.1",
-    "jagoc": "1.0.1",
-    "util-javi": "1.0.1",
     "@types/react": "^16.14.4",
-    "react": "^16.14.0"
+    "jab": "1.0.1",
+    "jab-react": "^1.0.2",
+    "jagoc": "^1.0.2",
+    "react": "^16.14.0",
+    "util-javi": "^1.0.2"
   }
 }

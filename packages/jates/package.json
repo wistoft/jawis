@@ -1,13 +1,8 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jates",
   "description": "Jate server",
   "dependencies": {
-    "jab": "1.0.1",
-    "jab-express": "1.0.1",
-    "jab-node": "1.0.1",
-    "jatec": "1.0.1",
-    "util-javi": "1.0.1",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",
@@ -20,6 +15,11 @@
     "filewatcher": "^3.0.1",
     "fs-extra": "^9.0.0",
     "fs-readdir-recursive": "^1.1.0",
+    "jab": "1.0.1",
+    "jab-express": "^1.0.2",
+    "jab-node": "^1.0.2",
+    "jatec": "^1.0.2",
+    "util-javi": "^1.0.2",
     "ws": "^7.3.0"
   }
 }

@@ -2,17 +2,17 @@
   "sideEffects": [
     "./JacsConsumerMain.ts"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jacs",
   "description": "",
   "engines": {
     "node": ">=12.11.0"
   },
   "dependencies": {
-    "jab": "1.0.1",
-    "jab-node": "1.0.1",
     "@types/source-map-support": "^0.5.3",
     "filewatcher": "^3.0.1",
+    "jab": "1.0.1",
+    "jab-node": "^1.0.2",
     "source-map-support": "^0.5.19",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.3"

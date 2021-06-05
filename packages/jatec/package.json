@@ -1,11 +1,11 @@
 {
   "sideEffects": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jatec",
   "description": "Common for jate view and server.",
   "dependencies": {
-    "jab": "1.0.1",
     "@types/deep-equal": "^1.0.1",
-    "deep-equal": "^2.0.5"
+    "deep-equal": "^2.0.5",
+    "jab": "1.0.1"
   }
 }

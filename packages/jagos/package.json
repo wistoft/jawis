@@ -2,15 +2,10 @@
   "sideEffects": [
     "./ScriptWrapperMain.ts"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jagos",
   "description": "Jago server",
   "dependencies": {
-    "jab": "1.0.1",
-    "jab-express": "1.0.1",
-    "jab-node": "1.0.1",
-    "jagoc": "1.0.1",
-    "util-javi": "1.0.1",
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",
@@ -18,6 +13,11 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
+    "jab": "1.0.1",
+    "jab-express": "^1.0.2",
+    "jab-node": "^1.0.2",
+    "jagoc": "^1.0.2",
+    "util-javi": "^1.0.2",
     "ws": "^7.3.0"
   }
 }

@@ -1,18 +1,18 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jagov",
   "description": "Jago view",
   "dependencies": {
-    "console": "1.0.1",
-    "jab": "1.0.1",
-    "jab-react": "1.0.1",
-    "jagoc": "1.0.1",
-    "util-javi": "1.0.1",
     "@reach/router": "^1.3.4",
     "@types/md5": "^2.2.0",
     "@types/reach__router": "^1.3.7",
     "@types/react": "^16.14.4",
+    "console": "^1.0.2",
+    "jab": "1.0.1",
+    "jab-react": "^1.0.2",
+    "jagoc": "^1.0.2",
     "md5": "^2.2.1",
-    "react": "^16.14.0"
+    "react": "^16.14.0",
+    "util-javi": "^1.0.2"
   }
 }

@@ -1,13 +1,13 @@
 {
   "sideEffects": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jab-react",
   "description": "Utilities for React",
   "dependencies": {
-    "jab": "1.0.1",
     "@reach/router": "^1.3.4",
     "@types/reach__router": "^1.3.7",
     "@types/react": "^16.14.4",
+    "jab": "1.0.1",
     "react": "^16.14.0",
     "shallow-equal": "^1.2.1"
   }

@@ -2,14 +2,14 @@
   "sideEffects": [
     "./JarunProcessMain.ts"
   ],
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "jarun",
   "description": "Jarun test runner",
   "dependencies": {
-    "jab": "1.0.1",
-    "jab-node": "1.0.1",
-    "jates": "1.0.1",
     "@types/deep-equal": "^1.0.1",
-    "deep-equal": "^2.0.5"
+    "deep-equal": "^2.0.5",
+    "jab": "1.0.1",
+    "jab-node": "^1.0.2",
+    "jates": "^1.0.2"
   }
 }
