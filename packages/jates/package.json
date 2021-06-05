@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "jates",
   "description": "Jate server",
   "dependencies": {
@@ -11,15 +11,15 @@
     "@types/cors": "^2.8.6",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",
+    "@types/fs-extra": "^9.0.8",
     "@types/fs-readdir-recursive": "^1.0.0",
     "@types/ws": "^7.2.4",
-    "@types/fs-extra": "^9.0.8",
-    "fs-extra": "^9.0.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
+    "filewatcher": "^3.0.1",
+    "fs-extra": "^9.0.0",
     "fs-readdir-recursive": "^1.1.0",
-    "ws": "^7.3.0",
-    "filewatcher": "^3.0.1"
+    "ws": "^7.3.0"
   }
 }

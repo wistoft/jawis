@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "jab-express",
   "description": "Utilities for express apps.",
   "dependencies": {
@@ -8,9 +8,9 @@
     "@jawis/jab-node": "1.0.0",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",
+    "@types/ws": "^7.2.4",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
-    "@types/ws": "^7.2.4",
     "ws": "^7.3.0"
   }
 }
