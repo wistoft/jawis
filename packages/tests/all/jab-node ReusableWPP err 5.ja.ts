@@ -1,4 +1,3 @@
-import util from "util";
 import { TestProvision } from "^jarun";
 
 import { getReusableWPPAndDeps } from "../_fixture";
