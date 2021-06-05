@@ -7,8 +7,8 @@
   "name": "jab-node",
   "description": "Utilities for node environment.",
   "dependencies": {
-    "@jawis/jab": "1.0.0",
-    "@jawis/jagoc": "1.0.0",
+    "jab": "1.0.1",
+    "jagoc": "1.0.1",
     "dateformat": "^4.5.1",
     "filewatcher": "^3.0.1"
   }

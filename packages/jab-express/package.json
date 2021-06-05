@@ -4,8 +4,8 @@
   "name": "jab-express",
   "description": "Utilities for express apps.",
   "dependencies": {
-    "@jawis/jab": "1.0.0",
-    "@jawis/jab-node": "1.0.0",
+    "jab": "1.0.1",
+    "jab-node": "1.0.1",
     "@types/express": "^4.17.11",
     "@types/express-ws": "^3.0.0",
     "@types/ws": "^7.2.4",

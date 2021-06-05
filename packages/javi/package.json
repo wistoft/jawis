@@ -9,14 +9,14 @@
   },
   "description": "JavaScript View is tool for running test cases and scripts. Everything is presented in the browser",
   "dependencies": {
-    "@jawis/jab": "1.0.0",
-    "@jawis/jab-express": "1.0.0",
-    "@jawis/jab-node": "1.0.0",
-    "@jawis/jacs": "1.0.0",
-    "@jawis/jagos": "1.0.0",
-    "@jawis/jarun": "1.0.0",
-    "@jawis/jates": "1.0.0",
-    "@jawis/util-javi": "1.0.0"
+    "jab": "1.0.1",
+    "jab-express": "1.0.1",
+    "jab-node": "1.0.1",
+    "jacs": "1.0.1",
+    "jagos": "1.0.1",
+    "jarun": "1.0.1",
+    "jates": "1.0.1",
+    "util-javi": "1.0.1"
   },
   "keywords": [
     "development",

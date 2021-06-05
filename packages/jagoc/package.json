@@ -3,6 +3,6 @@
   "name": "jagoc",
   "description": "Common for jago view and server",
   "dependencies": {
-    "@jawis/jab": "1.0.0"
+    "jab": "1.0.1"
   }
 }

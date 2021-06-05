@@ -9,8 +9,8 @@
     "node": ">=12.11.0"
   },
   "dependencies": {
-    "@jawis/jab": "1.0.0",
-    "@jawis/jab-node": "1.0.0",
+    "jab": "1.0.1",
+    "jab-node": "1.0.1",
     "@types/source-map-support": "^0.5.3",
     "filewatcher": "^3.0.1",
     "source-map-support": "^0.5.19",
