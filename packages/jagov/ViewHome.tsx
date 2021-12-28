@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { Props as ConsoleProps, View as ConsoleView } from "^console";
 
 import { ViewProcessOverview, Props as P1 } from "./ViewProcessOverview";
-import { ApiProv } from ".";
+import { ApiProv } from "./types";
 
 export type ViewHomeProps = P1 &
   ApiProv & {

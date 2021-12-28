@@ -1,4 +1,10 @@
-import { ZippedTestLog, ClientTestReport, RogueData, TestStatus } from "^jatec";
+import {
+  ZippedTestLog,
+  ClientTestReport,
+  RogueData,
+  TestStatus,
+  TestInfo,
+} from "^jatec";
 import { TestCollection } from "./TestCollection";
 
 export type State = Readonly<{
@@ -6,14 +12,15 @@ export type State = Readonly<{
   currentTest?: TestState;
   currentTestFressness?: number;
   tests?: TestCollection; //undefined means nothing received from server.
-  executingTestId?: string;
+  executingTest?: { id: string; name: string };
+
   userMessage: string;
   unknownRogue?: ZippedTestLog[];
 }>;
 
-export type Callbacks = {
+export type StateCallbacks = {
   setIsRunning: (isRunning: boolean) => void;
-  setTestSelection: (testCases: string[][]) => void;
+  setTestSelection: (testCases: TestInfo[][]) => void;
   setExecutingTestCase: (testId?: string) => void;
   setTestReport: (result: ClientTestReport) => void;
   setRogue: (rogue: RogueData) => void;
@@ -23,8 +30,7 @@ export type Callbacks = {
   onNext: () => void;
 };
 
-export type TestState = {
-  id: string;
+export type TestState = TestInfo & {
   status?: TestStatus;
   testLogs?: ZippedTestLog[];
   rogue?: boolean;

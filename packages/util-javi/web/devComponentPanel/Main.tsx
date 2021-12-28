@@ -1,7 +1,7 @@
 import React, { memo, useCallback } from "react";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { ClientMessage, ServerMessage } from "@jawis/jagoc";
+import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { useKeyListener, useWebSocketProv } from "^jab-react";
 
@@ -44,10 +44,7 @@ export const Main: React.FC<Props> = memo(({ apiPath, contexts }) => {
 
   const openComponnent = useCallback(
     (compPath: string) => {
-      // const projectRoot = "E:\\work\\repos\\jawis";
-
       apiSend({ type: "openRelFile", file: compPath });
-      // apiSend({ type: "openFile", file: path.join(projectRoot, compPath) });
     },
     [apiSend]
   );
@@ -60,6 +57,7 @@ export const Main: React.FC<Props> = memo(({ apiPath, contexts }) => {
       }))}
       openComponnent={openComponnent}
       useKeyListener={useKeyListener}
+      mountPath={"/Comps"} //dirty quick fix
     />
   );
 });

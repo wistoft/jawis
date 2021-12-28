@@ -1,16 +1,6 @@
 {
-  "version": "independent",
-  "useWorkspaces": true,
-  "packages": ["packages/*"],
+  "version": "0.0.3",
   "npmClient": "yarn",
   "loglevel": "warn",
-  "changelogPreset": {
-    "name": "conventionalcommits"
-  },
-  "command": {
-    "version": {
-      "allowBranch": "master",
-      "conventionalCommits": true
-    }
-  }
+  "packages": ["build/publish/*"]
 }

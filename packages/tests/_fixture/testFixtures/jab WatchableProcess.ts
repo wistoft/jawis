@@ -8,11 +8,12 @@ import {
 import {
   getJabProcessDeps,
   getLogProv,
+  getMakeJacsWorker,
   getScriptPath,
-  makeJacsWorker,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
 } from ".";
+import { BeeDeps } from "^jabc";
 
 /**
  *
@@ -22,8 +23,8 @@ export const getJabWatchableProcessPreloaderAndDeps = (
   extraDeps?: Partial<WatchableProcessPreloaderDeps>,
   logPrefix?: string
 ): [
-  WatchableProcessPreloader<any, any>,
-  WatchableProcessPreloaderDeps & ProcessDeps<any>
+  WatchableProcessPreloader<any>,
+  WatchableProcessPreloaderDeps & BeeDeps<any>
 ] => {
   const deps = getJabWatchbleProcessPreloaderDeps(prov, extraDeps, logPrefix);
 
@@ -79,9 +80,9 @@ export const getJabWatchableProcess_ipc_changeable = (
  */
 export const getJabWatchbleProcessPreloaderDeps = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>,
   logPrefix?: string
-): WatchableProcessPreloaderDeps & ProcessDeps<any> => {
+): WatchableProcessPreloaderDeps & BeeDeps<any> => {
   const procDeps = getJabProcessDeps(
     prov,
     {
@@ -105,7 +106,7 @@ export const getJabWatchbleProcessPreloaderDeps = (
 
     ...procDeps,
 
-    makeBee: makeJacsWorker,
+    makeBee: getMakeJacsWorker(),
     logProv: getLogProv(prov, logPrefix),
   };
 };

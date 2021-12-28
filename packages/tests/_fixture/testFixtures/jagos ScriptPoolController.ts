@@ -1,9 +1,16 @@
-import { TestProvision } from "^jarun";
-import { ScriptPoolController, Deps } from "^jagos/ScriptPoolController";
-
 import { basename } from "^jab";
+import { TestProvision } from "^jarun";
+import {
+  ScriptPoolController,
+  ScriptPoolControllerDeps,
+} from "^jagos/ScriptPoolController";
 
-import { getLogProv, getScriptPath, makeJacsWorker } from ".";
+import {
+  getLogProv,
+  getMakeJacsWorker,
+  getScriptPath,
+  getTestHoneyComb,
+} from ".";
 import { ScriptDefinition } from "^jagos";
 
 /**
@@ -11,7 +18,7 @@ import { ScriptDefinition } from "^jagos";
  */
 export const getJabScriptPoolController = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) => new ScriptPoolController(getJabScriptPoolControllerDeps(prov, extraDeps));
 
 /**
@@ -19,7 +26,7 @@ export const getJabScriptPoolController = (
  */
 export const getJabScriptPoolController_one = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
@@ -32,7 +39,7 @@ export const getJabScriptPoolController_one = (
  */
 export const getJabScriptPoolController_many = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
@@ -50,8 +57,8 @@ export const getJabScriptPoolController_many = (
  */
 export const getJabScriptPoolControllerDeps = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
-): Deps => {
+  extraDeps?: Partial<ScriptPoolControllerDeps>
+): ScriptPoolControllerDeps => {
   const logProv = getLogProv(prov);
 
   return {
@@ -73,7 +80,8 @@ export const getJabScriptPoolControllerDeps = (
 
     alwaysTypeScript: true, //development needs typescript for the preloader.
 
-    makeTsBee: makeJacsWorker,
+    makeTsBee: getMakeJacsWorker(),
+    honeyComb: getTestHoneyComb(),
 
     onError: prov.onError,
     finally: prov.finally,

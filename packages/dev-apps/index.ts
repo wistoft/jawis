@@ -1,1 +1,1 @@
-export * from "./makeDefaultRoute";
+export * from "./makeDevAppRoute";

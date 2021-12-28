@@ -1,7 +1,22 @@
 import nativeModule from "module";
+import isBuiltinModule from "is-builtin-module";
+import type { SharedMap as SharedMapType } from "sharedmap";
+
+const SharedMap = require("sharedmap") as typeof SharedMapType; //hack because of typing mismatch.
 
 // to handle webpack as compiler.
 export const nodeRequire: NodeRequire = eval("require");
+
+/**
+ * useful, when lazy require should be disabled for a single require call.
+ *
+ * - lazy require will remain active transitively.
+ *
+ * note
+ *  to be compatible with webpack, use this: `eval("require.eager || require")`
+ */
+export const eagerRequire = (require: any, id: any) =>
+  (require.eager || require)(id);
 
 export type LoadFunction = (
   this: FullNodeModule,
@@ -82,11 +97,18 @@ export const plugIntoModuleLoad = (
  * Can be used to
  *  - Intercept resolve.
  *  - Cached by relativeResolveCache. So only called once for each parent/request combination
+ *      Except for native modules, they will be called always.
  */
 export const interceptResolve = (
   makeResolve: (original: ResolveFilename) => ResolveFilename
 ) => {
+  const original = Module._resolveFilename;
+
   Module._resolveFilename = makeResolve(Module._resolveFilename);
+
+  return () => {
+    Module._resolveFilename = original;
+  };
 };
 
 /**
@@ -181,8 +203,8 @@ export const registerCompile = (
 /**
  *
  */
-export const clearModuleCache = () => {
-  Object.keys(require.cache).forEach((key) => {
+export const clearModuleCache = (files = Object.keys(require.cache)) => {
+  files.forEach((key) => {
     delete require.cache[key];
   });
 };
@@ -199,7 +221,7 @@ export const clearResolveCache = () => {
 /**
  *
  */
-export const makeCachedResolve = (
+export const makeCachedResolveOld = (
   original: ResolveFilename
 ): ResolveFilename => {
   const cache = new Map<string, string>();
@@ -229,4 +251,57 @@ export const makeCachedResolve = (
 /**
  * Cache node's resolve function
  */
-export const cacheResolve = () => interceptResolve(makeCachedResolve);
+export const cacheResolveOld = () => interceptResolve(makeCachedResolveOld);
+
+/**
+ *
+ */
+export const makeSharedResolveMap = () => {
+  const maxEntries = 10000;
+
+  // Size is in UTF-16 codepoints
+  const keySize = 300;
+  const valueSize = 200;
+
+  return new SharedMap(maxEntries, keySize, valueSize);
+};
+
+/**
+ * Caches resolved files in node_modules.
+ *
+ * - Doesn't cache native modules, because that makes no sense.
+ * - Doesn't cache files in project, because they change, and invalidate logic is then needed
+ *
+ *
+ * impl
+ *  - Use \x01 byte as separator, because SharedMap uses \x00
+ */
+export const makeMakeCachedResolve = (sharedMap: any) => (
+  original: ResolveFilename
+): ResolveFilename => {
+  // Manually restore the prototype of SharedMap
+  Object.setPrototypeOf(sharedMap, SharedMap.prototype);
+
+  return (request, parent, isMain) => {
+    if (isMain) {
+      //don't know what is special, so let node handle it.
+      return original(request, parent, isMain);
+    }
+
+    const key = request + "\x01" + parent.path;
+
+    const cachedValue = sharedMap.get(key);
+
+    if (cachedValue) {
+      return cachedValue;
+    }
+
+    const newValue = original(request, parent, isMain);
+
+    if (!isBuiltinModule(request) && newValue.includes("node_modules")) {
+      sharedMap.set(key, newValue);
+    }
+
+    return newValue;
+  };
+};

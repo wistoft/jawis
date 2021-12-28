@@ -1,18 +1,24 @@
-import { clearModuleCache, clearResolveCache } from "^jab-node";
-import { makeExpriment } from "^misc/node";
+/* eslint-disable */
+const start = Date.now();
 
-clearModuleCache();
-clearResolveCache();
+import { getViewEntry } from "^tests/_fixture";
 
-//fill resolve cache
+// cacheResolveOld();
 
-// require("../_fixture");
+// clearModuleCache();
+// clearResolveCache();
+
+// //fill resolve cache
+
+// require("^misc/node");
 // clearModuleCache();
 // clearResolveCache();
 
 //start
 
-const { printResult } = makeExpriment({ cacheResolve: false });
+// const { printResult, printResultCounts } = makeExpriment({
+//   cacheResolve: false,
+// });
 
 //work
 
@@ -20,12 +26,32 @@ const { printResult } = makeExpriment({ cacheResolve: false });
 // require("../_fixture/scripts/helloTs.ts");
 
 // require("^jacs");
+// require("^misc/node");
+// require("^util-javi/node");
 
-require("../_fixture");
+// require("../_fixture");
 
 // require("typescript");
 
 // require("deep-equal");
 
-printResult();
+// printResultCounts();
+// printResult();
+//
+
+// console.log(Object.keys(require.cache));
+
+console.log(Object.keys(require.cache).length);
+// console.log(Object.keys(require.cache).sort());
+
+if (true) {
+  // console.log(makeExpriment);
+  // console.log(cacheResolveOld);
+  console.log(getViewEntry);
+}
+
+console.log("time: ", Date.now() - start);
+console.log(Object.keys(require.cache).length);
+console.log(Object.keys(require.cache).sort());
+
 //

@@ -1,5 +1,13 @@
-import { assertNever } from "^jab";
-import { makeSend, nodeRequire, registerOnMessage } from "^jab-node";
+import async_hooks from "async_hooks";
+import {
+  assertNever,
+  beeExit,
+  makeSend,
+  registerOnMessage,
+  registerOnUncaughtException,
+  registerOnUnhandleRejection,
+  enable,
+} from "^jab";
 
 import { errorToTestLog, RogueData } from "^jatec";
 
@@ -28,11 +36,13 @@ export class JarunProcessMainImpl {
       onRogueTest: this.onRogueTest,
     });
 
-    registerOnMessage(this.onMessage);
+    registerOnMessage(this.onMessage, this.onError);
 
     this.send = makeSend();
 
     this.registerHandlers();
+
+    enable(async_hooks);
   }
 
   /**
@@ -56,7 +66,7 @@ export class JarunProcessMainImpl {
    */
   private wrapRunTest = (id: string, absTestFile: string) =>
     Promise.resolve().then(() =>
-      this.jtr.runTest(id, () => nodeRequire(absTestFile))
+      this.jtr.runTest(id, () => eval("require")(absTestFile))
     );
 
   /**
@@ -76,7 +86,7 @@ export class JarunProcessMainImpl {
         break;
 
       case "shutdown":
-        process.exit();
+        beeExit();
         break;
 
       default:
@@ -87,36 +97,38 @@ export class JarunProcessMainImpl {
   /**
    *
    */
-  private registerHandlers = () => {
-    //there can be only one
-
-    if (process.listenerCount("uncaughtException") !== 0) {
-      throw new Error("uncaughtException handler already registered");
-    }
-
-    if (process.listenerCount("unhandledRejection") !== 0) {
-      throw new Error("unhandledRejection handler already registered");
-    }
-
-    //we are the one
-
-    process.on("uncaughtException", this.onUncaughtException);
-    process.on("unhandledRejection", this.onUnhandledPromiseRejection);
-  };
-
-  /**
-   * - maybe promise is of interest.
-   */
-  private onUnhandledPromiseRejection: NodeJS.UnhandledRejectionListener = (
-    error
-  ) => {
-    this.jtr.handleUhException(error, "uh-promise");
+  private onError = (error: unknown) => {
+    this.jtr.handleUhException(error, "uh-exception");
   };
 
   /**
    *
    */
-  private onUncaughtException = (error: Error) => {
-    this.jtr.handleUhException(error, "uh-exception");
+  private registerHandlers = () => {
+    //there can be only one
+
+    if ((global.process as any)?.listenerCount) {
+      //we can only do this in nodejs.
+
+      if (process.listenerCount("uncaughtException") !== 0) {
+        throw new Error("uncaughtException handler already registered");
+      }
+
+      if (process.listenerCount("unhandledRejection") !== 0) {
+        throw new Error("unhandledRejection handler already registered");
+      }
+    }
+
+    //we are the one
+
+    registerOnUncaughtException((event) => {
+      event.preventDefault();
+      this.jtr.handleUhException(event.error, "uh-exception");
+    });
+
+    registerOnUnhandleRejection((event) => {
+      event.preventDefault();
+      this.jtr.handleUhException(event.reason, "uh-promise");
+    });
   };
 }

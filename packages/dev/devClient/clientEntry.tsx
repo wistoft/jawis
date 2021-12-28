@@ -7,11 +7,23 @@ import { DevDirector } from "./DevDirector";
 import { getDevClientConf } from "./getDevClientConf";
 
 const conf = getDevClientConf();
-const javiConf = getClientConf();
+
+let jsx: any;
+
+try {
+  //this will throw if the development server isn't running.
+  const javiConf = getClientConf();
+  jsx = <DevDirector {...javiConf} {...conf} />;
+} catch (error) {
+  jsx = (
+    <>
+      Could not load client conf from development server.
+      <br /> {"" + error}
+    </>
+  );
+}
 
 ReactDOM.render(
-  <React.StrictMode>
-    <DevDirector {...javiConf} {...conf} />
-  </React.StrictMode>,
+  <React.StrictMode>{jsx}</React.StrictMode>,
   document.getElementById("root")
 );

@@ -2,7 +2,7 @@ import React, { memo } from "react";
 
 import { JsLink } from "^jab-react";
 
-import { TestState } from ".";
+import { TestState } from "./types";
 
 export type Props = {
   level: TestState[];

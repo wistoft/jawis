@@ -3,3 +3,5 @@
 /build-tsc
 /packages/tests/_testLogs
 /packages/dev/devServer/testsuite/_testLogs
+
+**/CHANGELOG.md

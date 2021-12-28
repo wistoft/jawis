@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { makeMakeJacsWorkerBee } from "@jawis/jacs";
+import { makeMakeJacsWorkerBee } from "^released/jacs";
 
 import { mainProvToConsole, ProcessDeps } from "^jab-node";
 import { getJabProcessDeps } from "^tests/_fixture/testFixtures/jab Process";

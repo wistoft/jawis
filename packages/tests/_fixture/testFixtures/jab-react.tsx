@@ -35,6 +35,7 @@ export const getDevComponentPanel = (
       {...props}
       openComponnent={() => {}}
       useKeyListener={() => {}}
+      mountPath={"/mount"} //dirty quick fix
     />
   </LocationProvider>
 );

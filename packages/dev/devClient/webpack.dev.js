@@ -16,7 +16,7 @@ const baseWebpackConf = createWebpackBaseConf({
   template: getPackagePath("javi-client/index.ejs"),
   tsConfigFile: path.join(__dirname, "../tsconfig.json"),
   defineHtml: {
-    __pageTitle: "Dev",
+    __siteTitle: "Dev",
     __conf_url: "http://localhost:" + conf.serverPort + "/conf.js",
   },
   define: {
@@ -46,7 +46,6 @@ module.exports = {
   },
 
   devtool: "inline-cheap-module-source-map",
-  // devtool: "eval-cheap-module-source-map",
   devServer: {
     contentBase: "./dist",
     inline: false,

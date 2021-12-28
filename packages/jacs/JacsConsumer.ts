@@ -10,7 +10,11 @@ import type { ConsumerMessage, WorkerData } from ".";
 export type JacsConsumerDeps = {
   shared: Pick<
     WorkerData,
-    "controlArray" | "dataArray" | "timeout" | "softTimeout"
+    | "controlArray"
+    | "dataArray"
+    | "timeout"
+    | "softTimeout"
+    | "jacsCompileToken"
   >;
   onError: (error: unknown) => void;
 
@@ -75,6 +79,7 @@ export class JacsConsumer {
       this.deps.shared.dataArray,
       this.deps.shared.timeout,
       this.deps.shared.softTimeout,
+      this.deps.shared.jacsCompileToken,
       this.deps.postMessage || ((msg) => parentPort!.postMessage(msg)),
       this.deps.wait,
       Date.now

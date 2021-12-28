@@ -1,1 +1,1 @@
-export * from "./Director";
+export * from "./Main";

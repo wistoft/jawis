@@ -11,7 +11,8 @@
     "moduleResolution": "node",
     "outDir": "dummyBuildFolder",
     "paths": {
-      "^*": ["./packages/*"],
+      "^released/*": ["./node_modules/@jawis/*"],
+      "^*": ["./packages/*"]
     },
     "skipLibCheck": true,
     "resolveJsonModule": true,

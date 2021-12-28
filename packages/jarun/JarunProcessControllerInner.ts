@@ -8,8 +8,9 @@ import {
   LogProv,
   Waiter,
   clone,
+  JagoLogEntry,
 } from "^jab";
-import { OnRequire, RequireSenderMessage } from "^jab-node";
+import { OnRequire, RequireSenderMessage } from "^jabc";
 
 import { OnRogue, TestResult } from "^jatec";
 
@@ -126,6 +127,13 @@ export class JarunProcessControllerInner {
     } else {
       this.deps.onRogueTest({ data: { user: { stderr: [data.toString()] } } });
     }
+  };
+
+  public onLog = (entry: JagoLogEntry) => {
+    //jarun doesn't use logging, so this is fine.
+    console.log({
+      jagoLogEntry: entry,
+    });
   };
 
   /**

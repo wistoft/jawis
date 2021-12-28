@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Array #indexOf() igen igen 1`] = `"mikael"`;
+
+exports[`Array #indexOf() igen igen 2`] = `"jens"`;

@@ -8,6 +8,8 @@ export default (prov: TestProvision) => {
   prov.imp(
     getShownTestUpdate_with_shown_test({
       id: "test 1",
+      name: "test 1",
+      file: "file",
       status: ".",
       testLogs: [],
     })

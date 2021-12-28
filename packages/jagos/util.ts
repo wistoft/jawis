@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { HoneyComb } from "^jab";
 
 export type ScriptDefinition = {
   script: string;
@@ -10,7 +11,10 @@ export type ScriptDefinition = {
 /**
  *
  */
-export const loadScriptFolders = (folders?: string[]) => {
+export const loadScriptFolders = (
+  honeyComb?: HoneyComb,
+  folders?: string[]
+) => {
   if (!folders) {
     return [];
   }
@@ -29,7 +33,9 @@ export const loadScriptFolders = (folders?: string[]) => {
         .filter(
           ({ script }) =>
             fs.lstatSync(script).isFile() &&
-            (script.endsWith(".js") || script.endsWith(".ts"))
+            (script.endsWith(".js") ||
+              script.endsWith(".ts") ||
+              honeyComb?.isBee(script))
         )
     );
   });

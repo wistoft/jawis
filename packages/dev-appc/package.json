@@ -1,7 +1,6 @@
 {
-  "private": true,
   "sideEffects": false,
   "version": "0.0.0",
-  "name": "dev-appc",
-  "description": "Common for Dev view and router"
+  "name": "~dev-appc",
+  "description": "Common for view and server"
 }

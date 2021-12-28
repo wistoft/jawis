@@ -1,97 +1,146 @@
-import fs from "fs";
 import path from "path";
-import readdirRecursive from "fs-readdir-recursive";
 
-import { err, looping } from "^jab";
+import { looping, toInt } from "^jab";
+import { TestFrameworkProv, MinimalTestId, TestInfo, TestResult } from "^jatec";
+import { JarunTestFramework } from "^jates";
 
-import { TestRunner } from ".";
+export type ComposedTestFrameworkDeps = {
+  absTestLogFolder: string;
+  onError: (error: unknown) => void;
+  frameworks: TestFrameworkProv<MinimalTestId>[];
 
-export type TestFrameworkProv = TestRunner & {
-  getTestIds: () => Promise<string[]>; //Relative to absTestFolder.
-  getCurrentSelectionTestIds: () => Promise<string[]>;
+  //quick fix
+  jarun: JarunTestFramework;
 };
 
-export type TestFrameworkDeps = {
-  absTestFolder: string;
-  subFolderIgnore: string[];
-  runners: { [suffix: string]: TestRunner };
+export type ComposedTestFrameworkProv = {
+  getTestIds: () => Promise<TestInfo[]>;
+  getCurrentSelectionTestIds: () => Promise<TestInfo[]>;
+  runTest: (id: string) => Promise<TestResult>;
+  kill: () => Promise<void>;
+};
+
+type TestLocation = {
+  file: string;
+  line?: number;
 };
 
 /**
- * Composes all the frameworks that are supported.
+ * Composes all the frameworks that are given, and makes a facade to abstactly interact with them all.
  *
  */
-export class ComposedTestFramework implements TestFrameworkProv {
-  private suffixes: string[];
-
-  constructor(private deps: TestFrameworkDeps) {
-    this.suffixes = Object.keys(this.deps.runners);
-  }
+export class ComposedTestFramework implements ComposedTestFrameworkProv {
+  constructor(private deps: ComposedTestFrameworkDeps) {}
 
   /**
-   * Retrieves all tests. Test file suffixes are defined in configuration.
    *
-   * - Test id is the relative filename.
+   * - If a test framework rejects, the error is just reported.
+   *    Tests from other frameworks are still returned.
+   *
+   * todo: wouldn't it be better to report errors early?
    */
-  public getTestIds = () =>
-    Promise.resolve().then(() =>
-      readdirRecursive(this.deps.absTestFolder, (name: string) => {
-        return (
-          !name.startsWith("_") && !this.deps.subFolderIgnore.includes(name)
-        );
-      }).filter(this.registeredTest)
+  public getTestIds = async () => {
+    const proms = this.deps.frameworks.map((framework, frameworkId) =>
+      framework
+        .getTestIds()
+        .then((ids) => this.mapTestIdsToInfo(frameworkId, ids))
+    );
+
+    const data = await Promise.allSettled(proms);
+
+    return data.reduce<TestInfo[]>((acc, cur) => {
+      if (cur.status === "fulfilled") {
+        return acc.concat(cur.value);
+      } else {
+        this.deps.onError(cur.reason);
+        return acc;
+      }
+    }, []);
+  };
+
+  /**
+   * quick fix
+   */
+  public getCurrentSelectionTestIds = () =>
+    this.deps.jarun
+      .getCurrentSelectionTestIds()
+      .then((ids) => this.mapTestIdsToInfo(0, ids));
+
+  /**
+   *
+   */
+  public getTestLocation = (id: string): TestLocation => {
+    const testDef = this.decodeId(id);
+    return {
+      file: testDef.file,
+      line: testDef.line,
+    };
+  };
+
+  /**
+   * - bug: The path of test cases is ignored.
+   */
+  public getExpFilename = (id: string) =>
+    path.join(
+      this.deps.absTestLogFolder,
+      path.basename(this.decodeId(id).file) + ".json"
     );
 
   /**
    *
    */
-  public getCurrentSelectionTestIds = () => {
-    const folder = path.join(this.deps.absTestFolder, "cur");
+  private mapTestIdsToInfo = (frameworkId: number, ids: MinimalTestId[]) =>
+    ids.map((id) => ({
+      id: this.encodeId(frameworkId, id),
+      name: id.name,
+      file: id.file,
+    }));
 
-    if (!fs.existsSync(folder)) {
-      return Promise.resolve([]);
+  /**
+   * Make an id, that can be used globally in jate.
+   *
+   * - We need this, because an id must be a comparable by value. It's inconvenient to do deepEqual everywhere.
+   *    Not to speak of the problem of using object-ids as keys in a Map.
+   */
+  private encodeId = (frameworkId: number, id: MinimalTestId) =>
+    `${frameworkId}\x00${id.name}\x00${id.file}\x00${id.line ? id.line : ""}`;
+
+  /**
+   *
+   */
+  private decodeId = (encodedId: string): MinimalTestId => {
+    const elms = encodedId.split("\x00");
+
+    const res: MinimalTestId = {
+      name: elms[1],
+      file: elms[2],
+    };
+
+    if (elms[3]) {
+      res.line = toInt(elms[3]);
     }
 
-    return fs.promises
-      .readdir(folder)
-      .then((list) => list.map((file) => path.join("cur", file)))
-      .then((list) => list.filter(this.registeredTest));
+    return res;
   };
 
   /**
-   * Returns true if a filename is a test case.
+   * Return the framework, that a test case belongs to.
    */
-  private registeredTest = (id: string) => {
-    for (const suffix of this.suffixes) {
-      if (id.endsWith(suffix)) {
-        return true;
-      }
-    }
-    return false;
+  private getFramework = (id: string) => {
+    const fid = toInt(id.slice(0, id.indexOf("\x00")));
+
+    return this.deps.frameworks[fid];
   };
 
   /**
-   * Select the appropriate runner for a given test case.
+   *
    */
-  private getRunner = (id: string) => {
-    for (const suffix of this.suffixes) {
-      if (id.endsWith(suffix)) {
-        return this.deps.runners[suffix];
-      }
-    }
-
-    throw err("No runner owns this test.", id);
-  };
-
-  /**
-   * Run a single test case and return the test logs.
-   */
-  public runTest = (id: string, absTestFile: string) =>
-    this.getRunner(id).runTest(id, absTestFile);
+  public runTest = (id: string) =>
+    this.getFramework(id).runTest(id, this.decodeId(id));
 
   /**
    *
    */
   public kill = () =>
-    looping(Object.values(this.deps.runners), (runner) => runner.kill());
+    looping(this.deps.frameworks, (framework) => framework.kill());
 }

@@ -15,7 +15,7 @@ import { OpenFile } from "^util-javi";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { makeOnServerMessage } from "./onServerMessage";
-import { State } from ".";
+import { State } from "./types";
 import { setProcessStatusUpdater } from "./updaters";
 
 export type Props = {
@@ -87,7 +87,11 @@ const createStructure = ({
     setProcessStatus: makeSetStateCallback(setProcessStatusUpdater, setState),
   };
 
-  const onServerMessage = makeOnServerMessage({ ...callbacks, addConsoleData });
+  const onServerMessage = makeOnServerMessage({
+    ...callbacks,
+    addConsoleData,
+    apiSend,
+  });
 
   const onOpen = () => {
     apiSend({ type: "startListen" });

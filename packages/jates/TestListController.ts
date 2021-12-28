@@ -1,6 +1,7 @@
 import { err, assertNever, prej, Waiter } from "^jab";
-
-import { TestFrameworkProv } from ".";
+import { TestInfo } from "^jatec";
+import { ComposedTestFrameworkProv } from "^jates";
+import { ClientComProv } from "./ClientComController";
 
 import { TestAnalytics } from "./TestAnalytics";
 
@@ -8,6 +9,7 @@ import { TestAnalytics } from "./TestAnalytics";
 
 export type TestListControllerProv = {
   onRunAllTests: () => void;
+  onGetAllTests: () => void;
   onRunCurrentSelection: () => void;
   onRunDtp: () => void;
 };
@@ -15,12 +17,11 @@ export type TestListControllerProv = {
 // deps
 
 export type TestListControllerDeps = {
-  tf: TestFrameworkProv;
+  testFramework: ComposedTestFrameworkProv;
   ta: TestAnalytics;
   setTestExecutionList: (ids: string[]) => void;
-  onTestSelectionReady: (tests: string[][]) => void;
   onError: (error: unknown) => void;
-};
+} & Pick<ClientComProv, "onTestSelectionReady">;
 
 type States = "idle" | "fetching" | "stopping" | "done";
 type Events = never;
@@ -66,6 +67,30 @@ export class TestListController implements TestListControllerProv {
   /**
    *
    */
+  public onGetAllTests = () => {
+    const state = this.waiter.getState();
+    switch (state) {
+      case "fetching":
+        throw err("not impl.");
+
+      case "idle":
+        this.waiter.set("fetching");
+
+        this.deps.testFramework.getTestIds().then(this.makeOnFetchDone(false));
+        break;
+
+      case "stopping":
+      case "done":
+        throw err("Not active.");
+
+      default:
+        assertNever(state);
+    }
+  };
+
+  /**
+   *
+   */
   public onRunAllTests = () => {
     const state = this.waiter.getState();
     switch (state) {
@@ -75,7 +100,7 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        this.deps.tf.getTestIds().then(this.onFetchDone);
+        this.deps.testFramework.getTestIds().then(this.makeOnFetchDone(true));
         break;
 
       case "stopping":
@@ -99,7 +124,9 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        this.deps.tf.getCurrentSelectionTestIds().then(this.onFetchDone);
+        this.deps.testFramework
+          .getCurrentSelectionTestIds()
+          .then(this.makeOnFetchDone(true));
         break;
 
       case "stopping":
@@ -124,7 +151,7 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        return this.deps.tf.getTestIds().then(this.onDtpFetchDone);
+        return this.deps.testFramework.getTestIds().then(this.onDtpFetchDone);
 
       case "stopping":
       case "done":
@@ -138,7 +165,7 @@ export class TestListController implements TestListControllerProv {
   /**
    *
    */
-  private onDtpFetchDone = (ids: string[]): void => {
+  private onDtpFetchDone = (ids: TestInfo[]): void => {
     const state = this.waiter.getState();
 
     switch (state) {
@@ -151,7 +178,15 @@ export class TestListController implements TestListControllerProv {
 
         const impact = this.deps.ta.getImpact();
 
-        this.deps.onTestSelectionReady(impact);
+        const quickFix = impact.map((list) =>
+          list.map<TestInfo>((id) => ({
+            id: id,
+            name: id,
+            file: id,
+          }))
+        );
+
+        this.deps.onTestSelectionReady(quickFix);
 
         //start execution
 
@@ -175,7 +210,7 @@ export class TestListController implements TestListControllerProv {
   /**
    *
    */
-  private onFetchDone = (ids: string[]) => {
+  private makeOnFetchDone = (alsoRun: boolean) => (ids: TestInfo[]) => {
     const state = this.waiter.getState();
 
     switch (state) {
@@ -186,7 +221,9 @@ export class TestListController implements TestListControllerProv {
 
         this.deps.onTestSelectionReady([sortedIds]);
 
-        this.deps.setTestExecutionList(sortedIds);
+        if (alsoRun) {
+          this.deps.setTestExecutionList(sortedIds.map((info) => info.id));
+        }
 
         return;
       }

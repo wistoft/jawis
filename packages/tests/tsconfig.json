@@ -20,7 +20,8 @@
     { "path": "../jates" },
     { "path": "../jatev" },
     { "path": "../javi" },
-    { "path": "../misc" }
+    { "path": "../misc" },
+    { "path": "../ts-reload" }
   ],
   "exclude": ["_fixture/testsuite", "_fixture/tsProject"]
 }

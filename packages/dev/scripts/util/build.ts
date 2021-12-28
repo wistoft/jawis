@@ -1,24 +1,86 @@
 import path from "path";
-import { webpackCompile, getNodeWebpackConf } from "^misc/node";
+import { webpackCompile, getNodepackConf, getWebpackConf } from "^misc/node";
+import webpack from "webpack";
 
 const projectConf = eval("require")("../../../../project.conf");
 
 /**
- * Compile a ts-file with webpack to a single js-file
  *
- *
- * - Place output file in folder named: `compiled`
  */
-export const webpackCompileHelper = (
+export const nodepackHelper_new = ({
+  folder,
+  file,
+  outPath,
+  outFilename,
+  externals,
+}: {
+  folder: string;
+  file: string;
+  outPath: string;
+  outFilename?: string;
+  externals?: webpack.Configuration["externals"];
+}) =>
+  webpackCompile(
+    getNodepackConf({
+      file: path.join(projectConf.packageFolder, folder, file + ".ts"),
+      outPath,
+      outFilename: outFilename || file + ".js",
+      externals,
+    })
+  );
+
+/**
+ *
+ */
+export const webpackHelper_new = ({
+  folder,
+  file,
+  outPath,
+  outFilename,
+}: {
+  folder: string;
+  file: string;
+  outPath: string;
+  outFilename?: string;
+}) =>
+  webpackCompile(
+    getWebpackConf({
+      file: path.join(projectConf.packageFolder, folder, file + ".ts"),
+      outPath,
+      outFilename: outFilename || file + ".js",
+    })
+  );
+
+/**
+ *
+ */
+export const nodepackHelper = (
   folder: string,
   file: string,
   outFolder = projectConf.publishBuildFolder
-) => {
-  const conf = getNodeWebpackConf({
-    file: path.join(projectConf.packageFolder, folder, file + ".ts"),
-    outPath: path.join(outFolder, folder, "compiled"),
-    outFilename: file + ".js",
-  });
+) =>
+  webpackCompile(
+    getNodepackConf({
+      file: path.join(projectConf.packageFolder, folder, file + ".ts"),
+      outPath: path.join(outFolder, folder, "compiled"),
+      outFilename: file + ".js",
+    })
+  );
 
-  webpackCompile({ ...conf, devtool: "source-map" });
-};
+/**
+ *
+ * quick fix
+ *  - always output to javi folder.
+ */
+export const webpackHelper = (
+  folder: string,
+  file: string,
+  outFolder = projectConf.publishBuildFolder
+) =>
+  webpackCompile(
+    getWebpackConf({
+      file: path.join(projectConf.packageFolder, folder, file + ".ts"),
+      outPath: path.join(outFolder, "javi", "client"),
+      outFilename: file + ".js",
+    })
+  );

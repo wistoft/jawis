@@ -6,6 +6,10 @@ import { getClientConf } from "./getClientConf";
 
 const conf = getClientConf();
 
+if (conf.siteTitle) {
+  document.title = conf.siteTitle;
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <JaviDirector {...conf} />

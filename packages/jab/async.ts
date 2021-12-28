@@ -115,7 +115,7 @@ export const safeAllWait = <T>(
  *
  * - Rejects at first rejection
  * - Reports if subsequent promises reject.
- * - The first, if any, rejection is not given to onError. User can handle that.
+ * - The first rejection, if any, is not given to onError. User can handle that.
  *
  * note
  *  Code duplication with safeRace.
@@ -247,26 +247,25 @@ export const fullRace = <T>(
  *
  * - Ensures that a rejection is still reported, if the callback throws.
  */
-export const safeCatch = (
-  onError: (error: unknown) => void,
-  func: (error: unknown) => unknown
-) => (error: unknown) => {
-  try {
-    func(error);
-  } catch (e) {
-    //the call back threw, so report the original error. (it is the first error)
+export const safeCatch =
+  (onError: (error: unknown) => void, func: (error: unknown) => unknown) =>
+  (error: unknown) => {
+    try {
+      func(error);
+    } catch (e) {
+      //the call back threw, so report the original error. (it is the first error)
 
-    onError(error);
+      onError(error);
 
-    //reject the promise with the new error. As it's older, so it's strange if it gets reported first.
+      //reject the promise with the new error. As it's older, so it's strange if it gets reported first.
 
-    throw e;
-  }
+      throw e;
+    }
 
-  //no exception in the callback, so throw the original error.
+    //no exception in the callback, so throw the original error.
 
-  throw error;
-};
+    throw error;
+  };
 
 /**
  * Attaches a "safe" finally-function to a promise.
@@ -322,6 +321,25 @@ export const getPromise = <T>(): PromiseTriple<T> => {
 };
 
 /**
+ * ubrugt
+ */
+export const getPromiseNodeStyle = <T>() => {
+  let callback!: (err: Error, val: T) => void;
+
+  const promise = new Promise<T>((res, rej) => {
+    callback = (err: Error, val: T) => {
+      if (err) {
+        rej(err);
+      } else {
+        res(val);
+      }
+    };
+  });
+
+  return { promise, callback };
+};
+
+/**
  * - resolves to void if nothing wrong.
  * - rejects both on value and rejection
  */
@@ -368,3 +386,30 @@ export const assertUnsettled = (
       }
     });
 };
+
+export type SetTimeoutFunction = (
+  callback: (...args: any[]) => void,
+  ms?: number,
+  ...args: any[]
+) => unknown;
+
+/**
+ * - catch errors and report them to onError, instead of just writing to console.
+ */
+export const makeCatchingSetTimeout =
+  (
+    onError: (error: unknown) => void,
+    orgSetTimeout: SetTimeoutFunction = (global as any).setTimeout
+  ): SetTimeoutFunction =>
+  (callback: (...args: any[]) => void, ms?: number, ...args: any[]) =>
+    orgSetTimeout(
+      (...innerArgs) => {
+        try {
+          callback(...innerArgs);
+        } catch (error) {
+          onError(error);
+        }
+      },
+      ms,
+      ...args
+    );

@@ -2,8 +2,9 @@ import path from "path";
 
 import { Waiter, err, LogProv, FinallyFunc } from "^jab";
 
-import type { Bee, BeeListeners, MakeBee } from "..";
+import type { Bee, BeeListeners, MakeBee } from "^jab";
 import { TS_TIMEOUT } from ".";
+import { JagoLogEntry } from "^jabc";
 
 //can't be in main, couldn't be required there.
 export type BooterMessage = {
@@ -26,6 +27,14 @@ export type ProcessPreloaderDeps = {
   logProv: LogProv;
 };
 
+export interface BeePreloader<MS extends {}> {
+  useProcess: <MR extends {}>(listeners: BeeListeners<MR>) => Promise<Bee<MS>>;
+  shutdown: () => Promise<void>;
+  kill: () => Promise<void>;
+  noisyKill: () => Promise<void>;
+  cancel: (msg?: string) => void;
+}
+
 type States = "starting" | "ready" | "stopping" | "done";
 
 /**
@@ -41,7 +50,7 @@ type States = "starting" | "ready" | "stopping" | "done";
  * todo:
  *  The transitions are not tight enough. wrt shutdown and kill.
  */
-export class ProcessPreloader<MS extends {}> {
+export class ProcessPreloader<MS extends {}> implements BeePreloader<MS> {
   public waiter: Waiter<States, never>;
 
   private listeners: BeeListeners<BooterMessage>;
@@ -87,6 +96,7 @@ export class ProcessPreloader<MS extends {}> {
         filename: booter,
         finally: this.deps.finally,
         onMessage: this.onMessage,
+        onLog: this.onLog,
         onStdout: this.onStdout,
         onStderr: this.onStderr,
         onError: this.onError,
@@ -141,6 +151,10 @@ export class ProcessPreloader<MS extends {}> {
     this.listeners.onMessage(msg);
   };
 
+  private onLog = (entry: JagoLogEntry) => {
+    this.listeners.onLog(entry);
+  };
+
   private onStdout = (data: Buffer) => {
     this.listeners.onStdout(data);
   };
@@ -166,6 +180,12 @@ export class ProcessPreloader<MS extends {}> {
         throw err("Expected only to receive ready signal: ", msg);
       }
       this.waiter.set("ready");
+    },
+
+    onLog: (_entry) => {
+      throw new Error("not impl"); //we need something like: `this.deps.logProv.tunnelJagoLog`
+
+      //allow logs for debugging. So we don't cancel waiter.
     },
 
     onStdout: (data) => {

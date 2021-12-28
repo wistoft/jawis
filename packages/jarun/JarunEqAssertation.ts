@@ -2,7 +2,7 @@ import {
   clone,
   ClonedValue,
   tos,
-  fixErrorInheritence,
+  fixErrorInheritance,
   captureStack,
 } from "^jab";
 
@@ -20,7 +20,7 @@ export class JarunEqAssertation extends Error {
     this.exp = clone(exp);
     this.cur = clone(cur);
 
-    fixErrorInheritence(this, JarunEqAssertation.prototype);
+    fixErrorInheritance(this, JarunEqAssertation.prototype);
   }
 
   /**

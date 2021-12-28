@@ -1,0 +1,1 @@
+{"user":{"bee.stdout":["hello\nhelloTs\n"],"console.log":[["value",[{"key":"builtin-modules\u0001","value":"node_modules/builtin-modules/index.js"},{"key":"fido\u0001","value":"packages/tests/_fixture/scripts/helloTs.ts"}]]]}}

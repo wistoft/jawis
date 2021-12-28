@@ -69,6 +69,7 @@ export const requestProducerSync_test = (
     dataArray,
     extraDeps?.timeout || 20,
     softTimeout,
+    "jacs-compile",
     extraDeps?.postMessage || (() => {}),
     extraDeps?.wait || syntheticWait("success", controlArray, dataArray),
     /* DateNow */ () => 1

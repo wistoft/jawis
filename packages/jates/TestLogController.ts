@@ -39,6 +39,7 @@ export type TestLogsProv = {
 
 export type Deps = {
   absTestLogFolder: string;
+  getExpFilename: (id: string) => string;
   onError: (error: unknown) => void;
 };
 
@@ -71,7 +72,7 @@ export class TestLogController implements TestLogsProv {
     }
 
     return fs.promises.writeFile(
-      this.getExpFilename(id),
+      this.deps.getExpFilename(id),
       JSON.stringify(testLogs)
     );
   };
@@ -88,7 +89,7 @@ export class TestLogController implements TestLogsProv {
    */
   public getExpLogs = (id: string) =>
     fs.promises
-      .readFile(this.getExpFilename(id))
+      .readFile(this.deps.getExpFilename(id))
       .then(
         (data) => JSON.parse(data.toString()),
         (error: unknown) => {
@@ -186,12 +187,6 @@ export class TestLogController implements TestLogsProv {
         user: { ...old.user, [logName]: cur.user[logName] },
       };
     });
-
-  /**
-   * - bug: The path of test cases is ignored.
-   */
-  private getExpFilename = (id: string) =>
-    path.join(this.deps.absTestLogFolder, path.basename(id) + ".json");
 
   /**
    *

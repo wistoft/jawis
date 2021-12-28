@@ -6,9 +6,17 @@
   },
   "references": [
     { "path": "../jab" },
+    { "path": "../jab-express" },
+    { "path": "../jab-node" },
     { "path": "../jab-react" },
+    { "path": "../jabro" },
+    { "path": "../jabroc" },
     { "path": "../jacs" },
+    { "path": "../jarun" },
     { "path": "../jagoc" },
-    { "path": "../jatec" }
+    { "path": "../jagos" },
+    { "path": "../jatec" },
+    { "path": "../jates" },
+    { "path": "../util-javi" }
   ]
 }

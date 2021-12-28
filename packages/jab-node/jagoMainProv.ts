@@ -1,26 +1,33 @@
-import { JagoLogEntry } from "^jagoc";
+import async_hooks from "async_hooks";
 
 import {
+  JagoSend,
+  makeJagoSend,
+  makeSend,
+  registerOnMessage,
   cloneArrayEntries,
   err,
   FinallyProvider,
-  fixErrorInheritence,
+  fixErrorInheritance,
   indent,
   LogProv,
   unknownToErrorData,
+  JabShutdownMessage,
+  enable,
+  isInstanceOf,
 } from "^jab";
 
-import {
-  flushAndExit,
-  JabShutdownMessage,
-  MainProv,
-  makeSend,
-  OnError,
-  registerOnMessage,
-} from ".";
+import { flushAndExit, MainProv, OnError } from ".";
 
-//for testing
-export type JagoSend = (msg: JagoLogEntry) => void;
+type MainWrapperDeps = {
+  logPrefix?: string;
+  main: (mainProv: MainProv) => void;
+  type?: "console" | "jago";
+  registerOnShutdown?: boolean;
+  doRegisterErrorHandlers?: boolean;
+  enableLongTraces?: boolean;
+  consoleGroupingDelay?: number; //only used for `logServiceToConsole`
+};
 
 /**
  * For throwing user messages.
@@ -35,7 +42,7 @@ export class UserMessage extends Error {
     // fallback message for when this is caught as Error
     super(ownMessage);
 
-    fixErrorInheritence(this, UserMessage.prototype);
+    fixErrorInheritance(this, UserMessage.prototype);
   }
 
   public getUserMessage() {
@@ -46,7 +53,12 @@ export class UserMessage extends Error {
 /**
  * - sendImpl is needed for testing.
  */
-export const mainProvToJago = (sendImpl: JagoSend, logPrefix = "") => {
+export const mainProvToJago = (
+  rawSendImpl: (msg: any) => void,
+  logPrefix = ""
+) => {
+  const sendImpl = makeJagoSend(rawSendImpl);
+
   const onError = makeJagoOnError(sendImpl);
   const finalProv = new FinallyProvider({ onError });
   const logProv = makeJagoLogProv(sendImpl, logPrefix);
@@ -101,10 +113,13 @@ export const makeJagoLogProv = (
 /**
  *
  */
-export const mainProvToConsole = (logPrefix = ""): MainProv => {
+export const mainProvToConsole = (
+  logPrefix = "",
+  consoleGroupingDelay = 250
+): MainProv => {
   const onError = makeOnErrorToConsole();
   const finalProv = new FinallyProvider({ onError });
-  const logProv = makeLogServiceToConsole(logPrefix);
+  const logProv = makeLogServiceToConsole(logPrefix, consoleGroupingDelay);
 
   return {
     onError,
@@ -121,7 +136,7 @@ export const mainProvToConsole = (logPrefix = ""): MainProv => {
  * - errors are printed slightly different, than node would.
  */
 export const makeOnErrorToConsole = (): OnError => (error: any, extraInfo) => {
-  if (!(error instanceof Error)) {
+  if (!isInstanceOf(error, Error)) {
     console.log("Threw non-error:");
     console.log(error);
     return;
@@ -165,7 +180,7 @@ export const makeOnErrorToConsole = (): OnError => (error: any, extraInfo) => {
  */
 export const makeLogServiceToConsole = (
   logPrefix = "",
-  delay = 250
+  consoleGroupingDelay = 250
 ): LogProv => {
   let streamData: any = {};
   let timeoutHandle: any;
@@ -199,7 +214,7 @@ export const makeLogServiceToConsole = (
       }
 
       if (!timeoutHandle) {
-        timeoutHandle = setTimeout(emitStream, delay);
+        timeoutHandle = setTimeout(emitStream, consoleGroupingDelay);
       }
     },
     status: (type, status) => {
@@ -223,19 +238,30 @@ export const makeLogServiceToConsole = (
  *    - This keeps the process running, even if everything else has finished.
  *        So can't be used with a process, that exits by itself.
  *
+ * todo
+ *  - have auto console type, which use jago if available.
+ *  - throw if jago type chosen, but jago isn't available.
  */
-export const mainWrapper = (
-  logPrefix: string,
-  main: (mainProv: MainProv) => void,
-  type: "console" | "jago" = "console",
+export const mainWrapper = ({
+  main,
+  logPrefix = "",
+  type = "console",
   registerOnShutdown = false,
-  doRegisterRejectionHandlers = true
-) => {
+  doRegisterErrorHandlers = true,
+  enableLongTraces = false,
+  consoleGroupingDelay,
+}: MainWrapperDeps) => {
   const mainProv =
-    type === "console" ? mainProvToConsole() : mainProvToJago(makeSend());
+    type === "console"
+      ? mainProvToConsole(logPrefix, consoleGroupingDelay)
+      : mainProvToJago(makeSend(), logPrefix);
 
-  if (doRegisterRejectionHandlers) {
-    registerRejectionHandlers(mainProv.onError);
+  if (enableLongTraces) {
+    enable(async_hooks);
+  }
+
+  if (doRegisterErrorHandlers) {
+    registerErrorHandlers(mainProv.onError);
   }
 
   process.on("beforeExit", () => {
@@ -269,7 +295,7 @@ export const mainWrapper = (
 /**
  *
  */
-export const registerRejectionHandlers = (onError: OnError) => {
+export const registerErrorHandlers = (onError: OnError) => {
   //there can be only one
 
   if (process.listenerCount("uncaughtException") !== 0) {

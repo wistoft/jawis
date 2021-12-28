@@ -6,17 +6,21 @@ import { ComponentDef } from "./Main";
 import { ViewListFolders } from "./ViewList";
 import { ViewComponentRoute } from "./ViewComponentRoute";
 
+/**
+ * The `folders.folder` is just for displaying the heading.
+ */
 export type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];
   openComponnent: (path: string) => void;
   useKeyListener: UseKeyListener;
+  mountPath: string;
 };
 
 /**
  *
  */
 export const InnerPanel: React.FC<Props> = memo(
-  ({ folders, openComponnent, useKeyListener }) => (
+  ({ folders, openComponnent, useKeyListener, mountPath }) => (
     <Router>
       <ReachRoute
         path="/"
@@ -25,12 +29,13 @@ export const InnerPanel: React.FC<Props> = memo(
         }
       />
       <ReachRoute
-        path="/:component"
+        path="/:component/*"
         element={
           <ViewComponentRoute
             folders={folders}
             openComponnent={openComponnent}
             useKeyListener={useKeyListener}
+            mountPath={mountPath}
           />
         }
       />

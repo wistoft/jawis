@@ -1,1 +1,1 @@
-{"user":{"imp":["postMessage",{"type":"jacs-compile","file":"some file"}]},"return":"the result"}
+{"user":{"imp":["postMessage",{"jacsCompileToken":"jacs-compile","file":"some file"}]},"return":"the result"}

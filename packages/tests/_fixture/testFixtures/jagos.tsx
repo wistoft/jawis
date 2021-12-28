@@ -1,13 +1,40 @@
-import path from "path";
+import { assertNever, BeeDeps, HoneyComb } from "^jab";
 import { TestProvision } from "^jarun";
 import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
 import { director, Deps as DirectorDeps } from "^jagos/director";
 import { NodeWS } from "^jab-express";
 
-import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
-import { assertNever } from "^jab";
+import {
+  filterFilepath,
+  getLogProv,
+  getMakeJacsWorker,
+  getScriptPath,
+  WsPoolMock,
+} from ".";
 
-const projectConf = require("../../../../project.conf");
+import { makePlainWorkerBee } from "^jab-node";
+import { WsBuzzStore } from "^jabroc";
+import { FileService } from "^util-javi/node";
+
+export const getTestHoneyComb = (): HoneyComb => ({
+  isBee: (filename: string) => filename.endsWith(".br.js"),
+  makeBee: makePlainWorkerBee,
+  makeCertainBee: <MR extends {}>(_type: "ww", _deps: BeeDeps<MR>) => {
+    throw new Error("not impl");
+  },
+});
+
+const testBrowserBeeFrost: WsBuzzStore = {
+  register: () => {
+    // noop
+  },
+  onMessage: () => {
+    throw new Error("not impl");
+  },
+  tryGetOne: () => {
+    throw new Error("not impl");
+  },
+};
 
 /**
  *
@@ -16,17 +43,25 @@ export const getJagosDirector = (
   prov: TestProvision,
   extraDeps?: Partial<DirectorDeps>
 ) => {
+  const fileService: FileService = {
+    handleOpenFileInEditor: () => {},
+    compareFiles: () => {},
+  };
+
   const d = director({
     projectRoot: "projectRoot",
     alwaysTypeScript: true, //development needs typescript for the preloader.
-    makeTsBee: makeJacsWorker,
+    makeTsBee: getMakeJacsWorker(),
+    honeyComb: getTestHoneyComb(),
+    browserBeeFrost: testBrowserBeeFrost,
     onError: prov.onError,
     finally: prov.finally,
     logProv: getLogProv(prov),
-    wsPool: new WsPoolMock({
+    wsPool: new WsPoolMock<ServerMessage, ClientMessage>({
       log: prov.log,
       filterMessage: filterJagosMessage,
     }),
+    ...fileService,
     ...extraDeps,
   });
 
@@ -69,12 +104,17 @@ export const filterJagosMessage = (msg: ServerMessage) => {
     case "stderr":
       return {
         ...msg,
-        script: path.relative(projectConf.projectRoot, msg.script).replace(/\\/g, "/"), // prettier-ignore
+        script: filterFilepath(msg.script),
       };
 
     case "control":
     case "message":
+    case "log":
       return msg;
+
+    case "beeFrost":
+      throw new Error("not impl");
+      break;
 
     default:
       throw assertNever(msg, "Unknown server message.");
@@ -88,7 +128,7 @@ export const filterScriptStatuses = (data: ScriptStatus[]) =>
   data.map((status) => {
     const newStatus = {
       ...status,
-      script: path.relative(projectConf.projectRoot, status.script).replace(/\\/g, "/"), // prettier-ignore
+      script: filterFilepath(status.script),
     };
 
     if ("id" in newStatus) {

@@ -12,10 +12,20 @@ import {
   Waiter,
   getPromise,
   PromiseTriple,
+  Bee,
+  BeeDeps,
+  BeeListeners,
+  MakeBee,
 } from "^jab";
 
-import { Bee, BeeDeps, BeeListeners, MakeBee } from "..";
 import { ReusableWPP, WatchableProcessPreloaderDeps } from ".";
+
+//just a subset of bee.
+export type ProcessRestarterProv<MS extends Serializable> = {
+  send: (msg: MS) => Promise<void>;
+  kill: () => Promise<void>;
+  noisyKill: () => Promise<void>;
+};
 
 export type ProcessRestarterDeps<MR extends Serializable> = Omit<
   BeeListeners<MR>,
@@ -66,10 +76,8 @@ type Events = never;
  *  buffered messages are not ensured to be send completely, before new 'send commands' are also send. They may loose ordering.
  *
  */
-export class ProcessRestarter<
-  MR extends Serializable,
-  MS extends Serializable
-> {
+export class ProcessRestarter<MR extends Serializable, MS extends Serializable>
+  implements ProcessRestarterProv<MS> {
   public waiter: Waiter<States, Events>;
 
   private rwpp: ReusableWPP<MR, MS>;
@@ -296,6 +304,7 @@ export class ProcessRestarter<
     //for Process
     filename: this.deps.filename,
     onMessage: this.deps.onMessage,
+    onLog: this.deps.onLog,
     onStdout: this.deps.onStdout,
     onStderr: this.deps.onStderr,
     onError: this.deps.onError,

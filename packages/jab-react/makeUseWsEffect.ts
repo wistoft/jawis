@@ -13,7 +13,7 @@ export type UseWsEffect<ServerMessage> = (
 ) => void;
 
 /**
- * Make a hook that gives it easy to use a web socket.
+ * Make a hook that makes it easy to use a web socket.
  *
  * - Open/close websocket with the component.
  */

@@ -27,12 +27,6 @@ export const createConsoleFunction = (
  *
  */
 export const preserveConsoleEntry = (entry: ConsoleEntry) => {
-  if (entry.type === "error") {
-    ("Element type is invalid: expected a string (for built-in components) or a class/function (for composite components) but got: undefined. You likely forgot to export your component from the file it's defined in, or you might have mixed up default and named imports.");
-  }
-
-  // console.warn
-
   if (entry.type === "log" && entry.logName === "error") {
     const firstArg = entry.data[0];
 

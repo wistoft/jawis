@@ -4,8 +4,17 @@ import Adapter from "enzyme-adapter-react-16";
 import toJson from "enzyme-to-json";
 import prettyFormat from "pretty-format";
 
-//not that nice with side effects
-enzyme.configure({ adapter: new Adapter() });
+let loaded = false;
+
+/**
+ * Lazy, to avoid side-effects at module load.
+ */
+const ensureLoaded = () => {
+  if (!loaded) {
+    enzyme.configure({ adapter: new Adapter() });
+    loaded = true;
+  }
+};
 
 /**
  *
@@ -19,10 +28,17 @@ export const cheerioTos = (cheerio: any) =>
 /**
  *
  */
-export const getHtmlEnzyme = (elm: ReactElement) => cheerioTos(render(elm));
+export const getHtmlEnzyme = (elm: ReactElement) => {
+  ensureLoaded();
+
+  return cheerioTos(render(elm));
+};
 
 /**
  *
  */
-export const getShallowHtmlEnzyme = (elm: ReactElement) =>
-  cheerioTos(shallow(elm));
+export const getShallowHtmlEnzyme = (elm: ReactElement) => {
+  ensureLoaded();
+
+  return cheerioTos(shallow(elm));
+};

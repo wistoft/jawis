@@ -6,20 +6,13 @@ process.on("uncaughtException", (error: any) => {
   //removes all files in jawis codebase, except this file.
   //  Because they change too often.
 
-  console.log(
-    error.__jawisNodeStack.filter(
-      (elm: any) =>
-        elm.file.includes("jacs_make") || !elm.file.includes("jawis\\packages")
-    )
-  );
+  for (const val of error.__jawisNodeStack) {
+    if (val.file?.includes("jacs_make.ts")) {
+      console.log("Error was thrown at line: ", val.line);
+    }
+  }
 });
 
-//just to take up line numbers. For testing source map.
-
-export type fido = {
-  a: 1;
-  q: 1;
-  w: 1;
-};
+//throw
 
 throw new Error("you asked for it.");

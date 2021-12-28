@@ -1,6 +1,7 @@
 import path from "path";
 
 import { ProcessDeps, Process, TS_TIMEOUT } from "^jab-node";
+import { BeeDeps } from "^jabc";
 import { makeTsNodeJabProcess } from "^util-javi/node";
 
 import { getScriptPath, TestMainProv } from ".";
@@ -76,25 +77,28 @@ export const getStdinBlockProcess = (prov: TestMainProv) =>
  */
 export const getJabProcessDeps = (
   prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
+  extraDeps?: Partial<ProcessDeps<any> & BeeDeps<any>>,
   logPrefix = "child."
-): ProcessDeps<any> => {
+): ProcessDeps<any> & BeeDeps<any> => {
   if (extraDeps && extraDeps.filename && !path.isAbsolute(extraDeps.filename)) {
     throw new Error("Script must be absolute: " + extraDeps.filename);
   }
 
   return {
     filename: getScriptPath("hello.js"),
-    onMessage: (msg: unknown) => {
+    onMessage: (msg) => {
       prov.log("childMessage", msg);
     },
-    onStdout: (data: Buffer) => {
+    onLog: (entry) => {
+      prov.log("log", entry);
+    },
+    onStdout: (data) => {
       prov.logStream(logPrefix + "stdout", data.toString());
     },
-    onStderr: (data: Buffer) => {
+    onStderr: (data) => {
       prov.logStream(logPrefix + "stderr", data.toString());
     },
-    onError: (error: unknown) => {
+    onError: (error) => {
       prov.onError(error);
     },
     onExit: () => {},

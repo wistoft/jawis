@@ -1,28 +1,18 @@
-import { assertNever, tos, tryPropString } from "^jab";
+import { assertNever, clone } from "^jab";
 import { ConsoleEntry } from "^console";
-import { JagoLogEntry, ServerMessage } from "^jagoc";
-import { StateCallbacks } from ".";
+import { ClientMessage, ServerMessage } from "^jagoc";
+import { StateCallbacks } from "./types";
+import { handleBeeFrostMessage } from "./beeHive";
 
 type Deps = Pick<StateCallbacks, "setProcessStatus"> & {
   addConsoleData: (event: ConsoleEntry[]) => void;
+  apiSend: (data: ClientMessage) => void; //for beefrost
 };
 
 export const makeOnServerMessage = (deps: Deps) => (msg: ServerMessage) => {
   switch (msg.type) {
     case "processStatus":
       deps.setProcessStatus({ processStatus: msg.data });
-      break;
-
-    case "stdout":
-    case "stderr":
-      deps.addConsoleData([
-        {
-          type: "stream",
-          context: msg.script,
-          logName: msg.type,
-          data: msg.data,
-        },
-      ]);
       break;
 
     case "control":
@@ -37,60 +27,37 @@ export const makeOnServerMessage = (deps: Deps) => (msg: ServerMessage) => {
       break;
 
     case "message":
-      //an encapsulated message from the script.
-      handleScriptMessage(msg.script, msg.data, deps);
+      deps.addConsoleData([
+        {
+          type: "log",
+          context: msg.script,
+          logName: "messages",
+          data: [clone(msg.data)],
+        },
+      ]);
+      break;
+
+    case "log":
+      deps.addConsoleData([{ context: msg.script, ...msg.data }]);
+      break;
+
+    case "stdout":
+    case "stderr":
+      deps.addConsoleData([
+        {
+          type: "stream",
+          context: msg.script,
+          logName: msg.type,
+          data: msg.data,
+        },
+      ]);
+      break;
+
+    case "beeFrost":
+      handleBeeFrostMessage(msg.data, deps);
       break;
 
     default:
       assertNever(msg, "Unknown server message.");
-  }
-};
-
-//
-// util
-//
-
-export const handleScriptMessage = (
-  script: string,
-  umsg: unknown,
-  deps: Deps
-) => {
-  if (!tryPropString(umsg, "type")) {
-    deps.addConsoleData([
-      {
-        type: "log",
-        context: script,
-        logName: "control",
-        data: ["unknown message:", tos(umsg)],
-      },
-    ]);
-    return;
-  }
-
-  const msg = umsg as JagoLogEntry;
-
-  switch (msg.type) {
-    case "log":
-    case "stream":
-    case "html":
-    case "error":
-      deps.addConsoleData([{ context: script, ...msg }]);
-      break;
-
-    default: {
-      // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      const nev: never = msg; // we want exhaustive check, but not to throw.
-
-      deps.addConsoleData([
-        {
-          type: "log",
-          context: script,
-          logName: "control",
-          data: ["unknown message type", tos(umsg)],
-        },
-      ]);
-
-      break;
-    }
   }
 };

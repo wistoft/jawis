@@ -1,4 +1,4 @@
-import { ClonedValue, ErrorData, UnparsedStack } from "^jab";
+import { ClonedValue, ErrorData, CapturedStack } from "^jab";
 
 //
 // base types
@@ -31,7 +31,7 @@ export type TestExpLogs = {
 export type ChkInfo = {
   exp: ClonedValue;
   cur: ClonedValue;
-  stack: UnparsedStack;
+  stack: CapturedStack;
 };
 
 //

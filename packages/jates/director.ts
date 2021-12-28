@@ -1,6 +1,5 @@
 import path from "path";
 
-import { MakeBee, MakeJabProcess } from "^jab-node";
 import { LogProv, err, FinallyFunc } from "^jab";
 import {
   ClientMessage,
@@ -11,7 +10,7 @@ import {
 } from "^jatec";
 import { WsPoolController } from "^jab-express";
 
-import { ComposedTestFramework, CreateTestRunners } from ".";
+import { MakeTestFramework } from ".";
 import { ClientComController } from "./ClientComController";
 import { Behavior } from "./Behavior";
 import { makeOnClientMessage } from "./onClientMessage";
@@ -19,15 +18,15 @@ import { TestAnalyticsController } from "./TestAnalyticsController";
 import { TestLogController } from "./TestLogController";
 import { TestExecutionController } from "./TestExecutionController";
 import { TestListController } from "./TestListController";
+import { CompareFiles, HandleOpenFileInEditor } from "^util-javi/node";
 
 export type Deps = Readonly<{
   absTestFolder: string;
   absTestLogFolder: string;
   tecTimeout: number;
-
-  createTestRunners: CreateTestRunners;
-  makeTsProcess: MakeJabProcess;
-  makeTsBee: MakeBee;
+  makeTestFramework: MakeTestFramework;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
+  compareFiles: CompareFiles;
 
   onError: (error: unknown) => void;
   finally: FinallyFunc;
@@ -58,13 +57,8 @@ export const director = (deps: Deps) => {
     onError: deps.onError,
   });
 
-  const event = new ClientComController({
+  const clientCommunication = new ClientComController({
     wsPool,
-  });
-
-  const testLogController = new TestLogController({
-    absTestLogFolder: deps.absTestLogFolder,
-    onError: deps.onError,
   });
 
   const tac = new TestAnalyticsController({
@@ -72,42 +66,39 @@ export const director = (deps: Deps) => {
     onError: deps.onError,
   });
 
-  const runners = deps.createTestRunners({
-    onRogueTest: event.onRogueTest,
-    makeTsProcess: deps.makeTsProcess,
-    makeTsBee: deps.makeTsBee,
+  const testFramework = deps.makeTestFramework({
+    onRogueTest: clientCommunication.onRogueTest,
     onError: deps.onError,
     logProv: deps.logProv,
     finally: deps.finally,
     onRequire: tac.onRequire,
   });
 
-  const tf = new ComposedTestFramework({
-    absTestFolder: deps.absTestFolder,
-    runners,
-    subFolderIgnore: [], //extract to conf
+  const testLogController = new TestLogController({
+    absTestLogFolder: deps.absTestLogFolder,
+    ...testFramework,
+    onError: deps.onError,
   });
 
   const onTestResult: OnTestResult = (id: string, result: TestResult) =>
     testLogController.getExpLogs(id).then((exp) => {
       const report = getJatesTestReport(id, exp, result);
 
-      tac.ta.setTestExecTime(report.id, report.result.execTime);
+      tac.testAnalytics.setTestExecTime(report.id, report.result.execTime);
 
       if (report.status === ".") {
-        tac.ta.setTestValid(report.id);
+        tac.testAnalytics.setTestValid(report.id);
       } else {
         testLogController.setCurLogs(id, result.cur);
       }
 
-      event.onTestReport(report);
+      clientCommunication.onTestReport(report);
     });
 
   const tec = new TestExecutionController({
-    ...event,
-    absTestFolder: deps.absTestFolder,
+    ...clientCommunication,
     timeoutms: deps.tecTimeout,
-    tr: tf,
+    testFramework,
     onError: deps.onError,
     onTestResult,
 
@@ -115,9 +106,9 @@ export const director = (deps: Deps) => {
   });
 
   const testListController = new TestListController({
-    ...event,
-    tf,
-    ta: tac.ta,
+    ...clientCommunication,
+    testFramework,
+    ta: tac.testAnalytics,
     setTestExecutionList: tec.setTestList,
     onError: deps.onError,
   });
@@ -125,17 +116,18 @@ export const director = (deps: Deps) => {
   const behavior = new Behavior({
     onError: deps.onError,
     wsPool,
-    tf,
+    testFramework,
   });
 
   const onWsUpgrade = wsPool.makeUpgradeHandler(
     makeOnClientMessage({
-      ...event,
+      ...deps,
+      ...clientCommunication,
       ...testLogController,
       ...tec,
       ...testListController,
       ...behavior,
-      absTestFolder: deps.absTestFolder,
+      testFramework,
       onError: deps.onError,
     })
   );

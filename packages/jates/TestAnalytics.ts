@@ -1,4 +1,5 @@
 import path from "path";
+import { TestInfo } from "^jatec";
 
 import { dfs } from "^util-javi/algs";
 
@@ -46,22 +47,35 @@ export class TestAnalytics {
 
   /**
    *
+   * todo: string is the old way.
    */
-  public setTests = (relFiles: string[]) => {
-    for (const relFile of relFiles) {
-      const absFile = path.join(this.deps.absTestFolder, relFile);
+  public setTests = (ids: (string | TestInfo)[]) => {
+    for (const id of ids) {
+      let absFile;
+
+      if (typeof id === "string") {
+        absFile = path.join(this.deps.absTestFolder, id);
+      } else {
+        //quick fix, because be don't know if everybody does this right, yet.
+        if (path.isAbsolute(id.file)) {
+          absFile = id.file;
+        } else {
+          absFile = path.join(this.deps.absTestFolder, id.file);
+        }
+      }
+
       // console.log(this.deps.absTestFolder);
       // console.log("setTest: ", { relFile, absFile });
       this.setTest(absFile);
     }
 
-    if (relFiles.length !== this.tests.size) {
+    if (ids.length !== this.tests.size) {
       console.log(
         "setTest() - wrong number of tests",
-        relFiles.length,
+        ids.length,
         this.tests.size
       );
-      console.log({ relFiles, tests: this.tests });
+      console.log({ relFiles: ids, tests: this.tests });
     }
   };
 
@@ -148,13 +162,13 @@ export class TestAnalytics {
    *
    * - if exec-time undefined test is but in front.
    */
-  public sortTests = (tests: string[]): string[] =>
+  public sortTests = (tests: TestInfo[]) =>
     [...tests].sort((a, b) => {
-      const aTime = this.exexTime[a];
-      const bTime = this.exexTime[b];
+      const aTime = this.exexTime[a.id];
+      const bTime = this.exexTime[b.id];
 
       if (aTime === undefined && bTime === undefined) {
-        return a === b ? 0 : a < b ? -1 : 1;
+        return a.name === b.name ? 0 : a.name < b.name ? -1 : 1;
       }
 
       if (aTime === undefined) {

@@ -1,7 +1,6 @@
-import { then, Waiter } from "^jab";
+import { BeeStates, JabShutdownMessage, then, Waiter } from "^jab";
 
-import type { Bee, BeeDeps } from "..";
-import type { JabShutdownMessage } from ".";
+import type { Bee, BeeDeps } from "^jab";
 
 type States = "running" | "stopping" | "stopped";
 type Events = "message";
@@ -95,4 +94,6 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
     this.waiter.noisyKill(this.terminate, "InMemoryBee", true);
 
   public kill = () => this.waiter.kill(this.terminate, true);
+
+  public is = (state: BeeStates) => this.waiter.is(state);
 }

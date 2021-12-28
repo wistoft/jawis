@@ -1,5 +1,3 @@
-import path from "path";
-
 import { LoopController, timeRace } from "^jab";
 
 import {
@@ -10,8 +8,8 @@ import {
   errorToTestResult,
   OnTestResult,
 } from "^jatec";
+import { ComposedTestFrameworkProv } from "^jates";
 
-import { TestRunner } from ".";
 import { ClientComProv } from "./ClientComController";
 
 // prov
@@ -24,9 +22,8 @@ export type TestExecutionControllerProv = {
 //deps
 
 export type TestExecutionControllerDeps = {
-  absTestFolder: string;
   timeoutms: number;
-  tr: TestRunner;
+  testFramework: ComposedTestFrameworkProv;
   onRogueTest: OnRogue;
   onError: (error: unknown) => void;
   onTestResult: OnTestResult;
@@ -138,7 +135,7 @@ export class TestExecutionController implements TestExecutionControllerProv {
         });
 
     return timeRace(
-      this.deps.tr.runTest(id, path.join(this.deps.absTestFolder, id)),
+      this.deps.testFramework.runTest(id),
       fallback,
       this.deps.timeoutms,
       "Test timeout (" + this.deps.timeoutms + "ms) in TEC"

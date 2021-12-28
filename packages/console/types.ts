@@ -1,5 +1,10 @@
-import { ClonedValue, ParsedStack } from "^jab";
-import { HtmlEntry, JagoLogEntry, LogEntry } from "^jagoc";
+import {
+  ClonedValue,
+  ParsedStack,
+  HtmlEntry,
+  JagoLogEntry,
+  LogEntry,
+} from "^jab";
 
 //
 // console entries - the input data

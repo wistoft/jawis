@@ -11,6 +11,7 @@ import {
 } from "^jarun/JarunProcessControllerInner";
 
 import { getLogProv, makeDormentInMemoryBee } from ".";
+import { makeJarunNodeProcessRestarter } from "^javi";
 
 /**
  *
@@ -70,7 +71,7 @@ export const getJarunProcessControllerDeps = (
 ): JarunProcessControllerDeps => ({
   ...getJarunProcessControllerInnerDeps(prov, logPrefix, prov),
 
-  makeTsBee: makeDormentInMemoryBee,
+  makeProcessRestarter: makeJarunNodeProcessRestarter(makeDormentInMemoryBee),
   onError: prov.onError,
   finally: prov.finally,
 

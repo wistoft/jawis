@@ -1,0 +1,26 @@
+{
+  "sideEffects": [
+    "./index.ts"
+  ],
+  "version": "0.0.0",
+  "name": "~ts-reload",
+  "bin": {
+    "ts-reload": "./index.js"
+  },
+  "description": "Compile, watch and reload TypeScript projects during development.",
+  "dependencies": {
+    "@types/yargs": "^17.0.7",
+    "yargs": "^17.3.0"
+  },
+  "keywords": [
+    "development",
+    "watch",
+    "autoload",
+    "reload",
+    "restart",
+    "typescript",
+    "ts",
+    "ts-node",
+    "ts-node-dev"
+  ]
+}

@@ -1,11 +1,11 @@
-import { State, UiEntry } from "^console";
 import { cloneArrayEntries } from "^jab";
+import { State, UiEntry } from "^console";
 
 import { errorData1, errorData2 } from ".";
 
 export const defaultConsoleState: State = { logs: [] };
 
-export const uiEntries: UiEntry[] = [
+export const getUiEntries = (): UiEntry[] => [
   {
     id: 1,
     type: "log",

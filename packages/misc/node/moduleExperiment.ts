@@ -1,6 +1,6 @@
 import {
   interceptResolve,
-  makeCachedResolve,
+  makeCachedResolveOld,
   plugIntoModuleLoad,
   registerExtensions,
 } from "^jab-node";
@@ -24,7 +24,9 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
   //resolve
 
   interceptResolve((original) => {
-    const handler = deps.cacheResolve ? makeCachedResolve(original) : original;
+    const handler = deps.cacheResolve
+      ? makeCachedResolveOld(original)
+      : original;
 
     return (request, parent, isMain) =>
       measure(
@@ -60,12 +62,11 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
     true
   );
 
-  const printResult = () => {
+  const printResultCounts = () => {
+    console.log("counts\n");
     const measureResult = getResult();
 
     const count: any = {};
-    const agg: any = {};
-    const hist: any = {};
 
     for (const mes of measureResult) {
       //count
@@ -75,7 +76,24 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
       }
 
       count[mes.type] += 1;
+    }
 
+    for (const key in count) {
+      console.log(key + ": ", count[key]);
+    }
+  };
+
+  const printResult = () => {
+    console.log("\ntime");
+
+    const measureResult = getResult();
+
+    // const count: any = {};
+    const agg: any = {};
+    const hist: any = {};
+    let total = BigInt(0);
+
+    for (const mes of measureResult) {
       //time
 
       if (agg[mes.type] === undefined) {
@@ -86,11 +104,16 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
 
       //hist
 
-      if (hist[Number(mes.ownNs / BigInt(1000 * 1000))] === undefined) {
-        hist[Number(mes.ownNs / BigInt(1000 * 1000))] = 0;
-      }
+      if (mes.type === "resolve") {
+        if (hist[Number(mes.ownNs / BigInt(1000 * 1000))] === undefined) {
+          hist[Number(mes.ownNs / BigInt(1000 * 1000))] = 0;
+        }
 
-      hist[Number(mes.ownNs / BigInt(1000 * 1000))] += 1;
+        hist[Number(mes.ownNs / BigInt(1000 * 1000))] += 1;
+      }
+      if (mes.type === "resolve") {
+        total += mes.ownNs;
+      }
 
       // if (mes.ownNs < -10000000) {
       //   console.log(mes);
@@ -108,9 +131,9 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
     //   console.log(key + ": ", count[key]);
     // }
 
-    for (const key in count) {
-      console.log(key + ": ", count[key]);
-    }
+    // for (const key in count) {
+    //   console.log(key + ": ", count[key]);
+    // }
 
     console.log("");
 
@@ -120,6 +143,13 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
 
     console.log("");
     console.log(hist);
+
+    let histTotal = 0;
+    for (const key in hist) {
+      histTotal += (key as any) * hist[key];
+    }
+
+    console.log({ total: total / BigInt(1000 * 1000), histTotal });
 
     // for (const mes of measureResult) {
     //   const info = "filename" in mes ? mes.filename : mes.request;
@@ -141,5 +171,5 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
     // // console.log(messureResult);
   };
 
-  return { measure, getResult, printResult };
+  return { measure, getResult, printResult, printResultCounts };
 };

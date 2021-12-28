@@ -1,13 +1,13 @@
 import { objMap } from "^jab";
 import { getHtmlRTR } from "^misc/node";
 import { TestProvision } from "^jarun";
-import { defaultConf } from "../_fixture";
+import { getDefaultConf } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
-  imp(defaultConf.mapToAtoms);
-  imp(defaultConf.atoms);
+  imp(getDefaultConf().mapToAtoms);
+  imp(getDefaultConf().atoms);
   imp(
-    objMap(defaultConf.mapToFinal, (key, value) => {
+    objMap(getDefaultConf().mapToFinal, (key, value) => {
       if (typeof value === "string") {
         return value;
       } else {

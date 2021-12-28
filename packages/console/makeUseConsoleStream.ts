@@ -3,6 +3,8 @@ import { makeUseEventStream } from "^jab-react";
 
 import { ConsoleEntry, CaptureCache } from ".";
 
+declare const window: any; //quick fix
+
 export type UseConsoleStream = (
   listener: (entries: ConsoleEntry[]) => void
 ) => void;

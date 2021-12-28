@@ -1,11 +1,21 @@
-import { FinallyFunc, safeCatch, unknownToErrorData } from "^jab";
+import path from "path";
+import { Worker, WorkerOptions } from "worker_threads";
 import {
-  BeeDeps,
+  err,
+  FinallyFunc,
+  getRandomInteger,
+  safeCatch,
+  unknownToErrorData,
+  WorkerBeeDeps,
+} from "^jab";
+import {
   getFileToRequire,
   JabWorker,
   MakeNodeWorker,
   makePlainWorker,
+  makeSharedResolveMap,
 } from "^jab-node";
+import type { SharedMap } from "sharedmap";
 
 import { getControlArray, setCompiling, signalConsumerSync } from "./protocol";
 import { SourceFileLoader } from "./SourceFileLoader";
@@ -18,6 +28,7 @@ export type JacsProducerDeps = {
   maxSourceFileSize: number;
   customBooter?: string;
   sfl: Pick<SourceFileLoader, "load" | "getTsConfigPaths">;
+  cacheNodeResolve: boolean;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
 
@@ -32,7 +43,19 @@ export type JacsProducerDeps = {
  *
  */
 export class JacsProducer {
-  constructor(private deps: JacsProducerDeps) {}
+  private resolveCache?: SharedMap;
+  private makeWorker;
+  private jacsCompileToken;
+
+  constructor(private deps: JacsProducerDeps) {
+    this.makeWorker = this.deps?.makeWorker || makePlainWorker;
+
+    if (deps.cacheNodeResolve) {
+      this.resolveCache = makeSharedResolveMap();
+    }
+
+    this.jacsCompileToken = getRandomInteger();
+  }
 
   /**
    * - returned promise is just for tests.
@@ -73,12 +96,114 @@ export class JacsProducer {
   };
 
   /**
+   * Make a worker thread, that compiles TypeScript automatically.
+   *
+   * - WorkerData is given to the script, if it exports a `main` function.
+   *
+   * impl
+   *  - Filter out compile messages, so the users don't see them.
+   */
+  public makeTsWorker: MakeNodeWorker = (
+    filename: string,
+    options: WorkerOptions = {}
+  ) => {
+    const { realFilename, shared } = this.getWorkerConf(
+      filename,
+      options.workerData
+    );
+
+    const worker = this.makeWorker(realFilename, {
+      ...options,
+      workerData: shared,
+    });
+
+    //on message
+
+    const onMessage = (msg: ConsumerMessage) => {
+      if (msg.jacsCompileToken === this.jacsCompileToken) {
+        this.onCompile(shared.controlArray, shared.dataArray, msg.file);
+      }
+    };
+
+    worker.addListener("message", onMessage);
+
+    //ensure listener isn't disturbed by jacs.
+
+    this.monkeyPatchWorker(worker);
+
+    return worker;
+  };
+
+  /**
    *
    */
-  public makeJacsWorkerBee = <MS, MR>(beeDeps: BeeDeps<MR>) => {
+  public makeJacsWorkerBee = <MS, MR>(beeDeps: WorkerBeeDeps<MR>) => {
+    const { realFilename, shared } = this.getWorkerConf(
+      beeDeps.filename,
+      beeDeps.workerData
+    );
+
+    //on message
+
+    const onMessage = (msg: ConsumerMessage) => {
+      if (msg.jacsCompileToken === this.jacsCompileToken) {
+        this.onCompile(shared.controlArray, shared.dataArray, msg.file);
+      } else {
+        //the message belongs to the user.
+
+        beeDeps.onMessage((msg as unknown) as MR);
+      }
+    };
+
+    //worker
+
+    return new JabWorker<MS, ConsumerMessage, WorkerData>({
+      filename: realFilename,
+      workerData: shared,
+      onMessage,
+      onStdout: beeDeps.onStdout,
+      onStderr: beeDeps.onStderr,
+      onError: beeDeps.onError,
+      onExit: beeDeps.onExit,
+      finally: beeDeps.finally,
+      makeWorker: this.makeWorker,
+    });
+  };
+
+  /**
+   *
+   * Monkey patch add message listener, so we can filter away jacs-compile messages.
+   */
+  private monkeyPatchWorker = (worker: Worker) => {
+    (worker as any).__originalAddListener = worker.addListener;
+
+    worker.addListener = (event: any, outerListener: any, ...args: any[]) => {
+      let listener = outerListener;
+
+      if (event === "message") {
+        listener = (msg: any, ...args: any[]) => {
+          //only send, if it's no jacs who send the message.
+          if (msg.type !== this.jacsCompileToken) {
+            outerListener(msg, ...args);
+          }
+        };
+      }
+
+      return (worker as any).__originalAddListener(event, listener, ...args);
+    };
+  };
+
+  /**
+   *
+   */
+  private getWorkerConf = (filename: string, workerData: unknown) => {
+    if (!path.isAbsolute(filename)) {
+      err("filename must be absolute.", filename);
+    }
+
     //booter
 
-    const filename =
+    const realFilename =
       this.deps.customBooter || getFileToRequire(__dirname, "JacsConsumerMain");
 
     //shared memory
@@ -92,40 +217,18 @@ export class JacsProducer {
       dataArray,
       timeout: this.deps.consumerTimeout,
       softTimeout: this.deps.consumerSoftTimeout,
-      beeFilename: beeDeps.filename,
-      tsPaths: this.deps.sfl.getTsConfigPaths(beeDeps.filename),
+      jacsCompileToken: this.jacsCompileToken,
+
+      tsPaths: this.deps.sfl.getTsConfigPaths(filename),
+      resolveCache: this.resolveCache,
+
+      beeFilename: filename,
+      beeWorkerData: workerData,
 
       //for developement
       unregister: this.deps?.unregisterTsInWorker || false,
     };
 
-    //on message
-
-    const onMessage = (msg: ConsumerMessage) => {
-      switch (msg.type) {
-        case "jacs-compile":
-          this.onCompile(shared.controlArray, shared.dataArray, msg.file);
-          return;
-
-        default:
-          //the message belongs to the user.
-
-          beeDeps.onMessage((msg as unknown) as MR);
-      }
-    };
-
-    //worker
-
-    return new JabWorker<MS, ConsumerMessage, WorkerData>({
-      filename,
-      workerData: shared,
-      onMessage,
-      onStdout: beeDeps.onStdout,
-      onStderr: beeDeps.onStderr,
-      onError: beeDeps.onError,
-      onExit: beeDeps.onExit,
-      finally: beeDeps.finally,
-      makeWorker: this.deps?.makeWorker || makePlainWorker,
-    });
+    return { realFilename, shared };
   };
 }

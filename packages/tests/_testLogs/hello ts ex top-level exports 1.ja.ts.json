@@ -1,1 +1,0 @@
-{"user":{"console.log":["### saySomething\n","export const saySomething = (): void => {\n    console.log(\"saySomething\");\n};"]}}

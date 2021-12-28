@@ -2,7 +2,8 @@ import cp, { SpawnSyncReturns } from "child_process";
 
 import { err, indent } from "^jab";
 
-import { SpawnResult } from ".";
+import { makeNoisyProcessDeps, SpawnResult } from ".";
+import { RealProcess } from "./RealProcess";
 
 // Convenience functions for doing simple things. typically when
 //  interaction with the process is unneeded.
@@ -25,27 +26,10 @@ export const execSync = (command: string, args?: string[]) =>
 /**
  *
  */
-export const execSyncAndGetStdout = (cmd: string, args?: string[]) => {
-  const result = execSync(cmd, args);
+export const execSyncAndGetStdout = (command: string, args?: string[]) => {
+  const result = execSync(command, args);
 
-  // check the stdout, stderr and exit code
-
-  if (result.stderr === "" && result.status === 0) {
-    return result.stdout;
-  }
-
-  // it's an error
-
-  throw new Error(
-    "execAndGetStdoutNew() - error: \n" +
-      formatExecInformation({
-        cmd,
-        args,
-        retval: result.status,
-        stdout: result.stdout,
-        stderr: result.stderr,
-      })
-  );
+  return mapToStdout(command, args, result);
 };
 
 /**
@@ -58,10 +42,31 @@ export const execSilentSync = (command: string, args?: string[]) => {
 };
 
 /**
- * async
+ *
  */
 export const execSilent = (command: string, args?: string[]) =>
   exec(command, args).then((result) => mapSilent(command, args, result));
+
+/**
+ *
+ */
+export const execNoisy = (command: string, args?: string[], cwd?: string) =>
+  new Promise<void>((resolve) => {
+    new RealProcess(
+      makeNoisyProcessDeps({
+        filename: command,
+        args,
+        cwd,
+        onExit: () => resolve(),
+      })
+    );
+  });
+
+/**
+ *
+ */
+export const execAndGetStdout = (command: string, args?: string[]) =>
+  exec(command, args).then((result) => mapToStdout(command, args, result));
 
 /**
  * 1. Make errors noisy.
@@ -85,6 +90,7 @@ export const exec = (command: string, args?: string[]) =>
 
     const onData = (type: "out" | "err") => (data: unknown) => {
       if (data instanceof Buffer) {
+        // console.log(data.toString());
         //quick fix: any needed for gulp compile, because instanceof doesn't narrow the type, when Buffer type any
         ioData[type] += (data as any).toString();
       } else {
@@ -125,7 +131,9 @@ export const exec = (command: string, args?: string[]) =>
 /**
  *
  */
-export const mapSpawnSyncResult = (result: SpawnSyncReturns<string>) => {
+export const mapSpawnSyncResult = (
+  result: SpawnSyncReturns<string | Buffer>
+): SpawnResult => {
   if (result.error) {
     // would be nice to incorporate the other information here.
     throw result.error;
@@ -141,8 +149,36 @@ export const mapSpawnSyncResult = (result: SpawnSyncReturns<string>) => {
 /**
  *
  */
+export const mapToStdout = (
+  command: string,
+  args: string[] | undefined,
+  result: SpawnResult
+): string => {
+  // check the stdout, stderr and exit code
+
+  if (result.stderr === "" && result.status === 0) {
+    return result.stdout;
+  }
+
+  // it's an error
+
+  throw new Error(
+    "execAndGetStdoutNew() - error: \n" +
+      formatExecInformation({
+        command,
+        args,
+        retval: result.status,
+        stdout: result.stdout,
+        stderr: result.stderr,
+      })
+  );
+};
+
+/**
+ *
+ */
 const mapSilent = (
-  cmd: string,
+  command: string,
   args: string[] | undefined,
   result: SpawnResult
 ) => {
@@ -157,7 +193,7 @@ const mapSilent = (
   throw new Error(
     "execAndThrowOnStdout() - error: \n" +
       formatExecInformation({
-        cmd,
+        command,
         args,
         retval: result.status,
         stdout: result.stdout,
@@ -170,13 +206,13 @@ const mapSilent = (
  *
  */
 const formatExecInformation = ({
-  cmd,
+  command,
   args = [],
   retval,
   stdout,
   stderr,
 }: {
-  cmd: string;
+  command: string;
   args?: string[];
   retval: number | null;
   stdout: string;
@@ -185,7 +221,7 @@ const formatExecInformation = ({
   let errMsg = "";
 
   errMsg = "";
-  errMsg += "\nCOMMAND\n" + indent(cmd, 2, " ");
+  errMsg += "\nCOMMAND\n" + indent(command, 2, " ");
   errMsg += "\nARGS\n" + indent(args.toString(), 2, " ");
   errMsg += "\nRET: " + retval;
   errMsg += "\nOUT\n" + indent(stdout, 2, " ") + "\nEND";

@@ -2,6 +2,12 @@ import { ClientTestReport, TestCurLogs, TestResult } from ".";
 
 export type OnTestResult = (id: string, result: TestResult) => void;
 
+export type TestInfo = {
+  id: string;
+  name: string;
+  file: string; //absolute, it should be.
+};
+
 // rogue
 
 export type RogueData = { id?: string; data: TestCurLogs };
@@ -14,7 +20,12 @@ export type OnRogue = (rogue: RogueData) => void;
 
 export type ClientMessage =
   | {
-      action: "stopRunning" | "runAllTests" | "runCurrentSelection" | "runDtp";
+      action:
+        | "stopRunning"
+        | "getAllTests"
+        | "runAllTests"
+        | "runCurrentSelection"
+        | "runDtp";
     }
   | {
       action: "prependTests";
@@ -41,7 +52,7 @@ export type ClientMessage =
     }
   | {
       action: "openTest";
-      file: string;
+      id: string;
     };
 
 //
@@ -55,7 +66,7 @@ export type ServerMessage =
     }
   | {
       type: "TestSelection";
-      data: string[][]; //list of levels.
+      data: TestInfo[][]; //list of levels.
     }
   | {
       type: "TestCaseStarts";

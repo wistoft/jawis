@@ -80,7 +80,8 @@ export const getRandomRange = (min: number, max: number) =>
 /**
  * A random non-negative integer.
  */
-export const getRandomInteger = (max = 1000000) => getRandomRange(0, max);
+export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
+  getRandomRange(0, max);
 
 /**
  * Check whether the runtime is node.js.
@@ -93,7 +94,7 @@ export const isNode = () =>
  * Fix inheritance when inheriting from native classes in node.js.
  *
  */
-export const fixErrorInheritence = (obj: {}, cls: {} | null) => {
+export const fixErrorInheritance = (obj: {}, cls: {} | null) => {
   if (isNode()) {
     Object.setPrototypeOf(obj, cls);
   }
@@ -309,3 +310,22 @@ export const binaryStringToUInt8Array = (str: string) => {
   }
   return arr;
 };
+
+/**
+ * Unfinished.
+ *
+ * Escape for $'' strings.
+ *
+ * see: https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html
+ *
+ * note
+ *  - it's not possible to escape properly for "" or '' string.
+ */
+export const escapeBashArgument = (str: string) =>
+  str
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\?/g, "\\?");

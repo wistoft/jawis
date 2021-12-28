@@ -1,16 +1,14 @@
 import path from "path";
 import { Worker } from "worker_threads";
 
-import { assert, FinallyFunc } from "^jab";
+import { assert, execBee, FinallyFunc, MakeBee } from "^jab";
 import {
   makePlainJabProcess,
   MakeJabProcess,
   MakeNodeWorker,
   Process,
-  execBee,
   JabWorker,
   JabWorkerDeps,
-  MakeBee,
 } from "^jab-node";
 
 /**
@@ -44,7 +42,7 @@ export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
  * - execArgv not supported.
  *
  * note
- *  process.execArgv arves, så hvis ts-node er registreret, så bliver det automatisk for worker.
+ *  process.execArgv is inherited, therefore if ts_node is registered, it will also be registered for worker.
  *  Double ts-node registrering giver en fejl med noget: --isolated-modules.
  *
  * @source: https://github.com/TypeStrong/ts-node/issues/711
@@ -87,7 +85,7 @@ export const makeTsNodeWorkerBee: MakeBee = <MR, WD>(
 /**
  *
  */
-export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
+export const makeTsNodeJabProcessConditionally: MakeJabProcess = (deps) => {
   if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
     return makeTsNodeJabProcess(deps);
   } else {
@@ -98,7 +96,7 @@ export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
 /**
  *
  */
-export const nodeExecTsNodeConditonally = (
+export const nodeExecTsNodeConditionally = (
   script: string,
   finallyFunc: FinallyFunc = () => {}
-) => execBee(script, finallyFunc, makeTsNodeJabProcessConditonally);
+) => execBee(script, finallyFunc, makeTsNodeJabProcessConditionally);

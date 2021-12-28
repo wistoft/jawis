@@ -1,26 +1,15 @@
-import path from "path";
 import type { CompilerOptions } from "typescript";
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { uninstall } from "@jawis/jacs";
+import { uninstall, SourceFileLoader, WorkerData, TsPathsConfig } from "^jacs";
+import { assertString } from "^jab";
 
-import {
-  makeMakeJacsWorkerBee,
-  MakeMakeJacsBeeDeps,
-  SourceFileLoader,
-  WorkerData,
-  TsPathsConfig,
-} from "^jacs";
-import { makeTsNodeWorker } from "^util-javi/node";
 import { TestProvision } from "^jarun";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";
 import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
-
-import { assertString } from "^jab";
-
 import { syntheticWait } from "./jacs protocol";
+import { filterFilepath } from ".";
 
 const projectConf = require("../../../../project.conf");
 
@@ -29,22 +18,6 @@ const projectConf = require("../../../../project.conf");
  */
 export const load_tests = (sfl: SourceFileLoader, script: string) =>
   sfl.load(script).then((data) => data.toString());
-
-/**
- *
- */
-export const makeMakeJacsBee_test = (
-  prov: TestProvision,
-  extraDeps?: Partial<MakeMakeJacsBeeDeps>
-) =>
-  makeMakeJacsWorkerBee({
-    makeWorker: makeTsNodeWorker, // to be able to compile JacsConsumerMain.ts
-    unregisterTsInWorker: true,
-
-    onError: prov.onError,
-    finally: prov.finally,
-    ...extraDeps,
-  });
 
 /**
  * - doesn't start the consumer thread.
@@ -74,6 +47,8 @@ export const getJacsProducer = (
     consumerSoftTimeout: 0,
     maxSourceFileSize,
     sfl: getSourceFileLoaderMock(),
+    cacheNodeResolve: false, // this producer is only used by for onCompile, so no point in caching.
+
     onError: prov.onError,
     finally: prov.finally,
 
@@ -119,6 +94,7 @@ export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
     dataArray,
     timeout: 0,
     softTimeout: 0,
+    jacsCompileToken: "jacs-compile",
     unregister: false,
     tsPaths: {
       baseUrl: projectConf.projectRoot,
@@ -145,6 +121,7 @@ export const getConsumer = (
     dataArray,
     timeout: 0,
     softTimeout: 0,
+    jacsCompileToken: "jacs-compile",
   };
 
   const consumer = new JacsConsumer({
@@ -167,16 +144,13 @@ export const getConsumer = (
 export const filterTsConfig = (conf: CompilerOptions) => {
   //quick fix: only supports string value.
   const pathsBasePath =
-    conf.pathsBasePath &&
-    path
-      .relative(projectConf.projectRoot, assertString(conf.pathsBasePath))
-      .replace(/\\/g, "/");
+    conf.pathsBasePath && filterFilepath(assertString(conf.pathsBasePath));
 
   return {
     ...conf,
-    baseUrl: conf.baseUrl && path.relative(projectConf.projectRoot, conf.baseUrl).replace(/\\/g, "/"), // prettier-ignore
-    outDir: conf.outDir && path.relative(projectConf.projectRoot, conf.outDir).replace(/\\/g, "/"), // prettier-ignore
-    rootDir: conf.rootDir && path.relative(projectConf.projectRoot, conf.rootDir).replace(/\\/g, "/"), // prettier-ignore
+    baseUrl: conf.baseUrl && filterFilepath(conf.baseUrl),
+    outDir: conf.outDir && filterFilepath(conf.outDir),
+    rootDir: conf.rootDir && filterFilepath(conf.rootDir),
     pathsBasePath,
   };
 };
@@ -188,7 +162,7 @@ export const filterTsPathConfig = (conf: TsPathsConfig | undefined) => {
   if (conf) {
     return {
       ...conf,
-      baseUrl: conf.baseUrl && path.relative(projectConf.projectRoot, conf.baseUrl).replace(/\\/g, "/"), // prettier-ignore
+      baseUrl: conf.baseUrl && filterFilepath(conf.baseUrl),
     };
   } else {
     return undefined;
@@ -196,8 +170,7 @@ export const filterTsPathConfig = (conf: TsPathsConfig | undefined) => {
 };
 
 /**
- * It's needed to use uninstall from 'live' jacs. In order to test the development version.
- *  Live might be '@jawis/jacs' or 'alpha build jacs'
+ * Actually just the same function as in development.
  */
 export const uninstallLiveJacs = () => {
   uninstall();

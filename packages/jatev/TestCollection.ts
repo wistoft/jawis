@@ -1,5 +1,5 @@
 import { arrayCircularNext, arrayCircularPrev, assert, err } from "^jab";
-import { TestState, TestStateUpdate } from ".";
+import { TestState } from "./types";
 
 export type TestCollection = {
   tests: TestState[][];
@@ -7,11 +7,9 @@ export type TestCollection = {
 } & Methods;
 
 type Methods = {
-  getTestUpdate: (
-    this: TestCollection,
-    test: TestStateUpdate
-  ) => TestCollection;
+  getTestUpdate: (this: TestCollection, test: TestState) => TestCollection;
   getTest: (this: TestCollection, testId: string) => TestState;
+  tryGetTest: (this: TestCollection, testId: string) => TestState | undefined;
   getPrevTest: (this: TestCollection, testId?: string) => TestState;
   getNextTest: (this: TestCollection, testId?: string) => TestState;
 };
@@ -23,14 +21,15 @@ type Methods = {
  * - all operations are immutable, so the data structure can be used in react.
  *
  * notes
- * - test update should perform well. It is called for each test result. All others are called by UI only, and less important.
- *  - for test update be constant time, re-render needs to be too, otherwise it's a minor improvement to make
- *      data structure update in contant time. Therefore we accept linear time
- *      to update a test case. If it gets too slow, we can batch updates as a first approach. If that gets too slow,
+ *  - Test update should perform well, because it's called for each test result.
+ *      All other methods are called only by UI, so performance is less important.
+ *  - To make test update constant time, re-render needs to be constant too, otherwise it's a minor improvement to make
+ *      data structure update in contant time. Therefore we can accept linear time to
+ *      update a test case. If it gets too slow, we can batch updates as a first approach. If that gets too slow,
  *      we can make update and re-render both into log(n), by rendering a tree of tests, rather than a list.
- *  - it's complex to implement first, last, prev and next on a 2dArray. And performance isn't important. So a
+ *  - It's complex to implement first, last, prev and next on a 2dArray. And performance isn't important. So a
  *      flat list of test ids is contructed to make it easy. The test object is looked up afterwards.
- *      We don't have to support insert or delete, so flatIds is only calculated on construction.
+ *      We don't have to support insert or delete, so flatIds are only calculated on construction.
  */
 export const testSelectionToCollection = (
   tests: TestState[][] = []
@@ -69,6 +68,20 @@ const methods: Methods = {
    */
   getTest: function (this, testId) {
     const [i, j] = getTestIdx(this.tests, testId);
+    return this.tests[i][j];
+  },
+
+  /**
+   * Get test object from a test id.
+   */
+  tryGetTest: function (this, testId) {
+    const val = tryGetTestIdx(this.tests, testId);
+
+    if (!val) {
+      return;
+    }
+
+    const [i, j] = val;
     return this.tests[i][j];
   },
 
@@ -141,14 +154,29 @@ const get2dArrayUpdate = <T>(arr: T[][], idx: number, idx2: number, elm: T) =>
   getArrayUpdate(arr, idx, getArrayUpdate(arr[idx], idx2, elm));
 
 /**
- * Return the two index for a test id.
+ * Returns the two indexes for the test id.
  *
- * - exported for tests
+ * - exported for testing
  */
-export const getTestIdx = (
+export const getTestIdx = (selection: TestState[][], testId: string) => {
+  const val = tryGetTestIdx(selection, testId);
+
+  if (val) {
+    return val;
+  } else {
+    throw err("Could not find testId: ", testId);
+  }
+};
+
+/**
+ * Returns the two indexes for the test id.
+ *
+ * - exported for testing
+ */
+export const tryGetTestIdx = (
   selection: TestState[][],
   testId: string
-): [number, number] => {
+): [number, number] | undefined => {
   let i = 0;
 
   for (const tests of selection) {
@@ -161,5 +189,5 @@ export const getTestIdx = (
     i++;
   }
 
-  throw err("Could not find testId: ", testId);
+  //implicit return undefined, when test isn't found.
 };

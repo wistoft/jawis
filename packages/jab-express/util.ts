@@ -91,12 +91,16 @@ export const expressErrorsThrow = (
       //must we can end the connection, so the client don't hangs.
       res.end();
     } else {
-      res.json({
-        status: "err",
-        message: err.message,
-      });
+      if (req.method === "GET") {
+        res.type("txt");
+        res.send(err.stack);
+      } else {
+        res.json({
+          status: "err",
+          message: err.message,
+          strack: err.stack,
+        });
+      }
     }
   }
-
-  res.end(err);
 };

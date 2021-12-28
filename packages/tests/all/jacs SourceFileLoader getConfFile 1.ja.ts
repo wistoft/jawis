@@ -7,7 +7,10 @@ const { getPackagePath } = require("../../../project.conf");
 export default (prov: TestProvision) => {
   const { eq } = prov;
 
-  const sfl = new SourceFileLoader({ onError: prov.onError });
+  const sfl = new SourceFileLoader({
+    lazyRequire: true,
+    onError: prov.onError,
+  });
 
   const confFile = getPackagePath("tests/tsconfig.json").replace(/\\/g, "/");
 

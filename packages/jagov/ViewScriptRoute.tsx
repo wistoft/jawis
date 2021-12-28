@@ -7,7 +7,7 @@ import { assertPropString } from "^jab";
 import { ScriptStatus } from "^jagoc";
 
 import { ViewScript, Props as Sub1 } from "./ViewScript";
-import { ApiProv } from ".";
+import { ApiProv } from "./types";
 
 export type Props = ApiProv &
   Omit<Sub1, "singleProcessStatus"> & {

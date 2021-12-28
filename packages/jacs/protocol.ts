@@ -75,6 +75,7 @@ export const requestProducerSync = (
   dataArray: Uint8Array,
   timeout: number,
   softTimeout: number | undefined,
+  jacsCompileToken: string | number,
   postMessage: (msg: ConsumerMessage) => void,
   wait: WaitFunc = Atomics.wait,
   DateNow: () => number
@@ -109,7 +110,7 @@ export const requestProducerSync = (
   // this can actually finish "synchronously". I.e. the producer receives this event process it,
   // and tries to notify, before this consumer can make one step.
 
-  postMessage({ type: "jacs-compile", file });
+  postMessage({ jacsCompileToken, file });
 
   // sleep if needed
 

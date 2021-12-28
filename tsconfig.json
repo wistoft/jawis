@@ -10,6 +10,9 @@
     { "path": "./packages/jab-express" },
     { "path": "./packages/jab-node" },
     { "path": "./packages/jab-react" },
+    { "path": "./packages/jabc" },
+    { "path": "./packages/jabro" },
+    { "path": "./packages/jabroc" },
     { "path": "./packages/jacs" },
     { "path": "./packages/console" },
     { "path": "./packages/jagoc" },
@@ -22,6 +25,7 @@
     { "path": "./packages/javi" },
     { "path": "./packages/javi-client" },
     { "path": "./packages/misc" },
+    { "path": "./packages/ts-reload" },
     { "path": "./packages/util-dev" },
     { "path": "./packages/util-javi" },
     { "path": "./packages/tests" }

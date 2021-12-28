@@ -1,13 +1,14 @@
 import { WsPoolController, WsPoolProv } from "^jab-express";
-import { FinallyFunc, LogProv } from "^jab";
+import { FinallyFunc, LogProv, HoneyComb, MakeBee } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
-import { MakeBee } from "^jab-node";
 
 import { Behavior } from "./Behavior";
 import { ScriptPoolController } from "./ScriptPoolController";
-import { ActionProvider } from "./ActionProvider";
+import { ClientComController } from "./ClientComController";
 import { ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
+import { WsBuzzStore } from "^jabroc";
+import { HandleOpenFileInEditor } from "^util-javi/node";
 
 export type Deps = Readonly<{
   projectRoot: string;
@@ -15,6 +16,9 @@ export type Deps = Readonly<{
   scripts?: ScriptDefinition[];
   alwaysTypeScript?: boolean; //default false.
   makeTsBee: MakeBee;
+  browserBeeFrost: WsBuzzStore;
+  honeyComb: HoneyComb;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
   logProv: LogProv;
@@ -32,7 +36,7 @@ export const director = (deps: Deps) => {
   const wsPool =
     deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps);
 
-  const actionProv = new ActionProvider({
+  const actionProv = new ClientComController({
     wsPool,
   });
 
@@ -40,6 +44,7 @@ export const director = (deps: Deps) => {
     scriptFolders: deps.scriptFolders,
     scripts: deps.scripts,
     makeTsBee: deps.makeTsBee,
+    honeyComb: deps.honeyComb,
     alwaysTypeScript: deps.alwaysTypeScript,
 
     onError: deps.onError,

@@ -3,13 +3,17 @@ import nativeModule from "module";
 import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
-import { def, ErrorWithParsedNodeStack } from "^jab";
-import { CompileFunction, FullNativeModule, nodeRequire } from "^jab-node";
+import { def, ErrorWithParsedNodeStack, tryProp } from "^jab";
+import {
+  CompileFunction,
+  FullNativeModule,
+  interceptResolve,
+  makeMakeCachedResolve,
+} from "^jab-node";
 
 import {
   extractStackTraceInfo,
   unRegisterSourceMapSupport,
-  unRegisterTsCompiler,
   WorkerData,
 } from ".";
 import { JacsConsumer } from "./JacsConsumer";
@@ -19,6 +23,7 @@ const Module = (nativeModule as unknown) as FullNativeModule & {
 };
 
 export type UninstallInfo = {
+  resolveCache?: () => void;
   stackTraceLimit: number;
   prepareStackTrace: typeof Error.prepareStackTrace;
   _compile: CompileFunction; //to revert 'hookRequire' in source-map-support
@@ -42,13 +47,6 @@ export const install = (shared: WorkerData) => {
     _compile: Module.prototype._compile,
   };
 
-  //unregister - for development
-
-  if (shared.unregister) {
-    //this should be done elsewhere. Because we don't know which compiler to uninstall.
-    unRegisterTsCompiler();
-  }
-
   //A better default, because it will give all information.
 
   Error.stackTraceLimit = shared.stackTraceLimit || Infinity;
@@ -61,6 +59,15 @@ export const install = (shared: WorkerData) => {
     }
 
     uninstallInfo.tsConfigPaths = tsConfigPaths.register(shared.tsPaths);
+  }
+
+  //Resolve cache
+  // Must come after ts-paths, so this can cache its work as well.
+
+  if (shared.resolveCache) {
+    uninstallInfo.resolveCache = interceptResolve(
+      makeMakeCachedResolve(shared.resolveCache)
+    );
   }
 
   //install source map
@@ -106,16 +113,28 @@ export const install = (shared: WorkerData) => {
   //run a script, if that's what the user wants.
 
   if (shared.beeFilename) {
-    nodeRequire(shared.beeFilename);
+    const exports = eval("require.eager || require")(shared.beeFilename);
+
+    //call main function, if the script exports it.
+
+    const main = tryProp(exports, "main") as any;
+
+    if (main) {
+      main({
+        workerData: shared.beeWorkerData,
+      });
+    }
   }
 };
 
 /**
  * - Uninstall can't be perfect. But can useful for development testing.
- * - Uninstall information is stored globally, so other module, than install jacs, can uninstall it.
+ * - Uninstall information is stored globally, so other versions can uninstall.
+ *
+ * impl
+ *  tsconfig-paths and resovleCache both change `Module._resolveFilename`, so order is important.
  *
  * bugs
- *  - it's only possible to uninstall by using the exact same module, that installed.
  *  - source-map-support has no official uninstall.
  */
 export const uninstall = () => {
@@ -129,12 +148,16 @@ export const uninstall = () => {
 };
 
 /**
- *
+ * todo: uninstall lazy-require
  */
 const makeUninstall = (uninstallInfo: UninstallInfo) => () => {
   def(uninstallInfo.consumer).unregister();
 
   unRegisterSourceMapSupport(uninstallInfo);
+
+  if (uninstallInfo.resolveCache) {
+    uninstallInfo.resolveCache();
+  }
 
   if (uninstallInfo.tsConfigPaths) {
     uninstallInfo.tsConfigPaths();

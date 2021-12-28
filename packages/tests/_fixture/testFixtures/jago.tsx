@@ -1,7 +1,8 @@
 import React from "react";
 
+import { JagoLogEntry } from "^jab";
 import { TestProvision } from "^jarun";
-import { JagoLogEntry, ServerMessage } from "^jagoc";
+import { ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^jab-react";
 import { wrapHook } from "^misc/node";
 
@@ -15,7 +16,7 @@ export const getJagoView = () => (
     processStatus={[
       { id: "scriptId", script: "path/to/script.js", status: "stopped" },
     ]}
-    jcvProps={jcvProps}
+    jcvProps={jcvProps()}
     apiSend={() => {}}
     useApiSend={() => () => {}}
     wsState={"closed"}

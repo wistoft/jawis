@@ -1,8 +1,8 @@
 import React, { memo } from "react";
-import { Link, useParams } from "@reach/router";
+import { Link, useMatch } from "@reach/router";
 
 import { JsLink, UseKeyListener } from "^jab-react";
-import { assertPropString } from "^jab";
+import { tryProp } from "^jab";
 
 import { ViewComponent } from "./ViewComponent";
 
@@ -13,17 +13,18 @@ export type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];
   openComponnent: (path: string) => void;
   useKeyListener: UseKeyListener;
+  mountPath: string; //needed because useParams doesn't work.
 };
 
 /**
  *
+ * - `useParams` doesn't work here. `useMatch` does. It must have something to do with the route of the parent: '/:component/*'
  */
 export const ViewComponentRoute: React.FC<Props> = memo((props) => {
   //get params from url
+  const match = useMatch(props.mountPath + "/:component/*");
 
-  const params = useParams();
-
-  const id = assertPropString(params, "component");
+  const id = tryProp(match, "component");
 
   //lookup "props"
 
@@ -37,6 +38,11 @@ export const ViewComponentRoute: React.FC<Props> = memo((props) => {
   //key listener
 
   props.useKeyListener((e) => {
+    if (e.target instanceof HTMLInputElement) {
+      //todo find all that expects text input.
+      return;
+    }
+
     if (e.key === "e") {
       if (found) {
         props.openComponnent(found.path);

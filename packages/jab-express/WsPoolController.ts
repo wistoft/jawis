@@ -11,7 +11,10 @@ export type WsPoolProv<
 > = Readonly<{
   send: (data: MS) => void;
   forAll: (cb: (nws: NodeWS<MS, MR>) => void) => void;
-  makeUpgradeHandler: ( onMessage: WsMessageListener<MS, MR> ) => WebsocketRequestHandler; // prettier-ignore
+  makeUpgradeHandler: (
+    onMessage: WsMessageListener<MS, MR>,
+    depsOnOpen?: (nws: NodeWS<MS, MR>) => void
+  ) => WebsocketRequestHandler;
   shutdown: () => Promise<void>;
 }>;
 
@@ -55,13 +58,20 @@ export class WsPoolController<MS extends SocketData, MR extends SocketData>
   /**
    *
    */
-  public makeUpgradeHandler = (onMessage: WsMessageListener<MS, MR>) => {
+  public makeUpgradeHandler = (
+    onMessage: WsMessageListener<MS, MR>,
+    depsOnOpen?: (nws: NodeWS<MS, MR>) => void
+  ) => {
     const onOpen = (nws: NodeWS<MS, MR>) => {
       this.clients.add(nws);
 
       nws.ws.on("close", () => {
         this.clients.delete(nws);
       });
+
+      //call the user's onOpen
+
+      depsOnOpen && depsOnOpen(nws);
     };
 
     return makeUpgradeHandler(this.deps, onMessage, onOpen);

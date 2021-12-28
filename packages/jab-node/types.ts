@@ -1,10 +1,11 @@
-import type { FinallyFunc, FinallyProvider, LogProv, Waiter } from "^jab";
-
-import type { JabShutdownMessage } from ".";
+import type { FinallyProvider, LogProv } from "^jab";
 
 export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
 
+//
 //covenience: duplicates some properties to be compatible with TestMainProv
+//
+
 export type MainProv = {
   onError: OnError;
 
@@ -15,41 +16,6 @@ export type MainProv = {
   log: LogProv["log"]; //covenience
   logStream: LogProv["logStream"]; //covenience
 };
-
-//
-// bee
-//
-
-export type BeeDeps<MR> = {
-  filename: string;
-  finally: FinallyFunc;
-} & BeeListeners<MR>;
-
-export type BeeListeners<MR> = {
-  onMessage: (msg: MR) => void;
-  onStdout: (data: Buffer) => void;
-  onStderr: (data: Buffer) => void;
-  onError: (error: unknown) => void;
-  onExit: (exitCode: number | null) => void;
-};
-
-type BeeStates = "running" | "stopping" | "stopped";
-type BeeEvents = "message";
-
-export type Bee<MS> = {
-  send: (msg: JabShutdownMessage | MS) => Promise<void>;
-  shutdown: () => Promise<void>;
-  kill: () => Promise<void>;
-  noisyKill: () => Promise<void>;
-  waiter: Waiter<BeeStates, BeeEvents>;
-};
-
-/**
- *
- */
-export type MakeBee = <MS extends {}, MR extends {}>(
-  deps: BeeDeps<MR>
-) => Bee<MS>;
 
 //
 // not found in official places

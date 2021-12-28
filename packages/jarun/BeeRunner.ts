@@ -1,10 +1,19 @@
-import { clone, FinallyFunc, unknownToErrorData } from "^jab";
-import { TestRunner } from "^jates";
-import { execBee, Bee, MakeBee } from "^jab-node";
-import { TestResult, UserTestLogs } from "^jatec";
+import {
+  assertNever,
+  Bee,
+  clone,
+  ClonedValue,
+  FinallyFunc,
+  JabError,
+  MakeBee,
+  unknownToErrorData,
+  execBee,
+} from "^jab";
+import { JarunTestRunner, TestResult, UserTestLogs } from "^jatec";
 
 export type Deps = Readonly<{
   makeBee: MakeBee;
+  filterStdout?: (str: string) => string;
   finally: FinallyFunc;
 }>;
 
@@ -12,7 +21,7 @@ export type Deps = Readonly<{
  * Run a test completely in its own process/worker.
  *
  */
-export class BeeRunner implements TestRunner {
+export class BeeRunner implements JarunTestRunner {
   private curTest?: Bee<any>;
 
   constructor(private deps: Deps) {}
@@ -36,7 +45,11 @@ export class BeeRunner implements TestRunner {
         const userLog: UserTestLogs = {};
 
         if (data.stdout !== "") {
-          userLog.stdout = [data.stdout];
+          userLog.stdout = [
+            this.deps.filterStdout
+              ? this.deps.filterStdout(data.stdout)
+              : data.stdout,
+          ];
         }
 
         if (data.stderr !== "") {
@@ -60,12 +73,47 @@ export class BeeRunner implements TestRunner {
           execTime: Date.now() - startTime,
         };
 
+        //errors
+
         if (data.errors.length !== 0) {
           result.cur.err = data.errors.map((error) =>
             unknownToErrorData(error)
           );
         }
 
+        //jago logs
+
+        const addToUserLogHelper = (
+          rawLogName: string | undefined,
+          values: ClonedValue[]
+        ) => {
+          const logName = rawLogName || "log";
+
+          const old = logName in userLog ? userLog[logName] : [];
+          userLog[logName] = [...old, ...values];
+        };
+
+        data.logs.forEach((msg) => {
+          switch (msg.type) {
+            case "log":
+              addToUserLogHelper(msg.logName, msg.data);
+              return;
+
+            case "error": {
+              const errLog = result.cur.err || (result.cur.err = []);
+
+              errLog.push(msg.data);
+              return;
+            }
+
+            case "stream":
+            case "html":
+              throw new JabError("not impl", msg);
+
+            default:
+              throw assertNever(msg);
+          }
+        });
         return result;
       }
     );

@@ -1,52 +1,9 @@
-import { ClonedValue, ErrorData } from "^jab";
-
-//
-// log provision and jago logging convention.
-//
-
-export type LogEntry = {
-  type: "log";
-  data: ClonedValue[];
-  logName?: string;
-};
-
-export type StreamEntry = {
-  type: "stream";
-  data: string;
-  logName?: string;
-};
-
-export type HtmlEntry = {
-  type: "html";
-  data: string;
-  logName?: string;
-};
-
-export type ErrorEntry = {
-  type: "error";
-  data: ErrorData;
-  logName?: string;
-};
-
-export type JagoLogEntry = LogEntry | StreamEntry | HtmlEntry | ErrorEntry;
+import { ScriptOutput } from "^jabc";
+import { BeeFrostClientMessage, BeeFrostServerMessage } from "^jabroc";
 
 //
 // script
 //
-
-export type ScriptOutput =
-  | {
-      type: "stdout";
-      data: string;
-    }
-  | {
-      type: "stderr";
-      data: string;
-    }
-  | {
-      type: "message";
-      data: JagoLogEntry;
-    };
 
 export type ScriptStatusTypes =
   | "preloading"
@@ -91,6 +48,10 @@ export type ClientMessage =
       type: "openRelFile"; //relative to projectRoot
       file: string;
       line?: number;
+    }
+  | {
+      type: "beeFrost";
+      data: BeeFrostClientMessage;
     };
 
 //
@@ -105,6 +66,10 @@ export type ClientMessage =
  *  script  is the absolute path of the script.
  */
 export type ServerMessage =
+  | {
+      type: "beeFrost";
+      data: BeeFrostServerMessage;
+    }
   | {
       type: "processStatus";
       data: ScriptStatus[];

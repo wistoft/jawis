@@ -2,8 +2,9 @@
 import path from "path";
 
 import { MainProv, mainWrapper } from "^jab-node";
+import { makeMakeJacsWorkerBee } from "^jacs";
 
-import { startJaviServer } from "./util";
+import { startJaviServer } from "./javi-start";
 import { getJaviConf } from "./getConf";
 
 const main = (mainProv: MainProv) => {
@@ -14,19 +15,26 @@ const main = (mainProv: MainProv) => {
   //start
 
   startJaviServer({
-    name: "Javi",
+    name: conf.siteTitle,
     mainProv,
     serverPort: conf.port,
     staticWebFolder: path.join(__dirname, "client"),
+    makeMakeJacsWorkerBee,
     clientConf: {
+      siteTitle: conf.siteTitle,
       projectRoot: conf.projectRoot,
       removePathPrefix: conf.removePathPrefix,
       initialShowSystemFrames: conf.initialShowSystemFrames,
       showClearLink: conf.showClearLink,
     },
 
+    //todo: get from config file.
+    testFrameworkDef: {
+      jarun: true,
+      absJarunTestFolders: [conf.absTestFolder],
+    },
+
     jates: {
-      absTestFolder: conf.absTestFolder,
       absTestLogFolder: conf.absTestLogFolder,
       tecTimeout: conf.tecTimeout,
     },
@@ -36,7 +44,14 @@ const main = (mainProv: MainProv) => {
       scriptFolders: conf.scriptFolders,
       scripts: conf.scripts,
     },
+    ...conf,
   });
 };
 
-mainWrapper("Javi.", main, "console", true);
+mainWrapper({
+  logPrefix: "Javi.",
+  main,
+  type: "console",
+  registerOnShutdown: true,
+  enableLongTraces: false, //not needed in production
+});

@@ -1,16 +1,10 @@
-import { Serializable } from "child_process";
 import filewatcher from "filewatcher";
 
-import { def } from "^jab";
+import { def, RequireSenderMessage } from "^jab";
 
-import type { BeeListeners } from "..";
+import type { BeeListeners } from "^jab";
 
-import {
-  RequireSenderMessage,
-  ProcessPreloaderDeps,
-  ProcessPreloader,
-  getFileToRequire,
-} from ".";
+import { ProcessPreloaderDeps, ProcessPreloader, getFileToRequire } from ".";
 
 export type WatchableProcessPreloaderDeps = ProcessPreloaderDeps & {
   onRestartNeeded: () => void;
@@ -23,14 +17,11 @@ export type WatchableProcessPreloaderDeps = ProcessPreloaderDeps & {
  * - Init a watcher. For watching required files.
  * - Start the real script.
  */
-export class WatchableProcessPreloader<
-  MR extends Serializable,
-  MS extends Serializable
-> {
+export class WatchableProcessPreloader<MS extends {}> {
   private preload: ProcessPreloader<MS>;
   private fileChanged = false;
   private watcher: any;
-  private depListeners?: BeeListeners<MR>;
+  private depListeners?: BeeListeners<any>;
   private depFilterRequireMessages: boolean;
 
   /**
@@ -72,7 +63,7 @@ export class WatchableProcessPreloader<
   /**
    *
    */
-  public useProcess = (listeners: BeeListeners<MR>) => {
+  public useProcess = <MR extends {}>(listeners: BeeListeners<MR>) => {
     //so it can be called in this.onMessage.
 
     this.depListeners = listeners;
@@ -98,7 +89,7 @@ export class WatchableProcessPreloader<
    *
    */
   private onMessage = (
-    msg: MR & (RequireSenderMessage | { type: "script-required" })
+    msg: RequireSenderMessage | { type: "script-required" }
   ) => {
     switch (msg.type) {
       case "require":
@@ -106,7 +97,7 @@ export class WatchableProcessPreloader<
 
         //forward
         if (!this.depFilterRequireMessages) {
-          def(this.depListeners).onMessage(msg);
+          def(this.depListeners).onMessage(msg as any);
         }
         break;
 

@@ -5,7 +5,7 @@ import {
   JarunTestProvision,
   TestProvision,
   JarunTestRunner,
-  createJarunPromise,
+  makeJarunPromise,
   JarunTestRunnerDeps,
   JarunEqAssertation,
   BeeRunner,
@@ -15,7 +15,7 @@ import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
 import { filterTestResult, filterTestLogs } from "./jates";
-import { makeJacsWorker } from ".";
+import { getMakeJacsWorker } from ".";
 
 /**
  *
@@ -121,7 +121,7 @@ export const catchChkLog = (func: () => void) =>
  *
  */
 export const getJarunPromiseClass = (prov: TestProvision) =>
-  createJarunPromise(getJarunTestProvision(prov));
+  makeJarunPromise(getJarunTestProvision(prov));
 
 /**
  *
@@ -144,7 +144,7 @@ export const newJarunPromise = <T>(
 export const getBeeRunner = (prov: TestProvision) =>
   new BeeRunner({
     finally: prov.finally,
-    makeBee: makeJacsWorker,
+    makeBee: getMakeJacsWorker(),
   });
 
 /**

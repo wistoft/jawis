@@ -1,0 +1,1 @@
+{"user":{"console.log":[{"type":"require","file":"packages/tests/_fixture/scripts/WPP_require.js","source":"ProcessPreloaderMainUtil.ts"},{"type":"require","file":"packages/tests/_fixture/scratchFolder/FileThatChanges.js","source":"WPP_require.js"},{"type":"require","file":"packages/tests/_fixture/scratchFolder/FileThatChanges2.js","source":"WPP_require.js"}]}}

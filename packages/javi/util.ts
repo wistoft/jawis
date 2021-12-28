@@ -1,98 +1,77 @@
-//javi always import released version, but dev wants to choose:
+import path from "path";
 
-// import released versions for `devServerMain.ts`
+import { FinallyFunc, MakeBee } from "^jab";
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { makeMakeJacsWorkerBee } from "@jawis/jacs";
+import {
+  getFileToRequire,
+  getUrlToRequire,
+  MakeJabProcess,
+  makeMakeTsJabProcessConditionally,
+  ProcessRestarter,
+} from "^jab-node";
+import { BeeRunner, MakeJarunProcessRestarter } from "^jarun";
 
-//import development versions for `devServerMain.ts`
+/**
+ *
+ */
+export const makeProcessRunner = (deps: {
+  makeTsProcess: MakeJabProcess;
+  finally: FinallyFunc;
+}) => {
+  const makeTsProcessConditionally = makeMakeTsJabProcessConditionally(
+    deps.makeTsProcess
+  );
 
-import { makeTsNodeJabProcess } from "^util-javi/node";
-import { createDefaultTestRunners } from "^jarun";
-import { makeJatesRoute } from "^jates";
-import { makeJagosRoute } from "^jagos";
-import { makeApp, Route } from "^jab-express";
-import { Deps as JatesDeps } from "^jates/director";
-import { Deps as JagosDeps } from "^jagos/director";
-import { MainProv, MakeBee } from "^jab-node";
-
-import { JaviClientConf } from "./types";
-
-export type Deps = {
-  name: string;
-  mainProv: MainProv;
-  serverPort: number;
-  staticWebFolder: string;
-  clientConf: JaviClientConf;
-  jates: Partial<JatesDeps> & Pick<JatesDeps, "absTestFolder" | "absTestLogFolder" | "tecTimeout">; // prettier-ignore
-  jagos: Partial<JagosDeps> & Pick<JagosDeps, "scriptFolders" | "scripts" | "projectRoot">; // prettier-ignore
-  makeRoutes?: Route[];
+  return new BeeRunner({
+    ...deps,
+    makeBee: makeTsProcessConditionally,
+  });
 };
 
 /**
- * - Configure routes for jates and jagos.
- * - Add additional routes, defined in deps.
- * - Start web server
  *
- * note
- *  - this caters for both production and dev sites. (to avoid code duplication.)
  */
-export const startJaviServer = (deps: Deps) => {
-  const { onError, finalProv, logProv } = deps.mainProv;
+export const makeJarunNodeProcessRestarter = (
+  makeTsBee: MakeBee
+): MakeJarunProcessRestarter => (deps) => {
+  const filename = getFileToRequire(deps.jarunBooterDir, deps.jarunBooterName);
 
-  //compile service
+  return new ProcessRestarter({ ...deps, filename, makeBee: makeTsBee });
+};
 
-  const makeJacsBee = (makeMakeJacsWorkerBee(
-    deps.mainProv
-  ) as unknown) as MakeBee; //bug for development: there is a different between dev/released version.
+export type MakeJarunBrowserProcessRestarterDeps = {
+  makeBrowserBee: MakeBee;
+  compileServiceRoot: string;
+  staticWebFolder: string;
+  webRootUrl: string;
+  webcsUrl: string;
+};
+/**
+ *
+ */
+export const makeJarunBrowserProcessRestarter = (
+  outerDeps: MakeJarunBrowserProcessRestarterDeps
+): MakeJarunProcessRestarter => (deps) => {
+  //relative to what the compile service root.
 
-  //jates
+  const relFile = path.relative(
+    outerDeps.compileServiceRoot,
+    path.join(deps.jarunBooterDir, deps.jarunBooterName)
+  );
 
-  const jates: Route = {
-    type: "serverApp",
-    path: "/jate",
-    makeHandler: () =>
-      makeJatesRoute({
-        createTestRunners: createDefaultTestRunners,
-        makeTsProcess: makeTsNodeJabProcess,
-        makeTsBee: makeJacsBee,
-        onError,
-        finally: finalProv.finally,
-        logProv,
-        ...deps.jates,
-      }),
-  };
+  //choose between live and development
 
-  //jagos
-
-  const jagos: Route = {
-    type: "serverApp",
-    path: "/jago",
-    makeHandler: () =>
-      makeJagosRoute({
-        makeTsBee: makeJacsBee,
-        onError,
-        finally: finalProv.finally,
-        logProv,
-        ...deps.jagos,
-      }),
-  };
-
-  //app
-
-  const app = makeApp({
-    staticWebFolder: deps.staticWebFolder,
-    mainProv: deps.mainProv,
-    makeRoutes: [jates, jagos, ...(deps.makeRoutes || [])],
-    clientConf: {
-      variable: "__JAVI_CLIENT_CONF",
-      value: deps.clientConf,
-    },
+  const filename = getUrlToRequire({
+    ...outerDeps,
+    liveFilepath: "/jarunBooter.js",
+    devFilepath: relFile,
   });
 
-  // start server
+  //done
 
-  app.listen(deps.serverPort, () =>
-    deps.mainProv.log(deps.name + " port: " + deps.serverPort)
-  );
+  return outerDeps.makeBrowserBee({
+    ...deps,
+    filename,
+    onExit: deps.onUnexpectedExit,
+  });
 };

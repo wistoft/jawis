@@ -10,7 +10,7 @@ import {
   isBoolean,
   assert,
 } from "^jab";
-import { nodeRequire, UserMessage } from "^jab-node";
+import { makeAbsolute, UserMessage } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
 import { FullJaviConf } from "./types";
@@ -21,6 +21,9 @@ import { FullJaviConf } from "./types";
  * - When no config file use default values.
  * - projectRoot: just the place as config file.
  * - When known errors throw a UserMessage exception.
+ *
+ * todo
+ *  - It should be possible, compile the config file with jacs.
  */
 export const getJaviConf = (
   confFileDir: string,
@@ -33,7 +36,7 @@ export const getJaviConf = (
   let conf;
 
   try {
-    conf = nodeRequire(confFile);
+    conf = eval("require.eager || require")(confFile);
   } catch (e) {
     if (tryProp(e, "code") === "MODULE_NOT_FOUND") {
       conf = {}; // use nothing, when no conf file is found.
@@ -44,7 +47,6 @@ export const getJaviConf = (
 
   //handle
 
-  // if (typeof conf !== "object") {
   if (!isObject(conf)) {
     throw new UserMessage( "Javi: config file must export an object. Exported: " + typeof conf ); // prettier-ignore
   }
@@ -61,7 +63,6 @@ export const getJaviConf = (
 
   if (typeof fullConf === "string") {
     throw new Error("not used, right.");
-    // throw new UserMessage(fullConf);
   } else {
     return fullConf;
   }
@@ -89,13 +90,12 @@ export const getFullConf = (
 
   //test folder
 
-  let testFolder = "";
+  let absTestFolder = confFileDir;
 
   if (conf.testFolder !== undefined) {
-    testFolder = a(conf.testFolder, isString, "Javi: testFolder must be string, was: " + conf.testFolder); // prettier-ignore
+    const testFolder = a(conf.testFolder, isString, "Javi: testFolder must be string, was: " + conf.testFolder); // prettier-ignore
+    absTestFolder = makeAbsolute(confFileDir, testFolder);
   }
-
-  const absTestFolder = path.join(confFileDir, testFolder);
 
   if (!fs.existsSync(absTestFolder)) {
     const file = onlyBasenameInErrors
@@ -108,15 +108,24 @@ export const getFullConf = (
 
   //test log folder
 
-  let testLogFolder = path.join(testFolder, "_testLogs");
+  let absTestLogFolder = path.join(absTestFolder, "_testLogs");
 
   if (conf.testLogFolder !== undefined) {
-    testLogFolder = a(conf.testLogFolder, isString, "Javi: testLogFolder must be string, was: " + conf.testLogFolder); // prettier-ignore
+    const testLogFolder = a(conf.testLogFolder, isString, "Javi: testLogFolder must be string, was: " + conf.testLogFolder); // prettier-ignore
+    absTestLogFolder = path.join(absTestLogFolder, testLogFolder);
   }
 
-  const absTestLogFolder = path.join(confFileDir, testLogFolder);
-
   delete conf.testLogFolder;
+
+  //siteTitle
+
+  let siteTitle = "Javi";
+
+  if (conf.siteTitle !== undefined) {
+    siteTitle = a(conf.siteTitle, isString, "Javi: siteTitle must be string, was: " + conf.siteTitle ); // prettier-ignore
+  }
+
+  delete conf.siteTitle;
 
   //port
 
@@ -148,6 +157,26 @@ export const getFullConf = (
 
   delete conf.removePathPrefix;
 
+  //vsCodeBinary
+
+  let vsCodeBinary = "C:\\Program Files\\Microsoft VS Code\\Code.exe";
+
+  if (conf.vsCodeBinary !== undefined) {
+    vsCodeBinary =  a(conf.vsCodeBinary, isString, "Javi: vsCodeBinary must be string, was: " + conf.vsCodeBinary); // prettier-ignore
+  }
+
+  delete conf.vsCodeBinary;
+
+  //winMergeBinary
+
+  let winMergeBinary = "C:\\Program Files (x86)\\WinMerge\\WinMergeU.exe";
+
+  if (conf.winMergeBinary !== undefined) {
+    winMergeBinary =  a(conf.winMergeBinary, isString, "Javi: winMergeBinary must be string, was: " + conf.winMergeBinary); // prettier-ignore
+  }
+
+  delete conf.winMergeBinary;
+
   //scriptFolders
 
   let scriptFolders: string[] = [confFileDir];
@@ -156,7 +185,7 @@ export const getFullConf = (
     const relativeScriptFolders = a(conf.scriptFolders, isArray, "Javi: scriptFolders must be array, was: " + conf.scriptFolders ) as unknown[]; // prettier-ignore
 
     scriptFolders = relativeScriptFolders.map((folder, index) => {
-      const file = path.join(
+      const file = makeAbsolute(
         confFileDir,
         a(folder, isString, "Javi: scriptFolders[" + index + "] must be string, was: " + folder ) // prettier-ignore
       );
@@ -188,7 +217,7 @@ export const getFullConf = (
       }
 
       const res: ScriptDefinition = {
-        script: path.join(confFileDir, a(def.script, isString, prefix + ".script must be string, was: " + def.script)), // prettier-ignore
+        script: makeAbsolute(confFileDir, a(def.script, isString, prefix + ".script must be string, was: " + def.script)), // prettier-ignore
       };
 
       if (def.autoStart !== undefined) {
@@ -222,10 +251,13 @@ export const getFullConf = (
   //return
 
   return {
+    siteTitle,
     port,
     projectRoot: confFileDir,
     tecTimeout,
     removePathPrefix,
+    vsCodeBinary,
+    winMergeBinary,
     initialShowSystemFrames: false,
     showClearLink: true,
     absTestFolder,

@@ -1,5 +1,13 @@
-import { cloneArrayEntries, ErrorData, JabError } from ".";
-import { ParsedStackFrame, UnparsedStack } from "./types";
+import {
+  cloneArrayEntries,
+  ErrorData,
+  JabError,
+  ParsedStackFrame,
+  CapturedStack,
+  tryProp,
+  isInstanceOf,
+} from ".";
+
 import { isNode } from "./util";
 
 /**
@@ -8,6 +16,11 @@ import { isNode } from "./util";
 export const err = (msg: string, ...args: Array<unknown>) => {
   throw new JabError(msg, ...args);
 };
+
+/**
+ *
+ */
+export const pres = <T>(value: T) => Promise.resolve(value);
 
 /**
  *
@@ -36,8 +49,45 @@ export const assert = (
 export const captureStack = (error: {
   stack?: string;
   __jawisNodeStack?: ParsedStackFrame[];
-}): UnparsedStack => {
-  //ensure `Error.prepareStackTrace` is by accessing `error.stack`
+  getAncestorStackFrames?: () => CapturedStack;
+}): CapturedStack => {
+  const own = captureOwnStack(error);
+
+  // get ancestor frames
+
+  if (own.type !== "node-parsed") {
+    //this case isn't implemented for ancestors.
+    return own;
+  }
+
+  let ancestorFrames: ParsedStackFrame[] = [];
+
+  if (error.getAncestorStackFrames) {
+    const stack = error.getAncestorStackFrames();
+
+    if (stack.type !== "node-parsed") {
+      throw new Error("only implemented for jacs.");
+    }
+
+    ancestorFrames = stack.stack;
+  }
+
+  //combine
+
+  return {
+    type: "node-parsed",
+    stack: [...own.stack, ...ancestorFrames],
+  };
+};
+
+/**
+ *
+ */
+export const captureOwnStack = (error: {
+  stack?: string;
+  __jawisNodeStack?: ParsedStackFrame[];
+}): CapturedStack => {
+  //ensure `Error.prepareStackTrace` is executed by accessing `error.stack`
 
   if (error.stack === undefined) {
     return {
@@ -62,28 +112,17 @@ export const captureStack = (error: {
 };
 
 /**
- * Consistent way to convert an error object til structured data.
+ * Convert an error object til structured data.
  *
- * todo
- *  - dont rely on class instances. have a
  */
 export const unknownToErrorData = (
   error: unknown,
   extraInfo: Array<unknown> = []
 ): ErrorData => {
-  if (error instanceof JabError) {
-    return error.getErrorData(extraInfo);
-  } else if (
-    //use tryUProp
-    typeof error === "object" &&
-    error !== null &&
-    "getErrorData" in error
-  ) {
-    // quick fix, when jarun is run from another node_modules. Because then JabError
-    // is two different class "instances"
-    const any: any = error;
-    return any.getErrorData(extraInfo);
-  } else if (error instanceof Error) {
+  if (tryProp(error, "getErrorData")) {
+    return (error as any).getErrorData(extraInfo);
+  } else if (isInstanceOf(error, Error)) {
+    //using `instanceof` would be a problem, if Error is monkey patched, an instances of original Error is processed.
     return {
       msg: error.toString(),
       info: cloneArrayEntries(extraInfo),
@@ -95,3 +134,22 @@ export const unknownToErrorData = (
     return wrapper.getErrorData(extraInfo);
   }
 };
+
+/**
+ * we could also set a synthetic stack property, but not needed in jawis.
+ */
+export const getSyntheticError = (
+  msg: string,
+  file?: string,
+  line?: number
+) => ({
+  message: msg,
+  getErrorData: (): ErrorData => ({
+    msg: msg,
+    info: [],
+    stack: {
+      type: "node-parsed",
+      stack: [{ file, line }],
+    },
+  }),
+});

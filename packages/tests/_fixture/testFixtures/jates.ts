@@ -1,14 +1,12 @@
+import path from "path";
+
 import { ErrorData } from "^jab";
-import {
-  TestProvision,
-  JarunProcessController,
-  BeeRunner,
-  getDefaultRunnersAssignments,
-  makeProcessRunner,
-} from "^jarun";
-import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
+import { TestProvision, JarunProcessController, BeeRunner } from "^jarun";
+import { makeJarunNodeProcessRestarter, makeProcessRunner } from "^javi";
+import { TestResult, JatesTestReport, TestCurLogs, TestInfo } from "^jatec";
+import { makePowerBee } from "^jab-node";
 import { makeTsNodeJabProcess } from "^util-javi/node";
-import { ComposedTestFramework } from "^jates";
+import { JarunTestFramework } from "^jates";
 import {
   TestExecutionController,
   TestExecutionControllerDeps,
@@ -27,9 +25,15 @@ import {
   absTestFolder,
   absTestLogFolder,
   TestFrameworkMock,
-  makeJacsWorker,
   getScratchPath,
+  getMakeJacsWorker,
 } from ".";
+
+export const makeTestInfo = (str: string): TestInfo => ({
+  id: str,
+  name: str,
+  file: str,
+});
 
 /**
  *
@@ -103,7 +107,7 @@ export const getTestListController = (
   return new TestListController({
     onError: prov.onError,
 
-    tf: new TestFrameworkMock(),
+    testFramework: new TestFrameworkMock(),
     ta: getTestAnalytics(prov, absTestFolder),
 
     setTestExecutionList: (tests) => {
@@ -129,7 +133,7 @@ export const getTestExecutionController = (
 ) =>
   new TestExecutionController({
     ...getTestExecutionControllerDeps(prov, {}, logPrefix),
-    tr: new TestFrameworkMock(),
+    testFramework: new TestFrameworkMock(),
   });
 
 /**
@@ -153,8 +157,7 @@ export const getTestExecutionControllerDeps = (
   prov: TestProvision,
   extraDeps?: Partial<TestExecutionControllerDeps>,
   logPrefix = ""
-): Omit<TestExecutionControllerDeps, "tr"> => ({
-  absTestFolder,
+): Omit<TestExecutionControllerDeps, "testFramework"> => ({
   timeoutms: 50,
 
   onTestStarts: (id) =>
@@ -187,7 +190,7 @@ export const getTestExecutionControllerDeps = (
 });
 
 /**
- *
+ * todo: reduce the runners, they aren't used in test cases.
  */
 export const getComposedTestFramework = (
   prov: TestProvision,
@@ -201,7 +204,7 @@ export const getComposedTestFramework = (
 
   const jpc = new JarunProcessController({
     ...deps,
-    makeTsBee: makeJacsWorker,
+    makeProcessRestarter: makeJarunNodeProcessRestarter(getMakeJacsWorker()),
     onRogueTest: (data) => prov.log("Jate", ["onRogueTest: ", data]),
     onRequire: () => {},
   });
@@ -213,14 +216,29 @@ export const getComposedTestFramework = (
 
   const wo = new BeeRunner({
     ...deps,
-    makeBee: makeJacsWorker,
+    makeBee: getMakeJacsWorker(),
   });
 
-  return new ComposedTestFramework({
+  const ps = new BeeRunner({
     ...deps,
-    absTestFolder,
+    makeBee: makePowerBee,
+  });
+
+  return new JarunTestFramework({
+    ...deps,
+    absTestFolders: [absTestFolder],
     subFolderIgnore: ["alsoIgnoreThis"],
-    runners: getDefaultRunnersAssignments(jpc, pr, wo),
+    runners: {
+      ".ja.js": jpc,
+      ".ja.ts": jpc,
+      ".ja.jsx": jpc,
+      ".ja.tsx": jpc,
+      ".pr.js": pr,
+      ".pr.ts": pr,
+      ".wo.js": wo,
+      ".wo.ts": wo,
+      ".ps1": ps,
+    },
   });
 };
 
@@ -238,6 +256,8 @@ export const getTestAnalytics = (prov: TestProvision, absTestFolder = "") =>
 export const getTestLogController_test_suite = (prov: TestProvision) =>
   new TestLogController({
     absTestLogFolder,
+    getExpFilename: (id: string) =>
+      path.join(absTestLogFolder, path.basename(id) + ".json"),
     onError: prov.onError,
   });
 
@@ -247,6 +267,8 @@ export const getTestLogController_test_suite = (prov: TestProvision) =>
 export const getTestLogController_scratch = (prov: TestProvision) =>
   new TestLogController({
     absTestLogFolder: getScratchPath(),
+    getExpFilename: (id: string) =>
+      path.join(getScratchPath(), path.basename(id) + ".json"),
     onError: prov.onError,
   });
 

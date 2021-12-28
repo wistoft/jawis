@@ -1,11 +1,11 @@
-import { TestFrameworkProv } from "^jates";
+import { ComposedTestFrameworkProv } from "^jates";
 import { nightmare, prej, sleepingValue } from "^jab";
 import { TestResult } from "^jatec";
 
 /**
  *
  */
-export class TestFrameworkMock implements TestFrameworkProv {
+export class TestFrameworkMock implements ComposedTestFrameworkProv {
   private listedTests = [
     "first.test",
     "second.test",
@@ -30,9 +30,12 @@ export class TestFrameworkMock implements TestFrameworkProv {
     "rejects.test": "more2 result",
   };
 
-  public getTestIds = () => Promise.resolve(this.listedTests);
+  public getTestIds = () =>
+    Promise.resolve(
+      this.listedTests.map((file) => ({ id: file, name: file, file }))
+    );
 
-  public getCurrentSelectionTestIds = () => Promise.resolve(this.listedTests);
+  public getCurrentSelectionTestIds = () => this.getTestIds();
 
   /**
    *

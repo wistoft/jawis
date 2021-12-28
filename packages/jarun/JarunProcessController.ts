@@ -1,19 +1,25 @@
 import { prej, FinallyFunc, Waiter } from "^jab";
 
-import { getFileToRequire, MakeBee, ProcessRestarter } from "^jab-node";
+import { ProcessRestarterDeps, ProcessRestarterProv } from "^jab-node";
 
-import { TestRunner } from "^jates";
+import { JarunTestRunner } from "^jatec";
 
-import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
+import { JarunProcessControllerMessage } from ".";
 
 import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,
 } from "./JarunProcessControllerInner";
 
+export type MakeJarunProcessRestarter = <MR extends {}, MS extends {}>(
+  deps: Omit<ProcessRestarterDeps<MR>, "filename" | "makeBee"> & {
+    jarunBooterName: string;
+    jarunBooterDir: string;
+  }
+) => ProcessRestarterProv<MS>;
+
 export type JarunProcessControllerDeps = {
-  customBooter?: string;
-  makeTsBee: MakeBee;
+  makeProcessRestarter: MakeJarunProcessRestarter;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
 } & Omit<JarunProcessControllerInnerDeps, "prSend">;
@@ -25,14 +31,16 @@ type Events = never;
  * Integrate ProcessRestarter and JarunProcessControllerInner
  *
  * - Jarun process is always started with TypeScript compiler.
+ *
+ * todo
+ *  - This should just be a factory of some sort.
+ *    - there's no need for state here.
+ *    - Inner should be responsible for kill.
  */
-export class JarunProcessController implements TestRunner {
+export class JarunProcessController implements JarunTestRunner {
   private waiter: Waiter<States, Events>;
 
-  private pr: ProcessRestarter<
-    JarunProcessMessage,
-    JarunProcessControllerMessage
-  >;
+  private pr: ProcessRestarterProv<JarunProcessControllerMessage>;
 
   private inner: JarunProcessControllerInner;
 
@@ -59,18 +67,13 @@ export class JarunProcessController implements TestRunner {
 
     //pr
 
-    const filename =
-      this.deps.customBooter || getFileToRequire(__dirname, "JarunProcessMain");
-
-    this.pr = new ProcessRestarter<
-      JarunProcessMessage,
-      JarunProcessControllerMessage
-    >({
+    this.pr = this.deps.makeProcessRestarter({
       ...this.deps,
-      filename,
+      jarunBooterName: "JarunProcessMain",
+      jarunBooterDir: __dirname,
       filterRequireMessages: false,
-      makeBee: deps.makeTsBee,
       onMessage: this.inner.onMessage,
+      onLog: this.inner.onLog,
       onRestarted: this.inner.onRestarted,
       onUnexpectedExit: this.inner.onUnexpectedExit,
       onStdout: this.inner.onStdout,

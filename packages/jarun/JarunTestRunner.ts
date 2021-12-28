@@ -5,6 +5,7 @@ import {
   clone,
   ClonedValue,
   tryProp,
+  makeCatchingSetTimeout,
 } from "^jab";
 import {
   OnRogue,
@@ -14,14 +15,9 @@ import {
   errorToTestLog,
 } from "^jatec";
 
-import {
-  createJarunSetTimeout,
-  TestFunction,
-  awaitPromises,
-  TestFileExport,
-} from "./util";
+import { TestFunction, awaitPromises, TestFileExport } from "./util";
 import { JarunTestProvision } from "./JarunTestProvision";
-import { createJarunPromise } from "./JarunPromise";
+import { makeJarunPromise } from "./JarunPromise";
 
 export type JarunTestRunnerDeps = Readonly<{
   timeoutms: number;
@@ -101,9 +97,6 @@ export class JarunTestRunner {
     prov: JarunTestProvision,
     work: () => Promise<T>
   ) => {
-    const jarunPromise = createJarunPromise(prov);
-    const jarunSetTimeout = createJarunSetTimeout(prov, global.setTimeout);
-
     if (global.Promise !== this.orgPromise) {
       global.Promise = this.orgPromise; //reset
       throw new Error("global.Promise was been changed (before test)");
@@ -113,6 +106,9 @@ export class JarunTestRunner {
       global.setTimeout = this.orgSetTimeout; //reset
       throw new Error("global.setTimeout was been changed (before test)");
     }
+
+    const jarunPromise = makeJarunPromise(prov);
+    const jarunSetTimeout = makeCatchingSetTimeout(prov.onError);
 
     global.Promise = jarunPromise;
     global.setTimeout = jarunSetTimeout as any; //fix the missing __promisify__
@@ -209,8 +205,8 @@ export class JarunTestRunner {
 
       return this.runTestAndClone(testId, testFunc, prov)
         .catch(prov.onError) // handles sync throw in the test. Resolve as if test returned undefined.
-        .finally(prov.runFinally)
         .finally(() => awaitPromises(prov))
+        .finally(prov.runFinally)
         .then((testReturn) => {
           const now = Date.now();
           return {
@@ -255,7 +251,7 @@ export class JarunTestRunner {
           prov.onError,
           undefined,
           undefined,
-          this.orgPromise //hacky. Men Promise is not instanceof JaurnPromise, so it would otherwise be overlooked
+          this.orgPromise //hacky. But Promise is not instanceof JaurnPromise, so it would otherwise be overlooked
         );
       }
     });

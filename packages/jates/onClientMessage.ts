@@ -1,6 +1,6 @@
 import { assertNever } from "^jab";
 import { ServerMessage, ClientMessage } from "^jatec";
-import { compareFiles, handleOpenFileInVsCode } from "^util-javi/node";
+import { CompareFiles, HandleOpenFileInEditor } from "^util-javi/node";
 import { WsMessageListener } from "^jab-express";
 
 import { BehaviorProv } from "./Behavior";
@@ -8,9 +8,12 @@ import { ClientComProv } from "./ClientComController";
 import { TestLogsProv } from "./TestLogController";
 import { TestExecutionControllerProv } from "./TestExecutionController";
 import { TestListControllerProv } from "./TestListController";
+import { ComposedTestFramework } from "^jates";
 
 type Deps = {
-  absTestFolder: string;
+  testFramework: ComposedTestFramework;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
+  compareFiles: CompareFiles;
   onError: (error: unknown) => void;
 } & ClientComProv &
   TestExecutionControllerProv &
@@ -27,6 +30,10 @@ export const makeOnClientMessage = (
   switch (msg.action) {
     case "stopRunning":
       deps.onToggleRunning();
+      return;
+
+    case "getAllTests":
+      deps.onGetAllTests();
       return;
 
     case "runAllTests":
@@ -63,16 +70,18 @@ export const makeOnClientMessage = (
 
     case "compareTestLog":
       deps.getTempTestLogFiles(msg.testId, msg.logName).then(({ exp, cur }) => {
-        compareFiles(exp, cur);
+        deps.compareFiles(exp, cur);
       });
       return;
 
-    case "openTest":
-      handleOpenFileInVsCode(msg, deps.absTestFolder);
+    case "openTest": {
+      const location = deps.testFramework.getTestLocation(msg.id);
+      deps.handleOpenFileInEditor(location);
       return;
+    }
 
     case "openFile":
-      handleOpenFileInVsCode(msg);
+      deps.handleOpenFileInEditor(msg);
       return;
 
     default:

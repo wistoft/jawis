@@ -1,4 +1,5 @@
-import { BeeDeps, InMemoryBee, MakeBee } from "^jab-node";
+import { BeeDeps, MakeBee } from "^jab";
+import { InMemoryBee } from "^jab-node";
 
 import { getBeeDeps, TestMainProv } from ".";
 

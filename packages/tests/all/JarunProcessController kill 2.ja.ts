@@ -1,8 +1,5 @@
 import { TestProvision } from "^jarun";
 
-import { getJarunProcessController, makeDormentInMemoryBee } from "../_fixture";
+import { getJarunProcessController } from "../_fixture";
 
-export default (prov: TestProvision) =>
-  getJarunProcessController(prov, {
-    makeTsBee: makeDormentInMemoryBee,
-  }).kill();
+export default (prov: TestProvision) => getJarunProcessController(prov).kill();

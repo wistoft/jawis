@@ -1,17 +1,19 @@
 import ErrorStackParser from "error-stack-parser";
-import NodeStackTrace from "stack-trace";
 import StackTrace, { StackFrame } from "stacktrace-js";
 import StackTraceGPS from "stacktrace-gps";
 
 import {
+  assertNever,
   ErrorData,
   isNode,
   ParsedErrorData,
   ParsedStackFrame,
   sleeping,
-  UnparsedStack,
+  CapturedStack,
 } from "^jab";
+import { parseNodeTrace } from "^util-javi";
 
+//duplicated
 export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
 
 /**
@@ -29,40 +31,68 @@ export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
  *
  * note
  *  error-stack-parser has a lot of logic for Opera, but it's outdated. Current Opera
- *    use v8 format. So there is no need to think about capturing anything but the
+ *    uses v8 format. So there's no need to think about capturing anything but the
  *    `error.stack` property. It will work for all (modern) browsers and node.
  */
-export const parseTrace = (stack: UnparsedStack): ParsedStackFrame[] => {
+export const parseTrace = (stack: CapturedStack): ParsedStackFrame[] => {
   if (stack.stack === undefined || stack.stack === "") {
     //error-stack-parser can't handle this case
     return [];
   }
 
-  if (stack.type === "node") {
-    return parseNodeTrace(stack.stack);
-  } else if (stack.type === "node-parsed") {
-    return stack.stack;
-  } else {
-    return ErrorStackParser.parse({
-      stack: stack.stack,
-    } as Error).map((elm) => ({
-      line: elm.lineNumber,
-      file: elm.fileName,
-      func: elm.functionName,
-    }));
+  switch (stack.type) {
+    case "node":
+      return parseNodeTrace(stack.stack);
+
+    case "node-parsed":
+      return stack.stack;
+
+    case "other":
+      return ErrorStackParser.parse({
+        stack: stack.stack,
+      } as Error).map((elm) => ({
+        line: elm.lineNumber,
+        file: elm.fileName,
+        func: elm.functionName,
+      }));
+
+    default:
+      return assertNever(stack);
   }
 };
 
 /**
  * parse and use source map to find original file and line number.
  *
- * - Avoid using StackTraceGPS's "enhanced function name", because it's buggy.
+ * - source map assumes browser environment, and the error was thrown in this browser.
+ *
+ * impl
+ *  Avoids using StackTraceGPS's "enhanced function name", because it's buggy.
  *
  * note
  *  StackTraceGPS does a lot of good work. So if the function name enhancing could be disabled,
  *    we could just use StackTrace.fromError().
  */
-export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
+export const parseTraceAndSourceMap = (stack: CapturedStack) => {
+  switch (stack.type) {
+    case "node":
+      throw new Error("Can only source map errors from the browser.");
+
+    case "node-parsed":
+      return Promise.resolve(stack.stack);
+
+    case "other":
+      return parseTraceAndSourceMapReal(stack);
+
+    default:
+      return assertNever(stack);
+  }
+};
+
+/**
+ * Handles the errors, that are from a browser.
+ */
+export const parseTraceAndSourceMapReal = (stack: CapturedStack) => {
   const gps = new StackTraceGPS();
 
   const frames = ErrorStackParser.parse({
@@ -80,13 +110,33 @@ export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
     );
   }
 
+  //quick fix when running in worker, because gps uses `window.atob`
+  if (typeof window === "undefined") {
+    (self.window as any) = self;
+  }
+
   return Promise.all<ParsedStackFrame>(
     frames.map((frame) =>
-      gps.pinpoint(frame).then((res: StackFrame) => ({
-        line: res.lineNumber,
-        file: res.fileName,
-        func: frame.functionName,
-      }))
+      gps
+        .pinpoint(frame)
+        .then((res: StackFrame) => ({
+          line: res.lineNumber,
+          file: res.fileName,
+          func: frame.functionName,
+        }))
+        .catch((error: any) => {
+          //no source map isn't a fatal error, so we squash.
+          if (error?.message !== "sourceMappingURL not found") {
+            console.log("parseTraceAndSourceMapReal: " + error?.message);
+          }
+
+          //use the raw info from input as fallback.
+          return {
+            line: frame.lineNumber,
+            file: frame.fileName,
+            func: frame.functionName,
+          };
+        })
     )
   );
 };
@@ -98,7 +148,7 @@ export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
  *    stack to be ready. It's not a problem on the first parse. In other words, it only
  *    happens, when StackTrace use cached source map.
  */
-export const parseTraceAndSourceMapOld = (stack: UnparsedStack) =>
+export const parseTraceAndSourceMapOld = (stack: CapturedStack) =>
   sleeping(10).then(() =>
     StackTrace.fromError({
       stack: stack.stack,
@@ -110,47 +160,3 @@ export const parseTraceAndSourceMapOld = (stack: UnparsedStack) =>
       }))
     )
   );
-
-/**
- *
- */
-export const parseNodeTrace = (stack: string) => {
-  //note parse can't be call alone, it must have 'this === StackTrace'
-  const trace = NodeStackTrace.parse({ stack } as any);
-
-  return trace.map((frame) => {
-    // compose
-
-    let composedFunc;
-
-    if (frame.getTypeName() !== null) {
-      if (frame.getMethodName() !== null) {
-        composedFunc = frame.getTypeName() + "." + frame.getMethodName();
-      } else {
-        composedFunc = frame.getTypeName() + ".<anonymous>";
-      }
-    } else {
-      if (frame.getMethodName() !== null) {
-        composedFunc = frame.getMethodName();
-      } else {
-        composedFunc = "";
-      }
-    }
-
-    //check
-
-    let func = frame.getFunctionName();
-
-    if (func === null) {
-      func = composedFunc;
-    }
-
-    //return
-
-    return {
-      line: frame.getLineNumber(),
-      file: frame.getFileName(),
-      func,
-    };
-  });
-};

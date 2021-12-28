@@ -6,7 +6,10 @@ import { sleeping } from "^jab";
 import { getScratchPath, removeCarriageReturn } from "../_fixture";
 
 export default (prov: TestProvision) => {
-  const sfl = new SourceFileLoader({ onError: prov.onError });
+  const sfl = new SourceFileLoader({
+    onError: prov.onError,
+    lazyRequire: false,
+  });
 
   const file = getScratchPath("hello.js");
 

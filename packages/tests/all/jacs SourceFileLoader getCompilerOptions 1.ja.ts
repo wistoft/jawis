@@ -5,7 +5,10 @@ import { getScratchPath } from "^tests/_fixture";
 export default (prov: TestProvision) => {
   const { eq } = prov;
 
-  const sfl = new SourceFileLoader({ onError: prov.onError });
+  const sfl = new SourceFileLoader({
+    lazyRequire: true,
+    onError: prov.onError,
+  });
 
   const c1 = sfl.getCompilerOptions(getScratchPath("hello.js"));
   const c2 = sfl.getCompilerOptions(getScratchPath("hello.js"));

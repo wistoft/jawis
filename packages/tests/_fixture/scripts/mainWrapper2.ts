@@ -2,16 +2,16 @@ import { mainWrapper } from "^jab-node";
 
 //registers on shutdown
 
-mainWrapper(
-  "id",
-  (mainProv) => {
+mainWrapper({
+  logPrefix: "id",
+  main: (mainProv) => {
     setInterval(() => {}, 100); //keep alive
 
     mainProv.finally(() => console.log("finally done"));
   },
-  "console",
-  true
-);
+  type: "console",
+  registerOnShutdown: true,
+});
 
 console.log("after wrapper");
 

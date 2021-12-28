@@ -42,15 +42,19 @@ export const getJarunProcessRestarterDeps = (
   filename: getScriptPath("silentWait.js"),
   makeBee: makeInMemoryWppMain,
 
-  onMessage: (msg: unknown) => {
+  onMessage: (msg) => {
     prov.log(logPrefix + "onMessage", msg);
   },
 
-  onStdout: (data: Buffer) => {
+  onLog: (entry) => {
+    prov.log(logPrefix + "onLog", entry);
+  },
+
+  onStdout: (data) => {
     prov.logStream(logPrefix + "stdout", data.toString());
   },
 
-  onStderr: (data: Buffer) => {
+  onStderr: (data) => {
     prov.logStream(logPrefix + "stderr", data.toString());
   },
 

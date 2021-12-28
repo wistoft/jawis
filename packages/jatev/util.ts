@@ -10,7 +10,8 @@ import {
 } from "^jatec";
 import { dynamicDiff } from "^util-javi/algs";
 import { assertNever, ErrorData } from "^jab";
-import { TestState } from "^jatev";
+import { State, TestState } from "./types";
+import { DataItem, DataProvider } from "^util-javi/web/helm";
 
 export type ClientApiSendProv = {
   apiSend: (data: ClientMessage) => void;
@@ -148,3 +149,29 @@ export const getTestLogsThatDiffer = (
       ),
     []
   );
+
+/**
+ * quick fix
+ */
+export const makeDataProvider = (state: State): DataProvider => ({
+  data: makeDataItems(state),
+});
+
+const makeDataItems = (state: State) =>
+  !state.tests
+    ? []
+    : state.tests.tests.reduce<DataItem[]>(
+        (acc, cur) =>
+          acc.concat(
+            cur.map((test) => ({
+              name: test.name,
+              data:
+                test.status === undefined
+                  ? ""
+                  : test.status === "."
+                  ? "pass"
+                  : "fail",
+            }))
+          ),
+        []
+      );

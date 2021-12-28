@@ -6,7 +6,7 @@ import { expressErrorsThrow, ServerAppRouter } from "^jab-express";
 import { director, Deps as DirectorDeps } from "./director";
 
 /**
- * jago/jates are nearly identically
+ * todo: simplify by using makeRoute instead
  */
 export const makeJatesRoute = (deps: DirectorDeps): ServerAppRouter => {
   const router = express.Router();

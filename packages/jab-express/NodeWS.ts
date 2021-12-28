@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-import { err, FinallyFunc, JabError, Waiter } from "^jab";
+import { err, FinallyFunc, JabError, NodeWSProv, Waiter } from "^jab";
 
 export type WsUrl = { host: string; port: number; path: string };
 
@@ -36,7 +36,8 @@ export type SocketData = {};
  *  Stringent state management. I.e. hard fail, if methods called in wrong state.
  *  Kill functionality. Useful for also closing resource, when errors happen.
  */
-export class NodeWS<MS extends SocketData, MR extends SocketData> {
+export class NodeWS<MS extends SocketData, MR extends SocketData>
+  implements NodeWSProv<MS, MR> {
   public ws: WebSocket;
 
   public waiter: Waiter<States, Events>;

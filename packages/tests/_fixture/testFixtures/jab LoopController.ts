@@ -1,5 +1,5 @@
-import { TestProvision } from "^jarun";
 import { sleeping, LoopController } from "^jab";
+import { TestProvision } from "^jarun";
 
 /**
  *

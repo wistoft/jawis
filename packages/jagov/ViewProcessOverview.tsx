@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { Link } from "@reach/router";
 import { basename } from "^jab";
 
-import { ApiProv, State } from ".";
+import { ApiProv, State } from "./types";
 import {
   getEditLink,
   getRestartLink,

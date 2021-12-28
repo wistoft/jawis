@@ -1,9 +1,7 @@
 import React from "react";
 
-import { clonedTos } from "^jab";
+import { clonedTos, LogEntry } from "^jab";
 import { clonedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
-
-import { LogEntry } from "^jagoc";
 
 export const multiLineEntryMarginBottom = "10px";
 

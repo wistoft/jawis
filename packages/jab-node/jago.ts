@@ -1,29 +1,38 @@
 import { parentPort } from "worker_threads";
-import { JagoLogEntry } from "^jagoc";
+import {
+  JagoLogEntry,
+  makeJagoSend,
+  makeSend,
+  cloneArrayEntries,
+  tos,
+} from "^jab";
 
-import { cloneArrayEntries, tos } from "^jab";
-
-import { makeSend } from ".";
+const canSend = process.send || parentPort;
 
 //This is only contructed, if there is IPC connection or this is a worker.
 // But would be better to detect, if jago actually started this.
-let parentSend: (entry: JagoLogEntry) => void;
+let sendFunction: (entry: JagoLogEntry) => void;
 
-//only send  if it's possible.
+/**
+ *
+ */
+const parentSend = (msg: any) => {
+  if (!sendFunction) {
+    sendFunction = makeJagoSend(makeSend());
+  }
 
-if (process.send || parentPort) {
-  parentSend = (entry) => {
-    //wasteful to make it each time
-    makeSend<JagoLogEntry>()(entry);
-  };
-}
+  sendFunction(msg);
+};
 
 /**
  *
  */
 export const out = (...data: unknown[]) => {
-  if (parentSend) {
-    parentSend({ type: "log", data: cloneArrayEntries(data) });
+  if (canSend) {
+    parentSend({
+      type: "log",
+      data: cloneArrayEntries(data),
+    });
   } else {
     console.log(tos(data));
   }
@@ -33,7 +42,7 @@ export const out = (...data: unknown[]) => {
  *
  */
 export const outHtml = (html: string) => {
-  if (parentSend) {
+  if (canSend) {
     parentSend({ type: "html", data: html });
   } else {
     console.log("Html not displayed in console.");

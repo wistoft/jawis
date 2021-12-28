@@ -1,4 +1,4 @@
-import { ErrorEntry } from "^jagoc";
+import { ErrorEntry } from "^jab";
 import { parseTrace, parseTraceAndSourceMap } from "^util-javi/web";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
 import { State } from "./useConsoleState";

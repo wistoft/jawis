@@ -7,6 +7,8 @@ import { TestState } from "^jatev/types";
 export default (prov: TestProvision) => {
   const test: TestState = {
     id: "1",
+    name: "1",
+    file: "file",
     testLogs: [
       // testLogs aren't sorted here.
       {

@@ -5,6 +5,7 @@ import {
   ServerMessage,
   ClientTestReport,
   RogueData,
+  TestInfo,
 } from "^jatec";
 
 import {
@@ -23,7 +24,7 @@ import { ViewAction, Props as ViewActionProps } from "./ViewAction";
 import { ViewControls } from "./ViewControls";
 import { makeOnKeydown } from "./onKeydown";
 import { testSelectionToCollection } from "./TestCollection";
-import { Callbacks, State } from ".";
+import { StateCallbacks, State } from "./types";
 import {
   makeTestCaseUpdater,
   makeShowTestUpdater,
@@ -32,8 +33,8 @@ import {
   makeRogueUpdater,
 } from "./updaters";
 import { getTestLogsThatDiffer } from "./util";
-
-//props
+import { def } from "^jab";
+import { ViewHome } from "./ViewHome";
 
 export type Props = {
   getRandomToken: () => number;
@@ -118,7 +119,7 @@ export const useDirector = ({
       <ViewControls
         apiSend={apiSend}
         isRunning={state.isRunning}
-        executingTestId={state.executingTestId}
+        executingTest={state.executingTest}
         showTestCase={callbacks.showTestCase}
         runFailedTests={runFailedTests}
         acceptAllLogs={acceptAllLogs}
@@ -132,13 +133,7 @@ export const useDirector = ({
   const routes = [
     {
       name: "Home",
-      elm: (
-        <>
-          {" "}
-          <br />
-          To run tests: click <i>cur</i> or <i>all</i>, and reload page.
-        </>
-      ),
+      elm: <ViewHome {...viewProps} />,
     },
     {
       name: "cur",
@@ -211,7 +206,7 @@ const createStructure = ({
     if (stateRef.current.currentTest) {
       apiSend({
         action: "openTest",
-        file: stateRef.current.currentTest.id,
+        id: stateRef.current.currentTest.id,
       });
     }
   };
@@ -252,7 +247,7 @@ const createStructure = ({
 export const getCallbacks = (
   setState: HookSetState<State>,
   getRandomToken: () => number
-): Callbacks => {
+): StateCallbacks => {
   //quick fix - use: makeSetStateCallback
 
   const setPartialState = makeSetPartialState(setState);
@@ -262,19 +257,26 @@ export const getCallbacks = (
       setPartialState({ isRunning });
     },
 
-    setTestSelection: (data: string[][]) => {
-      //maybe server could map do these things.
+    setTestSelection: (data: TestInfo[][]) => {
       //filter empty levels away.
-      // A quick fix, needed to detect when there's no test in `ViewExecutionList`
-      const mapped = data
-        .map((level) => level.map((id) => ({ id })))
-        .filter((level) => level.length > 0);
+      // A quick fix, needed to detect when there's no tests in `ViewExecutionList`
+      const mapped = data.filter((level) => level.length > 0);
 
       setPartialState({ tests: testSelectionToCollection(mapped) });
     },
 
+    //I think getTest is implemented to slow, to run it for each test.
     setExecutingTestCase: (testId?: string) => {
-      setPartialState({ executingTestId: testId });
+      if (testId) {
+        setPartialState((old) => ({
+          executingTest: {
+            id: testId,
+            name: def(old.tests).getTest(testId).name,
+          },
+        }));
+      } else {
+        setPartialState({ executingTest: undefined });
+      }
     },
 
     setTestReport: (result: ClientTestReport) => {

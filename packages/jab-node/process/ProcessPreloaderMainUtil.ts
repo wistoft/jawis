@@ -1,10 +1,7 @@
-import { assertNever } from "^jab";
-
-import { nodeRequire } from "..";
+import { assertNever, makeSend } from "^jab";
 
 import {
-  makeSend,
-  registerOnMessage,
+  registerOnMessage_old,
   removeOnMessage,
   BooterMessage,
   PreloaderMessage,
@@ -29,7 +26,7 @@ export const ppMain = () => {
 
         //start the script
 
-        nodeRequire(msg.script);
+        eval("require.eager || require")(msg.script);
 
         //signal
 
@@ -44,7 +41,7 @@ export const ppMain = () => {
 
   //setup listener
 
-  registerOnMessage(onMessage);
+  registerOnMessage_old(onMessage);
 
   send({ type: "ready" });
 };

@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { src, dest, series } = require("gulp");
 const gts = require("gulp-typescript");
 const del = require("del");
@@ -6,22 +7,26 @@ const replace = require("gulp-replace");
 const gulpif = require("gulp-if");
 const merge = require("merge2");
 
-//conf
-
-const npmVersion = "1.0.0";
-
 const projectConf = require("./project.conf");
+
+//conf
 
 const npmScope = "@jawis";
 
+const npmVersion = "1.0.2-dev.1";
+const npmDistTag = "dev";
+
 const files = "{README.md,}";
 
-const packages = [
+const scopedPackages = [
   "console",
   "jab",
   "jab-express",
   "jab-node",
   "jab-react",
+  "jabc",
+  "jabro",
+  "jabroc",
   "jacs",
   "jagoc",
   "jagos",
@@ -35,9 +40,22 @@ const packages = [
   "util-dev",
 ];
 
+const unscopedPackages = ["ts-reload"];
+
+const privatePackages = [
+  "dev",
+  "dev-appc",
+  "dev-apps",
+  "dev-appv",
+  "javi-client",
+  "misc",
+  "tests",
+];
+
 //derived
 
-const packagesPattern = "{" + packages.join(",") + "}"; //bug: for one package it's: `{jab,}` or `jab`
+const packagesPattern =
+  "{" + [...scopedPackages, ...unscopedPackages].join(",") + "}"; //bug: for one package it's: `{jab,}` or `jab`
 
 //
 // init project
@@ -75,8 +93,9 @@ const makeBuildTs = (outDir, npmPaths) => {
           gulpif(
             npmPaths,
             replace(
-              new RegExp('require\\("\\^', "g"),
-              'require("' + npmScope + "/"
+              new RegExp('require\\("\\^([^"/]*)', "g"),
+              (match, packageName) =>
+                'require("' + getFullPackageName(packageName)
             )
           )
         )
@@ -84,7 +103,11 @@ const makeBuildTs = (outDir, npmPaths) => {
         .pipe(
           gulpif(
             npmPaths,
-            replace(new RegExp(' from "\\^', "g"), ' from "' + npmScope + "/")
+            replace(
+              new RegExp(' from "\\^([^"/]*)', "g"),
+              (match, packageName) =>
+                ' from "' + getFullPackageName(packageName)
+            )
           )
         )
         .pipe(dest(outDir))
@@ -115,9 +138,10 @@ const makeBuildPackageJson = (outDir) => {
     ])
       .pipe(
         jeditor((json) => {
-          const packageName = json.name;
+          const packageName = json.name.replace(/^~/, "");
+          json.version = npmVersion;
 
-          json.name = npmScope + "/" + packageName;
+          json.name = getFullPackageName(packageName);
 
           json.main = "./index.js";
           json.types = "./index.d.ts";
@@ -131,31 +155,18 @@ const makeBuildPackageJson = (outDir) => {
           //for lerna
           json.publishConfig = {
             access: "public",
+            tag: npmDistTag,
           };
 
-          const localDeps = getSiblingDeps(packageName);
-
-          //check all local dependencies in tsconfig.json is also in package.json
-
-          for (const key in localDeps) {
-            if (
-              json.dependencies === undefined ||
-              json.dependencies[key] === undefined
-            ) {
-              console.log(
-                "Error: " + json.name + " is missing dependency: " + key
-              );
-            }
-
-            //add dependency with npm scope, and trim the caret, that lerna adds, when it updates cross dependencies.
-
-            json.dependencies[npmScope + "/" + key] = json.dependencies[
-              key
-            ].replace(/^\^/, "");
-
-            //delete dependency entry without scope.
-
-            delete json.dependencies[key];
+          try {
+            json.dependencies = {
+              ...getSiblingDeps(packageName),
+              ...json.dependencies,
+            };
+          } catch (e) {
+            setTimeout(() => {
+              throw e;
+            }, 0);
           }
 
           json.license = "MIT";
@@ -174,16 +185,21 @@ const makeBuildPackageJson = (outDir) => {
 const makeBuild = (outDir) =>
   series(
     makeClean(outDir),
-    makeBuildTs(outDir, true),
+    checkPackageDestinations,
     makeBuildPackageJson(outDir),
-    makeCopyFiles(outDir)
+    makeCopyFiles(outDir),
+    makeBuildTs(outDir, true)
   );
 
 /**
  *
  */
 const makeBuildAlpha = (outDir) =>
-  series(makeClean(outDir), makeBuildTs(outDir, false));
+  series(
+    makeClean(outDir),
+    checkPackageDestinations,
+    makeBuildTs(outDir, false)
+  );
 
 /**
  *
@@ -191,17 +207,151 @@ const makeBuildAlpha = (outDir) =>
 const getSiblingDeps = (packageName) => {
   const conf = require("./packages/" + packageName + "/tsconfig.json");
 
+  //gather references to local packages.
+
   const extra = {};
 
   if (conf.references) {
     conf.references.forEach((def) => {
-      const required = def.path.replace(/^\.\.\//, "");
+      const packageName = getFullPackageName(def.path.replace(/^\.\.\//, ""));
 
-      extra[required] = "dummy";
+      extra[packageName] = npmVersion;
     });
   }
 
+  //check compiler options is set correctly
+
+  const outDir = "../../build-tsc/" + packageName;
+
+  if (conf.compilerOptions.outDir !== outDir) {
+    throw new Error(
+      "Expected outDir in tsconfig.json for '" +
+        packageName +
+        "' to be: " +
+        outDir
+    );
+  }
+
+  //done
+
   return extra;
+};
+
+/**
+ *
+ */
+const checkPackageDestinations = (cb) => {
+  //check declared packages in gulpfile
+
+  checkPackagesExistsInCodebase(scopedPackages);
+  checkPackagesExistsInCodebase(unscopedPackages);
+  checkPackagesExistsInCodebase(privatePackages);
+
+  //check all packages in the codebase
+
+  for (const packageName of fs.readdirSync("./packages/")) {
+    checkPackageHasDeclaredDestination(packageName);
+
+    checkPackageJsonFile(packageName);
+
+    checkRootTsConfigHasPackage(packageName);
+  }
+
+  //done
+
+  cb();
+};
+
+/**
+ *
+ */
+const getFullPackageName = (packageName) => {
+  if (scopedPackages.includes(packageName)) {
+    return npmScope + "/" + packageName;
+  } else if (unscopedPackages.includes(packageName)) {
+    return packageName;
+  } else if (privatePackages.includes(packageName)) {
+    throw new Error("Can't get full name of a private package: " + packageName);
+  } else {
+    throw new Error("Package not listed in gulpfile: " + packageName);
+  }
+};
+
+/**
+ *
+ */
+const checkPackagesExistsInCodebase = (packages) => {
+  for (const packageName of packages) {
+    if (!fs.existsSync("./packages/" + packageName)) {
+      throw new Error("Package declared in gulp not found: " + packageName);
+    }
+  }
+};
+
+/**
+ *
+ */
+const checkPackageHasDeclaredDestination = (packageName) => {
+  let count = 0;
+
+  if (scopedPackages.includes(packageName)) {
+    count++;
+  }
+
+  if (unscopedPackages.includes(packageName)) {
+    count++;
+  }
+
+  if (privatePackages.includes(packageName)) {
+    count++;
+  }
+
+  if (count === 0) {
+    throw new Error("Package has no declaration in gulpfile: " + packageName);
+  }
+
+  if (count !== 1) {
+    throw new Error(
+      "Package has multiple declarations in gulpfile: " + packageName
+    );
+  }
+};
+
+/**
+ *
+ */
+const checkPackageJsonFile = (packageName) => {
+  const conf = require("./packages/" + packageName + "/package.json");
+
+  if (conf.version !== "0.0.0") {
+    throw new Error("version in package.json should be 0.0.0: " + packageName);
+  }
+
+  if (conf.name !== "~" + packageName) {
+    throw new Error(
+      "name in package.json expexted to be: ~" +
+        packageName +
+        ", was: " +
+        conf.name
+    );
+  }
+};
+
+/**
+ *
+ */
+const checkRootTsConfigHasPackage = (packageName) => {
+  const conf = require("./tsconfig.json");
+
+  const found = conf.references.some(
+    (obj) => obj.path === "./packages/" + packageName
+  );
+
+  if (!found) {
+    throw new Error(
+      "root tsconfig.json does not contain the package: " + packageName
+    );
+  }
 };
 
 module.exports = {
@@ -210,4 +360,10 @@ module.exports = {
   buildAlpha: makeBuildAlpha(projectConf.alphaBuildFolder),
   buildPackageJson: makeBuildPackageJson("build/publish"),
   files: makeCopyFiles("build/publish"),
+
+  //for testing
+  getSiblingDeps,
+  getFullPackageName,
+  checkPackageDestinations,
+  checkPackagesExistsInCodebase,
 };

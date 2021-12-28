@@ -11,7 +11,7 @@ import {
   getScriptColor,
   getStopLink,
 } from "./util";
-import { ApiProv } from ".";
+import { ApiProv } from "./types";
 
 export type Props = {
   singleProcessStatus: ScriptStatus;

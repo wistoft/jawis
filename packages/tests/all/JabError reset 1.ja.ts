@@ -8,7 +8,5 @@ export default ({ imp }: TestProvision) => {
 
   err.reset("new message", "new info");
 
-  imp(err);
   imp(filterErrorDataStack(err.getErrorData()));
 };
-//

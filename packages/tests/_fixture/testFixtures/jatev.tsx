@@ -27,48 +27,49 @@ import {
   Props as ViewExecutionLevelProps,
 } from "^jatev/ViewExecutionLevel";
 import { ViewTestLog, Props as ViewTestLogProps } from "^jatev/ViewTestLog";
-import { TestState, TestStateUpdate } from "^jatev";
+import { TestState } from "^jatev/types";
 import { useDirector } from "^jatev/useDirector";
 
 import {
   defaultState,
   makeGetRandomInteger,
-  stateWithShownTest,
-  stateWithTestReports,
-  stateWithTests,
+  getStateWithShownTest,
+  getStateWithTestReports,
+  getStateWithTests,
+  makeTestInfo,
 } from ".";
 import {
   ViewTestLogContent,
   Props as ViewTestLogContentProps,
 } from "^jatev/ViewTestLogContent";
 
-export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.
+export const getDefaultConf = () => getConf(0xf000); //another char, than used by jatev, so we don't interfere.
 
-export const toAtomizedString_test = makeToAtomizedString(
-  defaultConf.mapToAtoms
-);
+export const getToAtomizedString_test = () =>
+  makeToAtomizedString(getDefaultConf().mapToAtoms);
 
-export const replaceAtoms_test = makeReplaceAtoms(
-  defaultConf.atoms,
-  defaultConf.mapToFinal
-);
+export const getReplaceAtoms_test = () =>
+  makeReplaceAtoms(getDefaultConf().atoms, getDefaultConf().mapToFinal);
 
 /**
  *
  */
 export const toHtml_test = (val: unknown) =>
-  getHtmlRTR(<>{replaceAtoms_test(toAtomizedString_test(clone(val)))}</>);
+  getHtmlRTR(
+    <>{getReplaceAtoms_test()(getToAtomizedString_test()(clone(val)))}</>
+  );
 
 /**
  *
  */
-export const tos_test = (val: unknown) => toAtomizedString_test(clone(val));
+export const tos_test = (val: unknown) =>
+  getToAtomizedString_test()(clone(val));
 
 /**
  *
  */
 export const tos_async = async (val: unknown) =>
-  toAtomizedString_test(await asyncClone(val));
+  getToAtomizedString_test()(await asyncClone(val));
 
 /**
  *
@@ -159,7 +160,7 @@ export const renderUseJatevDirector_with_tests = (prov: TestProvision) => {
 
   stuff.onServerMessage({
     type: "TestSelection",
-    data: [["test 1", "test 2"]],
+    data: [[makeTestInfo("test 1"), makeTestInfo("test 2")]],
   });
 
   return { ...stuff, result: stuff.rerender() };
@@ -195,27 +196,31 @@ export const getSetTestCaseUpdate_empty = (test: ClientTestReport) =>
  *
  */
 export const getSetTestCaseUpdate_with_tests = (test: ClientTestReport) =>
-  makeTestCaseUpdater(test, makeGetRandomInteger())(stateWithTests);
+  makeTestCaseUpdater(test, makeGetRandomInteger())(getStateWithTests());
 
 /**
  *
  */
-export const getShownTestUpdate_empty = (test: TestStateUpdate) =>
+export const getShownTestUpdate_empty = (test: TestState) =>
   getShowTestOnTestChangeUpdate(test, defaultState, makeGetRandomInteger());
 
 /**
  *
  */
-export const getShownTestUpdate_with_tests = (test: TestStateUpdate) =>
-  getShowTestOnTestChangeUpdate(test, stateWithTests, makeGetRandomInteger());
+export const getShownTestUpdate_with_tests = (test: TestState) =>
+  getShowTestOnTestChangeUpdate(
+    test,
+    getStateWithTests(),
+    makeGetRandomInteger()
+  );
 
 /**
  *
  */
-export const getShownTestUpdate_with_shown_test = (test: TestStateUpdate) =>
+export const getShownTestUpdate_with_shown_test = (test: TestState) =>
   getShowTestOnTestChangeUpdate(
     test,
-    stateWithShownTest,
+    getStateWithShownTest(),
     makeGetRandomInteger()
   );
 
@@ -229,10 +234,10 @@ export const getRogueUpdater_empty = (rogue: RogueData) =>
  *
  */
 export const getRogueUpdater_with_tests = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(stateWithTests);
+  makeRogueUpdater(rogue, makeGetRandomInteger())(getStateWithTests());
 
 /**
  *
  */
 export const getRogueUpdater_with_test_reports = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(stateWithTestReports);
+  makeRogueUpdater(rogue, makeGetRandomInteger())(getStateWithTestReports());

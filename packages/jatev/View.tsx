@@ -3,15 +3,13 @@ import React, { memo } from "react";
 import { def } from "^jab";
 
 import { ViewTest, Props as ViewTestProps } from "./ViewTest";
-import { Callbacks, State } from ".";
+import { StateCallbacks, State } from "./types";
 import { ViewExecutionList } from "./ViewExecutionList";
 import { ViewTestLog } from "./ViewTestLog";
 
-// props
-
 export type ViewProps = {
   state: State;
-  callbacks: Callbacks;
+  callbacks: StateCallbacks;
 } & Omit<
   ViewTestProps,
   "currentTest" | "onCloseTestCase" | "onPrev" | "onNext"
@@ -28,7 +26,7 @@ export const View: React.FC<ViewProps> = memo(
       <ViewExecutionList
         tests={state.tests?.tests}
         currentTestId={state.currentTest?.id}
-        executingTestId={state.executingTestId}
+        executingTestId={state.executingTest?.id}
         showTestCase={callbacks.showTestCase}
       />
 

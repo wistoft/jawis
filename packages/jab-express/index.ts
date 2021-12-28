@@ -1,4 +1,5 @@
 export * from "./makeApp";
+export * from "./makeRoute";
 export * from "./NodeWS";
 export * from "./Server";
 export * from "./ServerCustomWaiter";

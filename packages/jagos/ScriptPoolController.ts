@@ -8,19 +8,24 @@ import {
   Waiter,
   unknownToErrorData,
   err,
+  MakeBee,
+  HoneyComb,
+  Bee,
+  BeeListeners,
+  tryProp,
+  JagoLogEntry,
+  ScriptOutput,
 } from "^jab";
 import {
   TS_TIMEOUT,
   WatchableProcessPreloader,
-  Bee,
   makePlainWorkerBee,
-  MakeBee,
-  BeeListeners,
   getFileToRequire,
+  BeePreloader,
+  NoopProcessPreloader,
 } from "^jab-node";
 import { ScriptStatus, ScriptStatusTypes } from "^jagoc";
 
-import { ActionProv } from "./ActionProvider";
 import { loadScriptFolders, ScriptDefinition } from "./util";
 
 const DO_PRELOAD_FOR_ACTIVE_SCRIPTS = true;
@@ -39,11 +44,16 @@ export type ScriptPoolProv = {
   shutdown: () => Promise<void>;
 };
 
-export type Deps = {
+export type ScriptPoolControllerDeps = {
   scriptFolders?: string[];
   scripts?: ScriptDefinition[];
   makeTsBee: MakeBee;
+  honeyComb?: HoneyComb; //maybe this should replace `makeTsBee`
   alwaysTypeScript?: boolean; //default false.
+
+  sendProcessStatus: (status: ScriptStatus[]) => void;
+  onControlMessage: (script: string, data: string) => void;
+  onScriptOutput: (script: string, output: ScriptOutput) => void;
 
   onError: (error: unknown) => void;
   finally: FinallyFunc;
@@ -52,15 +62,12 @@ export type Deps = {
   //for testing
   scriptsDefs?: ScriptDefinition[];
   onStatusChange?: (script: string, status: ScriptStatusTypes) => void;
-} & Pick<
-  ActionProv,
-  "sendProcessStatus" | "onControlMessage" | "onScriptOutput"
->;
+};
 
 type ScriptState = {
   script: string;
   autoRestart?: boolean;
-  preload?: WatchableProcessPreloader<any, any>;
+  preload?: BeePreloader<any>;
   process?: Bee<any>;
   dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
 };
@@ -91,7 +98,7 @@ export class ScriptPoolController implements ScriptPoolProv {
 
   private waiter: Waiter<States, never>;
 
-  constructor(private deps: Deps) {
+  constructor(private deps: ScriptPoolControllerDeps) {
     this.deps.finally(() => this.noisyKill()); //must be before the processes, because we want to shutdown, before them.
 
     //init
@@ -110,7 +117,9 @@ export class ScriptPoolController implements ScriptPoolProv {
    *
    */
   private initScripts = () => {
-    loadScriptFolders(this.deps.scriptFolders).forEach(this.addScript(true));
+    loadScriptFolders(this.deps.honeyComb, this.deps.scriptFolders).forEach(
+      this.addScript(true)
+    );
 
     this.deps.scripts?.forEach(this.addScript(false));
 
@@ -171,7 +180,10 @@ export class ScriptPoolController implements ScriptPoolProv {
 
     //load
 
-    const defs = loadScriptFolders(this.deps.scriptFolders);
+    const defs = loadScriptFolders(
+      this.deps.honeyComb,
+      this.deps.scriptFolders
+    );
 
     defs.forEach((def) => {
       const oldIndex = nonStopped.findIndex((x) => x.script === def.script);
@@ -322,6 +334,8 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
+  public kill = () => this.waiter.shutdown(this.killAll);
+
   public shutdown = () => this.waiter.shutdown(this.shutdownAll);
 
   public noisyKill = () => this.waiter.noisyKill(this.killAll, "pool");
@@ -362,21 +376,15 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  private makePreloader = ({ script, autoRestart }: ScriptDefinition) => {
-    // depends on script, not preloader, so default `makeTsProcessConditonally` can't be used.
-
-    const makeTsBeeConditonally =
-      this.deps.alwaysTypeScript || script.endsWith(".ts")
-        ? this.deps.makeTsBee
-        : makePlainWorkerBee;
-
+  private makePreloader = ({
+    script,
+    autoRestart,
+  }: ScriptDefinition): BeePreloader<{}> => {
     //custom main
 
     const customBooter = getFileToRequire(__dirname, "ScriptWrapperMain");
 
-    //create
-
-    return new WatchableProcessPreloader({
+    const deps = {
       customBooter,
       filename: script,
       onRestartNeeded: () => {
@@ -390,11 +398,32 @@ export class ScriptPoolController implements ScriptPoolProv {
 
       timeout: 2 * TS_TIMEOUT, //for jacs compiler.
 
-      makeBee: makeTsBeeConditonally,
-
       onError: this.deps.onError,
       finally: this.deps.finally,
       logProv: this.deps.logProv,
+    };
+
+    //quick fix
+
+    if (this.deps.honeyComb?.isBee(script)) {
+      return new NoopProcessPreloader({
+        ...deps,
+        makeBee: this.deps.honeyComb.makeBee,
+      });
+    }
+
+    // depends on script, not preloader, so default `makeTsProcessConditionally` can't be used.
+
+    const makeTsBeeConditionally =
+      this.deps.alwaysTypeScript || script.endsWith(".ts")
+        ? this.deps.makeTsBee
+        : makePlainWorkerBee;
+
+    //create
+
+    return new WatchableProcessPreloader({
+      ...deps,
+      makeBee: makeTsBeeConditionally,
     });
   };
 
@@ -405,7 +434,8 @@ export class ScriptPoolController implements ScriptPoolProv {
     if (this.waiter.is("stopping")) {
       let allStopped = true;
       this.state.forEach((state) => {
-        if (state.process && !state.process.waiter.is("stopped")) {
+        //remove waiter, when updating jacs
+        if (state.process && !(state.process as any).waiter.is("stopped")) {
           allStopped = false;
         }
       });
@@ -422,27 +452,38 @@ export class ScriptPoolController implements ScriptPoolProv {
   private getStartedProcess = (state: ScriptState): Promise<ScriptState> => {
     const { script } = state;
 
-    const procConf: BeeListeners<any> = {
-      onMessage: (msg: unknown) => {
-        //the view will handle, if the message wasn't a jago log entry.
-        this.deps.onScriptOutput(script, { type: "message", data: msg as any });
+    const procConf: BeeListeners<unknown> = {
+      onMessage: (msg) => {
+        if (tryProp(msg, "channel") === "jago_channel_token") {
+          //quick fix, this should be done in bee logic.
+          delete (msg as any)["channel"];
+          this.deps.onScriptOutput(script, {
+            type: "log",
+            data: msg as JagoLogEntry,
+          });
+        } else {
+          this.deps.onScriptOutput(script, { type: "message", data: msg });
+        }
       },
-      onStdout: (data: Buffer) => {
+      onLog: (entry) => {
+        this.deps.onScriptOutput(script, { type: "log", data: entry });
+      },
+      onStdout: (data) => {
         this.deps.onScriptOutput(script, {
           type: "stdout",
           data: data.toString(),
         });
       },
-      onStderr: (data: Buffer) => {
+      onStderr: (data) => {
         this.deps.onScriptOutput(script, {
           type: "stderr",
           data: data.toString(),
         });
       },
-      onError: (error: unknown) => {
+      onError: (error) => {
         //we use jago message convention.
         this.deps.onScriptOutput(script, {
-          type: "message",
+          type: "log",
           data: {
             type: "error",
             data: unknownToErrorData(error),

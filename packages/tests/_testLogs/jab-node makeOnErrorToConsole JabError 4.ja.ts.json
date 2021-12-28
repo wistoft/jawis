@@ -1,1 +1,0 @@
-{"user":{"console.log":["Error: hello\nUndefined\nNumber: Infinity\nNumber: NaN\n[]\n    at func (E:\\work\\repos\\jawis\\packages\\tests\\all\\jab-node makeOnErrorToConsole JabError 4.ja.ts:10:11)\n    at E:\\work\\repos\\jawis\\node_modules\\@jawis\\jarun\\compiled\\webpack:\\packages\\jarun\\JarunTestRunner.ts:236:19"]}}

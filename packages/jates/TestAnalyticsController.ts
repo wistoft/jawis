@@ -1,4 +1,4 @@
-import { OnRequire } from "^jab-node";
+import { OnRequire } from "^jabc";
 import filewatcher from "filewatcher";
 import { TestAnalytics } from "./TestAnalytics";
 
@@ -12,13 +12,13 @@ type Deps = {
  */
 export class TestAnalyticsController {
   private watcher: any;
-  public ta: TestAnalytics;
+  public testAnalytics: TestAnalytics;
 
   /**
    *
    */
   constructor(private deps: Deps) {
-    this.ta = new TestAnalytics(deps);
+    this.testAnalytics = new TestAnalytics(deps);
 
     //watcher
 
@@ -26,9 +26,9 @@ export class TestAnalyticsController {
 
     this.watcher.on("change", (file: string, stat: any) => {
       if (stat && stat.deleted === true) {
-        this.ta.onDeletedFile(file);
+        this.testAnalytics.onDeletedFile(file);
       } else {
-        this.ta.onChangedFile(file);
+        this.testAnalytics.onChangedFile(file);
       }
     });
 
@@ -47,6 +47,6 @@ export class TestAnalyticsController {
 
     this.watcher.add(msg.file);
 
-    this.ta.addDependency(msg.source, msg.file);
+    this.testAnalytics.addDependency(msg.source, msg.file);
   };
 }

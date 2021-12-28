@@ -1,6 +1,5 @@
 import { parentPort, isMainThread } from "worker_threads";
-
-export type MakeSend = <M extends {}>() => (msg: M) => void;
+import { MakeSend } from "^jabc";
 
 //
 // for communicating with a parent process via ipc or via worker api.
@@ -9,7 +8,7 @@ export type MakeSend = <M extends {}>() => (msg: M) => void;
 /**
  *
  */
-export const registerOnMessage = (listener: (msg: any) => void) => {
+export const registerOnMessage_old = (listener: (msg: any) => void) => {
   if (isMainThread) {
     process.on("message", listener);
   } else {
@@ -40,7 +39,7 @@ export const removeOnMessage = (listener: (msg: any) => void) => {
  * - No real need for making. Except for asserting everything is fine at 'load'
  *    rather than at send.
  */
-export const makeSend: MakeSend = () => {
+export const makeSend_old: MakeSend = () => {
   //quick fix
   if (isMainThread) {
     if (!process.send) {

@@ -1,43 +1,3 @@
-import { ClonedValue } from ".";
-
-export type UnparsedStack =
-  | {
-      type: "node" | "other";
-      stack: string;
-    }
-  | {
-      type: "node-parsed";
-      stack: ParsedStackFrame[];
-    };
-
-export type ParsedStackFrame = {
-  line?: number;
-  file?: string;
-  func?: string;
-  rawLine?: number;
-  rawFile?: string;
-};
-
-export type ParsedStack = ParsedStackFrame[];
-
-export type ErrorWithParsedNodeStack = Error & {
-  __jawisNodeStack?: ParsedStackFrame[];
-};
-
-export type ErrorData = {
-  msg: string;
-  info: Array<ClonedValue>;
-  stack: UnparsedStack;
-};
-
-export type ParsedErrorData = {
-  msg: string;
-  info: Array<ClonedValue>;
-  parsedStack?: ParsedStack;
-};
-
-export type ErrorReporter = (error: unknown, info?: Array<unknown>) => void;
-
 /**
  *
  */
@@ -58,24 +18,21 @@ export type LogProv = {
   status: (type: string, status: string) => void;
 };
 
-/**
- *
- */
-export type FinallyProv = {
-  finally: FinallyFunc;
-  runFinally: () => Promise<void>;
-};
-
-export type FinallyFunc = (
-  func: () => void | undefined | Promise<void>
-) => void;
-
 //
 // not found in official places
 //
 
-export interface Json {
-  [x: string]: string | number | boolean | Date | Json | JsonArray | undefined;
+export interface Jsonable {
+  [x: string]:
+    | string
+    | number
+    | boolean
+    | Date
+    | Jsonable
+    | JsonableArray
+    | undefined;
 }
 
-type JsonArray = Array<string | number | boolean | Date | Json | JsonArray>;
+type JsonableArray = Array<
+  string | number | boolean | Date | Jsonable | JsonableArray
+>;

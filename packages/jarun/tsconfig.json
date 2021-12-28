@@ -7,6 +7,6 @@
   "references": [
     { "path": "../jab" },
     { "path": "../jab-node" },
-    { "path": "../jates" }
+    { "path": "../jatec" }
   ]
 }

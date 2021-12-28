@@ -52,7 +52,7 @@ ComponentMenu.displayName = "ComponentMenu";
 /**
  *
  */
-export const getStuff = (routeDefs: RouteDef[]) => {
+const getStuff = (routeDefs: RouteDef[]) => {
   const menu: JSX.Element[] = [];
   const routes: JSX.Element[] = [];
 

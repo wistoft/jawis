@@ -1,8 +1,11 @@
-import { webpackCompileHelper } from "./util/build";
+import { nodepackHelper, webpackHelper } from "./util/build";
 
 const { alphaBuildFolder } = eval("require")("../../../project.conf");
 
-webpackCompileHelper("jacs", "JacsConsumerMain", alphaBuildFolder); // prettier-ignore
-webpackCompileHelper("jarun", "JarunProcessMain", alphaBuildFolder);
-webpackCompileHelper("jab-node/process", "WatchableProcessMain", alphaBuildFolder); // prettier-ignore
-webpackCompileHelper("jagos", "ScriptWrapperMain", alphaBuildFolder);
+nodepackHelper("jacs", "JacsConsumerMain", alphaBuildFolder); // prettier-ignore
+nodepackHelper("jarun", "JarunProcessMain", alphaBuildFolder);
+nodepackHelper("jab-node/process", "WatchableProcessMain", alphaBuildFolder); // prettier-ignore
+nodepackHelper("jagos", "ScriptWrapperMain", alphaBuildFolder);
+
+webpackHelper("jagov", "ymer", alphaBuildFolder);
+webpackHelper("console", "consoleCaptureMain", alphaBuildFolder);

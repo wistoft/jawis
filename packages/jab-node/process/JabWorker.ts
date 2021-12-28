@@ -1,10 +1,18 @@
 import path from "path";
 import { Worker, MessagePort } from "worker_threads";
 
-import { def, err, FinallyFunc, Waiter } from "^jab";
+import {
+  Bee,
+  BeeStates,
+  def,
+  err,
+  FinallyFunc,
+  JabShutdownMessage,
+  Waiter,
+} from "^jab";
 
-import { nodeRequire, StructuredCloneable } from "..";
-import type { JabShutdownMessage, MakeNodeWorker } from ".";
+import { StructuredCloneable } from "..";
+import type { MakeNodeWorker } from ".";
 
 export type JabWorkerDeps<MR, WD> = {
   filename: string;
@@ -40,7 +48,7 @@ export class JabWorker<
   MS extends StructuredCloneable,
   MR extends StructuredCloneable,
   WD extends StructuredCloneable
-> {
+> implements Bee<MS> {
   public worker: Worker;
 
   public waiter: Waiter<States, Events>;
@@ -55,7 +63,7 @@ export class JabWorker<
 
     //waiter
 
-    this.waiter = new Waiter<States, Events>({
+    this.waiter = new Waiter({
       onError: deps.onError,
       startState: "running",
       stoppingState: "stopping",
@@ -64,13 +72,6 @@ export class JabWorker<
 
     //resolve unspecified file types.
 
-    let realFilename: string;
-    if (!deps.filename.endsWith(".js")) {
-      realFilename = nodeRequire.resolve(deps.filename);
-    } else {
-      realFilename = deps.filename;
-    }
-
     //optional
 
     const stdout = this.deps.onStdout !== undefined;
@@ -78,7 +79,7 @@ export class JabWorker<
 
     //worker
 
-    this.worker = this.deps.makeWorker(realFilename, {
+    this.worker = this.deps.makeWorker(deps.filename, {
       stdout,
       stderr,
       workerData: deps.workerData,
@@ -161,4 +162,6 @@ export class JabWorker<
     this.waiter.noisyKill(() => this.worker.terminate(), "Worker");
 
   public kill = () => this.waiter.kill(() => this.worker.terminate());
+
+  public is = (state: BeeStates) => this.waiter.is(state);
 }

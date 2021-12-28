@@ -12,7 +12,7 @@ export default (prov: TestProvision) => {
     "test with no status",
     getHtmlEnzyme(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
       })
     )
   );
@@ -23,7 +23,7 @@ export default (prov: TestProvision) => {
     "test with status 1",
     getHtmlEnzyme(
       getViewExecutionLevel({
-        level: [{ id: "test 1", status: 1 }],
+        level: [{ id: "test 1", name: "1", file: "file", status: 1 }],
       })
     )
   );
@@ -34,7 +34,7 @@ export default (prov: TestProvision) => {
     "test that passes",
     getHtmlEnzyme(
       getViewExecutionLevel({
-        level: [{ id: "test 1", status: "." }],
+        level: [{ id: "test 1", name: "1", file: "file", status: "." }],
       })
     )
   );
@@ -45,7 +45,7 @@ export default (prov: TestProvision) => {
     "test that is shown",
     getHtmlEnzyme(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
         currentTestId: "test 1",
       })
     )
@@ -57,7 +57,7 @@ export default (prov: TestProvision) => {
     "test that is executing",
     getHtmlEnzyme(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
         executingTestId: "test 1",
       })
     )

@@ -60,18 +60,16 @@ automatically start this task install the extentions: `AutoLaunch`
   - Running the vscode tasks makes the errors available in vscode.
   - Review, because there's a bug, that removes comments after imports
 - `yarn pretty:fix`
-- Clean up git history.
-- `yarn bump`
-  - Bumps package versions according to `conventional commits`
-  - Generates changelogs for each package
+- Update change log.
+- Bump version number in `gulpfile.js`
 - `yarn build`
-- `yarn release`
-  - Publishes to npm
+- `lerna publish from-package`
+- Clean up git history and tag commit.
 
 ## Packages
 
-- `dev` contains code useful just for development of jawis.
-- `misc` has where things that don't fit anywhere, fit in.
+- `dev` contains code used for development of jawis.
+- `misc` where things, that don't fit anywhere, fit in.
 - `javi` contains the 'mounts' for production/released javi.
 
 ### Naming conventions

@@ -8,4 +8,8 @@ Object.keys(require.cache).forEach((key) => {
 
 import { basename } from "^jab";
 
-console.log(basename("mikael/wistoft"));
+try {
+  console.log(basename("mikael/wistoft"));
+} catch (error) {
+  console.log(error);
+}

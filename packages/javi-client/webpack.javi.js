@@ -10,7 +10,7 @@ const baseWebpackConf = createWebpackBaseConf({
   template: path.join(__dirname, "index.ejs"),
   tsConfigFile: path.join(__dirname, "tsconfig.json"),
   defineHtml: {
-    __pageTitle: "Javi",
+    __siteTitle: "Javi", // will be overwritten from javascript, if configured in conf file.
     __conf_url: "/conf.js", // so the client loads this configuration files.
   },
 });

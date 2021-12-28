@@ -1,4 +1,4 @@
-import { indent } from "^myAliasForJabs";
+import { indent } from "^jab";
 import * as fs from "fs";
 import deepEqual from "deep-equal";
 

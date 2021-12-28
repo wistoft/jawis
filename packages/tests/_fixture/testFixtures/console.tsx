@@ -1,6 +1,6 @@
+import { EventController, sleeping } from "^jab";
 import React from "react";
 
-import { EventController } from "^jab";
 import {
   CaptureCache,
   ConsoleEntry,
@@ -15,20 +15,21 @@ import { ViewEntry, Props as ViewEntryProps } from "^console/ViewEntry";
 import { ViewLogEntry } from "^console/ViewLogEntry";
 import { makeConsoleChangeCallback } from "^console/makeUseConsoleStream";
 
-import { defaultConsoleState, makeGetRandomInteger, uiEntries } from ".";
+import { defaultConsoleState, makeGetRandomInteger, getUiEntries } from ".";
+import { makeStdioFilter } from "^util-javi/node";
 
-export const jcvProps: ConsoleProps = {
-  logs: uiEntries,
+export const jcvProps = (): ConsoleProps => ({
+  logs: getUiEntries(),
   projectRoot: "C:\\",
   clearAllLogs: () => {},
   openFile: () => {},
   useToggleEntry: () => () => {},
   useRemoveEntry: () => () => {},
-};
+});
 
 export const getView = () => (
   <View
-    logs={uiEntries}
+    logs={getUiEntries()}
     projectRoot={"C:\\"}
     clearAllLogs={() => {}}
     openFile={() => {}}
@@ -125,4 +126,61 @@ export const addDataUpdate_empty = (
   // do it
 
   return callbacks.addData(entries, doSourceMap).then(() => states);
+};
+
+const includeLine = (line: string) => {
+  return !["a", "b"].includes(line);
+};
+
+/**
+ * Without flush on partial lines
+ */
+export const filterStdioTest = (input: string | string[]) => {
+  let done = false;
+  const arr = typeof input === "string" ? [input] : input;
+
+  let result = "";
+
+  const filter = makeStdioFilter((out) => {
+    if (done) {
+      throw new Error("Output after filter is finished.");
+    }
+    if (out !== undefined) {
+      result += out;
+    }
+  }, includeLine);
+
+  arr.forEach((str) => {
+    filter(str);
+  });
+
+  done = true;
+
+  return result;
+};
+
+/**
+ * Flushing partial lines after 0ms.
+ */
+export const filterStdioWithFlushTest = async (input: string | string[]) => {
+  const arr = typeof input === "string" ? [input] : input;
+
+  let result = "";
+
+  const filter = makeStdioFilter(
+    (out) => {
+      if (out !== undefined) {
+        result += out;
+      }
+    },
+    includeLine,
+    0
+  );
+
+  for (const str of arr) {
+    filter(str);
+    await sleeping(100);
+  }
+
+  return result;
 };

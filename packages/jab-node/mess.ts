@@ -1,4 +1,5 @@
 import fs, { PathLike } from "fs";
+import path from "path";
 
 /**
  *
@@ -49,4 +50,34 @@ export const flushAndExit = () => {
   //if stream take to long to flush.
 
   setTimeout(process.exit, 300);
+};
+
+/**
+ * - Will include folder given as input.
+ */
+export const getParentFolders = (folder: string) => {
+  const res: string[] = [];
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    res.push(folder);
+
+    if (folder == path.dirname(folder)) {
+      break;
+    }
+    folder = path.dirname(folder);
+  }
+
+  return res;
+};
+
+/**
+ * Make the file absolute, if isn't already.
+ */
+export const makeAbsolute = (confFileDir: string, file: string) => {
+  if (path.isAbsolute(file)) {
+    return file;
+  } else {
+    return path.join(confFileDir, file);
+  }
 };

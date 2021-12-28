@@ -1,8 +1,7 @@
 import { Serializable } from "child_process";
 
-import { def, Waiter } from "^jab";
+import { def, Waiter, Bee, BeeListeners } from "^jab";
 
-import { Bee, BeeListeners } from "..";
 import { WatchableProcessPreloaderDeps, WatchableProcessPreloader } from ".";
 
 type States = "ready" | "using" | "stopping" | "done";
@@ -20,7 +19,7 @@ type States = "ready" | "using" | "stopping" | "done";
  *  when cancelled, this remains in using-state, and becomes unusable.
  */
 export class ReusableWPP<MR extends Serializable, MS extends Serializable> {
-  private wpp?: WatchableProcessPreloader<MR, MS>;
+  private wpp?: WatchableProcessPreloader<MS>;
   private waiter: Waiter<States, never>;
 
   /**

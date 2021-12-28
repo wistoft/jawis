@@ -1,1 +1,1 @@
-{"user":{"imp":[{"currentTest":{"id":"failingTest","status":1,"testLogs":["value",[]]},"currentTestFressness":144000}]}}
+{"user":{"imp":[{"currentTest":{"id":"failingTest","name":"failingTest","file":"file","status":1,"testLogs":["value",[]]},"currentTestFressness":144000}]}}

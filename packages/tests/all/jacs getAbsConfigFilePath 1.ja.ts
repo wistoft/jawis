@@ -1,14 +1,8 @@
-import path from "path";
 
 import { getAbsConfigFilePath } from "^jacs";
 import { TestProvision } from "^jarun";
-
-const projectConf = eval("require")("../../../project.conf");
+import { filterFilepath } from "^tests/_fixture";
 
 export default (prov: TestProvision) => {
-  prov.imp(
-    path
-      .relative(projectConf.packageFolder, getAbsConfigFilePath(__dirname))
-      .replace(/\\/g, "/")
-  );
+  prov.imp(filterFilepath(getAbsConfigFilePath(__dirname)));
 };

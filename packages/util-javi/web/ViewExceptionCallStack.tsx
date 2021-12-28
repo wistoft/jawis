@@ -75,9 +75,9 @@ const mapFrame = (
   normalizedRemovePathPrefix: string
   // eslint-disable-next-line react/display-name
 ) => (frame: ParsedStackFrame, index: number) => {
-  const isSystemFrame = getIsSystemFrame(frame);
+  const isSystem = isSystemFrame(frame);
 
-  if (!showSystemFrames && isSystemFrame) {
+  if (!showSystemFrames && isSystem) {
     return (
       <JsLink
         key={index}
@@ -91,7 +91,7 @@ const mapFrame = (
     );
   }
 
-  const color = isSystemFrame
+  const color = isSystem
     ? "var(--text-color-faded)"
     : "var(--jawis-console-text-color)";
 
@@ -117,7 +117,7 @@ const mapFrame = (
     ) : (
       <>
         &nbsp;&nbsp;
-        {isSystemFrame ? (
+        {isSystem ? (
           <i>
             <b>{firstDir}</b>
           </i>
@@ -160,14 +160,24 @@ const mapFrame = (
 
 /**
  *
+ * note
+ *  detect node frames like: https://github.com/AndreasMadsen/clarify/blob/master/clarify.js
  */
-const getIsSystemFrame = (frame: ParsedStackFrame) =>
-  frame.file?.startsWith("internal") ||
-  frame.file === "events.js" ||
-  frame.file === "webpack:///webpack/bootstrap" ||
-  frame.file?.includes("node_modules") ||
-  (frame.func && frame.func === "__webpack_require__") ||
-  frame.file?.indexOf("build-alpha") !== -1; //hacky. This should be custom setting only for jawis repo.
+export const isSystemFrame = (frame: ParsedStackFrame) => {
+  const isNodeFrame =
+    frame.file?.startsWith("internal") ||
+    !frame.file?.replace(/\\/g, "/").includes("/");
+
+  return (
+    isNodeFrame ||
+    frame.file === "webpack:///webpack/bootstrap" ||
+    frame.file?.includes("node_modules") ||
+    (frame.func && frame.func === "__webpack_require__") ||
+    //hacky. This should be custom setting only for jawis repo.
+    frame.file?.indexOf("build-alpha") !== -1 ||
+    frame.file?.replace(/\\/g, "/").indexOf("/wj/") !== -1
+  );
+};
 
 /**
  *

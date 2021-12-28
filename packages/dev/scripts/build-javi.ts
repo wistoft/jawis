@@ -1,6 +1,9 @@
-import { webpackCompileHelper } from "./util/build";
+import { nodepackHelper, webpackHelper } from "./util/build";
 
-webpackCompileHelper("jacs", "JacsConsumerMain");
-webpackCompileHelper("jarun", "JarunProcessMain");
-webpackCompileHelper("jab-node/process", "WatchableProcessMain");
-webpackCompileHelper("jagos", "ScriptWrapperMain");
+nodepackHelper("jacs", "JacsConsumerMain");
+nodepackHelper("jarun", "JarunProcessMain");
+nodepackHelper("jab-node/process", "WatchableProcessMain");
+nodepackHelper("jagos", "ScriptWrapperMain");
+
+webpackHelper("jagov", "ymer");
+webpackHelper("console", "consoleCaptureMain");

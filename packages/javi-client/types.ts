@@ -19,7 +19,12 @@ export type JaviDirectorProps = {
 
 /**
  * - All the configuration that comes from server. But not the props that are directly for JaviDirector.
+ *
+ * note: duplicated in javi server
  */
-export type JaviClientConf = Omit<JatevProps, "apiPath" | "showDtpLink"> &
+export type JaviClientConf = { siteTitle?: string } & Omit<
+  JatevProps,
+  "apiPath" | "showDtpLink"
+> &
   Omit<JagovProps, "apiPath"> &
   Omit<JagoConsoleMainProps, "apiPath" | "useConsoleStream">;

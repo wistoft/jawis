@@ -1,0 +1,6 @@
+{
+  "version": "0.0.0",
+  "name": "~jabro",
+  "description": "Make it possible from the server to run scripts in the browser",
+  "dependencies": {}
+}

@@ -3,56 +3,61 @@ import {
   clonedTos,
   ClonedValue,
   captureStack,
-  fixErrorInheritence,
+  fixErrorInheritance,
 } from ".";
 
 /**
  * An replacement for Error, that supports capturing variable with the error message.
  *
  * impl
- *  methods can't be "properties", because super is called in constructor.
+ *  - methods can't be "properties", because super is called in constructor.
+ *  - extends Error, so a maker function, so it can be used in test cases, that change `Error`
  */
-export class JabError extends Error {
-  private clonedInfo: ClonedValue[];
-  private jabMessage: string;
+export const makeJabError = () =>
+  class JabError extends Error {
+    public clonedInfo: ClonedValue[];
+    public jabMessage: string;
 
-  constructor(message: string, ...info: Array<unknown>) {
-    const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
+    constructor(message: string, ...info: Array<unknown>) {
+      const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
 
-    // make the Error return a reasonable message, if it's used as ordinary Error.
-    super(rawMessage);
+      // make the Error return a reasonable message, if it's used as ordinary Error.
+      super(rawMessage);
 
-    fixErrorInheritence(this, JabError.prototype);
+      fixErrorInheritance(this, JabError.prototype);
 
-    this.clonedInfo = clonedInfo;
-    this.jabMessage = message;
-  }
+      this.clonedInfo = clonedInfo;
+      this.jabMessage = message;
+    }
 
-  /**
-   * Change the message associated with this error object.
-   *
-   * - This will not update the message in the stack. But that should never be a problem, as that's "junk" data, anyway.
-   */
-  public reset(message: string, ...info: Array<unknown>): void {
-    const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
+    /**
+     * Change the message associated with this error object.
+     *
+     * - This will not update the message in the stack. But that should never be a problem, as that's "junk" data, anyway.
+     */
+    public reset(message: string, ...info: Array<unknown>): void {
+      const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
 
-    this.message = rawMessage;
+      this.message = rawMessage;
 
-    this.clonedInfo = clonedInfo;
-    this.jabMessage = message;
-  }
+      this.clonedInfo = clonedInfo;
+      this.jabMessage = message;
+    }
 
-  /**
-   * Return the error message, cloned info and the stack, with information about how to parse it.
-   */
-  public getErrorData(extraInfo: Array<unknown> = []) {
-    return {
-      msg: this.jabMessage,
-      info: [...this.clonedInfo, ...cloneArrayEntries(extraInfo)],
-      stack: captureStack(this),
-    };
-  }
-}
+    /**
+     * Return the error message, cloned info and the stack, with information about how to parse it.
+     */
+    public getErrorData(extraInfo: Array<unknown> = []) {
+      return {
+        msg: this.jabMessage,
+        info: [...this.clonedInfo, ...cloneArrayEntries(extraInfo)],
+        stack: captureStack(this),
+      };
+    }
+  };
+
+//maybe this should be done by user. After module load. Would give better control over what `Error` is extended.
+export const JabError = makeJabError();
 
 //
 // util

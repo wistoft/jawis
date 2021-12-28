@@ -2,22 +2,46 @@ import path from "path";
 import fs from "fs";
 import os from "os";
 import prettier from "prettier";
+import webpack from "webpack";
 
-import { getNodeWebpackConf, webpackCompile } from "^misc/node";
+import { getNodepackConf, getWebpackConf, webpackCompile } from "^misc/node";
+
+const quickFixOutPath = path.join(os.tmpdir(), "testCases");
 
 /**
  *
  */
-export const webpack_test = (file: string) => {
-  const outPath = path.join(os.tmpdir(), "testCases");
+export const nodepack_test = (file: string) =>
+  webpack_in_memory(
+    quickFixOutPath,
+    getNodepackConf({
+      file,
+      outPath: quickFixOutPath,
+      devtool: false,
+    })
+  );
 
-  const conf = getNodeWebpackConf({
-    file,
-    outPath,
-    runtimeChunk: true,
-  });
+/**
+ *
+ */
+export const webpack_test = (file: string) =>
+  webpack_in_memory(
+    quickFixOutPath,
+    getWebpackConf({
+      file,
+      outPath: quickFixOutPath,
+      devtool: false,
+    })
+  );
 
-  return webpackCompile(conf).then(() => {
+/**
+ *
+ */
+export const webpack_in_memory = (
+  outPath: string,
+  conf: webpack.Configuration
+) =>
+  webpackCompile(conf).then(() => {
     const code = fs
       .readFileSync(path.join(outPath, "main.js"))
       .toString()
@@ -25,4 +49,3 @@ export const webpack_test = (file: string) => {
 
     return prettier.format(code, { parser: "babel" });
   });
-};

@@ -2,16 +2,17 @@ import React, { memo } from "react";
 import { def } from "^jab";
 
 import { JsLink, TogglePanel } from "^jab-react";
+import { State } from "./types";
 
 import { ClientApiSendProv } from "./util";
 
-export type Props = ClientApiSendProv & {
-  isRunning: boolean;
-  executingTestId: string | undefined;
-  runFailedTests: () => void;
-  acceptAllLogs: () => void;
-  showTestCase: (test: string) => void;
-};
+export type Props = ClientApiSendProv &
+  Pick<State, "executingTest"> & {
+    isRunning: boolean;
+    runFailedTests: () => void;
+    acceptAllLogs: () => void;
+    showTestCase: (test: string) => void;
+  };
 
 export const ViewControls: React.FC<Props> = memo((props) => {
   const startStopLink = (
@@ -47,12 +48,12 @@ export const ViewControls: React.FC<Props> = memo((props) => {
         linkTitle={"Show executing test"}
         initial={false}
       >
-        {props.executingTestId && (
+        {props.executingTest && (
           <>
             {", "}
             <JsLink
-              name={props.executingTestId}
-              onClick={() => props.showTestCase(def(props.executingTestId))}
+              name={props.executingTest.name}
+              onClick={() => props.showTestCase(def(props.executingTest).id)}
               title="Show executing test"
             />
           </>

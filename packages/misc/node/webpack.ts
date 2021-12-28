@@ -1,11 +1,26 @@
 import path from "path";
-import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
-import webpack from "webpack";
+import webpack, { RuleSetRule } from "webpack";
 
 import { getPromise, JabError } from "^jab";
 import { getAbsConfigFilePath } from "^jacs";
-import { nodeExternals } from "^misc";
+import { makeNodeExternals } from "^misc";
+import { getWebpackResolve, getWebpackTSRules } from "^util-javi/node/webpack";
+
+export type NewWebpackConf = {
+  file: string;
+  outPath: string;
+  outFilename?: string;
+  tsConfigFile?: string;
+  runtimeChunk?: boolean;
+  comments?: boolean;
+  beautify?: boolean;
+  mangle?: boolean;
+  devtool?: string | false;
+  target?: string;
+  externals?: webpack.Configuration["externals"];
+  loaders?: RuleSetRule[];
+};
 
 /**
  *
@@ -17,7 +32,7 @@ export const webpackCompile = (conf: webpack.Configuration) => {
     if (err) {
       prom.reject(err);
     } else if (stats && (stats.hasErrors() || stats.hasWarnings())) {
-      prom.reject(new JabError("Webpack errors: ", "" + stats));
+      prom.reject(new JabError("Webpack errors:\n", "" + stats));
     } else {
       prom.resolve(stats);
     }
@@ -29,12 +44,31 @@ export const webpackCompile = (conf: webpack.Configuration) => {
 /**
  * Meant for compiling node programs.
  *
- * - Primary feature tree-shaking. Minification isn't that important.
+ */
+export const getNodepackConf = (conf: NewWebpackConf): webpack.Configuration =>
+  getWebpackConf({
+    ...conf,
+    target: "node",
+    externals: conf.externals ? conf.externals : makeNodeExternals(),
+    loaders: [
+      {
+        enforce: "pre",
+        test: /\.(js|ts)$/,
+        exclude: /node_modules/,
+        loader: "shebang-loader",
+      },
+    ],
+  });
+
+/**
+ * Convenient webpack configuration
+ *
+ * - Primary feature tree-shaking. Minification is less important.
  * - to get tree-shaking, typescript target=ES6 is needed.
  * - one can save more bytes, by mangle=true, and beautify=false, but then source mapping is unavoidable.
  *
  */
-export const getNodeWebpackConf = ({
+export const getWebpackConf = ({
   file,
   outPath,
   outFilename,
@@ -43,16 +77,11 @@ export const getNodeWebpackConf = ({
   comments = true,
   beautify = true,
   mangle = false,
-}: {
-  file: string;
-  outPath: string;
-  outFilename?: string;
-  tsConfigFile?: string;
-  runtimeChunk?: boolean;
-  comments?: boolean;
-  beautify?: boolean;
-  mangle?: boolean;
-}): webpack.Configuration => {
+  devtool = "source-map",
+  target = undefined,
+  externals = undefined,
+  loaders = [],
+}: NewWebpackConf): webpack.Configuration => {
   if (!tsConfigFile) {
     tsConfigFile = getAbsConfigFilePath(path.dirname(file));
   }
@@ -62,52 +91,22 @@ export const getNodeWebpackConf = ({
 
     entry: file,
 
-    resolve: {
-      extensions: [".ts", ".tsx", ".js"],
-      plugins: [
-        new TsconfigPathsPlugin({
-          configFile: tsConfigFile,
-        }) as any,
-      ],
-    },
+    resolve: getWebpackResolve(tsConfigFile),
 
-    target: "node",
+    target,
 
-    externals: [nodeExternals],
+    externals,
 
     module: {
-      rules: [
-        {
-          test: /\.ts(x?)$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: "ts-loader",
-              options: {
-                transpileOnly: true,
-                configFile: tsConfigFile,
-                compilerOptions: {
-                  module: "esnext",
-                  sourceMap: true,
-                },
-              },
-            },
-          ],
-        },
-        // All output '.js' files will have sourcemaps re-processed, to enforce consistency.
-        {
-          enforce: "pre",
-          test: /\.js$/,
-          exclude: /node_modules/,
-          loader: "source-map-loader",
-        },
-      ],
+      rules: [...loaders, ...getWebpackTSRules(tsConfigFile)],
     },
 
     output: {
       path: outPath,
       filename: outFilename,
     },
+
+    devtool,
 
     optimization: {
       runtimeChunk,

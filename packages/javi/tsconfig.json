@@ -8,6 +8,8 @@
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
+    { "path": "../jabro" },
+    { "path": "../jabroc" },
     { "path": "../jacs" },
     { "path": "../jarun" },
     { "path": "../jagos" },

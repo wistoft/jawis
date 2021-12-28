@@ -8,6 +8,8 @@ export default (prov: TestProvision) => {
   prov.imp(
     getShownTestUpdate_empty({
       id: "failingTest",
+      name: "failingTest",
+      file: "file",
       status: 1,
       testLogs: [],
     })

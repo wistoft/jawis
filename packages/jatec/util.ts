@@ -63,16 +63,18 @@ export const errorToTestResult = (
 
 /**
  * - Extra error message is shown first.
+ *
+ * todo: implement with: addErrorToTestLog
  */
 export const errorToTestLog = (
   error: unknown,
   extraInfo: Array<unknown> = [],
   extraErrorMsg?: string
 ): TestCurLogs => {
-  const data = unknownToErrorData(error, extraInfo);
+  const errorData = unknownToErrorData(error, extraInfo);
 
   if (extraErrorMsg === undefined) {
-    return { err: [data], user: {} };
+    return { err: [errorData], user: {} };
   } else {
     return {
       err: [
@@ -81,11 +83,51 @@ export const errorToTestLog = (
           info: [],
           stack: { type: "node", stack: "dummy" },
         },
-        data,
+        errorData,
       ],
       user: {},
     };
   }
+};
+
+/**
+ *
+ */
+export const addErrorToTestResult = (
+  result: TestResult,
+  error: unknown,
+  extraInfo: Array<unknown> = [],
+  extraErrorMsg?: string
+): TestResult => ({
+  ...result,
+  cur: addErrorToTestLog(result.cur, error, extraInfo, extraErrorMsg),
+});
+
+/**
+ *
+ */
+export const addErrorToTestLog = (
+  testLog: TestCurLogs,
+  error: unknown,
+  extraInfo: Array<unknown> = [],
+  extraErrorMsg?: string
+): TestCurLogs => {
+  const newErrorLog = [...(testLog.err || [])];
+
+  newErrorLog.push(unknownToErrorData(error, extraInfo));
+
+  if (extraErrorMsg !== undefined) {
+    newErrorLog.push({
+      msg: extraErrorMsg,
+      info: [],
+      stack: { type: "node", stack: "dummy" },
+    });
+  }
+
+  return {
+    ...testLog,
+    err: newErrorLog,
+  };
 };
 
 /**

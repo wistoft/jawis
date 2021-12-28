@@ -5,20 +5,28 @@ import { ClientMessage, ServerMessage } from "^jagoc";
 import { BehaviorProv } from "./Behavior";
 import { ScriptPoolProv } from "./ScriptPoolController";
 
-import { handleOpenFileInVsCode } from "^util-javi/node";
+import { HandleOpenFileInEditor } from "^util-javi/node";
 import { WsMessageListener } from "^jab-express";
+import { WsBuzzStore } from "^jabroc";
 
-export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };
+export type Deps = ScriptPoolProv &
+  BehaviorProv & {
+    projectRoot: string;
+    browserBeeFrost: WsBuzzStore;
+    handleOpenFileInEditor: HandleOpenFileInEditor;
+  };
 
 /**
  *
  */
 export const makeOnClientMesssage = (
   deps: Deps
-): WsMessageListener<ServerMessage, ClientMessage> => (msg) => {
+): WsMessageListener<ServerMessage, ClientMessage> => (msg, nws) => {
   switch (msg.type) {
     case "startListen":
       deps.onStartListen();
+
+      deps.browserBeeFrost.register(nws); //let the browser tab function as a bee hive.
       break;
 
     case "restartAll":
@@ -38,11 +46,15 @@ export const makeOnClientMesssage = (
       break;
 
     case "openFile":
-      handleOpenFileInVsCode(msg);
+      deps.handleOpenFileInEditor(msg);
       break;
 
     case "openRelFile":
-      handleOpenFileInVsCode(msg, deps.projectRoot);
+      deps.handleOpenFileInEditor(msg, deps.projectRoot);
+      break;
+
+    case "beeFrost":
+      deps.browserBeeFrost.onMessage(nws, msg.data);
       break;
 
     default:

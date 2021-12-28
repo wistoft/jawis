@@ -8,6 +8,11 @@ declare type Buffer = any; //hacky: this is used when compiling all packages wit
 declare const Buffer: any;
 declare const window: any;
 
+//quick fix long traces
+
+declare module "async_hooks";
+declare module "is-builtin-module";
+
 //
 // common types among node and web.
 //

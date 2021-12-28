@@ -3,7 +3,7 @@ import { WsPoolProv } from "^jab-express";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { ScriptPoolProv } from "./ScriptPoolController";
-import { ActionProv } from "./ActionProvider";
+import { ClientComProv } from "./ClientComController";
 import { safeAll } from "^jab";
 
 // prov
@@ -18,7 +18,7 @@ export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
   scriptPool: ScriptPoolProv;
   onError: (error: unknown) => void;
-} & Pick<ActionProv, "sendProcessStatus">;
+} & Pick<ClientComProv, "sendProcessStatus">;
 
 /**
  *

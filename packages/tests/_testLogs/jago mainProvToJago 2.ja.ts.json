@@ -1,1 +1,1 @@
-{"user":{"postMessage":[{"type":"stream","data":"hello","logName":"prefix.the name"}]}}
+{"user":{"postMessage":[{"channel":"jago_channel_token","type":"stream","data":"hello","logName":"prefix.the name"}]}}

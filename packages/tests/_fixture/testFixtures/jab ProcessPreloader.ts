@@ -1,17 +1,14 @@
 import { TestProvision } from "^jarun";
-import {
-  ProcessListeners,
-  ProcessPreloaderDeps,
-  ProcessPreloader,
-} from "^jab-node";
+import { ProcessPreloaderDeps, ProcessPreloader } from "^jab-node";
 
 import {
   getLogProv,
   getJabProcessDeps,
   getScriptPath,
   makeDormentInMemoryBee,
-  makeJacsWorker,
+  getMakeJacsWorker,
 } from ".";
+import { BeeListeners } from "^jabc";
 
 /**
  *
@@ -40,7 +37,7 @@ export const getJabProcessPreloaderAndDeps = (
   prov: TestProvision,
   extraDeps?: Partial<ProcessPreloaderDeps>,
   logPrefix = "UsedProcessPreloader."
-): [ProcessPreloader<any>, ProcessPreloaderDeps & ProcessListeners<any>] => {
+): [ProcessPreloader<any>, ProcessPreloaderDeps & BeeListeners<any>] => {
   const deps = getJabProcessPreloaderDeps(prov, extraDeps, logPrefix);
 
   const pp = new ProcessPreloader(deps);
@@ -55,7 +52,7 @@ export const getJabProcessPreloaderDeps = (
   prov: TestProvision,
   extraDeps?: Partial<ProcessPreloaderDeps>,
   logPrefix?: string
-): ProcessPreloaderDeps & ProcessListeners<any> => {
+): ProcessPreloaderDeps & BeeListeners<any> => {
   const procDeps = getJabProcessDeps(
     prov,
     {
@@ -67,7 +64,7 @@ export const getJabProcessPreloaderDeps = (
 
   return {
     ...procDeps,
-    makeBee: makeJacsWorker,
+    makeBee: getMakeJacsWorker(),
     logProv: getLogProv(prov, ""),
   };
 };

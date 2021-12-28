@@ -12,7 +12,7 @@ type Executor<T> = (
  *
  * - prov is stored on the error object, so uh-exceptions can be mapped to its test case.
  */
-export const createJarunPromise = (prov: JarunTestProvision) =>
+export const makeJarunPromise = (prov: JarunTestProvision) =>
   class JarunPromise<T> extends Promise<T> {
     // for debugging and testing.
     public static getActivity = () => JarunPromise.activity;

@@ -6,8 +6,6 @@ import { ClientApiSendProv } from "./util";
 
 import { View, ViewProps } from "./View";
 
-// props
-
 export type Props = {
   action: ClientMessage;
   wsState: WsStates;
@@ -15,7 +13,7 @@ export type Props = {
 } & ViewProps;
 
 /**
- * Send websocket action 'when' a component mount.
+ * Send websocket action 'when' a component mounts.
  *
  * - The action is only performed as a first route effect.
  *
@@ -34,8 +32,8 @@ ViewAction.displayName = "ViewAction";
 
 /**
  * - The web socket must be connected, when this is called. It would be hard to wait
- *    for connection to become online. Because this might get unmounted in the meantime, so a
- *    cancel is also needed in that case.
+ *    for connection to become online. Because this might get unmounted in the meantime, and a
+ *    cancel would be needed in that case.
  */
 const Inner: React.FC<Props> = memo(
   ({ action, wsState, apiSend, ...extra }) => {

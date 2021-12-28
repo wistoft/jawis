@@ -1,7 +1,8 @@
-import { plugIntoModuleLoadOld } from "..";
-import { makeRequireSender, makeSend } from ".";
+import { interceptResolve } from "..";
+import { makeMakeRequireSender } from ".";
 
 import { ppMain } from "./ProcessPreloaderMainUtil";
+import { makeSend } from "^jab";
 
 export const wppMain = () => {
   //process preloader
@@ -10,5 +11,5 @@ export const wppMain = () => {
 
   //register require last, to avoid noise
 
-  plugIntoModuleLoadOld(makeRequireSender(makeSend()));
+  interceptResolve(makeMakeRequireSender(makeSend()));
 };

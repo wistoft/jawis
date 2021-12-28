@@ -7,7 +7,7 @@ import {
   zipTestLogs,
 } from "^jatec";
 
-import { TestState, State, TestStateUpdate } from ".";
+import { TestState, State, TestStateUpdate } from "./types";
 import { sortTestLogs } from "./util";
 
 /**
@@ -59,16 +59,9 @@ export const makeRogueUpdater = (
  *
  */
 export const makeTestCaseUpdater = (
-  unsortedTest: TestStateUpdate,
+  unsortedTestUpdate: TestStateUpdate,
   getRandomToken: () => number
 ) => (old: State): Partial<State> => {
-  const testCase = {
-    ...unsortedTest,
-    testLogs: sortTestLogs(unsortedTest.testLogs),
-  };
-
-  //quick fix: ensure we know the test. The test result could be from an old test selection, that is in progress of stopping.
-  // otherwise `getTestUpdate` will throw.
   //We can't even assert we have a test selection. Because an old test result, might arrive between a page is reloaded,
   // and the new test selection arrives.
 
@@ -76,13 +69,23 @@ export const makeTestCaseUpdater = (
     return {};
   }
 
-  const knownTest = old.tests.flatIds.some((id) => id === testCase.id);
+  //Ignore udpate, if we don't know the test. The test result could be from an old test selection,
+  // that is in progress of stopping. Otherwise `getTestUpdate` will throw.
+
+  const knownTest = old.tests.tryGetTest(unsortedTestUpdate.id);
 
   if (!knownTest) {
     return {};
   }
 
   //do it
+
+  const testCase = {
+    ...unsortedTestUpdate,
+    name: knownTest.name,
+    file: knownTest.file,
+    testLogs: sortTestLogs(unsortedTestUpdate.testLogs),
+  };
 
   const update1 = { tests: old.tests.getTestUpdate(testCase) };
 
@@ -99,7 +102,7 @@ export const makeTestCaseUpdater = (
  * update needed to current test, when some test changes.
  */
 export const getShowTestOnTestChangeUpdate = (
-  test: TestStateUpdate,
+  test: TestState,
   old: State,
   getRandomToken: () => number
 ): Partial<State> => {

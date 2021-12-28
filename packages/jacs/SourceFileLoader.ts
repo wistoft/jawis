@@ -11,14 +11,17 @@ import {
 } from "typescript";
 
 import { basename, JabError, prej, tos } from "^jab";
+import { makePrefixCode } from "^jab-node";
 
 import {
   dianosticToString,
   getTsPathsConfig,
   getTsConfigFromAbsConfigFile,
 } from ".";
+import { CompileService } from "./types";
 
-type Deps = {
+export type SourceFileLoaderDeps = {
+  lazyRequire: boolean;
   onError: (error: unknown) => void;
 };
 
@@ -33,23 +36,25 @@ type Deps = {
  *  watch lookup pathes, so we can detect new config files, and invalidate transpile results.
  *  way to send errors back to the running process.
  */
-export class SourceFileLoader {
+export class SourceFileLoader implements CompileService {
   private watcher: any;
 
   //contains the transpiled code.
   private cache: Map<string, string> = new Map();
 
   //contains the conf file path for a specific directory.
-  // null means the directory has no conf file under it.
+  // null means no conf file in the directory, or its parents.
   private confLookupCache: Map<string, string | null> = new Map();
 
-  //contains the looded configuration file.
+  //contains the loaded configuration files.
   private confCache: Map<string, CompilerOptions> = new Map();
+
+  private static prefix = makePrefixCode();
 
   /**
    *
    */
-  constructor(private deps: Deps) {
+  constructor(private deps: SourceFileLoaderDeps) {
     //watcher
 
     this.watcher = filewatcher();
@@ -85,7 +90,7 @@ export class SourceFileLoader {
 
       const raw = this.getCompilerOptions(absScriptPath);
 
-      //something fucks up for .ts files, when jsx is set.
+      //overwrite some of the parameters.
 
       const compilerOptions: CompilerOptions = {
         ...raw,
@@ -93,14 +98,22 @@ export class SourceFileLoader {
         inlineSourceMap: true,
       };
 
+      //something fucks up for .ts files, when jsx is set.
+
       if (absScriptPath.endsWith(".ts")) {
         delete compilerOptions.jsx;
       }
 
+      //add lazy loading
+
+      const source = this.deps.lazyRequire
+        ? SourceFileLoader.prefix + indata.toString()
+        : indata.toString();
+
       // transpile
 
-      //shouldn't compile .js files?
-      const compiledSource = this.transpile(indata.toString(), {
+      //todo: shouldn't compile .js files?
+      const compiledSource = this.transpile(source, {
         fileName: basename(absScriptPath),
         compilerOptions,
       });
@@ -179,7 +192,7 @@ export class SourceFileLoader {
     const res = findConfigFile(dir, fileExists);
 
     filesLookedAt.forEach((file) => {
-      //we have to used null, because undefined means no cache entry.
+      //we have to use null, because undefined means no cache entry.
       this.confLookupCache.set(
         path.normalize(path.dirname(file)),
         res === undefined ? null : res

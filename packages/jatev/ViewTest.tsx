@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { JsLink } from "^jab-react";
 import { ViewTestLog, Props as ViewTestLogProps } from "./ViewTestLog";
 
-import { TestState } from ".";
+import { TestState } from "./types";
 
 export type Props = {
   currentTest: TestState;
@@ -31,7 +31,7 @@ export const ViewTest: React.FC<Props> = memo(
       <JsLink name="rerun" onClick={onRunCurrentTest} title="Rerun test case" />
       &nbsp;&nbsp;&nbsp;&nbsp;
       <JsLink
-        name={currentTest.id}
+        name={currentTest.name}
         onClick={onEditCurrentTest}
         title="Edit test case"
       />

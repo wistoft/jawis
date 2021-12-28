@@ -5,14 +5,11 @@ import cp, {
   ForkOptions,
 } from "child_process";
 
-import { FinallyFunc, Waiter } from "^jab";
-
-export type JabShutdownMessage = {
-  type: "shutdown";
-};
+import { Bee, BeeStates, FinallyFunc, JabShutdownMessage, Waiter } from "^jab";
 
 export type ProcessDeps<MR extends Serializable> = {
   filename: string;
+  args?: string[];
   execArgv?: string[];
   stdio?: StdioOptions;
   cwd?: string;
@@ -39,7 +36,8 @@ type Events = "message";
  *
  * - execArgv is default [], not process.execArgv.
  */
-export class Process<MR extends Serializable, MS extends Serializable> {
+export class Process<MR extends Serializable, MS extends Serializable>
+  implements Bee<MS> {
   public cp: ChildProcess;
 
   public waiter: Waiter<States, Events>;
@@ -145,7 +143,7 @@ export class Process<MR extends Serializable, MS extends Serializable> {
       options.env = this.deps.env;
     }
 
-    return cp.fork(this.deps.filename, [], options);
+    return cp.fork(this.deps.filename, this.deps.args || [], options);
   };
 
   /**
@@ -230,4 +228,6 @@ export class Process<MR extends Serializable, MS extends Serializable> {
     this.waiter.noisyKill(() => this.cp.kill(), "Process");
 
   public kill = () => this.waiter.kill(() => this.cp.kill());
+
+  public is = (state: BeeStates) => this.waiter.is(state);
 }

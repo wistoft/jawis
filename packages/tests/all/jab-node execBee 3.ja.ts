@@ -1,10 +1,10 @@
-import { execBee } from "^jab-node";
+import { execBee } from "^jab";
 import { TestProvision } from "^jarun";
 
-import { getScriptPath, makeJacsWorker } from "../_fixture";
+import { getMakeJacsWorker, getScriptPath } from "../_fixture";
 
 //stdout is also returned, when error is thrown in worker.
 
 export default (prov: TestProvision) =>
-  execBee(getScriptPath("stdoutAndThrow.js"), prov.finally, makeJacsWorker)
+  execBee(getScriptPath("stdoutAndThrow.js"), prov.finally, getMakeJacsWorker())
     .promise;
