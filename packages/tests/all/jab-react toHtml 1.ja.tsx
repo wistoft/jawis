@@ -1,7 +1,9 @@
 import { TestProvision } from "^jarun";
-import { toHtml_test } from "../_fixture";
+import { quickFixFilter, toHtml_test } from "../_fixture";
 
-export default ({ imp }: TestProvision) => {
+export default ({ imp, filter }: TestProvision) => {
+  filter("imp", quickFixFilter);
+
   imp(toHtml_test(true));
   imp(toHtml_test([true, false]));
 

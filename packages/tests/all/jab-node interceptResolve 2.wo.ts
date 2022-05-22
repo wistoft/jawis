@@ -3,12 +3,12 @@ import { filterFilepath } from "^tests/_fixture";
 
 //clearing module cache implicitly clears relativeResolveCache, and resolve is intercepted again.
 
+filterFilepath("sdf"); //eager load
+
 interceptResolve((original) => (request, parent, isMain) => {
-  const res = original(request, parent, isMain);
+  console.log(request);
 
-  console.log(request, "\n\tresolved to: " + filterFilepath(res));
-
-  return res;
+  return original(request, parent, isMain);
 });
 
 eagerRequire(require, "../_fixture/scripts/hello.js");

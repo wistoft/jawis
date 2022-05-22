@@ -13,10 +13,19 @@ export const getInMemoryBee = <MR = {}>(
  */
 export const makeDormentInMemoryBee: MakeBee = <MR extends {}>(
   deps: BeeDeps<MR>
-) =>
-  new InMemoryBee(deps, {
+) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
+
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new InMemoryBee(deps, {
     onSend: () => Promise.reject(new Error("It's winter")),
   });
+};
 
 /**
  *

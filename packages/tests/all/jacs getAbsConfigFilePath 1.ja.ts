@@ -1,4 +1,3 @@
-
 import { getAbsConfigFilePath } from "^jacs";
 import { TestProvision } from "^jarun";
 import { filterFilepath } from "^tests/_fixture";

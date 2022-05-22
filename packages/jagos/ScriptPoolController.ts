@@ -17,7 +17,6 @@ import {
   ScriptOutput,
 } from "^jab";
 import {
-  TS_TIMEOUT,
   WatchableProcessPreloader,
   makePlainWorkerBee,
   getFileToRequire,
@@ -129,32 +128,31 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  private addScript = (dynamicallyLoaded: boolean) => (
-    def: ScriptDefinition
-  ) => {
-    //status
+  private addScript =
+    (dynamicallyLoaded: boolean) => (def: ScriptDefinition) => {
+      //status
 
-    this.status.push({
-      id: crypto.createHash("md5").update(def.script).digest("hex"),
-      script: def.script,
-      status: "stopped",
-      dynamicallyLoaded,
-    });
+      this.status.push({
+        id: crypto.createHash("md5").update(def.script).digest("hex"),
+        script: def.script,
+        status: "stopped",
+        dynamicallyLoaded,
+      });
 
-    //state
+      //state
 
-    this.state.set(def.script, {
-      ...def,
-      dynamicallyLoaded,
-    });
+      this.state.set(def.script, {
+        ...def,
+        dynamicallyLoaded,
+      });
 
-    //auto start
+      //auto start
 
-    if (def.autoStart) {
-      //depends on state being set.
-      this.restartScript(def.script);
-    }
-  };
+      if (def.autoStart) {
+        //depends on state being set.
+        this.restartScript(def.script);
+      }
+    };
 
   /**
    * Read scriptFolders again to find new script, and deleted scripts.
@@ -386,7 +384,7 @@ export class ScriptPoolController implements ScriptPoolProv {
 
     const deps = {
       customBooter,
-      filename: script,
+      def: { filename: script },
       onRestartNeeded: () => {
         if (autoRestart) {
           this.restartScript(script);
@@ -396,7 +394,7 @@ export class ScriptPoolController implements ScriptPoolProv {
         this.onStatusChange(script, "listening");
       },
 
-      timeout: 2 * TS_TIMEOUT, //for jacs compiler.
+      timeout: 10000, //for jacs compiler. todo: extract
 
       onError: this.deps.onError,
       finally: this.deps.finally,

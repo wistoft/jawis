@@ -107,7 +107,7 @@ export const writeScriptFileThatChanges = (
 /**
  *
  */
-export const makeGetRandomInteger = () => {
+export const makeGetIntegerSequence = () => {
   let i = 144000;
   return () => i++;
 };
@@ -204,3 +204,15 @@ export class ThrowInToString {
  *
  */
 export const removeCarriageReturn = (data: string) => data.replace(/\r/g, "");
+
+//quick fix for bug in "1.0.2-dev.1". It had JarunPromise
+export const quickFixFilter = (...val: unknown[]) => {
+  if (val.length > 0) {
+    val[0] = (val[0] as any).replace("JarunPromise : ", "");
+  }
+  return val;
+};
+
+export const empty = new TextEncoder().encode("");
+export const data1 = new TextEncoder().encode("data");
+export const data2 = new TextEncoder().encode("1234");

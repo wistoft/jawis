@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-import { err, FinallyFunc, JabError, NodeWSProv, Waiter } from "^jab";
+import { err, FinallyFunc, NodeWSProv, Waiter } from "^jab";
 
 export type WsUrl = { host: string; port: number; path: string };
 
@@ -37,7 +37,8 @@ export type SocketData = {};
  *  Kill functionality. Useful for also closing resource, when errors happen.
  */
 export class NodeWS<MS extends SocketData, MR extends SocketData>
-  implements NodeWSProv<MS, MR> {
+  implements NodeWSProv<MS, MR>
+{
   public ws: WebSocket;
 
   public waiter: Waiter<States, Events>;
@@ -146,12 +147,12 @@ export class NodeWS<MS extends SocketData, MR extends SocketData>
   /**
    *
    */
-  private onMessage = (rawMsg: string) => {
+  private onMessage = (rawMsg: string | Buffer) => {
     // console.log("nodews message", message);
 
     if (!this.waiter.is("running")) {
       this.deps.onError(
-        new JabError(
+        new Error(
           "Received message while not open." +
             " (state:" +
             this.waiter.getState() +
@@ -165,11 +166,11 @@ export class NodeWS<MS extends SocketData, MR extends SocketData>
     let msg: MR;
 
     try {
-      if (typeof rawMsg !== "string") {
+      if (typeof rawMsg !== "string" && !(rawMsg instanceof Buffer)) {
         throw err("Unknown message type.", rawMsg);
       }
 
-      msg = JSON.parse(rawMsg);
+      msg = JSON.parse(rawMsg.toString());
     } catch (e) {
       this.deps.onError(e);
       return;

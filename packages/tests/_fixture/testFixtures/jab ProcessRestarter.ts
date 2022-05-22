@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { ProcessRestarter, ProcessRestarterDeps, TS_TIMEOUT } from "^jab-node";
+import { ProcessRestarter, ProcessRestarterDeps } from "^jab-node";
 
 import { getLogProv, getScriptPath, makeInMemoryWppMain } from ".";
 
@@ -28,7 +28,7 @@ export const getProcessRestarter_running = (
 
   jpr.firstInitProcess();
 
-  return jpr.waiter.await("running", TS_TIMEOUT).then(() => jpr);
+  return jpr.waiter.await("running").then(() => jpr);
 };
 
 /**
@@ -39,7 +39,8 @@ export const getJarunProcessRestarterDeps = (
   logPrefix = "",
   extraDeps?: Partial<ProcessRestarterDeps<any>>
 ): ProcessRestarterDeps<any> => ({
-  filename: getScriptPath("silentWait.js"),
+  def: { filename: getScriptPath("silentWait.js") },
+
   makeBee: makeInMemoryWppMain,
 
   onMessage: (msg) => {

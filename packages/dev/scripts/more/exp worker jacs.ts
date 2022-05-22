@@ -1,5 +1,4 @@
 import { runScaleExp } from "^misc";
-import { TS_TIMEOUT } from "^jab-node";
 
 import { getScriptPath } from "^tests/_fixture";
 
@@ -15,7 +14,7 @@ runScaleExp({
       // filename: path.join(__dirname, "util/helloJab.ts"),
     });
 
-    return proc.waiter.await("stopped", TS_TIMEOUT);
+    return proc.waiter.await("stopped");
   },
 }).then((res) => {
   console.log(res);

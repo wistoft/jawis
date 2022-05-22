@@ -1,0 +1,1 @@
+{"user":{"stdout":["{\n  type: 'node-parsed',\n  stack: [\n    {\n      line: 10,\n      file: 'E:\\\\work\\\\repos\\\\jawis\\\\packages\\\\tests\\\\cur\\\\hello 1.wo.ts',\n      func: '',\n      rawLine: 12\n    },\n    {\n      line: 95,\n      file: 'internal/process/task_queues.js',\n      func: 'processTicksAndRejections'\n    }\n  ]\n}\n"]}}

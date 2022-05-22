@@ -12,7 +12,12 @@ import {
 } from "^jates";
 
 import { JestAdapter, MochaAdapter } from "^util-javi/node";
-import { makeCommandBee, MakeJabProcess, makePowerBee } from "^jab-node";
+import {
+  makeCommandBee,
+  makeNodeConfMakeBee,
+  MakeJabProcess,
+  makePowerBee,
+} from "^jab-node";
 import { BeeRunner, JarunProcessController } from "^jarun";
 import {
   MakeJarunBrowserProcessRestarterDeps,
@@ -24,54 +29,56 @@ import {
 /**
  *
  */
-export const makeMakeTestFramework = (outerDeps: {
-  absTestLogFolder: string;
-  testFrameworkDef: TestFrameworkDefinition;
-  makeJarunTestRunners: MakeTestRunners;
-}): MakeTestFramework => (deps) => {
-  //quick fix to always have jarun.
-  const jarun = new JarunTestFramework({
-    absTestFolders: outerDeps.testFrameworkDef.absJarunTestFolders,
-    subFolderIgnore: ["node_modules"], //todo extract to conf
-    runners: outerDeps.makeJarunTestRunners({
-      onRogueTest: deps.onRogueTest,
+export const makeMakeTestFramework =
+  (outerDeps: {
+    absTestLogFolder: string;
+    testFrameworkDef: TestFrameworkDefinition;
+    makeJarunTestRunners: MakeTestRunners;
+  }): MakeTestFramework =>
+  (deps) => {
+    //quick fix to always have jarun.
+    const jarun = new JarunTestFramework({
+      absTestFolders: outerDeps.testFrameworkDef.absJarunTestFolders,
+      subFolderIgnore: ["node_modules"], //todo extract to conf
+      runners: outerDeps.makeJarunTestRunners({
+        onRogueTest: deps.onRogueTest,
+        onError: deps.onError,
+        logProv: deps.logProv,
+        finally: deps.finally,
+        onRequire: deps.onRequire,
+      }),
       onError: deps.onError,
-      logProv: deps.logProv,
-      finally: deps.finally,
-      onRequire: deps.onRequire,
-    }),
-    onError: deps.onError,
-  });
+    });
 
-  const frameworks: TestFrameworkProv<MinimalTestId>[] = [];
+    const frameworks: TestFrameworkProv<MinimalTestId>[] = [];
 
-  if (outerDeps.testFrameworkDef.jarun) {
-    frameworks.push(jarun);
-  }
+    if (outerDeps.testFrameworkDef.jarun) {
+      frameworks.push(jarun);
+    }
 
-  if (outerDeps.testFrameworkDef.absMochaTestFolder) {
-    frameworks.push(
-      new MochaAdapter({
-        absTestFolder: outerDeps.testFrameworkDef.absMochaTestFolder,
-      })
-    );
-  }
+    if (outerDeps.testFrameworkDef.absMochaTestFolder) {
+      frameworks.push(
+        new MochaAdapter({
+          absTestFolder: outerDeps.testFrameworkDef.absMochaTestFolder,
+        })
+      );
+    }
 
-  if (outerDeps.testFrameworkDef.absJestTestFolder) {
-    frameworks.push(
-      new JestAdapter({
-        absTestFolder: outerDeps.testFrameworkDef.absJestTestFolder,
-      })
-    );
-  }
+    if (outerDeps.testFrameworkDef.absJestTestFolder) {
+      frameworks.push(
+        new JestAdapter({
+          absTestFolder: outerDeps.testFrameworkDef.absJestTestFolder,
+        })
+      );
+    }
 
-  return new ComposedTestFramework({
-    onError: deps.onError,
-    absTestLogFolder: outerDeps.absTestLogFolder,
-    frameworks,
-    jarun,
-  });
-};
+    return new ComposedTestFramework({
+      onError: deps.onError,
+      absTestLogFolder: outerDeps.absTestLogFolder,
+      frameworks,
+      jarun,
+    });
+  };
 
 export type MakeTestRunners = (deps: {
   onRogueTest: OnRogue;
@@ -108,7 +115,7 @@ export const makeMakeJarunTestRunners = (
 
     const wo = new BeeRunner({
       ...deps,
-      makeBee: outerDeps.makeTsBee,
+      makeBee: makeNodeConfMakeBee(outerDeps.makeTsBee, {}),
     });
 
     const ww = new BeeRunner({

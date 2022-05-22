@@ -1,10 +1,13 @@
 import nativeModule from "module";
 import isBuiltinModule from "is-builtin-module";
-import type { SharedMap as SharedMapType } from "sharedmap";
 
-const SharedMap = require("sharedmap") as typeof SharedMapType; //hack because of typing mismatch.
+//hack because of typing mismatch.
+
+import type { SharedMap as SharedMapType } from "sharedmap";
+const SharedMap = require("sharedmap") as typeof SharedMapType;
 
 // to handle webpack as compiler.
+
 export const nodeRequire: NodeRequire = eval("require");
 
 /**
@@ -60,7 +63,7 @@ export type FullNodeModule = NodeJS.Module & ModuleInternals;
 export type FullNativeModule = typeof nativeModule & ModuleInternals;
 
 //to get the full typing.
-export const Module = (nativeModule as unknown) as FullNativeModule;
+export const Module = nativeModule as unknown as FullNativeModule;
 
 //
 // _load
@@ -185,13 +188,13 @@ export const registerPrecompilers = (
 /**
  * Transform loaded code, before it's compiled as oridinary JavaScript code.
  *
- * - The original .js handler loads the file.
+ * - The original .js handler loads the file, and calls `module._compile`.
  */
 export const registerCompile = (
   ext: string,
   makeHandler: (original: CompileFunction) => CompileFunction
 ) => {
-  const originalJs = nodeRequire.extensions[".js"]; //capture before, in case '.js' is registers.
+  const originalJs = nodeRequire.extensions[".js"]; //capture before, in case '.js' is registered.
 
   registerExtension(ext, () => (module, filename) => {
     module._compile = makeHandler(module._compile);
@@ -276,32 +279,32 @@ export const makeSharedResolveMap = () => {
  * impl
  *  - Use \x01 byte as separator, because SharedMap uses \x00
  */
-export const makeMakeCachedResolve = (sharedMap: any) => (
-  original: ResolveFilename
-): ResolveFilename => {
-  // Manually restore the prototype of SharedMap
-  Object.setPrototypeOf(sharedMap, SharedMap.prototype);
+export const makeMakeCachedResolve =
+  (sharedMap: any) =>
+  (original: ResolveFilename): ResolveFilename => {
+    // Manually restore the prototype of SharedMap
+    Object.setPrototypeOf(sharedMap, SharedMap.prototype);
 
-  return (request, parent, isMain) => {
-    if (isMain) {
-      //don't know what is special, so let node handle it.
-      return original(request, parent, isMain);
-    }
+    return (request, parent, isMain) => {
+      if (isMain) {
+        //don't know what is special, so let node handle it.
+        return original(request, parent, isMain);
+      }
 
-    const key = request + "\x01" + parent.path;
+      const key = request + "\x01" + parent.path;
 
-    const cachedValue = sharedMap.get(key);
+      const cachedValue = sharedMap.get(key);
 
-    if (cachedValue) {
-      return cachedValue;
-    }
+      if (cachedValue) {
+        return cachedValue;
+      }
 
-    const newValue = original(request, parent, isMain);
+      const newValue = original(request, parent, isMain);
 
-    if (!isBuiltinModule(request) && newValue.includes("node_modules")) {
-      sharedMap.set(key, newValue);
-    }
+      if (!isBuiltinModule(request) && newValue.includes("node_modules")) {
+        sharedMap.set(key, newValue);
+      }
 
-    return newValue;
+      return newValue;
+    };
   };
-};

@@ -2,6 +2,13 @@ import { TestProvision } from "^jarun";
 
 import { getWaiter } from "../_fixture";
 
-// await timeout
+// await twice.
 
-export default (prov: TestProvision) => getWaiter(prov).await("done");
+export default (prov: TestProvision) => {
+  const waiter = getWaiter(prov);
+
+  prov.await(waiter.await("done", 1));
+  prov.await(waiter.await("done", 1));
+
+  waiter.set("done");
+};

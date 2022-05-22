@@ -1,23 +1,22 @@
-import { getPromise, unknownToErrorData } from "^jab";
+import async_hooks from "async_hooks";
+
+import { enable, unknownToErrorData } from "^jab";
 import { TestProvision } from "^jarun";
-import { filterStackTrace, enableLongTraceForTest } from "^tests/_fixture";
+
+import { makeLiveJacs_lazy, filterStackTrace } from "../_fixture";
 
 // Error trace requested in child context. But trace still reflects parent context.
 
-export default (prov: TestProvision) => {
-  enableLongTraceForTest(prov);
+export default (prov: TestProvision) => makeLiveJacs_lazy(prov, __filename);
 
-  const prom = getPromise<void>();
-  prov.await(prom.promise);
+export const main = () => {
+  enable(async_hooks);
 
   setTimeout(() => {
     const err = new Error("asdf");
 
     setTimeout(() => {
-      prov.imp(filterStackTrace(unknownToErrorData(err)));
-      prom.resolve();
+      console.log(filterStackTrace(unknownToErrorData(err)));
     });
   });
-
-  return prom.promise;
 };

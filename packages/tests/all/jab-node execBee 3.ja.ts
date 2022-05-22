@@ -3,8 +3,13 @@ import { TestProvision } from "^jarun";
 
 import { getMakeJacsWorker, getScriptPath } from "../_fixture";
 
-//stdout is also returned, when error is thrown in worker.
+//stdout isn't returned, when error is thrown in worker.
+
+//this can't be better without making a custom booter like: `beeConfMain.ts`
 
 export default (prov: TestProvision) =>
-  execBee(getScriptPath("stdoutAndThrow.js"), prov.finally, getMakeJacsWorker())
-    .promise;
+  execBee({
+    def: { filename: getScriptPath("stdoutAndThrow.js") },
+    finallyFunc: prov.finally,
+    makeBee: getMakeJacsWorker(),
+  }).promise;

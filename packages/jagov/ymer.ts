@@ -7,7 +7,9 @@ import {
 } from "^jab";
 import { makeOnError, monkeyPatchConsoleFunction } from "./ymerUtil";
 
-// ymer minder meget om: ScriptWrapperMain.ts
+//
+// minder meget om: beeConfMain.ts
+//
 
 /*
  * Note

@@ -10,7 +10,7 @@ import {
   isBoolean,
   assert,
 } from "^jab";
-import { makeAbsolute, UserMessage } from "^jab-node";
+import { makeAbsolute, makeUserMessage } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
 import { FullJaviConf } from "./types";
@@ -48,14 +48,14 @@ export const getJaviConf = (
   //handle
 
   if (!isObject(conf)) {
-    throw new UserMessage( "Javi: config file must export an object. Exported: " + typeof conf ); // prettier-ignore
+    throw makeUserMessage( "Javi: config file must export an object. Exported: " + typeof conf ); // prettier-ignore
   }
 
   if ("default" in conf) {
     conf = conf.default; //support export default.
 
     if (!isObject(conf)) {
-      throw new UserMessage( "Javi: config file must default export an object. Exported: " + typeof conf ); // prettier-ignore
+      throw makeUserMessage( "Javi: config file must default export an object. Exported: " + typeof conf ); // prettier-ignore
     }
   }
 
@@ -101,7 +101,7 @@ export const getFullConf = (
     const file = onlyBasenameInErrors
       ? path.basename(absTestFolder)
       : absTestFolder;
-    throw new UserMessage( "Javi: testFolder must exist: " + file ); // prettier-ignore
+    throw makeUserMessage( "Javi: testFolder must exist: " + file ); // prettier-ignore
   }
 
   delete conf.testFolder;
@@ -193,7 +193,7 @@ export const getFullConf = (
       if (!fs.existsSync(file)) {
         const fileForError = onlyBasenameInErrors ? path.basename(file) : file;
 
-        throw new UserMessage( "Javi: scriptFolders[" + index + "] must exist: " + fileForError ); // prettier-ignore
+        throw makeUserMessage( "Javi: scriptFolders[" + index + "] must exist: " + fileForError ); // prettier-ignore
       }
 
       return file;
@@ -213,7 +213,7 @@ export const getFullConf = (
       const prefix = "Javi: scripts[" + index + "]";
 
       if (!isObject(def)) {
-        throw new UserMessage( prefix + " must be object, was: " + def ); // prettier-ignore
+        throw makeUserMessage( prefix + " must be object, was: " + def ); // prettier-ignore
       }
 
       const res: ScriptDefinition = {
@@ -233,7 +233,7 @@ export const getFullConf = (
           ? path.basename(res.script)
           : res.script;
 
-        throw new UserMessage(prefix + " must exist: " + fileForError);
+        throw makeUserMessage(prefix + " must exist: " + fileForError);
       }
 
       return res;
@@ -279,5 +279,5 @@ export const a = <T>(
     return value;
   }
 
-  throw new UserMessage(msg);
+  throw makeUserMessage(msg);
 };

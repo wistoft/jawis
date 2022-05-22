@@ -40,12 +40,20 @@ export class BuzzController {
   public makeBee: MakeBee = <MS extends {}, MR extends {}>(
     beeDeps: BeeDeps<MR>
   ) => {
-    const fileUrl = beeDeps.filename; //quick fix. filename is missleading. Maybe fileUrl is better.
+    if (beeDeps.def.data) {
+      throw new Error("data not impl");
+    }
+
+    if (beeDeps.def.next) {
+      throw new Error("next not impl");
+    }
+
+    const fileUrl = beeDeps.def.filename; //quick fix. filename is missleading. Maybe fileUrl is better.
 
     //check
 
     if (this.shells.has(fileUrl)) {
-      err("Bee with this name already exists.", beeDeps.filename);
+      err("Bee with this name already exists.", beeDeps.def.filename);
     }
 
     //intercept stuff

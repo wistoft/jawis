@@ -1,9 +1,9 @@
-require("../scratchFolder/FileThatChanges");
+require("./hello");
 
 //request will only result in one require message.
-require("../scratchFolder/FileThatChanges2");
-require("../scratchFolder/FileThatChanges2");
-require("../scratchFolder/FileThatChanges2");
+require("./helloTs.ts");
+require("./helloTs.ts");
+require("./helloTs.ts");
 
 //native modules are also sent
 

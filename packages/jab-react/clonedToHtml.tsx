@@ -24,33 +24,35 @@ export const clonedArrayEntriesToHtml = (arr: ClonedValue[]) =>
 /**
  *
  */
-export const makeToAtomizedString = (mapToAtoms: Strings) => (
-  value: ClonedValue
-) => clonedTosGeneral(value, mapToAtoms);
+export const makeToAtomizedString =
+  (mapToAtoms: Strings) => (value: ClonedValue) =>
+    clonedTosGeneral(value, mapToAtoms);
 
 /**
  *
  */
-export const makeReplaceAtoms = (
-  atoms: string[],
-  mapToFinal: {
-    [_: string]: JSX.Element | string;
-  }
-) => (str: string): Array<JSX.Element | string | null> => {
-  const regExp = new RegExp("(" + atoms.join("|") + ")", "gu");
-
-  const s = str.split(regExp);
-
-  return s.map((sub, index) => {
-    if (sub.match(regExp) !== null) {
-      return <React.Fragment key={index}>{mapToFinal[sub]}</React.Fragment>;
-    } else if (sub === "") {
-      return null;
-    } else {
-      return sub;
+export const makeReplaceAtoms =
+  (
+    atoms: string[],
+    mapToFinal: {
+      [_: string]: JSX.Element | string;
     }
-  });
-};
+  ) =>
+  (str: string): Array<JSX.Element | string | null> => {
+    const regExp = new RegExp("(" + atoms.join("|") + ")", "gu");
+
+    const s = str.split(regExp);
+
+    return s.map((sub, index) => {
+      if (sub.match(regExp) !== null) {
+        return <React.Fragment key={index}>{mapToFinal[sub]}</React.Fragment>;
+      } else if (sub === "") {
+        return null;
+      } else {
+        return sub;
+      }
+    });
+  };
 
 /**
  *

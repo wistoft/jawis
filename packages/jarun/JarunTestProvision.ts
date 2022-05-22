@@ -8,13 +8,13 @@ import {
   def,
   err,
   FinallyFunc,
-  JabError,
   looping,
+  PromiseAwait,
   tryProp,
   unknownToErrorData,
 } from "^jab";
 
-import { JarunEqAssertation } from "./JarunEqAssertation";
+import { makeJarunEqAssertation } from "./JarunEqAssertation";
 
 export type TestProvision = {
   chk: (val: unknown) => void;
@@ -54,13 +54,10 @@ export class JarunTestProvision implements TestProvision {
 
   private finallyFuncs: Array<() => void | undefined | Promise<void>> = [];
 
-  private filterFuncs: Map<
-    string,
-    (...val: unknown[]) => unknown[]
-  > = new Map();
+  private filterFuncs: Map<string, (...val: unknown[]) => unknown[]> =
+    new Map();
 
-  //cleared from outside, during await phase.
-  public awaitPromises: Promise<unknown>[] = [];
+  public promiseAwait = new PromiseAwait(this);
 
   constructor(private deps: Deps) {}
 
@@ -78,7 +75,7 @@ export class JarunTestProvision implements TestProvision {
     if (val === true) {
       return;
     } else {
-      throw new JarunEqAssertation(true, val);
+      throw makeJarunEqAssertation(true, val);
     }
   };
 
@@ -89,7 +86,7 @@ export class JarunTestProvision implements TestProvision {
     this.throwIfRogue();
 
     if (!deepEqual(exp, cur, { strict: true })) {
-      throw new JarunEqAssertation(exp, cur);
+      throw makeJarunEqAssertation(exp, cur);
     }
   };
 
@@ -101,7 +98,7 @@ export class JarunTestProvision implements TestProvision {
 
     if (deepEqual(exp, cur, { strict: true })) {
       // quick fix
-      throw new JarunEqAssertation(exp, cur);
+      throw makeJarunEqAssertation(exp, cur);
     }
   };
 
@@ -226,17 +223,17 @@ export class JarunTestProvision implements TestProvision {
 
   /**
    * - Rogue allowed, because we need a way to report those errors.
-   * - Explicit return undefined. It's a stronger guarantee, than 'returning' void.
    * - no motivation to handle rogue chk logs specially.
+   * - Explicit return type: undefined. It's a stronger guarantee, than void.
    */
   public onError = (error: unknown, extraInfo?: Array<unknown>): undefined => {
-    const name = tryProp(error, "name");
+    const getJarunEqAssertationData = tryProp(error, "getJarunEqAssertationData"); // prettier-ignore
 
-    if (name === "JarunEqAssertation") {
+    if (getJarunEqAssertationData) {
       assert(this.active, "Congratulations, rare race condition.");
       assert(this.logs.chk === undefined, "not supported: multiple chk logs.");
 
-      this.logs["chk"] = (error as JarunEqAssertation).getSomething();
+      this.logs["chk"] = (error as any).getJarunEqAssertationData();
     } else {
       if (this.active) {
         if (this.logs["err"] === undefined) {
@@ -320,15 +317,16 @@ export class JarunTestProvision implements TestProvision {
   };
 
   /**
-   * The test won't end before the promise has resolved.
+   * The test won't end before the promise has settled.
    *
    * - The value from the promise isn't used for anything.
+   * - If the promise rejects, it's logged to the 'err' log.
    * - There's no need to wait for the returned promise. It's just for convenience.
    */
   public await = <T>(prom: Promise<T>) => {
     this.throwIfRogue();
 
-    this.awaitPromises.push(prom);
+    this.promiseAwait.await(prom);
 
     return prom;
   };
@@ -337,8 +335,8 @@ export class JarunTestProvision implements TestProvision {
    * Assert that the promise resolves to the expected value.
    *
    * - This allows concurrent assertations.
-   * - Different from the async-await mechanism. The are for sequential assertations. But they are
-   *    easier to use, so do that, if possible.
+   * - Different from the async-await mechanism. That is for sequential assertations. But they are
+   *    easier to use, if possible.
    * - It's not necessary to wait for the returned promise.
    */
   public res = (exp: unknown, prom: Promise<unknown>) =>
@@ -358,7 +356,7 @@ export class JarunTestProvision implements TestProvision {
     this.await(
       prom.then(
         (cur) => {
-          throw new JabError("Expected rejection, but got:", cur);
+          err("Expected rejection, but got:", cur);
         },
         (error) => {
           if (tryProp(error, "getErrorData")) {

@@ -1,8 +1,6 @@
 import filewatcher from "filewatcher";
 
-import { def, RequireSenderMessage } from "^jab";
-
-import type { BeeListeners } from "^jab";
+import { def, RequireSenderMessage, BeeListeners } from "^jab";
 
 import { ProcessPreloaderDeps, ProcessPreloader, getFileToRequire } from ".";
 

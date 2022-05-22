@@ -15,7 +15,7 @@ import { ViewEntry, Props as ViewEntryProps } from "^console/ViewEntry";
 import { ViewLogEntry } from "^console/ViewLogEntry";
 import { makeConsoleChangeCallback } from "^console/makeUseConsoleStream";
 
-import { defaultConsoleState, makeGetRandomInteger, getUiEntries } from ".";
+import { defaultConsoleState, makeGetIntegerSequence, getUiEntries } from ".";
 import { makeStdioFilter } from "^util-javi/node";
 
 export const jcvProps = (): ConsoleProps => ({
@@ -120,7 +120,7 @@ export const addDataUpdate_empty = (
 
   const callbacks = createCallbacks({
     setState,
-    makeReactKey: makeGetRandomInteger(),
+    makeReactKey: makeGetIntegerSequence(),
   });
 
   // do it

@@ -1,7 +1,9 @@
 import { TestProvision } from "^jarun";
-import { tos_async, tos_test } from "../_fixture";
+import { quickFixFilter, tos_async, tos_test } from "../_fixture";
 
-export default async ({ imp }: TestProvision) => {
+export default async ({ imp, filter }: TestProvision) => {
+  filter("imp", quickFixFilter);
+
   imp(tos_test(true));
   imp(tos_test([true, false]));
 

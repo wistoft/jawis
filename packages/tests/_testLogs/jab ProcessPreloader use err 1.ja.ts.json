@@ -1,1 +1,1 @@
-{"user":{"childMessage":[{"type":"msg","value":"hello"},{"type":"script-required"}]},"err":["Error: The bee is already used."]}
+{"user":{"bee.message":[{"type":"msg","value":"hello"},{"type":"script-required"}]},"err":["Error: The bee is already used."]}

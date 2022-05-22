@@ -1,1 +1,1 @@
-{"user":{"stdout":["../_fixture/scripts/hello.js \n\tresolved to: packages/tests/_fixture/scripts/hello.js\nhello\n../_fixture/scripts/hello.js \n\tresolved to: packages/tests/_fixture/scripts/hello.js\nhello\n"]}}
+{"user":{"stdout":["../_fixture/scripts/hello.js\nhello\n../_fixture/scripts/hello.js\nhello\n"]}}

@@ -1,1 +1,1 @@
-{"user":{},"return":{"stdout":"hello there\n","stderr":"","status":1,"messages":["value",[]],"logs":["value",[]],"errors":["value",[["object",{"protoChain":["Error","Object"],"fields":{},"toStringValue":"Error: ups"}]]]}}
+{"user":{},"return":{"stdout":"hello 1\n","stderr":"","status":1,"messages":["value",[]],"logs":["value",[]],"errors":["value",[["object",{"protoChain":["Error","Object"],"fields":{},"toStringValue":"Error: ups"}]]]}}

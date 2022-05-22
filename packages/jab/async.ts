@@ -1,4 +1,4 @@
-import { err, JabError } from ".";
+import { err, makeJabError } from ".";
 
 export type PromiseTriple<T> = {
   promise: Promise<T>;
@@ -202,7 +202,7 @@ export const timeRace = <T>(
 };
 
 /**
- * Like Promise.race, and a callback is called for each of the loosing promises.
+ * Like Promise.race, but callbacks are called with the loosing promises as args.
  */
 export const fullRace = <T>(
   arr: Array<{ promise: Promise<T>; fallback: (promise: Promise<T>) => void }>
@@ -349,7 +349,7 @@ export const assertUnsettled = (
   timeout = 10
 ) => {
   //somewhat hacky, but the stack trace in lambda below gives no relevant information. So why not?
-  const betterError = new JabError("assertUnsettled() - placeholder.");
+  const betterError = makeJabError("assertUnsettled() - placeholder.");
 
   //setup
 
@@ -413,3 +413,50 @@ export const makeCatchingSetTimeout =
       ms,
       ...args
     );
+
+/**
+ * Await promises dynamically. Meaning the array of promises can be added during wait.
+ */
+export class PromiseAwait {
+  private promiseCount = 0;
+  private settleCount = 0;
+  private prom?: PromiseTriple<void>;
+
+  constructor(
+    private deps: {
+      onError: (error: unknown, extraInfo?: Array<unknown>) => void;
+    }
+  ) {}
+
+  /**
+   *
+   */
+  public await = (p: Promise<unknown>) => {
+    this.promiseCount++;
+
+    p.catch(this.deps.onError).finally(() => {
+      this.settleCount++;
+
+      if (this.prom && this.promiseCount === this.settleCount) {
+        this.prom.resolve();
+      }
+    });
+  };
+
+  /**
+   *
+   */
+  public start = () => {
+    if (this.prom) {
+      throw new Error("Multiple use not implemented");
+    }
+
+    if (this.promiseCount === this.settleCount) {
+      return Promise.resolve();
+    }
+
+    this.prom = getPromise();
+
+    return this.prom.promise;
+  };
+}

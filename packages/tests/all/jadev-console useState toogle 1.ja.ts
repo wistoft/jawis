@@ -2,14 +2,14 @@ import { TestProvision } from "^jarun";
 
 import { act } from "@testing-library/react-hooks";
 import { useConsoleState } from "^console";
-import { makeGetRandomInteger, getUiEntries } from "../_fixture";
+import { makeGetIntegerSequence, getUiEntries } from "../_fixture";
 import { wrapHook } from "^misc/node";
 
 //
 
 export default ({ imp }: TestProvision) => {
   const { result, rerender } = wrapHook(() =>
-    useConsoleState(makeGetRandomInteger(), getUiEntries())
+    useConsoleState(makeGetIntegerSequence(), getUiEntries())
   );
 
   //nothing set at first

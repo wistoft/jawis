@@ -1,5 +1,3 @@
-import { Serializable } from "child_process";
-
 import { def, Waiter, Bee, BeeListeners } from "^jab";
 
 import { WatchableProcessPreloaderDeps, WatchableProcessPreloader } from ".";
@@ -18,7 +16,7 @@ type States = "ready" | "using" | "stopping" | "done";
  * todo
  *  when cancelled, this remains in using-state, and becomes unusable.
  */
-export class ReusableWPP<MR extends Serializable, MS extends Serializable> {
+export class ReusableWPP<MR, MS> {
   private wpp?: WatchableProcessPreloader<MS>;
   private waiter: Waiter<States, never>;
 

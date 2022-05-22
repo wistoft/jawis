@@ -1,15 +1,8 @@
 import path from "path";
 import { Worker } from "worker_threads";
 
-import { assert, execBee, FinallyFunc, MakeBee } from "^jab";
-import {
-  makePlainJabProcess,
-  MakeJabProcess,
-  MakeNodeWorker,
-  Process,
-  JabWorker,
-  JabWorkerDeps,
-} from "^jab-node";
+import { assert, BeeDeps, MakeBee } from "^jab";
+import { MakeJabProcess, MakeNodeWorker, Process, JabWorker } from "^jab-node";
 
 /**
  *
@@ -78,25 +71,15 @@ export const makeTsNodeWorker: MakeNodeWorker = (filename, options = {}) => {
 /**
  *
  */
-export const makeTsNodeWorkerBee: MakeBee = <MR, WD>(
-  deps: Omit<JabWorkerDeps<MR, WD>, "makeWorker">
-) => new JabWorker({ ...deps, makeWorker: makeTsNodeWorker });
-
-/**
- *
- */
-export const makeTsNodeJabProcessConditionally: MakeJabProcess = (deps) => {
-  if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
-    return makeTsNodeJabProcess(deps);
-  } else {
-    return makePlainJabProcess(deps);
+export const makeTsNodeWorkerBee: MakeBee = <MR>(deps: BeeDeps<MR>) => {
+  if (deps.def.next) {
+    throw new Error("next not impl");
   }
-};
 
-/**
- *
- */
-export const nodeExecTsNodeConditionally = (
-  script: string,
-  finallyFunc: FinallyFunc = () => {}
-) => execBee(script, finallyFunc, makeTsNodeJabProcessConditionally);
+  return new JabWorker({
+    ...deps,
+    filename: deps.def.filename,
+    workerData: deps.def.data as any,
+    makeWorker: makeTsNodeWorker,
+  });
+};

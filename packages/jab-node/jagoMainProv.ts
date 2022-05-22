@@ -1,3 +1,4 @@
+import exit from "exit";
 import async_hooks from "async_hooks";
 
 import {
@@ -8,7 +9,6 @@ import {
   cloneArrayEntries,
   err,
   FinallyProvider,
-  fixErrorInheritance,
   indent,
   LogProv,
   unknownToErrorData,
@@ -17,7 +17,7 @@ import {
   isInstanceOf,
 } from "^jab";
 
-import { flushAndExit, MainProv, OnError } from ".";
+import { asyncFlushAndExit, MainProv, OnError } from ".";
 
 type MainWrapperDeps = {
   logPrefix?: string;
@@ -37,18 +37,13 @@ type MainWrapperDeps = {
  *    The message is for the end user, which have little use for the stack, in general, and no use for the stack,
  *    in this case, because the application intended to show a message to the user.
  */
-export class UserMessage extends Error {
-  constructor(private ownMessage: string) {
-    // fallback message for when this is caught as Error
-    super(ownMessage);
+export const makeUserMessage = (msg: string) => {
+  const e = new Error(msg);
 
-    fixErrorInheritance(this, UserMessage.prototype);
-  }
+  (e as any).userMessage = msg;
 
-  public getUserMessage() {
-    return this.ownMessage;
-  }
-}
+  return e;
+};
 
 /**
  * - sendImpl is needed for testing.
@@ -59,7 +54,7 @@ export const mainProvToJago = (
 ) => {
   const sendImpl = makeJagoSend(rawSendImpl);
 
-  const onError = makeJagoOnError(sendImpl);
+  const onError = makeJagoOnError_old(sendImpl);
   const finalProv = new FinallyProvider({ onError });
   const logProv = makeJagoLogProv(sendImpl, logPrefix);
 
@@ -74,17 +69,27 @@ export const mainProvToJago = (
 };
 
 /**
+ * Send errors over ipc.
  *
+ * exitOnError
+ *  - Note async exit is the best possible, if stdio the be flushed.
+ *  - This also means the process keeps running a while, even though it suppresses stdio.
+ *      It's observable by doing `fs.writeFileSync` or `process.send`.
+ *
+ * note no node
+ *  - jago ipc message does not suffer the same problem as stdio does. They will be sent
+ *      even though `process.exit` is called or uh-exception.
  */
-export const makeJagoOnError = (sendImpl: JagoSend): OnError => (
-  error,
-  extraInfo
-) => {
-  sendImpl({
-    type: "error",
-    data: unknownToErrorData(error, extraInfo),
-  });
-};
+export const makeJagoOnError_old =
+  (sendImpl: JagoSend, exitOnError = false): OnError =>
+  (error, extraInfo) => {
+    exitOnError && exit(0); //async flush stdio, then exit.
+
+    sendImpl({
+      type: "error",
+      data: unknownToErrorData(error, extraInfo),
+    });
+  };
 
 /**
  * Tries to batch stream data, so it at least gets less mixed between different streams.
@@ -276,7 +281,7 @@ export const mainWrapper = ({
       if (msg.type === "shutdown") {
         Promise.resolve()
           .then(mainProv.finalProv.runFinally)
-          .finally(flushAndExit);
+          .finally(asyncFlushAndExit);
       }
     });
   }
@@ -284,8 +289,8 @@ export const mainWrapper = ({
   try {
     main(mainProv);
   } catch (e) {
-    if (e instanceof UserMessage) {
-      mainProv.log(e.getUserMessage());
+    if ((e as any).userMessage) {
+      mainProv.log((e as any).userMessage);
     } else {
       throw e;
     }

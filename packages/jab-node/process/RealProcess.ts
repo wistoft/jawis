@@ -36,7 +36,8 @@ type Events = "message";
  *  - rename to Process, and Process to NodeProcess
  */
 export class RealProcess<MR extends Serializable, MS extends Serializable>
-  implements Bee<MS> {
+  implements Bee<MS>
+{
   public cp: ChildProcess;
 
   public waiter: Waiter<States, Events>;

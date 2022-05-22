@@ -8,5 +8,5 @@ import { getJagosDirector_with_script } from "^tests/_fixture/testFixtures/jagos
 export default (prov: TestProvision) =>
   getJagosDirector_with_script(prov).onClientMessage({
     type: "restartScript",
-    script: getScriptPath("hello.js"),
+    script: getScriptPath("silent.js"),
   });

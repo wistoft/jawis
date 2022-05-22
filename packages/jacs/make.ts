@@ -1,4 +1,4 @@
-import { Bee, BeeEvents, BeeStates, Waiter, WorkerBeeDeps } from "^jab";
+import { Bee, BeeEvents, BeeStates, Waiter, BeeDeps } from "^jab";
 
 import { JacsProducer, JacsProducerDeps } from "./JacsProducer";
 import { SourceFileLoader, SourceFileLoaderDeps } from "./SourceFileLoader";
@@ -13,7 +13,7 @@ export type MakeMakeJacsBeeDeps = Partial<
  * waiter is quick fix for testing.
  */
 export type MakeBeeWithWaiter = <MS extends {}, MR extends {}>(
-  deps: WorkerBeeDeps<MR>
+  deps: BeeDeps<MR>
 ) => Bee<MS> & { waiter: Waiter<BeeStates, BeeEvents> };
 
 /**

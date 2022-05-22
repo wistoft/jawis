@@ -14,8 +14,9 @@ export const makeAddDataUpdater = (
 ) => {
   const asyncs: Promise<(old: State) => State>[] = [];
 
-  const newEntries = entries.filter(preserveConsoleEntry).map(
-    (tmp): UiEntry => {
+  const newEntries = entries
+    .filter(preserveConsoleEntry)
+    .map((tmp): UiEntry => {
       const entry = mapConsoleEntry(tmp);
 
       if (entry.type === "stream") {
@@ -52,8 +53,7 @@ export const makeAddDataUpdater = (
       }
 
       return { id: makeReactKey(), ...entry };
-    }
-  );
+    });
 
   const sync = (old: State): State => ({
     ...old,
@@ -88,18 +88,17 @@ export const getErrorLogUpdateHelper = (
     return {
       sync: syncEntry,
       async: parseTraceAndSourceMap(entry.data.stack).then(
-        (parsedStack) => (old): State => ({
-          ...old,
-          logs: old.logs.map(
-            (entry): UiEntry => {
+        (parsedStack) =>
+          (old): State => ({
+            ...old,
+            logs: old.logs.map((entry): UiEntry => {
               if (entry.id === id && entry.type === "error") {
                 return { ...entry, data: { ...entry.data, parsedStack } };
               } else {
                 return entry;
               }
-            }
-          ),
-        })
+            }),
+          })
       ),
     };
   } else {

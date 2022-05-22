@@ -1,13 +1,18 @@
 import type async_hooks from "async_hooks";
-import { assert, CapturedStack, captureOwnStack, ParsedStackFrame } from "^jab";
+import {
+  assert,
+  CapturedStack,
+  captureOwnStack,
+  ParsedStackFrame,
+  replaceGlobalClass,
+  restoreGlobalClass,
+} from "^jab";
 
 //inspired by: https://github.com/AndreasMadsen/trace/blob/master/trace.js
 
 //Monkey patches Error constructor.
 // This is needed, because we can't determine at a later time, which async context the error was constructed in.
-// Problem: instanceof operator stops working for `Error`, so the function `isInstanceOf` can be used.
-
-declare const global: any;
+// Problem: extending Error must be done after enabling, to get things work for those errors.
 
 type AsyncType = "PROMISE" | "Timeout" | "FSREQCALLBACK"; //and a lot more.
 
@@ -39,67 +44,8 @@ const ancestorTraceDataById = new Map<number, TraceData | undefined>();
 //todo: this tree can be stored as references in the trace data. So the map becomes unneeded.
 const ancestorTree = new WeakMap<TraceData, TraceData | undefined>();
 
-/**
- *
- * - Simplied version of what TypeScript uses for downleveling classes to ES5
- * - Remember in constructor: Call super, and use returned value as `this`, and return `this`.
- *
- * note
- *  - Senitive to code position, because it's used during module load.
- */
-export function extend(_child: object, _super: object) {
-  if (typeof _super !== "function" && _super !== null)
-    throw new TypeError(
-      "Class extends value " + String(_super) + " is not a constructor"
-    );
-
-  Object.setPrototypeOf(_child, _super);
-
-  function PrototypeObject(this: any) {
-    this.constructor = _child;
-  }
-
-  PrototypeObject.prototype = _super.prototype;
-
-  (_child as any).prototype = new (PrototypeObject as any)();
-}
-
-/**
- *
- */
-export function replaceGlobalClass(_original: string, _new: any) {
-  _new._originalGlobalClass = global[_original];
-  global[_original] = _new;
-}
-
-/**
- *
- */
-export function restoreGlobalClass(_original: string, _new: any) {
-  if (_new !== global[_original]) {
-    throw new Error(
-      "The given class isn't the global now, class: " + _original
-    );
-  }
-
-  global[_original] = _new._originalGlobalClass;
-}
-
-/**
- * Replaces the `instanceof` operator when `replaceGlobalClass` has been used.
- */
-export function isInstanceOf<T extends new (...args: any) => any>(
-  obj: any,
-  parent: T
-): obj is InstanceType<T> {
-  let original = parent as any;
-
-  while (original._originalGlobalClass) {
-    original = original._originalGlobalClass;
-  }
-
-  return obj instanceof original;
-}
+//to be able to remove it, when disable.
+let CachedProxyErrorForLongTrace: any;
 
 /**
  * Hacky. But errors might be processed in another context. So we need this information rightaway.
@@ -107,13 +53,15 @@ export function isInstanceOf<T extends new (...args: any) => any>(
  * - Must be executed before any error objects are created. And any classes inherit from `Error`. Because Error is monkey patched.
  *
  * impl
- *  - selenium contruct errors without 'new' keyword, so it has to be a plain function.
- *      Which is the reason the the custom extend-function. Maybe TypeScript to ES5 would work.
+ *  - selenium contructs errors without 'new' keyword, so it has to be a plain function.
+ *      Which is the reason for the custom extend-function. Maybe TypeScript to ES5 would work.
  *  - We replace `Error`, so we need to capture it at define time.
  */
-export const ProxyErrorForLongTrace = ((_super) => {
-  function ProxyErrorForLongTrace(this: any, ...args: any) {
-    const _this = _super.apply(this, args) || this;
+export const makeProxyErrorForLongTrace = () => {
+  const OriginalError = Error; //captured at enable-time.
+
+  function ProxyErrorForLongTrace(msg?: string) {
+    const error = new OriginalError(msg);
 
     if (enabled) {
       try {
@@ -125,7 +73,7 @@ export const ProxyErrorForLongTrace = ((_super) => {
 
         //for `captureStack` to use.
 
-        Object.defineProperty(_this, "getAncestorStackFrames", {
+        Object.defineProperty(error, "getAncestorStackFrames", {
           value: (): CapturedStack => ({
             type: "node-parsed",
             stack: getAncestorTrace(traceData),
@@ -133,19 +81,45 @@ export const ProxyErrorForLongTrace = ((_super) => {
           enumerable: false,
           configurable: true,
         });
-      } catch (error) {
+      } catch (e) {
         //throwing when making an error, would be problematic.
-        console.log("Panic in ProxyErrorForLongTrace: " + error);
+        console.log("Panic in ProxyErrorForLongTrace: " + e);
       }
     }
 
-    return _this;
+    return error;
   }
 
-  extend(ProxyErrorForLongTrace, Error);
+  //copy all static properties from Error
+
+  // This also copies the prototype property, which means:
+  // 1. Make instances of Error also instance of ProxyErrorForLongTrace.
+  //      - Already existing instances of Error will return true for `error instanceof ProxyErrorForLongTrace`
+  //      - ProxyErrorForLongTrace also returns instances for Error, so it also need it, for `instanceof` to work.
+  // 2. And get inherited methods.
+
+  //quick fix for bug in "1.0.2-dev.1". Released long-traces didn't inherit properly.
+  const quick_fix = Error.hasOwnProperty("stackTraceLimit")
+    ? Error
+    : Object.getPrototypeOf(Error);
+
+  for (const method of Object.getOwnPropertyNames(quick_fix)) {
+    if (
+      method === "_originalGlobalClass" || //how to handle this one?
+      method === "length" ||
+      method === "name" ||
+      method === "caller" ||
+      method === "callee" ||
+      method === "arguments"
+    ) {
+      continue;
+    }
+
+    (ProxyErrorForLongTrace as any)[method] = (Error as any)[method];
+  }
 
   return ProxyErrorForLongTrace;
-})(Error);
+};
 
 /**
  *
@@ -155,7 +129,9 @@ export const ProxyErrorForLongTrace = ((_super) => {
 export const enable = (_asyncHooksImpl: typeof async_hooks) => {
   assert(!enabled, "Already enabled");
 
-  replaceGlobalClass("Error", ProxyErrorForLongTrace); //hacky, but no other way.
+  CachedProxyErrorForLongTrace = makeProxyErrorForLongTrace();
+
+  replaceGlobalClass("Error", CachedProxyErrorForLongTrace);
 
   enabled = true;
   asyncHooksImpl = _asyncHooksImpl;
@@ -165,6 +141,25 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
      * This is called in the parent scope, so we can get the parent trace and store it under the child id.
      */
     init(asyncId: number, type: AsyncType, triggerAsyncId: number) {
+      if (asyncHooksImpl.executionAsyncId() === asyncId) {
+        console.log("init() - excepted other async id.");
+      }
+
+      if (
+        type !== "PROMISE" &&
+        asyncHooksImpl.executionAsyncId() !== 0 &&
+        triggerAsyncId !== 0 &&
+        asyncHooksImpl.executionAsyncId() !== triggerAsyncId
+      ) {
+        //outputter stadig
+        // console.log(
+        //   "triggerAsyncId ambiguous " +
+        //     asyncHooksImpl.executionAsyncId() +
+        //     " " +
+        //     triggerAsyncId
+        // );
+      }
+
       const traceData: TraceData = {
         parentId: triggerAsyncId,
         err: new Error(), //this becomes the parent for errors thrown in this context.
@@ -180,7 +175,7 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
     },
 
     /**
-     * Only called for chained promises.
+     * Async hooks only calls this for chained promises. Not for root promises.
      *
      */
     before(asyncId: number) {
@@ -188,6 +183,26 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
 
       if (traceData && traceData.type === "PROMISE") {
         traceData.chainedPromise = true;
+      }
+    },
+
+    /**
+     *
+     */
+    after(asyncId: number) {
+      if (asyncHooksImpl.executionAsyncId() !== asyncId) {
+        console.log("after() - excepted other async id: " + asyncHooksImpl.executionAsyncId() + " " + asyncId); // prettier-ignore
+      }
+    },
+
+    /**
+     * todo: use as contract test.
+     */
+    promiseResolve(asyncId: number) {
+      if (asyncHooksImpl.executionAsyncId() !== asyncId) {
+        // console.log("root promise " + asyncId);
+      } else {
+        // console.log("chained promise " + asyncId);
       }
     },
 
@@ -212,11 +227,11 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
  *
  */
 export const disable = () => {
-  if (Error !== (ProxyErrorForLongTrace as any)) {
+  if (Error !== (CachedProxyErrorForLongTrace as any)) {
     throw new Error("The ErrorContructor has been changed since enable");
   }
 
-  restoreGlobalClass("Error", ProxyErrorForLongTrace);
+  restoreGlobalClass("Error", CachedProxyErrorForLongTrace);
 
   longTraceHooks.disable();
 

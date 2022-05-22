@@ -1,11 +1,16 @@
-import { unknownToErrorData } from "^jab";
+import async_hooks from "async_hooks";
+
+import { enable, unknownToErrorData } from "^jab";
 import { TestProvision } from "^jarun";
-import { filterStackTrace, enableLongTraceForTest } from "^tests/_fixture";
+
+import { makeLiveJacs_lazy, filterStackTrace } from "../_fixture";
 
 //promise resolve function isn't included any where. Because it's not part of the stack.
 
-export default (prov: TestProvision) => {
-  enableLongTraceForTest(prov);
+export default (prov: TestProvision) => makeLiveJacs_lazy(prov, __filename);
+
+export const main = () => {
+  enable(async_hooks);
 
   return new Promise<void>((resolve) => {
     const func = () => {
@@ -13,6 +18,6 @@ export default (prov: TestProvision) => {
     };
     func();
   }).then(function callback() {
-    prov.imp(filterStackTrace(unknownToErrorData(new Error("ups"))));
+    console.log(filterStackTrace(unknownToErrorData(new Error("ups"))));
   });
 };

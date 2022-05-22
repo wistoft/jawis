@@ -1,6 +1,6 @@
-import { getPromise, FinallyFunc, MakeBee } from "^jab";
+import { getPromise } from "^jab";
 
-import { BeeResult, ExecBee, JagoLogEntry } from "^jabc";
+import { BeeResult, ExecBee, ExecBeeDeps, JagoLogEntry } from "^jabc";
 
 //
 // Similar to `exec.ts` but for bee interface.
@@ -15,11 +15,11 @@ import { BeeResult, ExecBee, JagoLogEntry } from "^jabc";
  * note
  *  assumes that `onExit` is always called.
  */
-export const execBee: ExecBee = <MR extends {}, MS extends {}>(
-  script: string,
-  finallyFunc: FinallyFunc,
-  makeBee: MakeBee
-) => {
+export const execBee: ExecBee = <MR extends {}, MS extends {}>({
+  def,
+  finallyFunc,
+  makeBee,
+}: ExecBeeDeps) => {
   const prom = getPromise<BeeResult<MR>>();
 
   // state
@@ -46,7 +46,7 @@ export const execBee: ExecBee = <MR extends {}, MS extends {}>(
   //  process/worker
 
   const bee = makeBee<MS, MR>({
-    filename: script,
+    def,
     onMessage: (msg) => {
       messages.push(msg);
     },

@@ -1,11 +1,10 @@
 import { WorkerOptions } from "worker_threads";
 
-import { getPromise, WorkerBeeDeps } from "^jab";
+import { getPromise, BeeDeps } from "^jab";
 import { MakeMakeJacsBeeDeps, makeJacsProducer } from "^jacs";
 
 import { makeTsNodeWorker } from "^util-javi/node";
 import { TestProvision } from "^jarun";
-import { TS_TIMEOUT } from "^jab-node";
 
 import { getBeeDeps } from ".";
 
@@ -48,16 +47,16 @@ export const makeTsWorker_test = (
 export const makeJacs_lazy = (
   prov: TestProvision,
   filename: string,
-  extraDeps?: Partial<WorkerBeeDeps<any>>
+  extraDeps?: Partial<BeeDeps<any>>
 ) => {
   const bee = getProducer_lazy(prov).makeJacsWorkerBee(
     getBeeDeps(prov, {
-      filename,
+      def: { filename },
       ...extraDeps,
     })
   );
 
-  return bee.waiter.await("stopped", 2 * TS_TIMEOUT);
+  return bee.waiter.await("stopped");
 };
 
 /**
@@ -66,11 +65,11 @@ export const makeJacs_lazy = (
 export const makeJacs_eager = (prov: TestProvision, filename: string) => {
   const bee = getProducer_eager(prov).makeJacsWorkerBee(
     getBeeDeps(prov, {
-      filename,
+      def: { filename },
     })
   );
 
-  return bee.waiter.await("stopped", 2 * TS_TIMEOUT);
+  return bee.waiter.await("stopped");
 };
 
 /**

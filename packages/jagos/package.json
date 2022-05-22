@@ -7,12 +7,12 @@
   "description": "Jago server",
   "dependencies": {
     "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.11",
-    "@types/express-ws": "^3.0.0",
-    "@types/ws": "^7.2.4",
+    "@types/express": "^4.17.13",
+    "@types/express-ws": "^3.0.1",
+    "@types/ws": "^8.5.2",
     "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-ws": "^4.0.0",
-    "ws": "^7.3.0"
+    "express": "^4.17.3",
+    "express-ws": "^5.0.2",
+    "ws": "^8.5.0"
   }
 }

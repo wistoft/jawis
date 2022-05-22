@@ -31,13 +31,20 @@ export const makeProcessRunner = (deps: {
 /**
  *
  */
-export const makeJarunNodeProcessRestarter = (
-  makeTsBee: MakeBee
-): MakeJarunProcessRestarter => (deps) => {
-  const filename = getFileToRequire(deps.jarunBooterDir, deps.jarunBooterName);
+export const makeJarunNodeProcessRestarter =
+  (makeTsBee: MakeBee): MakeJarunProcessRestarter =>
+  (deps) => {
+    const filename = getFileToRequire(
+      deps.jarunBooterDir,
+      deps.jarunBooterName
+    );
 
-  return new ProcessRestarter({ ...deps, filename, makeBee: makeTsBee });
-};
+    return new ProcessRestarter({
+      ...deps,
+      def: { filename },
+      makeBee: makeTsBee,
+    });
+  };
 
 export type MakeJarunBrowserProcessRestarterDeps = {
   makeBrowserBee: MakeBee;
@@ -46,32 +53,35 @@ export type MakeJarunBrowserProcessRestarterDeps = {
   webRootUrl: string;
   webcsUrl: string;
 };
+
 /**
- *
+ * todo: shouldn't this implement restart?
  */
-export const makeJarunBrowserProcessRestarter = (
-  outerDeps: MakeJarunBrowserProcessRestarterDeps
-): MakeJarunProcessRestarter => (deps) => {
-  //relative to what the compile service root.
+export const makeJarunBrowserProcessRestarter =
+  (
+    outerDeps: MakeJarunBrowserProcessRestarterDeps
+  ): MakeJarunProcessRestarter =>
+  (deps) => {
+    //relative to what the compile service root.
 
-  const relFile = path.relative(
-    outerDeps.compileServiceRoot,
-    path.join(deps.jarunBooterDir, deps.jarunBooterName)
-  );
+    const relFile = path.relative(
+      outerDeps.compileServiceRoot,
+      path.join(deps.jarunBooterDir, deps.jarunBooterName)
+    );
 
-  //choose between live and development
+    //choose between live and development
 
-  const filename = getUrlToRequire({
-    ...outerDeps,
-    liveFilepath: "/jarunBooter.js",
-    devFilepath: relFile,
-  });
+    const filename = getUrlToRequire({
+      ...outerDeps,
+      liveFilepath: "/jarunBooter.js",
+      devFilepath: relFile,
+    });
 
-  //done
+    //done
 
-  return outerDeps.makeBrowserBee({
-    ...deps,
-    filename,
-    onExit: deps.onUnexpectedExit,
-  });
-};
+    return outerDeps.makeBrowserBee({
+      ...deps,
+      def: { filename },
+      onExit: deps.onUnexpectedExit,
+    });
+  };

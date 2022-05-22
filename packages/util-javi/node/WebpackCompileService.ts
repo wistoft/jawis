@@ -61,7 +61,7 @@ export class WebpackCompileService implements CompileService {
   /**
    * also get warnings.
    */
-  public watchDone = (error?: Error, stats?: webpack.Stats) => {
+  public watchDone = (error?: Error | null, stats?: webpack.Stats) => {
     if (!this.absFile) {
       throw err("The absFile should be set.");
     }
@@ -370,3 +370,4 @@ const getModuleTrace = (
 
   return moduleTrace;
 };
+//

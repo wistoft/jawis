@@ -32,7 +32,7 @@ import { useDirector } from "^jatev/useDirector";
 
 import {
   defaultState,
-  makeGetRandomInteger,
+  makeGetIntegerSequence,
   getStateWithShownTest,
   getStateWithTestReports,
   getStateWithTests,
@@ -144,7 +144,7 @@ export const renderUseJatevDirector = (prov: TestProvision) => {
       //executed sync. Because jatev registers effect in render.
       useWsEffectArgs = data;
     },
-    getRandomToken: makeGetRandomInteger(),
+    getRandomToken: makeGetIntegerSequence(),
     useKeyListener: () => {},
     projectRoot: "dummy",
   });
@@ -190,19 +190,19 @@ export const renderUseJatevDirector_with_test_results = (
  *
  */
 export const getSetTestCaseUpdate_empty = (test: ClientTestReport) =>
-  makeTestCaseUpdater(test, makeGetRandomInteger())(defaultState);
+  makeTestCaseUpdater(test, makeGetIntegerSequence())(defaultState);
 
 /**
  *
  */
 export const getSetTestCaseUpdate_with_tests = (test: ClientTestReport) =>
-  makeTestCaseUpdater(test, makeGetRandomInteger())(getStateWithTests());
+  makeTestCaseUpdater(test, makeGetIntegerSequence())(getStateWithTests());
 
 /**
  *
  */
 export const getShownTestUpdate_empty = (test: TestState) =>
-  getShowTestOnTestChangeUpdate(test, defaultState, makeGetRandomInteger());
+  getShowTestOnTestChangeUpdate(test, defaultState, makeGetIntegerSequence());
 
 /**
  *
@@ -211,7 +211,7 @@ export const getShownTestUpdate_with_tests = (test: TestState) =>
   getShowTestOnTestChangeUpdate(
     test,
     getStateWithTests(),
-    makeGetRandomInteger()
+    makeGetIntegerSequence()
   );
 
 /**
@@ -221,23 +221,23 @@ export const getShownTestUpdate_with_shown_test = (test: TestState) =>
   getShowTestOnTestChangeUpdate(
     test,
     getStateWithShownTest(),
-    makeGetRandomInteger()
+    makeGetIntegerSequence()
   );
 
 /**
  *
  */
 export const getRogueUpdater_empty = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(defaultState);
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(defaultState);
 
 /**
  *
  */
 export const getRogueUpdater_with_tests = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(getStateWithTests());
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(getStateWithTests());
 
 /**
  *
  */
 export const getRogueUpdater_with_test_reports = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(getStateWithTestReports());
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(getStateWithTestReports());

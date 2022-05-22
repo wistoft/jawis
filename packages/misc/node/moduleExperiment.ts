@@ -14,11 +14,12 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
 
   //load
 
-  plugIntoModuleLoad((original) => (request, parent, isMain) =>
-    measure(() => original(request, parent, isMain), {
-      type: "all",
-      request: request + "\n",
-    })
+  plugIntoModuleLoad(
+    (original) => (request, parent, isMain) =>
+      measure(() => original(request, parent, isMain), {
+        type: "all",
+        request: request + "\n",
+      })
   );
 
   //resolve
@@ -104,16 +105,12 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
 
       //hist
 
-      if (mes.type === "resolve") {
-        if (hist[Number(mes.ownNs / BigInt(1000 * 1000))] === undefined) {
-          hist[Number(mes.ownNs / BigInt(1000 * 1000))] = 0;
-        }
+      if (hist[Number(mes.ownNs / BigInt(1000 * 1000))] === undefined) {
+        hist[Number(mes.ownNs / BigInt(1000 * 1000))] = 0;
+      }
 
-        hist[Number(mes.ownNs / BigInt(1000 * 1000))] += 1;
-      }
-      if (mes.type === "resolve") {
-        total += mes.ownNs;
-      }
+      hist[Number(mes.ownNs / BigInt(1000 * 1000))] += 1;
+      total += mes.ownNs;
 
       // if (mes.ownNs < -10000000) {
       //   console.log(mes);
@@ -144,12 +141,12 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
     console.log("");
     console.log(hist);
 
-    let histTotal = 0;
-    for (const key in hist) {
-      histTotal += (key as any) * hist[key];
-    }
+    // let histTotal = 0;
+    // for (const key in hist) {
+    //   histTotal += (key as any) * hist[key];
+    // }
 
-    console.log({ total: total / BigInt(1000 * 1000), histTotal });
+    // console.log({ total: total / BigInt(1000 * 1000), histTotal });
 
     // for (const mes of measureResult) {
     //   const info = "filename" in mes ? mes.filename : mes.request;

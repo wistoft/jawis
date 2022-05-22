@@ -1,11 +1,11 @@
 import {
-  JabError,
   timeRace,
   asyncClone,
   clone,
   ClonedValue,
   tryProp,
   makeCatchingSetTimeout,
+  err,
 } from "^jab";
 import {
   OnRogue,
@@ -15,9 +15,8 @@ import {
   errorToTestLog,
 } from "^jatec";
 
-import { TestFunction, awaitPromises, TestFileExport } from "./util";
+import { TestFunction, TestFileExport } from "./util";
 import { JarunTestProvision } from "./JarunTestProvision";
-import { makeJarunPromise } from "./JarunPromise";
 
 export type JarunTestRunnerDeps = Readonly<{
   timeoutms: number;
@@ -97,36 +96,22 @@ export class JarunTestRunner {
     prov: JarunTestProvision,
     work: () => Promise<T>
   ) => {
-    if (global.Promise !== this.orgPromise) {
-      global.Promise = this.orgPromise; //reset
-      throw new Error("global.Promise was been changed (before test)");
-    }
-
     if (global.setTimeout !== this.orgSetTimeout) {
       global.setTimeout = this.orgSetTimeout; //reset
       throw new Error("global.setTimeout was been changed (before test)");
     }
 
-    const jarunPromise = makeJarunPromise(prov);
     const jarunSetTimeout = makeCatchingSetTimeout(prov.onError);
 
-    global.Promise = jarunPromise;
     global.setTimeout = jarunSetTimeout as any; //fix the missing __promisify__
 
     return work().finally(() => {
-      if (jarunPromise !== global.Promise) {
-        prov.onError(
-          new Error("global.Promise was been changed (during test)")
-        );
-      }
-
       if (jarunSetTimeout !== global.setTimeout) {
         prov.onError(
           new Error("global.setTimeout was been changed (during test)")
         );
       }
 
-      global.Promise = this.orgPromise;
       global.setTimeout = this.orgSetTimeout;
     });
   };
@@ -184,7 +169,7 @@ export class JarunTestRunner {
         testMod = makeTest();
 
         if (
-          typeof testMod === "object" &&
+          (typeof testMod === "object" || typeof testMod === "function") && //allow function to support lazyRequire's proxy.
           testMod !== null &&
           "default" in testMod
         ) {
@@ -194,7 +179,7 @@ export class JarunTestRunner {
         }
 
         if (typeof testFunc !== "function") {
-          throw new JabError( "Unknown export from test case.", testMod ); // prettier-ignore
+          err( "Unknown export from test case.", testMod ); // prettier-ignore
         }
       } catch (e) {
         prov.onError(e);
@@ -205,7 +190,7 @@ export class JarunTestRunner {
 
       return this.runTestAndClone(testId, testFunc, prov)
         .catch(prov.onError) // handles sync throw in the test. Resolve as if test returned undefined.
-        .finally(() => awaitPromises(prov))
+        .finally(prov.promiseAwait.start)
         .finally(prov.runFinally)
         .then((testReturn) => {
           const now = Date.now();
@@ -231,7 +216,7 @@ export class JarunTestRunner {
     Promise.resolve().then(() => {
       const res = func(prov);
 
-      if (res instanceof this.orgPromise) {
+      if (res instanceof Promise) {
         return this.wrapSinglePromise(testId, res).then(cloneTestReturn);
       } else if (res === undefined) {
         return;
@@ -250,8 +235,7 @@ export class JarunTestRunner {
           },
           prov.onError,
           undefined,
-          undefined,
-          this.orgPromise //hacky. But Promise is not instanceof JaurnPromise, so it would otherwise be overlooked
+          undefined
         );
       }
     });

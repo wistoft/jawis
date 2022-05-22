@@ -15,7 +15,7 @@ export default (prov: TestProvision) => {
       logRequireMessage(m);
     },
     onExit: prom.resolve,
-    filename: getScriptPath("WPP_require.js"),
+    def: { filename: getScriptPath("WPP_require.js") },
     filterRequireMessages: false,
   });
 

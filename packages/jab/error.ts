@@ -1,7 +1,7 @@
 import {
   cloneArrayEntries,
   ErrorData,
-  JabError,
+  makeJabError,
   ParsedStackFrame,
   CapturedStack,
   tryProp,
@@ -14,7 +14,7 @@ import { isNode } from "./util";
  *
  */
 export const err = (msg: string, ...args: Array<unknown>) => {
-  throw new JabError(msg, ...args);
+  throw makeJabError(msg, ...args);
 };
 
 /**
@@ -26,13 +26,13 @@ export const pres = <T>(value: T) => Promise.resolve(value);
  *
  */
 export const prej = (msg: string, ...args: Array<unknown>) =>
-  Promise.reject(new JabError(msg, ...args));
+  Promise.reject(makeJabError(msg, ...args));
 
 /**
  *
  */
 export const assert = (
-  val: boolean,
+  val: boolean | undefined,
   msg = "Assert failed.",
   ...args: Array<unknown>
 ) => {
@@ -41,6 +41,21 @@ export const assert = (
   }
 
   err(msg, ...args);
+};
+/**
+ *
+ */
+export const assertEq = (
+  val1: any,
+  val2: any,
+  msg = "Assert failed.",
+  ...args: Array<unknown>
+) => {
+  if (val1 === val2) {
+    return;
+  }
+
+  err(msg, val1, val2, ...args);
 };
 
 /**
@@ -129,7 +144,7 @@ export const unknownToErrorData = (
       stack: captureStack(error),
     };
   } else {
-    const wrapper = new JabError("Unknown Error object: ", error);
+    const wrapper = makeJabError("Unknown Error object: ", error);
 
     return wrapper.getErrorData(extraInfo);
   }

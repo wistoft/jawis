@@ -1,4 +1,4 @@
-import { def, err, JabError } from "^jab";
+import { def, err } from "^jab";
 
 export type WsStates =
   | "connecting"
@@ -155,7 +155,7 @@ export class BrowserWebSocket<MS, MR> {
     try {
       data = JSON.parse(msg.data);
     } catch (e) {
-      throw new JabError("Error parsing server response: ", [msg.data, e]);
+      err("Error parsing server response: ", [msg.data, e]);
     }
 
     this.deps.onServerMesssage(data);

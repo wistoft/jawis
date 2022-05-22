@@ -23,8 +23,7 @@ export const asyncClone = (
   ) => void = () => {},
   onError: (error: unknown) => void = () => {},
   externalCustomClone: CustomClone = () => null,
-  includeErrorStack = false,
-  orgPromise: PromiseConstructor = Promise //quick fix
+  includeErrorStack = false
 ): Promise<ClonedValue> => {
   let resolved = false;
 
@@ -41,7 +40,7 @@ export const asyncClone = (
 
     //default
 
-    if (!(value instanceof orgPromise)) {
+    if (!(value instanceof Promise)) {
       return null;
     } else {
       const holder = {} as ClonedPromisePending;

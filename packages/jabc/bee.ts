@@ -4,10 +4,20 @@ export type JabShutdownMessage = {
   type: "shutdown";
 };
 
-export type BeeDeps<MR> = {
+export type BeeDef<D = unknown> = {
   filename: string;
+  data?: D;
+  next?: BeeDef;
+};
+
+export type BeeConf = {};
+
+export type BeeDeps<MR> = {
+  def: BeeDef;
   finally: FinallyFunc;
 } & BeeListeners<MR>;
+
+export type BeeMain<D = unknown> = (deps: { beeData?: D }) => void;
 
 export type BeeListeners<MR> = {
   onMessage: (msg: MR) => void;
@@ -16,11 +26,6 @@ export type BeeListeners<MR> = {
   onStderr: (data: Buffer) => void;
   onError: (error: unknown) => void;
   onExit: (exitCode: number | null) => void;
-};
-
-//support for SharedDataArray
-export type WorkerBeeDeps<MR> = BeeDeps<MR> & {
-  workerData?: unknown;
 };
 
 export type BeeStates = "running" | "stopping" | "stopped";
@@ -55,10 +60,14 @@ export type HoneyComb = {
   makeCertainBee: MakeCertainBee;
 };
 
+export type ExecBeeDeps = {
+  def: BeeDef;
+  finallyFunc: FinallyFunc;
+  makeBee: MakeBee;
+};
+
 export type ExecBee = <MR extends {}, MS extends {}>(
-  script: string,
-  finallyFunc: FinallyFunc,
-  makeBee: MakeBee
+  deps: ExecBeeDeps
 ) => { bee: Bee<MS>; promise: Promise<BeeResult<MR>> };
 
 export type BeeResult<MR> = {

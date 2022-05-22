@@ -19,45 +19,45 @@ export type Deps = ScriptPoolProv &
 /**
  *
  */
-export const makeOnClientMesssage = (
-  deps: Deps
-): WsMessageListener<ServerMessage, ClientMessage> => (msg, nws) => {
-  switch (msg.type) {
-    case "startListen":
-      deps.onStartListen();
+export const makeOnClientMesssage =
+  (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
+  (msg, nws) => {
+    switch (msg.type) {
+      case "startListen":
+        deps.onStartListen();
 
-      deps.browserBeeFrost.register(nws); //let the browser tab function as a bee hive.
-      break;
+        deps.browserBeeFrost.register(nws); //let the browser tab function as a bee hive.
+        break;
 
-    case "restartAll":
-      deps.restartAllScripts();
-      break;
+      case "restartAll":
+        deps.restartAllScripts();
+        break;
 
-    case "stopAll":
-      deps.ensureAllScriptsStopped();
-      break;
+      case "stopAll":
+        deps.ensureAllScriptsStopped();
+        break;
 
-    case "restartScript":
-      //return for testing
-      return deps.restartScript(msg.script);
+      case "restartScript":
+        //return for testing
+        return deps.restartScript(msg.script);
 
-    case "stopScript":
-      deps.ensureScriptStopped(msg.script);
-      break;
+      case "stopScript":
+        deps.ensureScriptStopped(msg.script);
+        break;
 
-    case "openFile":
-      deps.handleOpenFileInEditor(msg);
-      break;
+      case "openFile":
+        deps.handleOpenFileInEditor(msg);
+        break;
 
-    case "openRelFile":
-      deps.handleOpenFileInEditor(msg, deps.projectRoot);
-      break;
+      case "openRelFile":
+        deps.handleOpenFileInEditor(msg, deps.projectRoot);
+        break;
 
-    case "beeFrost":
-      deps.browserBeeFrost.onMessage(nws, msg.data);
-      break;
+      case "beeFrost":
+        deps.browserBeeFrost.onMessage(nws, msg.data);
+        break;
 
-    default:
-      throw assertNever(msg, "Unknown client message type.");
-  }
-};
+      default:
+        throw assertNever(msg, "Unknown client message type.");
+    }
+  };

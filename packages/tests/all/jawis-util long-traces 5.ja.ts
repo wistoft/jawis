@@ -1,13 +1,19 @@
-import { getPromise, unknownToErrorData } from "^jab";
-import { TestProvision } from "^jarun";
-import { filterStackTrace, enableLongTraceForTest } from "^tests/_fixture";
+import async_hooks from "async_hooks";
 
-//not impl - because native error extends Error
+import { enable, getPromise, unknownToErrorData } from "^jab";
+import { TestProvision } from "^jarun";
+
+import { makeLiveJacs_lazy, filterStackTrace } from "../_fixture";
+
+//not impl - because native error extends Error not the proxy.
 
 declare const notDefined: any;
 
-export default (prov: TestProvision) => {
-  enableLongTraceForTest(prov);
+export default (prov: TestProvision) => makeLiveJacs_lazy(prov, __filename);
+
+export const main = () => {
+  enable(async_hooks);
+
   const prom = getPromise<void>();
   let err: any;
   setTimeout(function outer() {
@@ -24,8 +30,9 @@ export default (prov: TestProvision) => {
     }
     inner();
   });
+
   return prom.promise.then(() => {
-    prov.imp("" + err);
-    prov.imp(filterStackTrace(unknownToErrorData(err)));
+    console.log("" + err);
+    console.log(filterStackTrace(unknownToErrorData(err)));
   });
 };

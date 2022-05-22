@@ -1,5 +1,5 @@
 import { runScaleExp } from "^misc";
-import { mainProvToConsole, TS_TIMEOUT } from "^jab-node";
+import { mainProvToConsole } from "^jab-node";
 
 import { getScriptPath, getJabTsProcess } from "^tests/_fixture";
 
@@ -14,7 +14,7 @@ runScaleExp({
       filename: getScriptPath("silent.js"),
     });
 
-    return proc.waiter.await("stopped", TS_TIMEOUT);
+    return proc.waiter.await("stopped");
   },
 }).then((res) => {
   console.log(res);

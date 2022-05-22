@@ -3,10 +3,10 @@ import { ProcessPreloaderDeps, ProcessPreloader } from "^jab-node";
 
 import {
   getLogProv,
-  getJabProcessDeps,
   getScriptPath,
   makeDormentInMemoryBee,
   getMakeJacsWorker,
+  getBeeDeps,
 } from ".";
 import { BeeListeners } from "^jabc";
 
@@ -36,7 +36,7 @@ export const getJabProcessPreloader = (prov: TestProvision) => {
 export const getJabProcessPreloaderAndDeps = (
   prov: TestProvision,
   extraDeps?: Partial<ProcessPreloaderDeps>,
-  logPrefix = "UsedProcessPreloader."
+  logPrefix?: string
 ): [ProcessPreloader<any>, ProcessPreloaderDeps & BeeListeners<any>] => {
   const deps = getJabProcessPreloaderDeps(prov, extraDeps, logPrefix);
 
@@ -53,10 +53,10 @@ export const getJabProcessPreloaderDeps = (
   extraDeps?: Partial<ProcessPreloaderDeps>,
   logPrefix?: string
 ): ProcessPreloaderDeps & BeeListeners<any> => {
-  const procDeps = getJabProcessDeps(
+  const procDeps = getBeeDeps(
     prov,
     {
-      filename: getScriptPath("beeSendAndWait.js"),
+      def: { filename: getScriptPath("beeSendAndWait.js") },
       ...extraDeps,
     },
     logPrefix

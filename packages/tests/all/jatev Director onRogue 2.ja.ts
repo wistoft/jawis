@@ -8,10 +8,8 @@ import {
 // rogue error
 
 export default (prov: TestProvision) => {
-  const {
-    rerender,
-    onServerMessage,
-  } = renderUseJatevDirector_with_test_results(prov);
+  const { rerender, onServerMessage } =
+    renderUseJatevDirector_with_test_results(prov);
 
   onServerMessage({
     type: "OnRogue",

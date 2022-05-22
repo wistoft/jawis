@@ -102,7 +102,7 @@ export class JarunProcessMainImpl {
   };
 
   /**
-   *
+   * todo: use jab-node function: `registerErrorHandlers`
    */
   private registerHandlers = () => {
     //there can be only one

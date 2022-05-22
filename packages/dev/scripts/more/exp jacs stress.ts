@@ -1,6 +1,6 @@
 import path from "path";
 import { runScaleExp } from "^misc";
-import { Process, registerOnMessage_old, TS_TIMEOUT } from "^jab-node";
+import { Process, registerOnMessage_old } from "^jab-node";
 
 import { getJacsBee } from "../util/bee";
 
@@ -45,7 +45,7 @@ runScaleExp({
       filename: path.join(__dirname, "util/helloJab.ts"),
     });
 
-    return proc.waiter.await("stopped", 2 * TS_TIMEOUT);
+    return proc.waiter.await("stopped");
   },
 }).then((res) => {
   console.log(res);

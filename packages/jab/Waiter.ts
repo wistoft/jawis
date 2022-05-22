@@ -1,13 +1,22 @@
-import { safeRace, sleepingValue, getPromise, tryProp, prej, def } from ".";
+import { getPromise, tryProp, prej, def, assert, PromiseTriple } from ".";
 
 const TIMEOUT_ERROR_CODE = "JAB_WAITER_TIMEOUT";
 const CANCEL_ERROR_CODE = "JAB_WAITER_CANCEL";
 
-type Deps<States> = {
+const SOFT_TIMEOUT = 10000;
+const HARD_TIMEOUT = 0;
+
+export type Deps<States> = {
   startState: States;
   stoppingState?: States;
   endState?: States;
   onError: (error: unknown) => void;
+
+  softTimeout?: number;
+  timeout?: number;
+
+  //for testing
+  DateNow?: () => number;
 };
 
 /**
@@ -16,11 +25,10 @@ type Deps<States> = {
  * - One can wait for state changes or events.
  * - Implements convention for async kill and shutdown. For async kill and shutdown there is a 'stopping state'.
  *
- *
  * notes
  * - Waiting is meant for development testing. It's possible to test specific async execution paths, when
  *    a test case can 'inject' actions at specific state changes or events of the object under test.
- * - Only one thing can wait at a time. This is to reduce complexity. If more things wait there is no
+ * - Only one thing can wait at a time. This is to reduce complexity. If more things wait there's no
  *    way to know what will execute first. The result is likely flaky test cases.
  * - this.eventTrace is useful the see what has happened with this waiter.
  *
@@ -33,26 +41,48 @@ export class Waiter<States, Events = never> {
 
   private state: States;
 
-  private waitError?: Error; // holds the error object with the current waiters own stack.
-
   private signal?: {
     type: States | Events;
-    resolve: () => void;
-    reject: (error: unknown) => void;
-  };
+    startTime: number;
+    waitError: Error; // holds the error object with the current waiters own stack.
+    didSoftTimeout?: true;
+  } & PromiseTriple<void>;
+
+  private softTimeoutHandle?: any; //must be cleared, when a signal arrives.
+  private timeoutHandle?: any; //must be cleared, when a signal arrives.
 
   private neverSignal?: {
     type: States | Events;
-    promise: Promise<void>;
-    reject: (error: Error) => void;
-  };
+  } & PromiseTriple<void>;
 
   private shutdownProm?: Promise<void>;
 
   private killProm?: Promise<void>;
 
+  private softTimeout: number;
+  private timeout: number;
+
+  private DateNow: () => number;
+
+  /**
+   *
+   */
   constructor(private deps: Deps<States>) {
     this.state = deps.startState;
+
+    //use default timeouts if needed.
+
+    this.softTimeout =
+      this.deps.softTimeout !== undefined
+        ? this.deps.softTimeout
+        : SOFT_TIMEOUT;
+
+    this.timeout =
+      this.deps.timeout !== undefined ? this.deps.timeout : HARD_TIMEOUT;
+
+    //for testing
+
+    this.DateNow = this.deps.DateNow || Date.now;
   }
 
   public getState = () => this.state;
@@ -84,7 +114,11 @@ export class Waiter<States, Events = never> {
    *
    * - Timeout after 300ms, if state or event didn't happen.
    */
-  public await = (type: States | Events, timeout = 300) => {
+  public await = (
+    type: States | Events,
+    timeout = this.timeout,
+    softTimeout = this.softTimeout
+  ) => {
     if (this.state === this.deps.endState) {
       return Promise.reject(new Error("Can't await, when terminated."));
     }
@@ -93,7 +127,7 @@ export class Waiter<States, Events = never> {
       return Promise.reject(new Error("Can't await, when stopping."));
     }
 
-    return this.rawAwait(type, timeout);
+    return this.rawAwait(type, timeout, softTimeout);
   };
 
   /**
@@ -116,57 +150,110 @@ export class Waiter<States, Events = never> {
   /**
    * To allow internal use of waiter in kill and shutdown.
    */
-  private rawAwait = (type: States | Events, timeout = 300) => {
-    this.waitError = new Error("Cancelled while waiting.");
-
-    const signalPromise = new Promise<void>((resolve, reject) => {
-      if (this.signal !== undefined) {
-        reject(new Error("Signal already registered."));
-      }
-
-      //we can do it
-
-      if (this.state === type) {
-        //already there
-        resolve();
-      } else {
-        this.signal = { type, resolve, reject };
-      }
-    });
-
-    // no timeout
-
-    if (timeout <= 0) {
-      return signalPromise;
+  private rawAwait = (
+    type: States | Events,
+    timeout = this.timeout,
+    softTimeout = this.softTimeout
+  ) => {
+    if (this.signal !== undefined) {
+      return Promise.reject(new Error("Signal already registered."));
     }
 
-    //somewhat hacky, but the stack trace in the lambda below gives no relevant information. So why not?
+    if (this.state === type) {
+      //already there
+      return Promise.resolve();
+    }
 
-    const betterError = new Error("Timeout waiting for: " + type);
+    //we can do it
 
-    //mark the error, so users can known it's a timeout error.
+    this.signal = {
+      type,
+      startTime: this.DateNow(),
+      waitError: new Error("Cancelled while waiting."),
+      ...getPromise<void>(),
+    };
 
-    (betterError as any).code = TIMEOUT_ERROR_CODE;
+    // setup soft timeout
 
-    // setup timeout
+    if (softTimeout > 0) {
+      this.softTimeoutHandle = setTimeout(() => {
+        def(this.signal).didSoftTimeout = true;
 
-    const symbol = Symbol("timeout");
+        this.deps.onError(
+          new Error(
+            "Soft timeout waiting for: " + type + " (" + softTimeout + "ms)"
+          )
+        );
+      }, softTimeout);
+    }
 
-    const timeoutPromise = sleepingValue(timeout, symbol);
+    // setup hard timeout
 
-    return safeRace([signalPromise, timeoutPromise], this.deps.onError).then(
-      (val) => {
-        if (val === symbol) {
-          //The signal timed out, so we cancel it completely, even though it might happen later.
-          this.signal = undefined;
+    if (timeout > 0) {
+      this.timeoutHandle = setTimeout(() => {
+        assert(this.signal !== undefined);
 
-          throw betterError;
-        } else {
-          //happy path.
-          return val;
-        }
-      }
-    );
+        const error = new Error(
+          "Timeout waiting for: " + type + " (" + timeout + "ms)"
+        );
+
+        (error as any).code = TIMEOUT_ERROR_CODE; //mark the error, so users can know it's a timeout error.
+
+        this.tryRejectSignal(error, false);
+      }, timeout);
+    }
+
+    // done
+
+    return this.signal.promise;
+  };
+
+  /**
+   * Resolve signal if it's registered for the given state.
+   *
+   */
+  private tryResolveSignal = (
+    state: States | Events | undefined,
+    data?: any
+  ) => {
+    if (this.signal && this.signal.type === state) {
+      this.maybeLateSettle();
+      (this.signal.resolve as any)(data);
+      this.signal = undefined;
+      clearTimeout(this.softTimeoutHandle);
+      clearTimeout(this.timeoutHandle);
+    }
+  };
+
+  /**
+   *
+   */
+  private tryRejectSignal = (error: unknown, signalLateSettle = true) => {
+    if (this.signal) {
+      signalLateSettle && this.maybeLateSettle();
+      this.signal.reject(error as any);
+      this.signal = undefined;
+      clearTimeout(this.softTimeoutHandle);
+      clearTimeout(this.timeoutHandle);
+    }
+  };
+
+  /**
+   * Prints an error, if the signal arrived after the soft timeout.
+   */
+  private maybeLateSettle = () => {
+    if (this.signal === undefined) {
+      throw new Error("Signal should be set");
+    }
+
+    if (this.signal.didSoftTimeout) {
+      this.deps.onError(
+        new Error(
+          "Signal arrived after soft timeout, time: " +
+            (this.DateNow() - this.signal.startTime)
+        )
+      );
+    }
   };
 
   /**
@@ -175,12 +262,8 @@ export class Waiter<States, Events = never> {
   public event = (event: Events, data?: unknown) => {
     this.eventTrace.push(event);
 
-    if (this.signal) {
-      if (this.signal.type === event) {
-        (this.signal.resolve as any)(data); //no sure data is a good idea. The waiter hack, shouldn't become too convenient???
-        this.signal = undefined;
-      }
-    }
+    //no sure data is a good idea. The waiter hack, shouldn't become too convenient???
+    this.tryResolveSignal(event, data);
 
     if (this.neverSignal) {
       if (this.neverSignal.type === event) {
@@ -206,12 +289,7 @@ export class Waiter<States, Events = never> {
 
     this.state = newState;
 
-    if (this.signal) {
-      if (this.signal.type === newState) {
-        this.signal.resolve();
-        this.signal = undefined;
-      }
-    }
+    this.tryResolveSignal(newState);
 
     if (this.neverSignal) {
       if (this.neverSignal.type === newState) {
@@ -233,23 +311,23 @@ export class Waiter<States, Events = never> {
 
     //use the error created when await was registered.
 
-    if (!this.waitError) {
+    if (!this.signal.waitError) {
       throw new Error("Impossible: waitError not set.");
     }
 
     //custom message
 
     if (msg) {
-      this.waitError.message = msg;
+      this.signal.waitError.message = msg;
     }
 
     //mark
 
-    (this.waitError as any).code = CANCEL_ERROR_CODE;
+    (this.signal.waitError as any).code = CANCEL_ERROR_CODE;
 
     //reject the wait.
 
-    this.onErrorOld(this.waitError); // internal onError, to reject the waiter.
+    this.onErrorOld(this.signal.waitError); // internal onError, to reject the waiter.
   };
 
   /**
@@ -273,16 +351,13 @@ export class Waiter<States, Events = never> {
   public onErrorOld = (error: unknown) => {
     this.eventTrace.push("error");
 
-    if (this.signal) {
-      this.signal.reject(error);
-      this.signal = undefined;
-    }
+    this.tryRejectSignal(error);
   };
 
   /**
    * Use this as an error-callback in the object under state control.
    *
-   * - Gurantees the error will occur somewhere.
+   * - Guarantees the error will occur somewhere.
    * - If there is a waiter it will be rejected with the error.
    * - If there is no waiter the error will be reported.
    */
@@ -290,8 +365,7 @@ export class Waiter<States, Events = never> {
     this.eventTrace.push("error");
 
     if (this.signal) {
-      this.signal.reject(error);
-      this.signal = undefined;
+      this.tryRejectSignal(error);
     } else {
       this.deps.onError(error);
     }
@@ -313,13 +387,11 @@ export class Waiter<States, Events = never> {
 
     if (this.signal) {
       if (this.signal.type === this.deps.endState) {
-        this.signal.resolve();
-        this.signal = undefined;
+        this.tryResolveSignal(this.deps.endState);
       } else {
-        this.signal.reject(
+        this.tryRejectSignal(
           new Error("Terminated while waiting for: " + this.signal.type)
         );
-        this.signal = undefined;
       }
     }
   };

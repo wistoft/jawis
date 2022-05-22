@@ -7,11 +7,10 @@ import {
   JarunTestRunner,
   makeJarunPromise,
   JarunTestRunnerDeps,
-  JarunEqAssertation,
   BeeRunner,
   TestFileExport,
 } from "^jarun";
-import { assert, err } from "^jab";
+import { err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
 import { filterTestResult, filterTestLogs } from "./jates";
@@ -87,15 +86,14 @@ export const getJarunTestProvision_inactive = (
 /**
  *
  */
-export const getOnRogueTest = (prov: TestProvision, logPrefix = "") => (rogue: {
-  id?: string;
-  data: TestCurLogs;
-}) => {
-  prov.log(logPrefix + "onRogueTest", {
-    ...rogue,
-    data: filterTestLogs(rogue.data),
-  });
-};
+export const getOnRogueTest =
+  (prov: TestProvision, logPrefix = "") =>
+  (rogue: { id?: string; data: TestCurLogs }) => {
+    prov.log(logPrefix + "onRogueTest", {
+      ...rogue,
+      data: filterTestLogs(rogue.data),
+    });
+  };
 
 /**
  *
@@ -106,9 +104,7 @@ export const catchChkLog = (func: () => void) =>
       err("exception expected");
     })
     .catch((e) => {
-      assert(e.name === "JarunEqAssertation");
-
-      const data = (e as JarunEqAssertation).getSomething();
+      const data = e.getJarunEqAssertationData();
 
       //stack is ignored
       return {

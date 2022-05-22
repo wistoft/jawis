@@ -19,10 +19,22 @@ export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
 /**
  * Produce a parsed stack for ViewException component.
  */
-export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
-  ...error,
-  parsedStack: parseTrace(error.stack),
-});
+export const parseErrorData = (error: ErrorData): ParsedErrorData => {
+  try {
+    return {
+      ...error,
+      parsedStack: parseTrace(error.stack),
+    };
+  } catch (e) {
+    console.log(e);
+    console.log(error);
+    return {
+      msg: error.msg,
+      info: [],
+      parsedStack: [],
+    };
+  }
+};
 
 /**
  *

@@ -26,7 +26,7 @@ export const ViewNew: React.FC<Props> = ({ onNew }) => {
         onSubmit={function (e) {
           e.preventDefault();
           onNew(data.name, data.data);
-          navigate("./"); //wierd, would expect '../'
+          navigate("./"); //weird, would expect '../'
         }}
       >
         Name:{" "}

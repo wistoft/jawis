@@ -12,7 +12,7 @@ import {
 } from "./JarunProcessControllerInner";
 
 export type MakeJarunProcessRestarter = <MR extends {}, MS extends {}>(
-  deps: Omit<ProcessRestarterDeps<MR>, "filename" | "makeBee"> & {
+  deps: Omit<ProcessRestarterDeps<MR>, "def" | "makeBee"> & {
     jarunBooterName: string;
     jarunBooterDir: string;
   }

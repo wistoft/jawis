@@ -1,0 +1,1 @@
+{"user":{"empty":["DoublyLinkedList (0)\n"],"one element":["DoublyLinkedList (1)\n{\n\tref: Number: 0\n\tnodeData: TypedArray: Int32Array(2)\n\t\t\u0000\u0000\n\t\t0 0\n\t\tAAA=\n\tdata: TypedArray: Int32Array(4)\n\t\t\u0000\u0000\u0000\u0000\n\t\t0 0 0 0\n\t\tAAAAAA==\n}\n"]}}

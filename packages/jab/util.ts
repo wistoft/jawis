@@ -1,4 +1,4 @@
-import { err, FinallyProv, looping } from ".";
+import { err, FinallyProv, looping, TypedArray, TypedArrayContructor } from ".";
 import { assert } from "./error";
 
 /**
@@ -81,7 +81,24 @@ export const getRandomRange = (min: number, max: number) =>
  * A random non-negative integer.
  */
 export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
-  getRandomRange(0, max);
+  Math.floor(Math.random() * max);
+
+/**
+ * A random length Uint8Array with random data.
+ *
+ * note: Can do this in node 15: https://nodejs.org/api/webcrypto.html#cryptogetrandomvaluestypedarray
+ */
+export const getRandomUint8Array = (maxLength = 1000) => {
+  const length = Math.floor(Math.random() * maxLength);
+
+  const array = new Uint8Array(length);
+
+  for (let i = 0; i < length; i++) {
+    array[i] = Math.floor(Math.random() * 256);
+  }
+
+  return array;
+};
 
 /**
  * Check whether the runtime is node.js.
@@ -89,16 +106,6 @@ export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
 export const isNode = () =>
   typeof global !== "undefined" &&
   {}.toString.call(global) === "[object global]";
-
-/**
- * Fix inheritance when inheriting from native classes in node.js.
- *
- */
-export const fixErrorInheritance = (obj: {}, cls: {} | null) => {
-  if (isNode()) {
-    Object.setPrototypeOf(obj, cls);
-  }
-};
 
 /**
  * Omit fields from an object.
@@ -202,31 +209,6 @@ export class FinallyProvider implements FinallyProv {
 }
 
 /**
- * The prototype chain is returned as an array of names.
- */
-export const getProtoChain = (obj: {}) => {
-  const res: string[] = [];
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    const proto = Object.getPrototypeOf(obj);
-    if (proto === null) {
-      res.push("null");
-      return res;
-    } else if (
-      proto === Object.prototype &&
-      proto.constructor.name === "Object"
-    ) {
-      res.push("Object");
-      return res;
-    } else {
-      res.push(proto.constructor.name);
-      // dive down
-      obj = proto;
-    }
-  }
-};
-
-/**
  * Split a string into three parts: the leading whitespace, the middle, the trailing whitespace.
  */
 export const splitSurroundingWhitespace = (
@@ -279,6 +261,105 @@ export const splitSurroundingWhitespace = (
 /**
  *
  */
+export function toBytes(str: string) {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    if (result !== "") {
+      result += " ";
+    }
+    result += str.charCodeAt(i);
+  }
+  return result;
+}
+
+/**
+ * Convert from int32 or uint32 to readable bits.
+ */
+export function toBits(val: number) {
+  if (!Number.isInteger(val)) {
+    throw new Error("Number must be integer: " + val);
+  }
+
+  if (val > 0xffffffff) {
+    throw new Error("Number too large: " + val);
+  }
+
+  const res1 = toBits_i1(val);
+  const res2 = toBits_i2(val);
+  const res3 = "0b" + Uint32Array.from([val])[0].toString(2);
+
+  if (res1 !== res2) {
+    console.log("Invariant failed", {
+      res1,
+      res2,
+    });
+  }
+
+  if (res1 !== res3) {
+    console.log("Invariant failed", {
+      res1,
+      res3,
+    });
+  }
+
+  return res1;
+}
+
+/**
+ *
+ */
+export function toBits_i1(val: number) {
+  if (!Number.isInteger(val)) {
+    throw new Error("Number must be integer: " + val);
+  }
+
+  if (val > 0xffffffff) {
+    throw new Error("Number too large: " + val);
+  }
+
+  let result = "";
+  let rest = val;
+
+  do {
+    result = (rest & 0b1) + result;
+
+    rest = rest >>> 1;
+
+    if (rest === 0) {
+      break;
+    }
+  } while (rest !== 0);
+
+  return "0b" + result;
+}
+
+/**
+ *
+ */
+export function toBits_i2(val: number) {
+  if (!Number.isInteger(val)) {
+    throw new Error("Number must be integer: " + val);
+  }
+
+  if (val > 0xffffffff) {
+    throw new Error("Number too large: " + val);
+  }
+
+  let result = "";
+  let rest = Uint32Array.from([val])[0]; //convert from (int32 | uint32) to uint32
+
+  do {
+    result = (rest & 0b1) + result;
+
+    rest = rest / 2;
+  } while (rest >= 1);
+
+  return "0b" + result;
+}
+
+/**
+ *
+ */
 export const base64ToBinary = (str: string) => {
   if (isNode()) {
     return Buffer.from(str, "base64").toString("binary");
@@ -312,6 +393,36 @@ export const binaryStringToUInt8Array = (str: string) => {
 };
 
 /**
+ *
+ */
+export const numberOfRightZeroBits = (n: number) => {
+  let mask = 1;
+
+  for (let i = 0; i < 32; i++) {
+    if ((mask & n) !== 0) {
+      return i;
+    }
+
+    mask <<= 1;
+  }
+
+  throw new Error("Impossible");
+};
+
+/**
+ * Calculating the number, where only the heighest bit is preserved.
+ *
+ * todo: implement faster.
+ */
+export const preserveHeighestBit = (n: number) => {
+  if (n <= 0) {
+    err("not impl");
+  }
+
+  return 2 ** Math.floor(Math.log2(n));
+};
+
+/**
  * Unfinished.
  *
  * Escape for $'' strings.
@@ -329,3 +440,78 @@ export const escapeBashArgument = (str: string) =>
     .replace(/'/g, "\\'")
     .replace(/"/g, '\\"')
     .replace(/\?/g, "\\?");
+
+/**
+ *
+ */
+export const once = (func: () => void) => {
+  let first = true;
+  return () => {
+    if (first) {
+      first = false;
+      func();
+    }
+  };
+};
+
+/**
+ *
+ */
+export const refable = () => {
+  const ref: { func: () => void; current?: () => void } = {
+    func: () => {
+      ref.current && ref.current();
+    },
+  };
+
+  return ref;
+};
+
+/**
+ * - only implements part of the constructor interface.
+ */
+export const makeTypedArray = <T extends TypedArray, U extends TypedArray>(
+  source: T,
+  TypedArray: TypedArrayContructor<U>,
+  byteOffset: number,
+  length: number
+) => {
+  //must check, because the buffer could have data, that would be wrong to return.
+
+  assert(byteOffset >= 0, "Offset must be non-negative: " + byteOffset);
+
+  //ensure we don't take data after the array as ended.
+
+  const minimalLength = byteOffset + length * TypedArray.BYTES_PER_ELEMENT;
+
+  if (source.byteLength < minimalLength) {
+    err("Array isn't long enough. ", {
+      source,
+      target: TypedArray.name,
+      byteOffset,
+      length,
+    });
+  }
+
+  //checks length isn't negative.
+
+  return new TypedArray(source.buffer, source.byteOffset + byteOffset, length);
+};
+
+/**
+ * todo
+ *  - implement for browser. Maybe use: https://www.npmjs.com/package/base64-arraybuffer
+ */
+export const base64ToTypedArray = <T extends TypedArray>(
+  str: string,
+  TypedArray: TypedArrayContructor<T>
+) => {
+  const buffer = Buffer.from(str, "base64");
+
+  return makeTypedArray(
+    buffer,
+    TypedArray,
+    0,
+    buffer.byteLength / TypedArray.BYTES_PER_ELEMENT
+  );
+};

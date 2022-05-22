@@ -1,1 +1,1 @@
-{"user":{"imp":[["value",["last","inner","-----","outer","-----","func"]]]}}
+{"user":{"bee.stdout":["[\n  'last',  'inner',\n  '-----', 'outer',\n  '-----', 'outer',\n  '-----', 'main',\n  '-----', 'main'\n]\n"]}}

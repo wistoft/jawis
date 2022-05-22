@@ -1,1 +1,1 @@
-{"user":{"imp":[["value",["callback","-----","inner","callback","-----","func"]]]}}
+{"user":{"bee.stdout":["[\n  'Timeout._onTimeout',\n  '-----',\n  'inner',\n  'Timeout._onTimeout',\n  '-----',\n  'main'\n]\n"]}}

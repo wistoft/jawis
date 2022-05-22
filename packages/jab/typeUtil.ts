@@ -1,4 +1,4 @@
-import { err, JabError } from ".";
+import { err } from ".";
 
 /**
  *
@@ -77,7 +77,7 @@ export const assertHelper = <T>(
   if (msg) {
     throw new Error(msg);
   } else {
-    throw new JabError(defaultMsg, value);
+    throw err(defaultMsg, value);
   }
 };
 
@@ -119,7 +119,7 @@ export const assertProp = <T>(
     if (msg) {
       throw new Error(msg);
     } else {
-      throw new JabError("Failed to find: " + propertyName + " in:", value);
+      throw err("Failed to find: " + propertyName + " in:", value);
     }
   }
 
@@ -134,7 +134,7 @@ export const assertProp = <T>(
   if (msg) {
     throw new Error(msg);
   } else {
-    throw new JabError(
+    throw err(
       "Property must be " + propertyType + ". " + propertyName + " in:",
       value
     );
@@ -171,16 +171,18 @@ export const assertPropString = (
 /**
  *
  */
-export const intersect = <A, B>(
-  a: (value: unknown) => value is A,
-  b: (value: unknown) => value is B
-) => (value: unknown) => {
-  if (a(value) || b(value)) {
-    return value;
-  } else {
-    throw err("intersect failed for: ", value);
-  }
-};
+export const intersect =
+  <A, B>(
+    a: (value: unknown) => value is A,
+    b: (value: unknown) => value is B
+  ) =>
+  (value: unknown) => {
+    if (a(value) || b(value)) {
+      return value;
+    } else {
+      throw err("intersect failed for: ", value);
+    }
+  };
 
 /**
  * - return undefined if not an object

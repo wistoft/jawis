@@ -1,5 +1,3 @@
-import { Serializable } from "child_process";
-
 import {
   def,
   assert,
@@ -14,24 +12,19 @@ import {
   PromiseTriple,
   Bee,
   BeeDeps,
-  BeeListeners,
   MakeBee,
 } from "^jab";
 
 import { ReusableWPP, WatchableProcessPreloaderDeps } from ".";
 
 //just a subset of bee.
-export type ProcessRestarterProv<MS extends Serializable> = {
+export type ProcessRestarterProv<MS> = {
   send: (msg: MS) => Promise<void>;
   kill: () => Promise<void>;
   noisyKill: () => Promise<void>;
 };
 
-export type ProcessRestarterDeps<MR extends Serializable> = Omit<
-  BeeListeners<MR>,
-  "onExit"
-> & {
-  filename: string;
+export type ProcessRestarterDeps<MR> = Omit<BeeDeps<MR>, "onExit"> & {
   filterRequireMessages?: boolean;
   makeBee: MakeBee;
   onRestarted: () => void;
@@ -76,8 +69,7 @@ type Events = never;
  *  buffered messages are not ensured to be send completely, before new 'send commands' are also send. They may loose ordering.
  *
  */
-export class ProcessRestarter<MR extends Serializable, MS extends Serializable>
-  implements ProcessRestarterProv<MS> {
+export class ProcessRestarter<MR, MS> implements ProcessRestarterProv<MS> {
   public waiter: Waiter<States, Events>;
 
   private rwpp: ReusableWPP<MR, MS>;
@@ -301,8 +293,11 @@ export class ProcessRestarter<MR extends Serializable, MS extends Serializable>
     filterRequireMessages: this.deps.filterRequireMessages,
     makeBee: this.deps.makeBee,
 
-    //for Process
-    filename: this.deps.filename,
+    //for makeBee
+    def: {
+      filename: this.deps.def.filename,
+      data: this.deps.def.data,
+    },
     onMessage: this.deps.onMessage,
     onLog: this.deps.onLog,
     onStdout: this.deps.onStdout,

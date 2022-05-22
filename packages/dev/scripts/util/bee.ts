@@ -2,11 +2,15 @@
 import { makeMakeJacsWorkerBee } from "^released/jacs";
 
 import { mainProvToConsole, ProcessDeps } from "^jab-node";
-import { getJabProcessDeps } from "^tests/_fixture/testFixtures/jab Process";
+import { getBeeDeps } from "^tests/_fixture";
 
 const mainProv = mainProvToConsole();
 
-const makeJacsBee = makeMakeJacsWorkerBee(mainProv);
+const makeJacsBee = makeMakeJacsWorkerBee({
+  ...mainProv,
+  cacheNodeResolve: true,
+  lazyRequire: true,
+});
 
 /**
  *
@@ -14,4 +18,4 @@ const makeJacsBee = makeMakeJacsWorkerBee(mainProv);
 export const getJacsBee = (
   extraDeps?: Partial<ProcessDeps<any>>,
   logPrefix?: string
-) => makeJacsBee(getJabProcessDeps(mainProv, extraDeps, logPrefix));
+) => makeJacsBee(getBeeDeps(mainProv, extraDeps, logPrefix));

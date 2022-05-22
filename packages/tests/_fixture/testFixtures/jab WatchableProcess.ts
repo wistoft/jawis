@@ -1,12 +1,11 @@
 import { TestProvision } from "^jarun";
 import {
-  ProcessDeps,
   WatchableProcessPreloaderDeps,
   WatchableProcessPreloader,
 } from "^jab-node";
 
 import {
-  getJabProcessDeps,
+  getBeeDeps,
   getLogProv,
   getMakeJacsWorker,
   getScriptPath,
@@ -38,7 +37,7 @@ export const getJabWatchableProcessPreloaderAndDeps = (
  */
 export const getJabWatchableProcess = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
 ) => {
   const [wpp, deps] = getJabWatchableProcessPreloaderAndDeps(prov, extraDeps);
 
@@ -51,13 +50,13 @@ export const getJabWatchableProcess = (
  */
 export const getJabWatchableProcess_nonIpc_changeable = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
 ) => {
   writeScriptFileThatChanges(144);
   writeScriptFileThatChanges2(355);
 
   return getJabWatchableProcess(prov, {
-    filename: getScriptPath("WPP.js"),
+    def: { filename: getScriptPath("WPP.js") },
     ...extraDeps,
   });
 };
@@ -68,10 +67,10 @@ export const getJabWatchableProcess_nonIpc_changeable = (
  */
 export const getJabWatchableProcess_ipc_changeable = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
 ) =>
   getJabWatchableProcess_nonIpc_changeable(prov, {
-    filename: getScriptPath("WPP_wait.js"),
+    def: { filename: getScriptPath("WPP_wait.js") },
     ...extraDeps,
   });
 
@@ -83,10 +82,10 @@ export const getJabWatchbleProcessPreloaderDeps = (
   extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>,
   logPrefix?: string
 ): WatchableProcessPreloaderDeps & BeeDeps<any> => {
-  const procDeps = getJabProcessDeps(
+  const procDeps = getBeeDeps(
     prov,
     {
-      filename: getScriptPath("beeSendAndWait.js"),
+      def: { filename: getScriptPath("beeSendAndWait.js") },
       onMessage: () => {
         //hidden, because all those require messages are anoying
       },

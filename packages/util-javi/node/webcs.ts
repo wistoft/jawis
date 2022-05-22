@@ -21,21 +21,20 @@ export const makeWebcsRoute = (deps: Deps): ServerAppRouter =>
 /**
  * todo: find a better api than (req, res, next)
  */
-export const makeOnGet = (deps: Deps) => (
-  req: Request<ParamsDictionary, any, any>,
-  res: Response<any>
-) => {
-  if (!req.path.endsWith(".js") && !req.path.endsWith(".ts")) {
-    err("Only handles js and ts files.");
-  }
+export const makeOnGet =
+  (deps: Deps) =>
+  (req: Request<ParamsDictionary, any, any>, res: Response<any>) => {
+    if (!req.path.endsWith(".js") && !req.path.endsWith(".ts")) {
+      err("Only handles js and ts files.");
+    }
 
-  deps.compileService
-    .load(req.path)
-    .then((code) => {
-      res.type("js");
-      res.send(code);
-    })
-    .catch((error: unknown) => {
-      res.send("<pre>" + error + "</pre>");
-    });
-};
+    deps.compileService
+      .load(req.path)
+      .then((code) => {
+        res.type("js");
+        res.send(code);
+      })
+      .catch((error: unknown) => {
+        res.send("<pre>" + error + "</pre>");
+      });
+  };

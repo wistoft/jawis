@@ -3,7 +3,7 @@ import nativeModule from "module";
 import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
-import { def, ErrorWithParsedNodeStack, tryProp } from "^jab";
+import { def, ErrorWithParsedNodeStack, runBee } from "^jab";
 import {
   CompileFunction,
   FullNativeModule,
@@ -18,7 +18,7 @@ import {
 } from ".";
 import { JacsConsumer } from "./JacsConsumer";
 
-const Module = (nativeModule as unknown) as FullNativeModule & {
+const Module = nativeModule as unknown as FullNativeModule & {
   prototype: { _compile: CompileFunction; _jacsUninstall?: () => void };
 };
 
@@ -110,21 +110,9 @@ export const install = (shared: WorkerData) => {
 
   (global as any)._jacsUninstall = makeUninstall(uninstallInfo);
 
-  //run a script, if that's what the user wants.
+  //run the script
 
-  if (shared.beeFilename) {
-    const exports = eval("require.eager || require")(shared.beeFilename);
-
-    //call main function, if the script exports it.
-
-    const main = tryProp(exports, "main") as any;
-
-    if (main) {
-      main({
-        workerData: shared.beeWorkerData,
-      });
-    }
-  }
+  runBee(shared.next);
 };
 
 /**

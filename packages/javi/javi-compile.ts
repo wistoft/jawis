@@ -23,6 +23,7 @@ export const makeHoneyComb = (deps: {
   sshDeps?: SshDeps;
 }) => {
   const wsBuzzStore = makeWsBuzzStore(deps);
+
   const makeSshBee = deps.sshDeps
     ? lazyMakeMakeSshBee(deps.sshDeps)
     : () => {
@@ -42,15 +43,18 @@ export const makeHoneyComb = (deps: {
 
     //turn into relative to what the compile service knows.
 
-    const relFile = path.relative(deps.compileServiceRoot, beeDeps.filename);
+    const relFile = path.relative(
+      deps.compileServiceRoot,
+      beeDeps.def.filename
+    );
 
     //turn into an url, that hit the compile service.
 
-    const fileUrl = urlJoin(deps.webcsUrl, relFile);
+    const filename = urlJoin(deps.webcsUrl, relFile);
 
     //make
 
-    return makeBee({ ...beeDeps, filename: fileUrl });
+    return makeBee({ ...beeDeps, def: { ...beeDeps.def, filename } });
   };
 
   /**
@@ -94,21 +98,21 @@ export const makeHoneyComb = (deps: {
      */
     makeBee: <MR extends {}>(beeDeps: BeeDeps<MR>) => {
       if (
-        beeDeps.filename.endsWith(".br.js") ||
-        beeDeps.filename.endsWith(".br.ts")
+        beeDeps.def.filename.endsWith(".br.js") ||
+        beeDeps.def.filename.endsWith(".br.ts")
       ) {
         return makeWebWorkerBee(beeDeps);
       } else if (
-        beeDeps.filename.endsWith(".ssh.js") ||
-        beeDeps.filename.endsWith(".ssh.ts")
+        beeDeps.def.filename.endsWith(".ssh.js") ||
+        beeDeps.def.filename.endsWith(".ssh.ts")
       ) {
         return makeSshBee(beeDeps);
-      } else if (beeDeps.filename.endsWith(".ps1")) {
+      } else if (beeDeps.def.filename.endsWith(".ps1")) {
         return makePowerBee(beeDeps);
-      } else if (beeDeps.filename.endsWith(".cmd")) {
+      } else if (beeDeps.def.filename.endsWith(".cmd")) {
         return makeCommandBee(beeDeps);
       } else {
-        throw err("Unknown bee: ", beeDeps.filename);
+        throw err("Unknown bee: ", beeDeps.def.filename);
       }
     },
   };

@@ -2,14 +2,14 @@ import { TestProvision } from "^jarun";
 
 import { act } from "@testing-library/react-hooks";
 import { useConsoleState } from "^console";
-import { errorData2, makeGetRandomInteger } from "../_fixture";
+import { errorData2, makeGetIntegerSequence } from "../_fixture";
 import { wrapHook } from "^misc/node";
 
 // source map the error log, so state update will be async.
 
 export default (prov: TestProvision) => {
   const { result, rerender } = wrapHook(() =>
-    useConsoleState(makeGetRandomInteger(), [])
+    useConsoleState(makeGetIntegerSequence(), [])
   );
 
   let prom: any;

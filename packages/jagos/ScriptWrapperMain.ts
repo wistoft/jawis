@@ -1,10 +1,10 @@
 import async_hooks from "async_hooks";
 import { makeJagoSend, makeSend, enable } from "^jab";
-import { makeJagoOnError, registerErrorHandlers, wppMain } from "^jab-node";
+import { makeJagoOnError_old, registerErrorHandlers, wppMain } from "^jab-node";
 
 //register rejection handlers
 
-registerErrorHandlers(makeJagoOnError(makeJagoSend(makeSend())));
+registerErrorHandlers(makeJagoOnError_old(makeJagoSend(makeSend())));
 
 //long traces
 

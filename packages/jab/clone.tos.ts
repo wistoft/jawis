@@ -7,6 +7,7 @@ import {
   clone,
   ClonedValue,
   ClonedValueNonPrimitive,
+  toBytes,
 } from ".";
 
 export type StringKeys =
@@ -208,20 +209,6 @@ const arrayTos = (value: Array<ClonedValue>, strings: Strings) => {
 
   return strings["bracket-start"] + "\n" + content + strings["bracket-end"];
 };
-
-/**
- *
- */
-export function toBytes(str: string) {
-  let result = "";
-  for (let i = 0; i < str.length; i++) {
-    if (result !== "") {
-      result += " ";
-    }
-    result += str.charCodeAt(i);
-  }
-  return result;
-}
 
 /**
  *

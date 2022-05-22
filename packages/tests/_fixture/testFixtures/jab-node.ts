@@ -2,17 +2,19 @@ import path from "path";
 import async_hooks from "async_hooks";
 
 import { enable, disable } from "^jab";
-import { ErrorData, RequireSenderMessage, WorkerBeeDeps } from "^jabc";
+import { ErrorData, RequireSenderMessage, BeeDeps } from "^jabc";
 import { TestProvision } from "^jarun";
 
 import { filterFilepath, getScriptPath, TestMainProv } from ".";
 
 export const getBeeDeps = (
   prov: TestMainProv,
-  extraDeps?: Partial<WorkerBeeDeps<any>>,
+  extraDeps?: Partial<BeeDeps<any>>,
   logPrefix = "bee."
-): WorkerBeeDeps<any> => ({
-  filename: getScriptPath("hello.js"),
+): BeeDeps<any> => ({
+  def: {
+    filename: getScriptPath("hello.js"),
+  },
   onMessage: (msg: unknown) => {
     prov.log(logPrefix + "message", msg);
   },

@@ -1,24 +1,29 @@
-import { getPromise, makeJabError, unknownToErrorData } from "^jab";
+import async_hooks from "async_hooks";
+
+import { enable, getPromise, makeJabError, unknownToErrorData } from "^jab";
 import { TestProvision } from "^jarun";
-import { filterStackTrace, enableLongTraceForTest } from "^tests/_fixture";
+
+import { makeLiveJacs_lazy, filterStackTrace } from "../_fixture";
 
 // Error trace request in later context. But still Retains trace from creation context.
 
-export default (prov: TestProvision) => {
-  enableLongTraceForTest(prov);
+export default (prov: TestProvision) => makeLiveJacs_lazy(prov, __filename);
 
-  const CustomJabError = makeJabError(); //Make JabError late, because it extends Error, which is monkey patched.
+export const main = () => {
+  enable(async_hooks);
 
   const prom = getPromise<void>();
   let err: any;
+
   setTimeout(function outer() {
     function inner() {
-      err = new CustomJabError("asdf");
+      err = makeJabError("asdf");
       prom.resolve();
     }
     inner();
   });
+
   return prom.promise.then(() => {
-    prov.imp(filterStackTrace(unknownToErrorData(err)));
+    console.log(filterStackTrace(unknownToErrorData(err)));
   });
 };

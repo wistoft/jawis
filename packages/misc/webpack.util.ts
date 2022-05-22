@@ -26,42 +26,42 @@ export type OnExternals = (data: {
  *  - simplify. And remove jawis thing. By using ts-paths for lookup.
  *  - check it handles: 'node:fs'
  */
-export const makeNodeExternals = (
-  onExternal?: OnExternals
-): WebpackExternalsFunc => ({ request, context }, callback) => {
-  if (request === undefined) {
-    return callback();
-  }
+export const makeNodeExternals =
+  (onExternal?: OnExternals): WebpackExternalsFunc =>
+  ({ request, context }, callback) => {
+    if (request === undefined) {
+      return callback();
+    }
 
-  // quick fix for import aliases in jawis.
-  // can we use the the module: `TsconfigPathsPlugin`
-  if (request.startsWith("^")) {
-    return callback();
-  }
+    // quick fix for import aliases in jawis.
+    // can we use the the module: `TsconfigPathsPlugin`
+    if (request.startsWith("^")) {
+      return callback();
+    }
 
-  //relative/absolute
-  if (/^(\.|\/|\w:)/.test(request)) {
-    return callback();
-  }
+    //relative/absolute
+    if (/^(\.|\/|\w:)/.test(request)) {
+      return callback();
+    }
 
-  if (!isBuiltin(request)) {
-    onExternal && onExternal({ request, context });
-  }
+    if (!isBuiltin(request)) {
+      onExternal && onExternal({ request, context });
+    }
 
-  //unscoped npm package
-  if (/^[a-z0-9\-_]/i.test(request)) {
-    // Externalize to a commonjs module using the request path
-    return callback(undefined, "commonjs " + request);
-  }
+    //unscoped npm package
+    if (/^[a-z0-9\-_]/i.test(request)) {
+      // Externalize to a commonjs module using the request path
+      return callback(undefined, "commonjs " + request);
+    }
 
-  //scoped npm package
-  if (request.startsWith("@")) {
-    // Externalize to a commonjs module using the request path
-    return callback(undefined, "commonjs " + request);
-  }
+    //scoped npm package
+    if (request.startsWith("@")) {
+      // Externalize to a commonjs module using the request path
+      return callback(undefined, "commonjs " + request);
+    }
 
-  err("unknown import", { context, request });
-};
+    err("unknown import", { context, request });
+  };
 
 /**
  * Capture required node modules, so we can generate a package.json.

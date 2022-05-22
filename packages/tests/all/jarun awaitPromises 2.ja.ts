@@ -1,16 +1,12 @@
-import { nightmare } from "^jab";
-import { awaitPromises, TestProvision } from "^jarun";
-
-import { filterTestLogs, getJarunTestProvision } from "../_fixture";
+import { nightmare, PromiseAwait } from "^jab";
+import { TestProvision } from "^jarun";
 
 // await rejecting promise
 
 export default (prov: TestProvision) => {
-  const inner = getJarunTestProvision(prov);
+  const awaiter = new PromiseAwait(prov);
 
-  inner.await(nightmare(10));
+  awaiter.await(nightmare(10));
 
-  return awaitPromises(inner).then(() => {
-    prov.imp(filterTestLogs(inner.logs));
-  });
+  return awaiter.start();
 };

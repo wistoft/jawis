@@ -2,7 +2,7 @@ import path from "path";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack, { RuleSetRule } from "webpack";
 
-import { getPromise, JabError } from "^jab";
+import { getPromise, makeJabError } from "^jab";
 import { getAbsConfigFilePath } from "^jacs";
 import { makeNodeExternals } from "^misc";
 import { getWebpackResolve, getWebpackTSRules } from "^util-javi/node/webpack";
@@ -32,7 +32,7 @@ export const webpackCompile = (conf: webpack.Configuration) => {
     if (err) {
       prom.reject(err);
     } else if (stats && (stats.hasErrors() || stats.hasWarnings())) {
-      prom.reject(new JabError("Webpack errors:\n", "" + stats));
+      prom.reject(makeJabError("Webpack errors:\n", "" + stats));
     } else {
       prom.resolve(stats);
     }

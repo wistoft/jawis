@@ -6,7 +6,8 @@ import {
   getRandomInteger,
   safeCatch,
   unknownToErrorData,
-  WorkerBeeDeps,
+  BeeDeps,
+  BeeDef,
 } from "^jab";
 import {
   getFileToRequire,
@@ -107,10 +108,10 @@ export class JacsProducer {
     filename: string,
     options: WorkerOptions = {}
   ) => {
-    const { realFilename, shared } = this.getWorkerConf(
+    const { realFilename, shared } = this.getWorkerConf({
       filename,
-      options.workerData
-    );
+      data: options.workerData,
+    });
 
     const worker = this.makeWorker(realFilename, {
       ...options,
@@ -137,11 +138,8 @@ export class JacsProducer {
   /**
    *
    */
-  public makeJacsWorkerBee = <MS, MR>(beeDeps: WorkerBeeDeps<MR>) => {
-    const { realFilename, shared } = this.getWorkerConf(
-      beeDeps.filename,
-      beeDeps.workerData
-    );
+  public makeJacsWorkerBee = <MS, MR>(beeDeps: BeeDeps<MR>) => {
+    const { realFilename, shared } = this.getWorkerConf(beeDeps.def);
 
     //on message
 
@@ -151,7 +149,7 @@ export class JacsProducer {
       } else {
         //the message belongs to the user.
 
-        beeDeps.onMessage((msg as unknown) as MR);
+        beeDeps.onMessage(msg as unknown as MR);
       }
     };
 
@@ -196,9 +194,9 @@ export class JacsProducer {
   /**
    *
    */
-  private getWorkerConf = (filename: string, workerData: unknown) => {
-    if (!path.isAbsolute(filename)) {
-      err("filename must be absolute.", filename);
+  private getWorkerConf = (beeDef: BeeDef) => {
+    if (!path.isAbsolute(beeDef.filename)) {
+      err("filename must be absolute.", beeDef.filename);
     }
 
     //booter
@@ -219,11 +217,10 @@ export class JacsProducer {
       softTimeout: this.deps.consumerSoftTimeout,
       jacsCompileToken: this.jacsCompileToken,
 
-      tsPaths: this.deps.sfl.getTsConfigPaths(filename),
+      tsPaths: this.deps.sfl.getTsConfigPaths(beeDef.filename),
       resolveCache: this.resolveCache,
 
-      beeFilename: filename,
-      beeWorkerData: workerData,
+      next: beeDef,
 
       //for developement
       unregister: this.deps?.unregisterTsInWorker || false,

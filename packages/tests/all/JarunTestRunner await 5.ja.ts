@@ -1,4 +1,4 @@
-import { sleeping } from "^jab";
+import { getPromise, sleeping } from "^jab";
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";
@@ -6,13 +6,16 @@ import { jtrRunTest } from "../_fixture";
 // await after test has ended is rude.
 
 export default (prov: TestProvision) => {
+  const prom = getPromise<void>();
+
   jtrRunTest(prov, () => (inner) => {
     sleeping(10)
       .then(() => {
         inner.await(Promise.resolve());
       })
-      .catch(prov.onError);
+      .catch(prov.onError)
+      .finally(prom.resolve);
   });
 
-  return sleeping(50);
+  return prom.promise;
 };

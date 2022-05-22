@@ -3,7 +3,7 @@ import { makeRogueUpdater } from "^jatev/updaters";
 
 import {
   getRogueUpdater_with_test_reports,
-  makeGetRandomInteger,
+  makeGetIntegerSequence,
   defaultState,
 } from "../_fixture";
 
@@ -26,7 +26,7 @@ export default (prov: TestProvision) => {
       id: "test 1",
       data: { return: "return again", user: {} },
     },
-    makeGetRandomInteger()
+    makeGetIntegerSequence()
   )({ ...defaultState, ...state });
 
   prov.log("test that has same test logs", state2);

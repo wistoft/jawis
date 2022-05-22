@@ -1,10 +1,15 @@
 import path from "path";
 
-import { Waiter, err, LogProv, FinallyFunc } from "^jab";
-
-import type { Bee, BeeListeners, MakeBee } from "^jab";
-import { TS_TIMEOUT } from ".";
-import { JagoLogEntry } from "^jabc";
+import { BeeDef, JagoLogEntry } from "^jabc";
+import {
+  Bee,
+  BeeListeners,
+  MakeBee,
+  Waiter,
+  err,
+  LogProv,
+  FinallyFunc,
+} from "^jab";
 
 //can't be in main, couldn't be required there.
 export type BooterMessage = {
@@ -17,9 +22,8 @@ export type PreloaderMessage = {
 };
 
 export type ProcessPreloaderDeps = {
-  filename: string;
+  def: BeeDef;
   customBooter?: string;
-  timeout?: number;
   makeBee: MakeBee; //can be a process, worker, who knows.
   onExit?: (exitCode: number | null) => void; //used for errors before 'use'.
   onError: (error: unknown) => void;
@@ -39,9 +43,9 @@ type States = "starting" | "ready" | "stopping" | "done";
 
 /**
  *
- * - Shutdown will be ignored, if a use is in progress.
+ * - Shutdown will be ignored, if use in progress.
  * - Kill will always be performed, except in done state.
- * - Assert stopped in when finally function is called.
+ * - Assert stopped when finally function is called.
  *
  * Note
  *  - listeners are switched from own listeners to user's listeners, when the process is used.
@@ -55,9 +59,6 @@ export class ProcessPreloader<MS extends {}> implements BeePreloader<MS> {
 
   private listeners: BeeListeners<BooterMessage>;
   private proc: Bee<PreloaderMessage>;
-
-  //We start TypeScript, so we need a large timeout :-)
-  private timeout = TS_TIMEOUT;
 
   //extra state, corresponsing to starting-use, ready-use.
   private inUse = false;
@@ -83,17 +84,14 @@ export class ProcessPreloader<MS extends {}> implements BeePreloader<MS> {
       ? this.deps.customBooter
       : path.join(__dirname, "ProcessPreloaderMain");
 
-    if (this.deps.timeout) {
-      this.timeout = this.deps.timeout;
-    }
-
-    // console.log("preload");
-
     this.listeners = this.getOwnListeners();
 
     try {
       this.proc = this.deps.makeBee({
-        filename: booter,
+        def: {
+          filename: booter,
+          data: this.deps.def.data,
+        },
         finally: this.deps.finally,
         onMessage: this.onMessage,
         onLog: this.onLog,
@@ -122,7 +120,7 @@ export class ProcessPreloader<MS extends {}> implements BeePreloader<MS> {
 
     // wait for ready signal
 
-    return this.waiter.await("ready", this.timeout).then(() => {
+    return this.waiter.await("ready").then(() => {
       //this shouldn't be able to happen. The waiter
 
       if (this.waiter.is("done")) {
@@ -135,7 +133,10 @@ export class ProcessPreloader<MS extends {}> implements BeePreloader<MS> {
 
       //start script
 
-      this.proc.send({ type: "startScript", script: this.deps.filename });
+      this.proc.send({
+        type: "startScript",
+        script: this.deps.def.filename,
+      });
 
       //done
 

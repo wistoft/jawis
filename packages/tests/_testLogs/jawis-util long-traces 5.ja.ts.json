@@ -1,1 +1,1 @@
-{"user":{"imp":["ReferenceError: notDefined is not defined",["value",["inner","callback"]]]}}
+{"user":{"bee.stdout":["ReferenceError: notDefined is not defined\n[ 'inner', 'outer' ]\n"]}}

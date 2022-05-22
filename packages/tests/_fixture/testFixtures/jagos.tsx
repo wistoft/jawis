@@ -85,7 +85,10 @@ export const getJagosDirector_with_script = (
   extraDeps?: Partial<DirectorDeps>
 ) =>
   getJagosDirector(prov, {
-    scripts: [{ script: getScriptPath("hello.js") }],
+    scripts: [
+      { script: getScriptPath("hello.js") },
+      { script: getScriptPath("silent.js") },
+    ],
     ...extraDeps,
   });
 

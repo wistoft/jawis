@@ -1,11 +1,52 @@
-import { getSyntheticError, isNode } from "^jab";
+import { getSyntheticError, isNode, tryProp } from "^jab";
 import {
+  BeeDef,
+  BeeMain,
   ErrorEvent,
   JagoLogEntry,
   JagoSend,
   MakeSend,
   PromiseRejectionEvent,
 } from "../jabc";
+
+/**
+ * Runs a bee in the current process.
+ *
+ *  - Useful for running serial composition of bee definitions.
+ */
+export const runBee = (beeDef: BeeDef) => {
+  const exports = eval("require.eager || require")(beeDef.filename);
+
+  //call main function, if the script exports it.
+
+  const main = tryProp(exports, "main") as BeeMain<any>;
+
+  if (main) {
+    main({
+      beeData: beeDef.data,
+    });
+  }
+
+  //run next bee
+
+  if (beeDef.next) {
+    runBee(beeDef.next);
+  }
+};
+
+/**
+ *
+ */
+export const composeBeeDefs = (first: BeeDef, second: BeeDef) => {
+  if (first.next) {
+    throw new Error("not impl");
+  }
+
+  return {
+    ...first,
+    next: second,
+  };
+};
 
 /**
  *
@@ -18,13 +59,13 @@ export const defaultOnError = (error: any) => {
 /**
  * Use for tunnelling jago messages on same ipc as the on the script uses.
  */
-export const makeJagoSend = (send: (msg: any) => void): JagoSend => (
-  msg: JagoLogEntry
-) =>
-  send({
-    channel: "jago_channel_token",
-    ...msg,
-  });
+export const makeJagoSend =
+  (send: (msg: any) => void): JagoSend =>
+  (msg: JagoLogEntry) =>
+    send({
+      channel: "jago_channel_token",
+      ...msg,
+    });
 
 /**
  * todo

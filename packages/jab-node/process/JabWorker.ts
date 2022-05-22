@@ -48,7 +48,8 @@ export class JabWorker<
   MS extends StructuredCloneable,
   MR extends StructuredCloneable,
   WD extends StructuredCloneable
-> implements Bee<MS> {
+> implements Bee<MS>
+{
   public worker: Worker;
 
   public waiter: Waiter<States, Events>;

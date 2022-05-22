@@ -1,7 +1,6 @@
 import { RogueData, TestResult } from "^jatec";
-import { safeAllWait } from "^jab";
 
-import { JarunTestProvision, TestProvision } from "./JarunTestProvision";
+import { TestProvision } from "./JarunTestProvision";
 
 export type TestFunction = (prov: TestProvision) => unknown;
 
@@ -32,22 +31,3 @@ export type JarunProcessControllerMessage =
   | {
       type: "shutdown";
     };
-
-/**
- * Recursively await the promises in the test provision.
- */
-export const awaitPromises = (prov: JarunTestProvision): Promise<undefined> => {
-  const tmp = prov.awaitPromises;
-
-  prov.awaitPromises = []; //clear, so we can detect if more promises are made.
-
-  return safeAllWait(tmp, prov.onError)
-    .catch(() => {
-      /* ignore this rejection, the error is reported by `safeAllWait` */
-    })
-    .then(() => {
-      if (prov.awaitPromises.length !== 0) {
-        return awaitPromises(prov);
-      }
-    });
-};

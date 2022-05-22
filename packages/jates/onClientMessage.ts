@@ -24,67 +24,69 @@ type Deps = {
 /**
  *
  */
-export const makeOnClientMessage = (
-  deps: Deps
-): WsMessageListener<ServerMessage, ClientMessage> => async (msg) => {
-  switch (msg.action) {
-    case "stopRunning":
-      deps.onToggleRunning();
-      return;
+export const makeOnClientMessage =
+  (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
+  async (msg) => {
+    switch (msg.action) {
+      case "stopRunning":
+        deps.onToggleRunning();
+        return;
 
-    case "getAllTests":
-      deps.onGetAllTests();
-      return;
+      case "getAllTests":
+        deps.onGetAllTests();
+        return;
 
-    case "runAllTests":
-      deps.onRunAllTests();
-      return;
+      case "runAllTests":
+        deps.onRunAllTests();
+        return;
 
-    case "runCurrentSelection":
-      deps.onRunCurrentSelection();
-      return;
+      case "runCurrentSelection":
+        deps.onRunCurrentSelection();
+        return;
 
-    case "runDtp":
-      deps.onRunDtp();
-      return;
+      case "runDtp":
+        deps.onRunDtp();
+        return;
 
-    case "prependTests":
-      deps.prependTestList(msg.ids);
-      return;
+      case "prependTests":
+        deps.prependTestList(msg.ids);
+        return;
 
-    case "acceptTestLogs": {
-      //maybe do this in parallel
-      for (const id of msg.testIds) {
-        const report = await deps.acceptTestLogs(id);
-        deps.sendTestReport(report);
+      case "acceptTestLogs": {
+        //maybe do this in parallel
+        for (const id of msg.testIds) {
+          const report = await deps.acceptTestLogs(id);
+          deps.sendTestReport(report);
+        }
+        return;
       }
-      return;
+
+      case "acceptTestLog": {
+        const report = await deps.acceptTestLog(msg.testId, msg.logName);
+
+        deps.sendTestReport(report);
+        return;
+      }
+
+      case "compareTestLog":
+        deps
+          .getTempTestLogFiles(msg.testId, msg.logName)
+          .then(({ exp, cur }) => {
+            deps.compareFiles(exp, cur);
+          });
+        return;
+
+      case "openTest": {
+        const location = deps.testFramework.getTestLocation(msg.id);
+        deps.handleOpenFileInEditor(location);
+        return;
+      }
+
+      case "openFile":
+        deps.handleOpenFileInEditor(msg);
+        return;
+
+      default:
+        return assertNever(msg, "Unknown action.");
     }
-
-    case "acceptTestLog": {
-      const report = await deps.acceptTestLog(msg.testId, msg.logName);
-
-      deps.sendTestReport(report);
-      return;
-    }
-
-    case "compareTestLog":
-      deps.getTempTestLogFiles(msg.testId, msg.logName).then(({ exp, cur }) => {
-        deps.compareFiles(exp, cur);
-      });
-      return;
-
-    case "openTest": {
-      const location = deps.testFramework.getTestLocation(msg.id);
-      deps.handleOpenFileInEditor(location);
-      return;
-    }
-
-    case "openFile":
-      deps.handleOpenFileInEditor(msg);
-      return;
-
-    default:
-      return assertNever(msg, "Unknown action.");
-  }
-};
+  };

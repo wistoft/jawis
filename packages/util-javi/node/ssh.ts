@@ -148,24 +148,17 @@ export const getBuzzController = (conn: Client, deps: SshDeps) => {
 
   const protoBee = new SshProtoBee({
     conn,
-    beeDeps: {
-      filename: path.join(__dirname, "./sshMain.js"),
-      onMessage: () => {
-        throw new Error("not possible");
-      },
-      onLog: () => {
-        throw new Error("not possible");
-      },
-      onStdout: makeOnJsonOverStdout(onMessage),
-      onStderr: (data) => {
-        deps.logProv.logStream("ssh.stderr", data);
-      },
-      onExit: () => {
-        //todo: should we accept, if this happens. Or reconnect. Does it mean all bee have died?
-      },
-      finally: deps.finally,
-      onError: deps.onError,
+
+    filename: path.join(__dirname, "./sshMain.js"),
+    onStdout: makeOnJsonOverStdout(onMessage),
+    onStderr: (data) => {
+      deps.logProv.logStream("ssh.stderr", data);
     },
+    onExit: () => {
+      //todo: should we accept, if this happens. Or reconnect. Does it mean all bees have died?
+    },
+    finally: deps.finally,
+    onError: deps.onError,
   });
 
   const buzzController = new BuzzController({

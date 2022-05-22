@@ -30,7 +30,8 @@ type Deps = {
  * - This allows sending messages to only those connected to this specific route.
  */
 export class WsPoolController<MS extends SocketData, MR extends SocketData>
-  implements WsPoolProv<MS, MR> {
+  implements WsPoolProv<MS, MR>
+{
   public clients = new Set<NodeWS<MS, MR>>();
 
   constructor(private deps: Deps) {}

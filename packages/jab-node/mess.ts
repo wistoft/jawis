@@ -14,8 +14,12 @@ export const ensureMkdirSync = (path: PathLike) => {
  * Flush stdout and stderr, before exit is called.
  *
  * - Exits after 300ms if streams doesn't end within.
+ *
+ * note
+ *  - sync flush isn't possible because stdio is implicitly buffered in the event queue.
+ *  - This is probably better: https://github.com/cowboy/node-exit/blob/master/lib/exit.js
  */
-export const flushAndExit = () => {
+export const asyncFlushAndExit = () => {
   let out = false;
   let err = false;
 

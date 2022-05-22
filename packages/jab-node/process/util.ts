@@ -17,19 +17,42 @@ import {
 import type { LoadFunction, ResolveFilename } from "..";
 import { RealProcess } from "./RealProcess";
 
-//We start TypeScript, so we need a large timeout :-)
-export const TS_TIMEOUT = 4000;
+/**
+ *  identity implementation.
+ */
+export const makePlainProcessBee: MakeBee = (deps) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
+
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new Process({
+    ...deps,
+    filename: deps.def.filename,
+  });
+};
 
 /**
  *  identity implementation.
  */
-export const makePlainJabProcess: MakeJabProcess = (deps) => new Process(deps);
+export const makePlainWorkerBee: MakeBee = (deps) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
 
-/**
- *  identity implementation.
- */
-export const makePlainWorkerBee: MakeBee = (deps) =>
-  new JabWorker({ ...deps, makeWorker: makePlainWorker });
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new JabWorker({
+    ...deps,
+    filename: deps.def.filename,
+    makeWorker: makePlainWorker,
+  });
+};
 
 /**
  *  identity implementation.
@@ -40,17 +63,28 @@ export const makePlainWorker: MakeNodeWorker = (
 ) => new Worker(filename, options);
 
 /**
- *
+ * Uses the bee interface.
  */
-export const makeMakeTsJabProcessConditionally = (
-  makeTsJabProcess: MakeJabProcess
-): MakeJabProcess => (deps) => {
-  if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
-    return makeTsJabProcess(deps);
-  } else {
-    return makePlainJabProcess(deps);
-  }
-};
+export const makeMakeTsJabProcessConditionally =
+  (makeTsJabProcess: MakeJabProcess): MakeBee =>
+  (deps) => {
+    if (deps.def.data) {
+      throw new Error("data not impl");
+    }
+
+    if (deps.def.next) {
+      throw new Error("next not impl");
+    }
+
+    if (
+      deps.def.filename.endsWith(".ts") ||
+      deps.def.filename.endsWith(".tsx")
+    ) {
+      return makeTsJabProcess({ ...deps, filename: deps.def.filename });
+    } else {
+      return makePlainProcessBee(deps);
+    }
+  };
 
 const defaultWinPath = `${process.env.SYSTEMROOT}\\system32;${process.env.SYSTEMROOT};${process.env.SYSTEMROOT}\\System32\\Wbem;${process.env.SYSTEMROOT}\\System32\\WindowsPowerShell\\v1.0\\;`;
 
@@ -65,25 +99,43 @@ const defaultWinPath = `${process.env.SYSTEMROOT}\\system32;${process.env.SYSTEM
  *    - HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control\Session Manager\Environment
  *    - HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Environment
  */
-export const makeCommandBee: MakeBee = (deps) =>
-  new RealProcess({
+export const makeCommandBee: MakeBee = (deps) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
+
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new RealProcess({
     ...deps,
-    filename: deps.filename,
+    filename: deps.def.filename,
     env: {
       ...process.env,
       PATH: defaultWinPath + process.env.PATH,
     },
   });
+};
 
 /**
  *
  */
-export const makePowerBee: MakeBee = (deps) =>
-  new RealProcess({
+export const makePowerBee: MakeBee = (deps) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
+
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new RealProcess({
     ...deps,
     filename: "powershell.exe",
-    args: [deps.filename],
+    args: [deps.def.filename],
   });
+};
 
 /**
  * Get files required in the script.
@@ -95,21 +147,18 @@ export const makePowerBee: MakeBee = (deps) =>
  *  - Node caches _resolveFilename by parent&request, so the request the wrapper function will be
  *      called for each parent of a script. Which is pretty much all the places it's required.
  */
-export const makeMakeRequireSender = (
-  parentSend: (msg: RequireSenderMessage) => void
-) => (original: ResolveFilename): ResolveFilename => (
-  request,
-  parent,
-  isMain
-) => {
-  const filename = original(request, parent, isMain);
+export const makeMakeRequireSender =
+  (parentSend: (msg: RequireSenderMessage) => void) =>
+  (original: ResolveFilename): ResolveFilename =>
+  (request, parent, isMain) => {
+    const filename = original(request, parent, isMain);
 
-  if (filename !== "fs") {
-    parentSend({ type: "require", file: filename, source: parent?.filename });
-  }
+    if (filename !== "fs") {
+      parentSend({ type: "require", file: filename, source: parent?.filename });
+    }
 
-  return filename;
-};
+    return filename;
+  };
 
 /**
  * Get files required, even though they've already been loaded.

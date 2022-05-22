@@ -1,6 +1,6 @@
 import type { CompilerOptions } from "typescript";
 
-import { uninstall, SourceFileLoader, WorkerData, TsPathsConfig } from "^jacs";
+import { uninstall, SourceFileLoader, TsPathsConfig } from "^jacs";
 import { assertString } from "^jab";
 
 import { TestProvision } from "^jarun";
@@ -79,29 +79,6 @@ export const makeProducerOnCompile = (
   };
 
   return { controlArray, dataArray, onCompile };
-};
-
-/**
- *
- */
-export const getWorkerData = (extraDeps?: Partial<WorkerData>): WorkerData => {
-  const controlArray = getControlArray();
-
-  const dataArray = new Uint8Array(new SharedArrayBuffer(40));
-
-  return {
-    controlArray,
-    dataArray,
-    timeout: 0,
-    softTimeout: 0,
-    jacsCompileToken: "jacs-compile",
-    unregister: false,
-    tsPaths: {
-      baseUrl: projectConf.projectRoot,
-      paths: { "^*": ["./packages/*"] },
-    },
-    ...extraDeps,
-  };
 };
 
 /**

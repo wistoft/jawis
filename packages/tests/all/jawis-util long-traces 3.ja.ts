@@ -1,20 +1,22 @@
 import fs from "fs";
-import { getPromise, unknownToErrorData } from "^jab";
+import async_hooks from "async_hooks";
+
+import { enable, unknownToErrorData } from "^jab";
 import { TestProvision } from "^jarun";
-import { filterStackTrace, enableLongTraceForTest } from "^tests/_fixture";
+
+import { makeLiveJacs_lazy, filterStackTrace } from "../_fixture";
 
 //native async callbacks.
 
-export default (prov: TestProvision) => {
-  enableLongTraceForTest(prov);
+export default (prov: TestProvision) => makeLiveJacs_lazy(prov, __filename);
 
-  const prom = getPromise<void>();
+export const main = () => {
+  enable(async_hooks);
 
   const outer = () => {
     fs.stat("asdf", function inner() {
       const last = () => {
-        prov.imp(filterStackTrace(unknownToErrorData(new Error())));
-        prom.resolve();
+        console.log(filterStackTrace(unknownToErrorData(new Error())));
       };
 
       last();
@@ -22,6 +24,4 @@ export default (prov: TestProvision) => {
   };
 
   outer();
-
-  return prom.promise;
 };

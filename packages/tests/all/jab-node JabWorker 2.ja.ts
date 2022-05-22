@@ -1,4 +1,3 @@
-import { TS_TIMEOUT } from "^jab-node";
 import { TestProvision } from "^jarun";
 import { getJabWorker, getScriptPath } from "../_fixture";
 
@@ -9,8 +8,6 @@ export default (prov: TestProvision) => {
     filename: getScriptPath("beeSend.js"),
   });
 
-  return worker.waiter
-    .await("message", TS_TIMEOUT)
-    .then(() => worker.shutdown());
+  return worker.waiter.await("message").then(() => worker.shutdown());
 };
 //

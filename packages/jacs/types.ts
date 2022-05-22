@@ -1,5 +1,6 @@
 import { TsPathsConfig } from "./ts-util";
 import type { SharedMap } from "sharedmap";
+import { BeeDef } from "^jabc";
 
 export type WorkerData = {
   controlArray: Int32Array;
@@ -12,8 +13,7 @@ export type WorkerData = {
   tsPaths?: TsPathsConfig;
   resolveCache?: SharedMap;
 
-  beeFilename?: string;
-  beeWorkerData?: unknown;
+  next: BeeDef;
 
   //for development
   unregister?: boolean;

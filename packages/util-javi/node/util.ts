@@ -53,31 +53,31 @@ export const openFileInVsCode = async (
 /**
  *
  */
-export const makeHandleOpenFileInVsCode = (
-  vsCodeBinary: string
-): HandleOpenFileInEditor => (
-  location: {
-    file: string;
-    line?: number;
-  },
-  baseFolder = ""
-) => {
-  const file = assertString(location.file);
-  const line = undefinedOr(isInt)(location.line);
-  const fullpath = path.join(baseFolder, file);
+export const makeHandleOpenFileInVsCode =
+  (vsCodeBinary: string): HandleOpenFileInEditor =>
+  (
+    location: {
+      file: string;
+      line?: number;
+    },
+    baseFolder = ""
+  ) => {
+    const file = assertString(location.file);
+    const line = undefinedOr(isInt)(location.line);
+    const fullpath = path.join(baseFolder, file);
 
-  assert(fs.existsSync(fullpath), "File not found: ", fullpath);
+    assert(fs.existsSync(fullpath), "File not found: ", fullpath);
 
-  openFileInVsCode(vsCodeBinary, fullpath, line);
-};
+    openFileInVsCode(vsCodeBinary, fullpath, line);
+  };
 
 /**
  *
  */
-export const makeCompareFiles = (binary: string): CompareFiles => (
-  file1: string,
-  file2: string
-) => execSilent(binary, [file1, file2]);
+export const makeCompareFiles =
+  (binary: string): CompareFiles =>
+  (file1: string, file2: string) =>
+    execSilent(binary, [file1, file2]);
 
 /**
  *

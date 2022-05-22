@@ -7,13 +7,15 @@ import {
   BeeStates,
   escapeBashArgument,
   Waiter,
-  BeeDeps,
+  FinallyFunc,
+  BeeListeners,
 } from "^jab";
 
 type Deps<MR extends {}> = {
   conn: Client;
-  beeDeps: BeeDeps<MR>;
-};
+  filename: string;
+  finally: FinallyFunc;
+} & Omit<BeeListeners<MR>, "onLog" | "onMessage">;
 
 /**
  * Not quite a bee.
@@ -38,7 +40,7 @@ export class SshProtoBee<MR extends {}> {
     //must be first, because listeners depend on it.
 
     this.waiter = new Waiter({
-      onError: deps.beeDeps.onError,
+      onError: deps.onError,
       startState: "running",
       stoppingState: "stopping",
       endState: "stopped",
@@ -46,7 +48,7 @@ export class SshProtoBee<MR extends {}> {
 
     //ensure clean shutdown
 
-    this.deps.beeDeps.finally(() => this.noisyKill());
+    this.deps.finally(() => this.noisyKill());
   }
 
   /**
@@ -74,20 +76,20 @@ export class SshProtoBee<MR extends {}> {
         this.stream = stream;
 
         if (error) {
-          this.deps.beeDeps.onError(error);
+          this.deps.onError(error);
         } else {
-          const beeCode = readFileSync( this.deps.beeDeps.filename ).toString(); // prettier-ignore
+          const beeCode = readFileSync( this.deps.filename ).toString(); // prettier-ignore
           stream.write(beeCode + "\x00");
         }
 
         stream.on("close", this.closeStream);
 
         stream.on("data", (data: any) => {
-          this.deps.beeDeps.onStdout(data);
+          this.deps.onStdout(data);
         });
 
         stream.stderr.on("data", (data) => {
-          this.deps.beeDeps.onStderr(data);
+          this.deps.onStderr(data);
         });
       }
     );
@@ -103,7 +105,7 @@ export class SshProtoBee<MR extends {}> {
   public onExit = (status: number | null) => {
     this.waiter.set("stopped");
 
-    this.deps.beeDeps.onExit(status);
+    this.deps.onExit(status);
   };
 
   /**
