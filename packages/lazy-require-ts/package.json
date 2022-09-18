@@ -1,0 +1,14 @@
+{
+  "version": "0.0.2",
+  "name": "~lazy-require-ts",
+  "description": "",
+  "dependencies": {
+    "is-builtin-module": "^3.1.0"
+  },
+  "keywords": [
+    "import",
+    "require",
+    "module",
+    "lazy"
+  ]
+}
