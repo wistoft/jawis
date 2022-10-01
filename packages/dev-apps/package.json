@@ -2,7 +2,7 @@
   "private": true,
   "sideEffects": false,
   "version": "0.0.0",
-  "name": "dev-apps",
+  "name": "~dev-apps",
   "description": "Dev app router",
   "dependencies": {
     "@types/cors": "^2.8.6",

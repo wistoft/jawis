@@ -3,7 +3,7 @@
     "./JarunProcessMain.ts"
   ],
   "version": "1.0.2",
-  "name": "jarun",
+  "name": "~jarun",
   "description": "Jarun test runner",
   "dependencies": {
     "@types/deep-equal": "^1.0.1",

@@ -1,6 +1,6 @@
-# @jawis/jab
+# Basic utilities for JavaScript
 
-JavaScript basic is a collection of utilities. Can be used in both node and web
+Collection of basic utilities for JavaScript. Can be used in both node and web
 projects.
 
 ## Installation
@@ -101,6 +101,11 @@ All imports are side effect free. So this library is ideal for tree-shaking.
   - Sparsity in arrays is not preserved.
   - Non-enumerable properties is not preserved.
 - ES6 is required minimum. Because `JabError` inherits from `Error`
+
+## Related work
+
+- Capture:
+  [Several](https://npmtrends.com/@stdlib/utils-native-class-vs-arson-vs-error-to-json-vs-lave-vs-serialize-error-vs-serialize-javascript-vs-uneval)
 
 ## License
 

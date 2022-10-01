@@ -6,7 +6,7 @@ import { MainProv, mainWrapper } from "^jab-node";
 
 import conf from "../dev.conf";
 
-const { getPackagePath, projectRoot } = require("../../../project.conf");
+const { getPackagePath, projectRoot } = require("../project.conf");
 
 const main = (mainProv: MainProv) => {
   startJaviServer({

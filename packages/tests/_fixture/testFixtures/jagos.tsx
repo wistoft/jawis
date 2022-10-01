@@ -7,7 +7,7 @@ import { NodeWS } from "^jab-express";
 import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
 import { assertNever } from "^jab";
 
-const projectConf = require("../../../../project.conf");
+const projectConf = require("../../../../packages/dev/project.conf");
 
 /**
  *

@@ -79,3 +79,24 @@ export interface Json {
 }
 
 type JsonArray = Array<string | number | boolean | Date | Json | JsonArray>;
+
+export type TypedArray =
+  | Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float64Array
+  | BigInt64Array
+  | BigUint64Array;
+
+/**
+ * - only partial
+ */
+export type TypedArrayContructor<T> = {
+  new (length: number): T;
+  new (buffer: ArrayBufferLike, byteOffset?: number, length?: number): T;
+  readonly BYTES_PER_ELEMENT: number;
+};

@@ -1,7 +1,7 @@
 {
   "private": true,
   "version": "0.0.0",
-  "name": "tests",
+  "name": "~tests",
   "dependencies": {
     "@types/fs-extra": "^9.0.8",
     "fs-extra": "^9.0.0",

@@ -4,7 +4,7 @@
     "**/*.css"
   ],
   "version": "0.0.0",
-  "name": "dev-appv",
+  "name": "~dev-appv",
   "description": "Dev app view",
   "dependencies": {
     "@reach/router": "^1.3.4",

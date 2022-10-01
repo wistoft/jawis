@@ -3,7 +3,7 @@
     "./JacsConsumerMain.ts"
   ],
   "version": "1.0.2",
-  "name": "jacs",
+  "name": "~jacs",
   "description": "",
   "engines": {
     "node": ">=12.11.0"

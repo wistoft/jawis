@@ -1,6 +1,6 @@
 {
   "version": "1.0.2",
-  "name": "jagoc",
+  "name": "~jagoc",
   "description": "Common for jago view and server",
   "dependencies": {
     "jab": "1.0.1"

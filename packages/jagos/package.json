@@ -3,7 +3,7 @@
     "./ScriptWrapperMain.ts"
   ],
   "version": "1.0.2",
-  "name": "jagos",
+  "name": "~jagos",
   "description": "Jago server",
   "dependencies": {
     "@types/cors": "^2.8.6",

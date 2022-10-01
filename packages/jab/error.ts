@@ -12,6 +12,11 @@ export const err = (msg: string, ...args: Array<unknown>) => {
 /**
  *
  */
+export const pres = <T>(value: T) => Promise.resolve(value);
+
+/**
+ *
+ */
 export const prej = (msg: string, ...args: Array<unknown>) =>
   Promise.reject(new JabError(msg, ...args));
 
@@ -19,7 +24,7 @@ export const prej = (msg: string, ...args: Array<unknown>) =>
  *
  */
 export const assert = (
-  val: boolean,
+  val: boolean | undefined,
   msg = "Assert failed.",
   ...args: Array<unknown>
 ) => {
@@ -28,6 +33,21 @@ export const assert = (
   }
 
   err(msg, ...args);
+};
+/**
+ *
+ */
+export const assertEq = (
+  val1: any,
+  val2: any,
+  msg = "Assert failed.",
+  ...args: Array<unknown>
+) => {
+  if (val1 === val2) {
+    return;
+  }
+
+  err(msg, val1, val2, ...args);
 };
 
 /**
@@ -62,10 +82,8 @@ export const captureStack = (error: {
 };
 
 /**
- * Consistent way to convert an error object til structured data.
+ * Convert an error object til structured data.
  *
- * todo
- *  - dont rely on class instances. have a
  */
 export const unknownToErrorData = (
   error: unknown,
@@ -95,3 +113,22 @@ export const unknownToErrorData = (
     return wrapper.getErrorData(extraInfo);
   }
 };
+
+/**
+ * we could also set a synthetic stack property, but not needed in jawis.
+ */
+export const getSyntheticError = (
+  msg: string,
+  file?: string,
+  line?: number
+) => ({
+  message: msg,
+  getErrorData: (): ErrorData => ({
+    msg: msg,
+    info: [],
+    stack: {
+      type: "node-parsed",
+      stack: [{ file, line }],
+    },
+  }),
+});

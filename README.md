@@ -61,17 +61,14 @@ automatically start this task install the extentions: `AutoLaunch`
   - Review, because there's a bug, that removes comments after imports
 - `yarn pretty:fix`
 - Clean up git history.
-- `yarn bump`
-  - Bumps package versions according to `conventional commits`
-  - Generates changelogs for each package
 - `yarn build`
 - `yarn release`
   - Publishes to npm
 
 ## Packages
 
-- `dev` contains code useful just for development of jawis.
-- `misc` has where things that don't fit anywhere, fit in.
+- `dev` contains code used for development of jawis.
+- `misc` where things, that don't fit anywhere, fit in.
 - `javi` contains the 'mounts' for production/released javi.
 
 ### Naming conventions
@@ -91,7 +88,7 @@ automatically start this task install the extentions: `AutoLaunch`
   browser, that this happens.
 - vscode tasks are configured to use `powershell.exe`. Hence only work on
   Windows.
-- There is a problem with ambiant types in builded `d.ts` files.
+- There is a problem with ambiant types in built `d.ts` files.
 - Minimal `node` version is `12.11.0`.
 
 ## Licence

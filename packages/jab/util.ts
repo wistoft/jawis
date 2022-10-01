@@ -1,4 +1,4 @@
-import { err, FinallyProv, looping } from ".";
+import { err, FinallyProv, looping, TypedArray, TypedArrayContructor } from ".";
 import { assert } from "./error";
 
 /**
@@ -278,6 +278,20 @@ export const splitSurroundingWhitespace = (
 /**
  *
  */
+export function toBytes(str: string) {
+  let result = "";
+  for (let i = 0; i < str.length; i++) {
+    if (result !== "") {
+      result += " ";
+    }
+    result += str.charCodeAt(i);
+  }
+  return result;
+}
+
+/**
+ *
+ */
 export const base64ToBinary = (str: string) => {
   if (isNode()) {
     return Buffer.from(str, "base64").toString("binary");
@@ -308,4 +322,128 @@ export const binaryStringToUInt8Array = (str: string) => {
     arr[i] = str.charCodeAt(i);
   }
   return arr;
+};
+
+/**
+ *
+ */
+export const numberOfRightZeroBits = (n: number) => {
+  let mask = 1;
+
+  for (let i = 0; i < 32; i++) {
+    if ((mask & n) !== 0) {
+      return i;
+    }
+
+    mask <<= 1;
+  }
+
+  throw new Error("Impossible");
+};
+
+/**
+ * Calculating the number, where only the heighest bit is preserved.
+ *
+ * todo: implement faster.
+ */
+export const preserveHeighestBit = (n: number) => {
+  if (n <= 0) {
+    err("not impl");
+  }
+
+  return 2 ** Math.floor(Math.log2(n));
+};
+
+/**
+ * Unfinished.
+ *
+ * Escape for $'' strings.
+ *
+ * see: https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html
+ *
+ * note
+ *  - it's not possible to escape properly for $"", "" or '' string.
+ */
+export const escapeBashArgument = (str: string) =>
+  str
+    .replace(/\\/g, "\\\\")
+    .replace(/\n/g, "\\n")
+    .replace(/\r/g, "\\r")
+    .replace(/'/g, "\\'")
+    .replace(/"/g, '\\"')
+    .replace(/\?/g, "\\?");
+
+/**
+ *
+ */
+export const once = (func: () => void) => {
+  let first = true;
+  return () => {
+    if (first) {
+      first = false;
+      func();
+    }
+  };
+};
+
+/**
+ *
+ */
+export const refable = () => {
+  const ref: { func: () => void; current?: () => void } = {
+    func: () => {
+      ref.current && ref.current();
+    },
+  };
+
+  return ref;
+};
+
+/**
+ * - only implements part of the constructor interface.
+ */
+export const makeTypedArray = <T extends TypedArray, U extends TypedArray>(
+  source: T,
+  TypedArray: TypedArrayContructor<U>,
+  byteOffset: number,
+  length: number
+) => {
+  //must check, because the buffer could have data, that would be wrong to return.
+
+  assert(byteOffset >= 0, "Offset must be non-negative: " + byteOffset);
+
+  //ensure we don't take data after the array as ended.
+
+  const minimalLength = byteOffset + length * TypedArray.BYTES_PER_ELEMENT;
+
+  if (source.byteLength < minimalLength) {
+    err("Array isn't long enough. ", {
+      source,
+      target: TypedArray.name,
+      byteOffset,
+      length,
+    });
+  }
+
+  //checks length isn't negative.
+
+  return new TypedArray(source.buffer, source.byteOffset + byteOffset, length);
+};
+
+/**
+ * todo
+ *  - implement for browser. Maybe use: https://www.npmjs.com/package/base64-arraybuffer
+ */
+export const base64ToTypedArray = <T extends TypedArray>(
+  str: string,
+  TypedArray: TypedArrayContructor<T>
+) => {
+  const buffer = Buffer.from(str, "base64");
+
+  return makeTypedArray(
+    buffer,
+    TypedArray,
+    0,
+    buffer.byteLength / TypedArray.BYTES_PER_ELEMENT
+  );
 };

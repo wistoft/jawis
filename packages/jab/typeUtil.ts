@@ -114,7 +114,7 @@ export const assertProp = <T>(
   msg?: string,
   predicate?: (value: unknown) => value is T,
   propertyType?: string
-) => {
+): T => {
   if (!hasProp(value, propertyName)) {
     if (msg) {
       throw new Error(msg);

@@ -47,6 +47,18 @@
       },
       "problemMatcher": ["$eslint-stylish"],
       "detail": " "
+    },
+    {
+      "label": "pretty fix",
+      "group": "build",
+      "type": "npm",
+      "script": "pretty:fix",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe"
+        }
+      },
+      "detail": " "
     }
   ]
 }

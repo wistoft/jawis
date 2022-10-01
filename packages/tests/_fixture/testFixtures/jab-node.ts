@@ -4,7 +4,7 @@ import { BeeDeps, RequireSenderMessage } from "^jab-node";
 
 import { getScriptPath, TestMainProv } from ".";
 
-const projectConf = require("../../../../project.conf");
+const projectConf = require("../../../../packages/dev/project.conf");
 
 export const getBeeDeps = (
   prov: TestMainProv,

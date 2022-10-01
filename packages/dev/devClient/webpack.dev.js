@@ -5,8 +5,7 @@ const {
 } = require("../../util-dev/node/createWebpackBaseConf");
 
 const conf = require("../dev.conf");
-
-const { getPackagePath } = eval("require")("../../../project.conf");
+const { getPackagePath } = require("../project.conf");
 
 //
 // base conf

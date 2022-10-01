@@ -1,7 +1,7 @@
 import path from "path";
 import { webpackCompile, getNodeWebpackConf } from "^misc/node";
 
-const projectConf = eval("require")("../../../../project.conf");
+const projectConf = eval("require")("../../project.conf");
 
 /**
  * Compile a ts-file with webpack to a single js-file

@@ -1,6 +1,6 @@
 {
   "version": "1.0.1",
-  "name": "util-dev",
+  "name": "~util-dev",
   "description": "Utilities for development",
   "dependencies": {
     "css-loader": "^5.1.1",

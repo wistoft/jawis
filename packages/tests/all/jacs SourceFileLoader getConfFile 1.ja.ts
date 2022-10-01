@@ -2,7 +2,7 @@ import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
 import { getScratchPath } from "^tests/_fixture";
 
-const { getPackagePath } = require("../../../project.conf");
+const { getPackagePath } = require("../../../packages/dev/project.conf");
 
 export default (prov: TestProvision) => {
   const { eq } = prov;

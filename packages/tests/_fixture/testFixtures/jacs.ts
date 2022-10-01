@@ -22,7 +22,7 @@ import { assertString } from "^jab";
 
 import { syntheticWait } from "./jacs protocol";
 
-const projectConf = require("../../../../project.conf");
+const projectConf = require("../../../../packages/dev/project.conf");
 
 /**
  *

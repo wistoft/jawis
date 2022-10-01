@@ -1,6 +1,6 @@
 import { webpackCompileHelper } from "./util/build";
 
-const { alphaBuildFolder } = eval("require")("../../../project.conf");
+const { alphaBuildFolder } = eval("require")("../project.conf");
 
 webpackCompileHelper("jacs", "JacsConsumerMain", alphaBuildFolder); // prettier-ignore
 webpackCompileHelper("jarun", "JarunProcessMain", alphaBuildFolder);

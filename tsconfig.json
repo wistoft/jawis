@@ -21,6 +21,7 @@
     { "path": "./packages/jatev" },
     { "path": "./packages/javi" },
     { "path": "./packages/javi-client" },
+    { "path": "./packages/lazy-require-ts" },
     { "path": "./packages/misc" },
     { "path": "./packages/util-dev" },
     { "path": "./packages/util-javi" },

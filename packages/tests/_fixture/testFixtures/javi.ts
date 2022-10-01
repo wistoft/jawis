@@ -2,7 +2,7 @@ import path from "path";
 
 import { FullJaviConf } from "^javi/types";
 
-const projectConf = require("../../../../project.conf");
+const projectConf = require("../../../../packages/dev/project.conf");
 
 /**
  *
