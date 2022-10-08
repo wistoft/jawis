@@ -8,6 +8,7 @@ const {
   scopedPackages,
   unscopedPackages,
   privatePackages,
+  phpPackages,
 } = require("../../project.conf");
 
 makeJawisBuildManager(
@@ -19,7 +20,8 @@ makeJawisBuildManager(
   scopedPackages,
   unscopedPackages,
   privatePackages,
-  /* replacePathForRelease */ true
+  /* replacePathForRelease */ true,
+  phpPackages
 )
   .build()
   .catch(console.log);

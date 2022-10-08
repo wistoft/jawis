@@ -1,6 +1,6 @@
 {
   "sideEffects": [
-    "./server/javiServerMain.ts"
+    "./javiServerMain.ts"
   ],
   "version": "1.0.2",
   "name": "~javi",
@@ -8,19 +8,9 @@
     "javi": "./javiServerMain.js"
   },
   "description": "JavaScript View is tool for running test cases and scripts. Everything is presented in the browser",
-  "dependencies": {
-    "jab": "1.0.1",
-    "jab-express": "^1.0.2",
-    "jab-node": "^1.0.2",
-    "jacs": "^1.0.2",
-    "jagos": "^1.0.2",
-    "jarun": "^1.0.2",
-    "jates": "^1.0.2",
-    "util-javi": "^1.0.2"
-  },
+  "dependencies": {},
   "keywords": [
     "development",
-    "monitor",
     "watch",
     "autoload",
     "reload",

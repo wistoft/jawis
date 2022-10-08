@@ -102,7 +102,7 @@ export const getFunctionNameFromFrame = (frame: NodeJS.CallSite) => {
  *
  * note
  *  - taken from source-map-support#prepareStackTrace
- *      tried to preserve `curPosition` and `nextPosition`. But don't know what its purpose.
+ *      tried to preserve `curPosition` and `nextPosition`. But don't know their purpose.
  */
 export const extractStackTraceInfo = (
   error: Error,

@@ -9,9 +9,6 @@
     "@types/react": "^16.14.4",
     "@types/stack-trace": "^0.0.29",
     "error-stack-parser": "^2.0.6",
-    "jab": "1.0.1",
-    "jab-node": "^1.0.2",
-    "jab-react": "^1.0.2",
     "path-browserify": "^1.0.1",
     "react": "^16.14.0",
     "stack-trace": "^0.0.10",
@@ -19,5 +16,9 @@
     "stacktrace-js": "^2.0.2",
     "ts-node": "^8.8.2",
     "typescript": "^4.2.3"
-  }
+  },
+  "keywords": [
+    "prototype",
+    "beta"
+  ]
 }

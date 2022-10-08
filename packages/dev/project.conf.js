@@ -33,7 +33,6 @@ const scopedPackages = [
   "jates",
   "jatev",
   "javi",
-  "misc",
   "util-dev",
   "util-javi",
 ];
@@ -44,8 +43,11 @@ const privatePackages = [
   "dev-apps",
   "dev-appv",
   "javi-client",
+  "misc",
   "tests",
 ];
+
+const phpPackages = [];
 
 //
 // export
@@ -63,4 +65,5 @@ module.exports = {
   scopedPackages,
   unscopedPackages,
   privatePackages,
+  phpPackages,
 };

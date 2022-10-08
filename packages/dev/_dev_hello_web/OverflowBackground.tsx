@@ -5,7 +5,7 @@ import "./util.css";
 /**
  *
  */
-export const OverflowBackground: React.FC = () => {
+export const Component: React.FC = () => {
   const [overflow, setOverflow] = useState(false);
   const [content, setContent] = useState("hej dav");
 

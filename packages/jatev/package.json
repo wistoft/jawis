@@ -1,4 +1,5 @@
 {
+  "sideEffects": false,
   "version": "1.0.2",
   "name": "~jatev",
   "description": "Jate view",
@@ -8,10 +9,24 @@
     "@types/reach__router": "^1.3.7",
     "@types/react": "^16.14.4",
     "deep-equal": "^2.0.5",
-    "jab": "1.0.1",
-    "jab-react": "^1.0.2",
-    "jatec": "^1.0.2",
-    "react": "^16.14.0",
-    "util-javi": "^1.0.2"
-  }
+    "react": "^16.14.0"
+  },
+  "keywords": [
+    "test runner",
+    "unit test",
+    "ui test",
+    "functional test",
+    "testing",
+    "test",
+    "bdd",
+    "tdd",
+    "jest",
+    "mocha",
+    "jasmine",
+    "karma",
+    "tape",
+    "ava",
+    "qunit",
+    "alsatian"
+  ]
 }

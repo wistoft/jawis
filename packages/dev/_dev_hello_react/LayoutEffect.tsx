@@ -5,7 +5,7 @@ import { JsLink } from "^jab-react";
 /**
  *
  */
-export const LayoutEffect: React.FC = () => {
+export const Component: React.FC = () => {
   const [overflow, setOverflow] = useState(false);
   const [content, setContent] = useState("hej dav");
 

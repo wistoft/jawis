@@ -7,10 +7,15 @@
   "description": "Console output from both node and browser shown in the browser",
   "dependencies": {
     "@types/react": "^16.14.4",
-    "jab": "1.0.1",
-    "jab-react": "^1.0.2",
-    "jagoc": "^1.0.2",
-    "react": "^16.14.0",
-    "util-javi": "^1.0.2"
-  }
+    "react": "^16.14.0"
+  },
+  "keywords": [
+    "development",
+    "overlay",
+    "redbox",
+    "console",
+    "error handling",
+    "error-overlay",
+    "error"
+  ]
 }

@@ -5,7 +5,7 @@ import { JsLink, ScrollbarTail } from "^jab-react";
 /**
  *
  */
-export const ScrollbarTailDev: React.FC = () => {
+export const Component: React.FC = () => {
   const [numbers, setNumbers] = useState<number[]>([0, 1, 2, 3, 4, 5, 6]);
 
   const divContent = numbers.map((elm) => (

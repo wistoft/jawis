@@ -5,7 +5,7 @@ import { JsLink, ClickableDivBackground } from "^jab-react";
 /**
  *
  */
-export const ClickableDivBackgroudDev: React.FC = () => {
+export const Component: React.FC = () => {
   return (
     <>
       <ClickableDivBackground

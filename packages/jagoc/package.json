@@ -1,8 +1,14 @@
 {
+  "sideEffects": false,
   "version": "1.0.2",
   "name": "~jagoc",
   "description": "Common for jago view and server",
-  "dependencies": {
-    "jab": "1.0.1"
-  }
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
 }

@@ -29,7 +29,7 @@ type State = {
 /**
  *
  */
-export class HelloErrorsReactLiftCycle extends React.Component<Props, State> {
+export class Component extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
 

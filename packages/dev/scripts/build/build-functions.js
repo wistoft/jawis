@@ -6,6 +6,8 @@ const del = require("del");
 
 const { copyingFiles } = require("./util");
 
+const tscBuildFolderName = "build-tsc";
+
 /**
  *
  */
@@ -18,17 +20,23 @@ const makeJawisBuildManager = (
   scopedPackages,
   unscopedPackages,
   privatePackages,
-  replacePathForRelease
+  replacePathForRelease,
+  phpPackages
 ) => {
   const files = "{README.md,}";
 
   //derived
 
   const packageFolder = path.join(projectFolder, "packages");
-  const bulidTscFolder = path.join(projectFolder, "build-tsc");
+  const bulidTscFolder = path.join(projectFolder, tscBuildFolderName);
 
   const packagesPattern =
     "{" + [...scopedPackages, ...unscopedPackages].join(",") + "}"; //bug: for one package it's: `{jab,}` or `jab`
+
+  const packagesPatternIncludingPrivate =
+    "{" +
+    [...scopedPackages, ...unscopedPackages, ...privatePackages].join(",") +
+    "}";
 
   //
   // functions
@@ -37,15 +45,19 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const getFullPackageName = (packageName) => {
+  const getFullPackageName = (packageName, allowPrivate = false) => {
     if (scopedPackages.includes(packageName)) {
       return npmScope + "/" + packageName;
     } else if (unscopedPackages.includes(packageName)) {
       return packageName;
     } else if (privatePackages.includes(packageName)) {
-      throw new Error(
-        "Can't get full name of a private package: " + packageName
-      );
+      if (allowPrivate) {
+        return packageName;
+      } else {
+        throw new Error(
+          "Can't get full name of a private package: " + packageName
+        );
+      }
     } else {
       throw new Error("Package not listed in build file: " + packageName);
     }
@@ -54,7 +66,11 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const getSiblingDeps = async (packageName, fullPackageName = true) => {
+  const getSiblingPackages = async (
+    packageName,
+    fullPackageName = true,
+    allowPrivate = false
+  ) => {
     const confStr = await fs.promises.readFile(
       path.join(projectFolder, "./packages/" + packageName + "/tsconfig.json")
     );
@@ -63,7 +79,7 @@ const makeJawisBuildManager = (
 
     //gather references to local packages.
 
-    const extra = {};
+    const deps = [];
 
     if (conf.references) {
       conf.references.forEach((def) => {
@@ -72,18 +88,19 @@ const makeJawisBuildManager = (
           npmScope,
           scopedPackages,
           unscopedPackages,
-          privatePackages
+          privatePackages,
+          allowPrivate
         );
 
         const tmp2 = fullPackageName ? tmp : def.path.replace(/^\.\.\//, "");
 
-        extra[tmp2] = npmVersion;
+        deps.push(tmp2);
       });
     }
 
     //check compiler options is set correctly
 
-    const outDir = "../../build-tsc/" + packageName;
+    const outDir = "../../" + tscBuildFolderName + "/" + packageName;
 
     if (conf.compilerOptions.outDir !== outDir) {
       throw new Error(
@@ -96,22 +113,90 @@ const makeJawisBuildManager = (
 
     //done
 
-    return extra;
+    return deps;
+  };
+
+  /**
+   * The dependencies on other packages in the repo.
+   *
+   * - includes private packages, as quick fix.
+   */
+  const getAllPackageDeps = async (
+    fullPackageName = true,
+    allowPrivate = false
+  ) => {
+    const pattern = allowPrivate
+      ? packagesPatternIncludingPrivate
+      : packagesPattern;
+
+    const res = {};
+    const packages = await fastGlob([pattern], {
+      cwd: packageFolder,
+      onlyDirectories: true,
+    });
+
+    for (const packageName of packages) {
+      res[packageName] = await getSiblingPackages(
+        packageName,
+        fullPackageName,
+        allowPrivate
+      );
+    }
+
+    return res;
   };
 
   /**
    *
-   * - excludes private packages.
    */
-  const getAllPackageDeps = async () => {
-    const res = {};
+  const getAllSiblingDeps = async () => {
+    const tmp = [];
+    const versions = {};
+
     const packages = await fastGlob([packagesPattern], {
       cwd: packageFolder,
       onlyDirectories: true,
     });
 
     for (const packageName of packages) {
-      res[packageName] = Object.keys(await getSiblingDeps(packageName, false));
+      //deps without versions
+
+      tmp.push([packageName, await getSiblingPackages(packageName)]);
+
+      //find version
+
+      const jsonStr = await fs.promises.readFile(
+        path.join(packageFolder, packageName, "package.json")
+      );
+
+      const json = JSON.parse(jsonStr);
+
+      const version =
+        json.version === "0.0.0" ? npmVersion : "^" + json.version;
+
+      const fullName = getFullPackageName(
+        packageName,
+        npmScope,
+        scopedPackages,
+        unscopedPackages,
+        privatePackages
+      );
+
+      versions[fullName] = version;
+    }
+
+    //make deps with right versions.
+
+    const res = {};
+
+    for (const [packageName, deps] of tmp) {
+      const versionDeps = {};
+
+      for (const dep of deps) {
+        versionDeps[dep] = versions[dep];
+      }
+
+      res[packageName] = versionDeps;
     }
 
     return res;
@@ -126,15 +211,20 @@ const makeJawisBuildManager = (
     await checkPackagesExistsInCodebase(scopedPackages);
     await checkPackagesExistsInCodebase(unscopedPackages);
     await checkPackagesExistsInCodebase(privatePackages);
+    await checkPackagesExistsInCodebase(phpPackages);
 
     //check all packages in the codebase
 
     for (const packageName of fs.readdirSync("./packages/")) {
       checkPackageHasDeclaredDestination(packageName);
 
-      await checkPackageJsonFile(packageName);
+      if (phpPackages.includes(packageName)) {
+        //todo: check composer.json
+      } else {
+        await checkPackageJsonFile(packageName);
 
-      await checkRootTsConfigHasPackage(packageName);
+        await checkRootTsConfigHasPackage(packageName);
+      }
     }
   };
 
@@ -173,6 +263,10 @@ const makeJawisBuildManager = (
       count++;
     }
 
+    if (phpPackages.includes(packageName)) {
+      count++;
+    }
+
     if (count === 0) {
       throw new Error(
         "Package has no declaration in build file: " + packageName
@@ -201,6 +295,8 @@ const makeJawisBuildManager = (
    *
    */
   const checkPackageJson = async (json, packageName) => {
+    //package name
+
     if (json.name !== "~" + packageName) {
       throw new Error(
         "name in package.json expexted to be: ~" +
@@ -210,8 +306,36 @@ const makeJawisBuildManager = (
       );
     }
 
+    //private packages
+
+    if (privatePackages.includes(packageName)) {
+      if (json.private !== true) {
+        throw new Error("Package listed as private have other value in package.json: " + packageName); // prettier-ignore
+      }
+
+      if (json.version && json.version !== "0.0.0") {
+        throw new Error("Version should be 0.0.0 for private package: " + packageName); // prettier-ignore
+      }
+
+      //private packages are not checked further.
+
+      return;
+    }
+
+    // only public packages
+
+    if (json.private) {
+      throw new Error("Package listed as public have other value in package.json: " + packageName); // prettier-ignore
+    }
+
     if (json.version === undefined) {
-      throw new Error("Missing version in package.json for: " + packageName);
+      throw new Error("Version should be set for public package: " + packageName); // prettier-ignore
+    }
+
+    if (json.private && json.private !== true) {
+      if (json.version === undefined) {
+        throw new Error("Missing version in package.json for: " + packageName);
+      }
     }
 
     if (json.description === undefined || json.description === "") {
@@ -247,9 +371,13 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const transformPackageJson = async (json, packageName) => {
-    await checkPackageJson(json, packageName);
-
+  const transformPackageJson = async (
+    json,
+    packageName,
+    targetFolder,
+    siblingDeps,
+    checkSideEffects = true
+  ) => {
     if (json.version === "0.0.0") {
       json.version = npmVersion;
     }
@@ -269,16 +397,41 @@ const makeJawisBuildManager = (
         "https://github.com/wistoft/jawis/tree/master/packages/" + packageName,
     };
 
+    if (json.sideEffects) {
+      json.sideEffects = json.sideEffects.map((file) =>
+        file.replace(/\.ts$/, ".js")
+      );
+
+      //they must exist in build folder
+
+      for (const file of json.sideEffects) {
+        const absFile = path.join(targetFolder, file);
+
+        if (checkSideEffects) {
+          if (!(await fse.pathExists(absFile))) {
+            throw new Error(
+              "File declared in sideEffect must exist: " +
+                file +
+                ", package: " +
+                packageName +
+                ", folder: " +
+                targetFolder
+            );
+          }
+        }
+      }
+    }
+
     // json.publishConfig = {
     //   access: "public",
     //   tag: npmDistTag,
     // };
 
     try {
-      json.dependencies = {
-        ...(await getSiblingDeps(packageName)),
+      json.dependencies = sortObject({
+        ...siblingDeps[packageName],
         ...json.dependencies,
-      };
+      });
     } catch (e) {
       setTimeout(() => {
         throw e;
@@ -293,6 +446,21 @@ const makeJawisBuildManager = (
   /**
    *
    */
+  const sortObject = (obj) => {
+    const keys = Object.keys(obj).sort((a, b) => a.localeCompare(b));
+
+    const res = {};
+
+    for (const key of keys) {
+      res[key] = obj[key];
+    }
+
+    return res;
+  };
+
+  /**
+   *
+   */
   const copyFiles = () =>
     copyingFiles(["packages/" + packagesPattern + "/" + files, buildFolder], {
       up: 1,
@@ -301,13 +469,21 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const buildPackageJson = async () => {
+  const buildPackageJson = async (checkSideEffects = true) => {
+    //read sibling deps
+
+    const siblingDeps = await getAllSiblingDeps();
+
+    //process package.json files
+
     const files = await fastGlob([packagesPattern + "/package.json"], {
       cwd: packageFolder,
     });
 
     for (const file of files) {
       const packageName = path.basename(file.replace(/\/package\.json$/, ""));
+
+      const targetFolder = path.join(buildFolder, packageName);
 
       //read
 
@@ -320,7 +496,13 @@ const makeJawisBuildManager = (
       //transform
 
       const result = JSON.stringify(
-        await transformPackageJson(json, packageName),
+        await transformPackageJson(
+          json,
+          packageName,
+          targetFolder,
+          siblingDeps,
+          checkSideEffects
+        ),
         undefined,
         2
       );
@@ -343,28 +525,33 @@ const makeJawisBuildManager = (
     });
 
     for (const file of files) {
-      //read
+      try {
+        //read
 
-      const codeBuffer = await fs.promises.readFile(
-        path.join(bulidTscFolder, file)
-      );
+        const codeBuffer = await fs.promises.readFile(
+          path.join(bulidTscFolder, file)
+        );
 
-      //replace windows newlines
+        //replace windows newlines
 
-      const codeStr = codeBuffer.toString().replace(/\r/g, "");
+        const codeStr = codeBuffer.toString().replace(/\r/g, "");
 
-      //replace imports
+        //replace imports
 
-      const result = replacePathForRelease
-        ? transformImports(file, codeStr)
-        : codeStr;
+        const result = replacePathForRelease
+          ? transformImports(file, codeStr)
+          : codeStr;
 
-      //write to build folder
+        //write to build folder
 
-      const target = path.join(buildFolder, file);
+        const target = path.join(buildFolder, file);
 
-      await fse.ensureDir(path.dirname(target));
-      await fs.promises.writeFile(target, result);
+        await fse.ensureDir(path.dirname(target));
+        await fs.promises.writeFile(target, result);
+      } catch (error) {
+        console.log("Could not build: " + file);
+        console.log(error);
+      }
     }
   };
 
@@ -400,15 +587,16 @@ const makeJawisBuildManager = (
   const build = async () => {
     await del(buildFolder);
     await checkPackageDestinations();
-    await buildPackageJson();
     await copyFiles();
     await buildTs();
+    await buildPackageJson();
   };
 
   return {
     getFullPackageName,
-    getSiblingDeps,
+    getSiblingPackages,
     getAllPackageDeps,
+    getAllSiblingDeps,
     checkPackageDestinations,
     checkPackagesExistsInCodebase,
     checkPackageHasDeclaredDestination,

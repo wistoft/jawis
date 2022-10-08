@@ -76,7 +76,6 @@ export class JacsConsumer {
       this.deps.shared.timeout,
       this.deps.shared.softTimeout,
       this.deps.postMessage || ((msg) => parentPort!.postMessage(msg)),
-      this.deps.wait,
-      Date.now
+      this.deps.wait
     );
 }

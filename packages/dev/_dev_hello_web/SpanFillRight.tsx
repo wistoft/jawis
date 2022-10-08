@@ -3,7 +3,7 @@ import React from "react";
 /**
  *
  */
-export const SpanFillRight: React.FC = () => {
+export const Component: React.FC = () => {
   return (
     <>
       display flex, and grow <br />

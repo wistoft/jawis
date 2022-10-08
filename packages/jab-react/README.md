@@ -1,4 +1,4 @@
-# @jawis/jab-react
+# Utilities for react.
 
 Collection of utilities for working with react.
 

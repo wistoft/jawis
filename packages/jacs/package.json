@@ -2,19 +2,24 @@
   "sideEffects": [
     "./JacsConsumerMain.ts"
   ],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "~jacs",
-  "description": "",
+  "description": "JavaScript compile service for Node.js worker threads",
   "engines": {
     "node": ">=12.11.0"
   },
   "dependencies": {
     "@types/source-map-support": "^0.5.3",
     "filewatcher": "^3.0.1",
-    "jab": "1.0.1",
-    "jab-node": "^1.0.2",
     "source-map-support": "^0.5.19",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.2.3"
-  }
+  },
+  "keywords": [
+    "typescript",
+    "compiler",
+    "development",
+    "worker",
+    "thread"
+  ]
 }

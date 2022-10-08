@@ -103,19 +103,25 @@ export const install = (shared: WorkerData) => {
 
   (global as any)._jacsUninstall = makeUninstall(uninstallInfo);
 
-  //run a script, if that's what the user wants.
+  //run the script
 
   if (shared.beeFilename) {
     nodeRequire(shared.beeFilename);
   }
+
+  // return
+
+  return consumer;
 };
 
 /**
  * - Uninstall can't be perfect. But can useful for development testing.
- * - Uninstall information is stored globally, so other module, than install jacs, can uninstall it.
+ * - Uninstall information is stored globally, so other versions can uninstall.
+ *
+ * impl
+ *  tsconfig-paths and resovleCache both change `Module._resolveFilename`, so order is important.
  *
  * bugs
- *  - it's only possible to uninstall by using the exact same module, that installed.
  *  - source-map-support has no official uninstall.
  */
 export const uninstall = () => {

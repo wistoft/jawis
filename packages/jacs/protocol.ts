@@ -76,13 +76,12 @@ export const requestProducerSync = (
   timeout: number,
   softTimeout: number | undefined,
   postMessage: (msg: ConsumerMessage) => void,
-  wait: WaitFunc = Atomics.wait,
-  DateNow: () => number
+  wait: WaitFunc = Atomics.wait
 ): string => {
   assert(controlArray.length === ControlArrayLength, "controlArray has wrong length:", controlArray.length ); // prettier-ignore
 
   //check producer state
-  // Producers state isn't exact here. We could execute between producer notifies and sets its state bit.
+  // Producer's state isn't exact here. We could execute between producer notifies and sets its state bit.
 
   const preProducerState = ProducerStates[controlArray[CaIndex.producer_state]]; // prettier-ignore
 
@@ -114,7 +113,6 @@ export const requestProducerSync = (
   // sleep if needed
 
   let val: "ok" | "timed-out" | "not-equal";
-  const startTime = DateNow();
   let actualTimeout: number | undefined = softTimeout || timeout;
   let hasBeenSoftTimeout = false;
 
@@ -157,14 +155,6 @@ export const requestProducerSync = (
     // not-equal can happen if producer has finished, before we have a chance to sleep.
     case "not-equal":
     case "ok": {
-      //tell if producer responsed between first and second timeout
-
-      if (hasBeenSoftTimeout) {
-        console.log(
-          "Producer responded late, time: " + (DateNow() - startTime)
-        );
-      }
-
       // check the part of result.
 
       if (dataLength === NoDataLength) {

@@ -16,6 +16,7 @@ import {
   dianosticToString,
   getTsPathsConfig,
   getTsConfigFromAbsConfigFile,
+  CompileService,
 } from ".";
 
 type Deps = {
@@ -33,7 +34,7 @@ type Deps = {
  *  watch lookup pathes, so we can detect new config files, and invalidate transpile results.
  *  way to send errors back to the running process.
  */
-export class SourceFileLoader {
+export class SourceFileLoader implements CompileService {
   private watcher: any;
 
   //contains the transpiled code.

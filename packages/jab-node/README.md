@@ -1,4 +1,6 @@
-# @jawis/jab-node
+# Utilities for nodejs.
+
+Collection of utilities for working with nodejs environment.
 
 ## Installation
 

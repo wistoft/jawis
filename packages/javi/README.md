@@ -24,7 +24,7 @@ npm i --save-dev @jawis/javi
 ## Usage
 
 - Create a configuration file in the root of your project.
-- Run `yarn javi` or `npx javi` depending on your installation.
+- Run `yarn javi` or `npm javi` depending on your installation.
 - Open a browser at `http://localhost:3003`
 - Explore how the view works.
 
@@ -85,21 +85,20 @@ module.exports = {
 
 - [Jacs](https://www.npmjs.com/package/@jawis/jacs) is used to transpile
   TypeScript for both test cases and scripts. It transpiles and caches results
-  in the same process javi runs in. When a new worker thread starts, it can
-  receive the cached source files through shared memory.
+  in the same process javi runs in. When a new worker thread starts, it receives
+  the cached source files through shared memory.
 - Changes in test files or files they import are detected by
   [WatchableProcess](https://www.npmjs.com/package/@jawis/jab-node). Javi kills
   processes with old code, and restarts executing test cases, so test results
-  are always from running on a consistent codebase. I.e. it's guaranteed that no
-  file used by the test case changed during execution.
+  are always from a consistent codebase. I.e. it's guaranteed that no file used
+  by the test case changed during execution.
 
 ## Limitations
 
 - Test cases must be placed in a separate folder. Tests in subfolders are
-  included. subfolders prefixed `_` are ignored.
-- TypeScript is only be transpiled. This could be viewed as beneficial,
-  actually. Because one can execute test cases, even if there are type errors.
-  That's useful some times.
+  included. Subfolders prefixed `_` are ignored.
+- TypeScript is only transpiled. This could be viewed as beneficial, actually.
+  Because one can execute code with type errors. That's useful some times.
   - It's beneficial the make a
     [vscode task](https://code.visualstudio.com/docs/editor/tasks#_typescript-hello-world)
     to compile TypeScript, and show errors in vscode. A vscode task is the best
@@ -118,14 +117,17 @@ module.exports = {
 - Open files for merge is hardcoded to WinMerge.
 - Test paths are ignored. So 'path/test.ja.js' has same test log file as
   'other/path/test.ja.js'
-- Output form scripts can only be own in the view. Opt-in to show it in the same
-  console as javi runs, would be great.
+- Output from scripts can only be shown in the view. Opt-in to show it in the
+  same console as javi runs, would be great.
 - TypeScript is fixed to a certain version. It should be a peer dependency,
   instead.
 
 ## Future work
 
 - Make it possible to use other testing frameworks.
+- Make posible to run script and tests in the browser.
+
+## Related work
 
 ## License
 

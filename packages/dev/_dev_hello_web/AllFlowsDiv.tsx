@@ -3,7 +3,7 @@ import React from "react";
 /**
  * All children must be in span to respect the "lines".
  */
-export const AllFlowsDiv = () => {
+export const Component = () => {
   return (
     <>
       <div
@@ -64,5 +64,3 @@ export const AllFlowsDiv = () => {
     </>
   );
 };
-
-AllFlowsDiv.displayName = "AllFlowsDiv";

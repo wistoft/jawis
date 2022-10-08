@@ -1,9 +1,9 @@
 import React from "react";
 
-import { assert, JabError } from "^jab";
+import { assert, err } from "^jab";
 import { JsLink } from "^jab-react";
 
-export const HelloErrors: React.FC = () => {
+export const Component: React.FC = () => {
   return (
     <>
       <div>
@@ -20,7 +20,7 @@ export const HelloErrors: React.FC = () => {
         <JsLink
           name="throw jab exception"
           onClick={() => {
-            throw new JabError("Hello jab", 1, 2, undefined);
+            err("Hello jab", 1, 2, undefined);
           }}
         />
         <br />

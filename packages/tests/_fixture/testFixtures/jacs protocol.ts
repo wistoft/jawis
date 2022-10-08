@@ -70,8 +70,7 @@ export const requestProducerSync_test = (
     extraDeps?.timeout || 20,
     softTimeout,
     extraDeps?.postMessage || (() => {}),
-    extraDeps?.wait || syntheticWait("success", controlArray, dataArray),
-    /* DateNow */ () => 1
+    extraDeps?.wait || syntheticWait("success", controlArray, dataArray)
   );
 
   prov.eq("ready", ConsumerStates[controlArray[CaIndex.consumer_state]]);
