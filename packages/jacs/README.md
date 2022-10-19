@@ -1,7 +1,6 @@
-# JavaScript compile service for Node.js worker threads
+# Compile service for Node.js worker threads
 
-JavaScript compile service delivers transpiled TypeScript to a Node.js worker
-thread.
+Delivers transpiled TypeScript to a Node.js worker thread.
 
 ## Installation
 
@@ -25,14 +24,17 @@ const mainProv = mainProvToConsole();
 
 const makeBee = makeMakeJacsWorkerBee(mainProv);
 
-const bee = makeBee<MS, MR>({
+const bee = makeBee({
   filename: "/path/to/my-script.ts",
-  onMessage: (msg) => {},
-  onStdout: (data: Buffer) => {},
-  onStderr: (data: Buffer) => {},
-  onError: (error) => {},
-  onExit:(status: number | null) => {},
-  finally: mainProv.finallyFunc,
+  onMessage: console.log,
+  onStdout: console.log,
+  onStderr: console.log,
+  onError: console.log,
+  onExit: (status) => {
+    //needed because jacs blocks exit, by watching files for change
+    process.exit();
+  },
+  finally: mainProv.finally,
 });
 ```
 
