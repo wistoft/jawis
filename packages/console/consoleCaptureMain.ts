@@ -1,3 +1,3 @@
-import { consoleCapture } from "^console";
+import { consoleCapture } from ".";
 
 consoleCapture();

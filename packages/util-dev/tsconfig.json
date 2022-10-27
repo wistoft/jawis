@@ -1,8 +1,0 @@
-{
-  "extends": "../../tsconfig.base.web.json",
-  "compilerOptions": {
-    "outDir": "../../build-tsc/util-dev",
-    "rootDir": "."
-  },
-  "references": []
-}

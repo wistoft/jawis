@@ -3,6 +3,8 @@ import { unknownToErrorData } from "^jab";
 import { CaptureCache, defaultWindowPropertyName } from ".";
 import { createConsoleFunction } from "./util";
 
+declare const window: any; //quick fix
+
 /**
  * - Intercept "console data"
  * - Install at module load, so the most information is captured.
@@ -39,7 +41,7 @@ export const consoleCapture = (windowProperty = defaultWindowPropertyName) => {
 
   window.addEventListener(
     "error",
-    (event) => {
+    (event: any) => {
       captureCache.data.push({
         type: "error",
         context: "browser",
@@ -54,7 +56,7 @@ export const consoleCapture = (windowProperty = defaultWindowPropertyName) => {
   // promises
   //
 
-  window.addEventListener("unhandledrejection", (event) => {
+  window.addEventListener("unhandledrejection", (event: any) => {
     captureCache.data.push({
       type: "error",
       context: "browser",

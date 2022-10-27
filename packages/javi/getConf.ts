@@ -44,7 +44,6 @@ export const getJaviConf = (
 
   //handle
 
-  // if (typeof conf !== "object") {
   if (!isObject(conf)) {
     throw new UserMessage( "Javi: config file must export an object. Exported: " + typeof conf ); // prettier-ignore
   }
@@ -61,7 +60,6 @@ export const getJaviConf = (
 
   if (typeof fullConf === "string") {
     throw new Error("not used, right.");
-    // throw new UserMessage(fullConf);
   } else {
     return fullConf;
   }

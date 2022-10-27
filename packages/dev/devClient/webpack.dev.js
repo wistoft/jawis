@@ -2,7 +2,7 @@ const path = require("path");
 
 const {
   createWebpackBaseConf,
-} = require("../../util-dev/node/createWebpackBaseConf");
+} = require("../../misc/node/createWebpackBaseConf");
 
 const conf = require("../dev.conf");
 const { getPackagePath } = require("../project.conf");

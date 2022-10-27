@@ -42,18 +42,9 @@ export const makeMeasure = (hrtime = process.hrtime.bigint) => {
 
     stack.push(BigInt(0)); //children has used zero time here.
 
-    // let res;
-    // let threw;
-
     try {
       return work();
     } finally {
-      // try {
-      // } catch (error) {
-      //   threw = error;
-      //   // console.log("threw: " + error.message);
-      // }
-
       const ns = hrtime() - s;
 
       measureResult.push({

@@ -224,6 +224,10 @@ const makeJawisBuildManager = (
         await checkPackageJsonFile(packageName);
 
         await checkRootTsConfigHasPackage(packageName);
+
+        if (!privatePackages.includes(packageName)) {
+          await checkPackageHasReadme(packageName);
+        }
       }
     }
   };
@@ -277,6 +281,19 @@ const makeJawisBuildManager = (
       throw new Error(
         "Package has multiple declarations in build file: " + packageName
       );
+    }
+  };
+
+  /**
+   *
+   */
+  const checkPackageHasReadme = async (packageName) => {
+    if (
+      !(await fse.pathExists(
+        path.join(projectFolder, "./packages/" + packageName + "/README.md")
+      ))
+    ) {
+      throw new Error("Package is missing README.md: " + packageName);
     }
   };
 

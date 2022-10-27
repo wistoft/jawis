@@ -1,6 +1,6 @@
 import React, { memo } from "react";
-import { def } from "^jab";
 
+import { def } from "^jab";
 import { JsLink, TogglePanel } from "^jab-react";
 
 import { ClientApiSendProv } from "./util";

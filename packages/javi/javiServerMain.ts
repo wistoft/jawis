@@ -6,6 +6,9 @@ import { MainProv, mainWrapper } from "^jab-node";
 import { startJaviServer } from "./util";
 import { getJaviConf } from "./getConf";
 
+/**
+ *
+ */
 const main = (mainProv: MainProv) => {
   //conf
 

@@ -3,11 +3,11 @@ import { ClientMessage, ServerMessage } from "^jatec";
 import { safeAll } from "^jab";
 import { TestFrameworkProv } from ".";
 
-//prov
+// prov
 
 export type BehaviorProv = {};
 
-//deps
+// deps
 
 export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
@@ -28,5 +28,5 @@ export class Behavior implements BehaviorProv {
     safeAll(
       [this.deps.tf.kill(), this.deps.wsPool.shutdown()],
       this.deps.onError
-    ).then(() => {}); //just for typing.
+    ).then(() => {}); //just for typing
 }

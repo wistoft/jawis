@@ -3,6 +3,8 @@ import { makeUseEventStream } from "^jab-react";
 
 import { ConsoleEntry, CaptureCache } from ".";
 
+declare const window: any; //quick fix
+
 export type UseConsoleStream = (
   listener: (entries: ConsoleEntry[]) => void
 ) => void;
@@ -20,9 +22,7 @@ export const makeUseConsoleStream = (
 ) => {
   const eventSink = new EventController<ConsoleEntry[]>();
 
-  const captureCache = (window as any)[windowProperty] as
-    | CaptureCache
-    | undefined;
+  const captureCache = window[windowProperty] as CaptureCache | undefined;
 
   if (captureCache === undefined) {
     throw new Error("ConsoleCapture is not active.");

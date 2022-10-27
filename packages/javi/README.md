@@ -110,9 +110,7 @@ module.exports = {
 
 ## Known issues
 
-- The configuration can't be in TypeScript, yet.
-- List of scripts are not updated, when scripts are added/deleted. And
-  subfolders in script folders are handled buggy.
+- The configuration can't be in TypeScript.
 - Open files from browser is hardcoded to vscode. On windows.
 - Open files for merge is hardcoded to WinMerge.
 - Test paths are ignored. So 'path/test.ja.js' has same test log file as
@@ -128,6 +126,10 @@ module.exports = {
 - Make posible to run script and tests in the browser.
 
 ## Related work
+
+maybe
+
+- [nof5](https://www.npmjs.com/package/nof5)
 
 ## License
 

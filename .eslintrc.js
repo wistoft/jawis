@@ -34,7 +34,7 @@ module.exports = {
     },
   },
 
-  ignorePatterns: [".vscode/tasks.json"],
+  ignorePatterns: [".vscode/tasks.json", "vendor"],
 
   rules: {
     "@typescript-eslint/no-unused-vars": "off", //replaced by unused-imports

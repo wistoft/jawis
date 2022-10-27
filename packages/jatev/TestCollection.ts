@@ -141,9 +141,9 @@ const get2dArrayUpdate = <T>(arr: T[][], idx: number, idx2: number, elm: T) =>
   getArrayUpdate(arr, idx, getArrayUpdate(arr[idx], idx2, elm));
 
 /**
- * Return the two index for a test id.
+ * Returns the two indexes for the test id.
  *
- * - exported for tests
+ * - exported for testing
  */
 export const getTestIdx = (
   selection: TestState[][],

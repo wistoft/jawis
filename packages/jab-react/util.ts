@@ -44,13 +44,11 @@ export type HookSetState<State> = (
  * As `useMemo`, but dependencies are explicit.
  *
  * - Ensures all variables are in the dependency list.
- * - This relies on the "order" of deps. It's will be a bug, if properties change order,
- *    which JavaScript makes no guarantee about.
  *
  * note
  *  - It makes little sense to use this function with an inline function declaration.
  *      Because that function will be able to close over variables.
- *  - recreates a little too often. I.e. when keys are reordered, and there's a key with
+ *  - recreates a little too often. I.e. when keys are reordered, or there's a key with
  *      explicit undefined added/removed.
  */
 export const useMemoDep = <Deps extends {}, T>(

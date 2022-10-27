@@ -320,7 +320,7 @@ export class JarunTestProvision implements TestProvision {
   };
 
   /**
-   * The test won't end before the promise has resolved.
+   * The test won't end before the promise has settled.
    *
    * - The value from the promise isn't used for anything.
    * - There's no need to wait for the returned promise. It's just for convenience.
@@ -337,8 +337,8 @@ export class JarunTestProvision implements TestProvision {
    * Assert that the promise resolves to the expected value.
    *
    * - This allows concurrent assertations.
-   * - Different from the async-await mechanism. The are for sequential assertations. But they are
-   *    easier to use, so do that, if possible.
+   * - Different from the async-await mechanism. That is for sequential assertations. But they are
+   *    easier to use, if possible.
    * - It's not necessary to wait for the returned promise.
    */
   public res = (exp: unknown, prom: Promise<unknown>) =>

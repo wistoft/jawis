@@ -70,6 +70,8 @@ export const useDirector = ({
   const stateRef = useRef(state);
   stateRef.current = state;
 
+  // structure
+
   const {
     callbacks,
     onServerMessage,
@@ -83,11 +85,11 @@ export const useDirector = ({
     createStructure
   );
 
-  //web socket
+  // web socket
 
   useWsEffect({ onServerMessage });
 
-  //key events
+  // key events
 
   useKeyListener(
     makeOnKeydown({
@@ -98,7 +100,7 @@ export const useDirector = ({
     })
   );
 
-  //shared props between routes.
+  // shared props between routes.
 
   const viewProps: Omit<ViewActionProps, "action"> = {
     ...extra,
@@ -111,7 +113,7 @@ export const useDirector = ({
     onEditCurrentTest,
   };
 
-  //post nav
+  // post nav
 
   const postNav = (
     <>
@@ -127,7 +129,7 @@ export const useDirector = ({
     </>
   );
 
-  //routes
+  // routes
 
   const routes = [
     {
@@ -158,7 +160,7 @@ export const useDirector = ({
     });
   }
 
-  // prov
+  // done
 
   return { ...viewProps, postNav, routes };
 };
@@ -168,9 +170,9 @@ export const useDirector = ({
 //
 
 type StructureDeps = {
-  stateRef: { current: State };
-  setState: HookSetState<State>;
   apiSend: (data: ClientMessage) => void;
+  setState: HookSetState<State>;
+  stateRef: { current: State };
   getRandomToken: () => number;
 };
 
@@ -178,9 +180,9 @@ type StructureDeps = {
  *
  */
 const createStructure = ({
-  stateRef,
   apiSend,
   setState,
+  stateRef,
   getRandomToken,
 }: StructureDeps) => {
   const callbacks = getCallbacks(setState, getRandomToken);
@@ -235,9 +237,9 @@ const createStructure = ({
   };
 
   return {
-    callbacks,
-    onServerMessage,
     useApiSend,
+    onServerMessage,
+    callbacks,
     openFile,
     onRunCurrentTest,
     onEditCurrentTest,

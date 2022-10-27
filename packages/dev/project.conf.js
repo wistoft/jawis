@@ -33,7 +33,6 @@ const scopedPackages = [
   "jates",
   "jatev",
   "javi",
-  "util-dev",
   "util-javi",
 ];
 

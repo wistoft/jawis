@@ -41,6 +41,7 @@ export const MyConsole: React.FC<Props> = () => {
 ## Related work
 
 - [ouch](https://www.npmjs.com/package/ouch)
+- [clerk notebook](https://nextjournal.github.io/clerk-demo/notebooks/introduction.html)
 
 ## License
 

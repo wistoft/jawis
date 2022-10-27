@@ -3,3 +3,6 @@
 /build-tsc
 /packages/tests/_testLogs
 /packages/dev/devServer/testsuite/_testLogs
+
+vendor
+node_modules
