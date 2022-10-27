@@ -378,7 +378,7 @@ export const flatToTestExpLogs_compat = (
     if (isExp) {
       throw new Error("chk log not allowed in exp logs");
     } else {
-      (res as TestCurLogs).chk = (logs.chk[0] as unknown) as ChkInfo;
+      (res as TestCurLogs).chk = logs.chk[0] as unknown as ChkInfo;
 
       delete copy.chk;
     }
@@ -432,31 +432,29 @@ export const mergeTestLogsAndRogue = (
   // add to existing logs
   //
 
-  const newZipped = curZipped.map(
-    (elm): ZippedTestLog => {
-      //ordinary entry
+  const newZipped = curZipped.map((elm): ZippedTestLog => {
+    //ordinary entry
 
-      if (elm.name in ordinaryCopy) {
-        delete ordinaryCopy[elm.name];
+    if (elm.name in ordinaryCopy) {
+      delete ordinaryCopy[elm.name];
 
-        return mergeTestLogsAndRogue_map_testlog(rogue, elm, elm.name);
-      }
-
-      //entry previously stored with rogue
-
-      const logName = elm.name.replace(/rogue\./, "");
-
-      if (logName in rogueCopy) {
-        delete rogueCopy[logName];
-
-        return mergeTestLogsAndRogue_map_testlog(rogue, elm, logName);
-      }
-
-      //nothing to do
-
-      return elm;
+      return mergeTestLogsAndRogue_map_testlog(rogue, elm, elm.name);
     }
-  );
+
+    //entry previously stored with rogue
+
+    const logName = elm.name.replace(/rogue\./, "");
+
+    if (logName in rogueCopy) {
+      delete rogueCopy[logName];
+
+      return mergeTestLogsAndRogue_map_testlog(rogue, elm, logName);
+    }
+
+    //nothing to do
+
+    return elm;
+  });
 
   // create new ordinary entries.
 
@@ -482,7 +480,7 @@ export const mergeTestLogsAndRogue_map_testlog = (
   if (elm.type === "err") {
     return {
       ...elm,
-      cur: elm.cur.concat((flatRogue[logName] as unknown) as ErrorData[]),
+      cur: elm.cur.concat(flatRogue[logName] as unknown as ErrorData[]),
     };
   }
 
@@ -529,7 +527,7 @@ export const mergeTestLogsAndRogue_helper_by_ref = (
         type: "err",
         name: prefix + "err",
         exp: [],
-        cur: (value as unknown) as ErrorData[],
+        cur: value as unknown as ErrorData[],
       });
       return;
     }
@@ -547,7 +545,7 @@ export const mergeTestLogsAndRogue_helper_by_ref = (
       output.push({
         type: "chk",
         name: prefix + "chk",
-        ...((value as unknown) as ChkInfo),
+        ...(value as unknown as ChkInfo),
       });
       return;
     }

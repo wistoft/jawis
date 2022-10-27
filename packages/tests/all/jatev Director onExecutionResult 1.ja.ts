@@ -6,11 +6,8 @@ import { renderUseJatevDirector_with_tests } from "../_fixture";
 // execution result, while test case shown
 
 export default (prov: TestProvision) => {
-  const {
-    result,
-    rerender,
-    onServerMessage,
-  } = renderUseJatevDirector_with_tests(prov);
+  const { result, rerender, onServerMessage } =
+    renderUseJatevDirector_with_tests(prov);
 
   result.callbacks.onNext();
 

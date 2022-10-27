@@ -21,45 +21,46 @@ export type ViewExceptionCallStackProps = {
  * - projectRoot is used to know where webpack is servered from, so we can resolve `webpack://` and `webpack-internal://`
  * - projectRoot is used to resolve `removePathPrefix`, which is relative to projectRoot.
  */
-export const ViewExceptionCallStack: React.FC<ViewExceptionCallStackProps> = memo(
-  ({
-    stack,
-    projectRoot,
-    openFile,
-    removePathPrefix,
-    initialShowSystemFrames,
-  }) => {
-    const [showSystemFrames, setShowSystemFrames] = useState(
-      initialShowSystemFrames || false
-    );
+export const ViewExceptionCallStack: React.FC<ViewExceptionCallStackProps> =
+  memo(
+    ({
+      stack,
+      projectRoot,
+      openFile,
+      removePathPrefix,
+      initialShowSystemFrames,
+    }) => {
+      const [showSystemFrames, setShowSystemFrames] = useState(
+        initialShowSystemFrames || false
+      );
 
-    if (!stack) {
-      return null;
+      if (!stack) {
+        return null;
+      }
+
+      //make sure it ends on a slash.
+      const normalizedProjectRoot = normalize(projectRoot);
+
+      const normalizedRemovePathPrefix = removePathPrefix
+        ? normalize(removePathPrefix)
+        : "";
+
+      return (
+        <>
+          {stack.map(
+            mapFrame(
+              openFile,
+              showSystemFrames,
+              setShowSystemFrames,
+              normalizedProjectRoot,
+              normalizedRemovePathPrefix
+            )
+          )}
+          <div />
+        </>
+      );
     }
-
-    //make sure it ends on a slash.
-    const normalizedProjectRoot = normalize(projectRoot);
-
-    const normalizedRemovePathPrefix = removePathPrefix
-      ? normalize(removePathPrefix)
-      : "";
-
-    return (
-      <>
-        {stack.map(
-          mapFrame(
-            openFile,
-            showSystemFrames,
-            setShowSystemFrames,
-            normalizedProjectRoot,
-            normalizedRemovePathPrefix
-          )
-        )}
-        <div />
-      </>
-    );
-  }
-);
+  );
 
 ViewExceptionCallStack.displayName = "ViewExceptionCallStack";
 
@@ -67,96 +68,98 @@ ViewExceptionCallStack.displayName = "ViewExceptionCallStack";
 // util
 //
 
-const mapFrame = (
-  openFile: OpenFile,
-  showSystemFrames: boolean,
-  setShowSystemFrames: any,
-  normalizedProjectRoot: string,
-  normalizedRemovePathPrefix: string
-  // eslint-disable-next-line react/display-name
-) => (frame: ParsedStackFrame, index: number) => {
-  const isSystemFrame = getIsSystemFrame(frame);
+const mapFrame =
+  (
+    openFile: OpenFile,
+    showSystemFrames: boolean,
+    setShowSystemFrames: any,
+    normalizedProjectRoot: string,
+    normalizedRemovePathPrefix: string
+    // eslint-disable-next-line react/display-name
+  ) =>
+  (frame: ParsedStackFrame, index: number) => {
+    const isSystemFrame = getIsSystemFrame(frame);
 
-  if (!showSystemFrames && isSystemFrame) {
+    if (!showSystemFrames && isSystemFrame) {
+      return (
+        <JsLink
+          key={index}
+          onClick={() => {
+            setShowSystemFrames(!showSystemFrames);
+          }}
+          style={{ color: "var(--text-color-faded)" }}
+        >
+          .
+        </JsLink>
+      );
+    }
+
+    const color = isSystemFrame
+      ? "var(--text-color-faded)"
+      : "var(--jawis-console-text-color)";
+
+    //make file relative and trim and remove prefix
+
+    const file = getFile(
+      normalizedProjectRoot,
+      normalizedRemovePathPrefix,
+      frame.file
+    );
+
+    //split file path up.
+
+    const { firstDir, filepath, filename } = partitionFile(file);
+
+    //render file and line
+
+    const showLineNumber = false; //extract.
+
+    const fileAndLine =
+      file === undefined && frame.line === undefined ? (
+        <>&nbsp;&nbsp;...</>
+      ) : (
+        <>
+          &nbsp;&nbsp;
+          {isSystemFrame ? (
+            <i>
+              <b>{firstDir}</b>
+            </i>
+          ) : (
+            firstDir
+          )}
+          {filepath}
+          <span style={{ color }}>{filename}</span>
+          {showLineNumber && frame.line && " (" + frame.line + ")"}
+        </>
+      );
+
+    //render function name
+
+    const func = getFunc(frame);
+
+    // for opening files
+
+    const openInfo = getOpenInfo(normalizedProjectRoot, frame);
+
     return (
-      <JsLink
-        key={index}
-        onClick={() => {
-          setShowSystemFrames(!showSystemFrames);
-        }}
-        style={{ color: "var(--text-color-faded)" }}
-      >
-        .
-      </JsLink>
+      <React.Fragment key={index}>
+        <div style={{ marginTop: "5px" }} />
+        <JsLink
+          style={{ color: "var(--text-color-faded)" }}
+          onClick={() => {
+            if (openInfo) {
+              openFile(openInfo);
+            }
+          }}
+        >
+          {func}
+          <br />
+          {fileAndLine}
+        </JsLink>
+        <div />
+      </React.Fragment>
     );
-  }
-
-  const color = isSystemFrame
-    ? "var(--text-color-faded)"
-    : "var(--jawis-console-text-color)";
-
-  //make file relative and trim and remove prefix
-
-  const file = getFile(
-    normalizedProjectRoot,
-    normalizedRemovePathPrefix,
-    frame.file
-  );
-
-  //split file path up.
-
-  const { firstDir, filepath, filename } = partitionFile(file);
-
-  //render file and line
-
-  const showLineNumber = false; //extract.
-
-  const fileAndLine =
-    file === undefined && frame.line === undefined ? (
-      <>&nbsp;&nbsp;...</>
-    ) : (
-      <>
-        &nbsp;&nbsp;
-        {isSystemFrame ? (
-          <i>
-            <b>{firstDir}</b>
-          </i>
-        ) : (
-          firstDir
-        )}
-        {filepath}
-        <span style={{ color }}>{filename}</span>
-        {showLineNumber && frame.line && " (" + frame.line + ")"}
-      </>
-    );
-
-  //render function name
-
-  const func = getFunc(frame);
-
-  // for opening files
-
-  const openInfo = getOpenInfo(normalizedProjectRoot, frame);
-
-  return (
-    <React.Fragment key={index}>
-      <div style={{ marginTop: "5px" }} />
-      <JsLink
-        style={{ color: "var(--text-color-faded)" }}
-        onClick={() => {
-          if (openInfo) {
-            openFile(openInfo);
-          }
-        }}
-      >
-        {func}
-        <br />
-        {fileAndLine}
-      </JsLink>
-      <div />
-    </React.Fragment>
-  );
-};
+  };
 
 /**
  *

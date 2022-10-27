@@ -64,15 +64,14 @@ export const mainProvToJago = (sendImpl: JagoSend, logPrefix = "") => {
 /**
  *
  */
-export const makeJagoOnError = (sendImpl: JagoSend): OnError => (
-  error,
-  extraInfo
-) => {
-  sendImpl({
-    type: "error",
-    data: unknownToErrorData(error, extraInfo),
-  });
-};
+export const makeJagoOnError =
+  (sendImpl: JagoSend): OnError =>
+  (error, extraInfo) => {
+    sendImpl({
+      type: "error",
+      data: unknownToErrorData(error, extraInfo),
+    });
+  };
 
 /**
  * Tries to batch stream data, so it at least gets less mixed between different streams.

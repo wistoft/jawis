@@ -48,7 +48,7 @@ export default (prov: TestProvision) => {
       const imports: any = [];
 
       if ((file as any)?.resolvedModules) {
-        for (const [key, value] of (file as any)?.resolvedModules.entries()) {
+        for (const [key, value] of (file as any).resolvedModules.entries()) {
           imports.push({
             src: key,
             tgt: value?.resolvedFileName,

@@ -247,26 +247,25 @@ export const fullRace = <T>(
  *
  * - Ensures that a rejection is still reported, if the callback throws.
  */
-export const safeCatch = (
-  onError: (error: unknown) => void,
-  func: (error: unknown) => unknown
-) => (error: unknown) => {
-  try {
-    func(error);
-  } catch (e) {
-    //the call back threw, so report the original error. (it is the first error)
+export const safeCatch =
+  (onError: (error: unknown) => void, func: (error: unknown) => unknown) =>
+  (error: unknown) => {
+    try {
+      func(error);
+    } catch (e) {
+      //the call back threw, so report the original error. (it is the first error)
 
-    onError(error);
+      onError(error);
 
-    //reject the promise with the new error. As it's older, so it's strange if it gets reported first.
+      //reject the promise with the new error. As it's older, so it's strange if it gets reported first.
 
-    throw e;
-  }
+      throw e;
+    }
 
-  //no exception in the callback, so throw the original error.
+    //no exception in the callback, so throw the original error.
 
-  throw error;
-};
+    throw error;
+  };
 
 /**
  * Attaches a "safe" finally-function to a promise.

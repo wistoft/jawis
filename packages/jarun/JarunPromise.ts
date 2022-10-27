@@ -28,44 +28,42 @@ export const createJarunPromise = (prov: JarunTestProvision) =>
     /**
      *
      */
-    public static wrapExecutor = <T>(executor: Executor<T>): Executor<T> => (
-      resolve,
-      reject
-    ) => {
-      executor(
-        JarunPromise.wrapResolve(resolve),
-        JarunPromise.wrapRejection(reject)
-      );
-    };
+    public static wrapExecutor =
+      <T>(executor: Executor<T>): Executor<T> =>
+      (resolve, reject) => {
+        executor(
+          JarunPromise.wrapResolve(resolve),
+          JarunPromise.wrapRejection(reject)
+        );
+      };
 
     /**
      *
      */
-    public static wrapResolve = <T>(resolve: Resolve<T>): Resolve<T> => (
-      value
-    ) => {
-      JarunPromise.resolves.push([
-        value,
-        new Error("Dummy").stack || "No stack",
-      ]);
+    public static wrapResolve =
+      <T>(resolve: Resolve<T>): Resolve<T> =>
+      (value) => {
+        JarunPromise.resolves.push([
+          value,
+          new Error("Dummy").stack || "No stack",
+        ]);
 
-      resolve(value);
-    };
+        resolve(value);
+      };
 
     /**
      *
      */
-    public static wrapRejection = (reject: (error?: any) => void) => (
-      error?: any
-    ) => {
-      if (error === null || typeof error !== "object") {
-        console.log("JarunPromise: Could not wrap non object.", error);
-      } else {
-        (error as any)._jarunTestProvision = prov;
-      }
+    public static wrapRejection =
+      (reject: (error?: any) => void) => (error?: any) => {
+        if (error === null || typeof error !== "object") {
+          console.log("JarunPromise: Could not wrap non object.", error);
+        } else {
+          (error as any)._jarunTestProvision = prov;
+        }
 
-      reject(error);
-    };
+        reject(error);
+      };
 
     /**
      *

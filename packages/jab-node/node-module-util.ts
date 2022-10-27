@@ -45,7 +45,7 @@ export type FullNodeModule = NodeJS.Module & ModuleInternals;
 export type FullNativeModule = typeof nativeModule & ModuleInternals;
 
 //to get the full typing.
-export const Module = (nativeModule as unknown) as FullNativeModule;
+export const Module = nativeModule as unknown as FullNativeModule;
 
 //
 // _load

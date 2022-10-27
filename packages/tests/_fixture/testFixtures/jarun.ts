@@ -87,15 +87,14 @@ export const getJarunTestProvision_inactive = (
 /**
  *
  */
-export const getOnRogueTest = (prov: TestProvision, logPrefix = "") => (rogue: {
-  id?: string;
-  data: TestCurLogs;
-}) => {
-  prov.log(logPrefix + "onRogueTest", {
-    ...rogue,
-    data: filterTestLogs(rogue.data),
-  });
-};
+export const getOnRogueTest =
+  (prov: TestProvision, logPrefix = "") =>
+  (rogue: { id?: string; data: TestCurLogs }) => {
+    prov.log(logPrefix + "onRogueTest", {
+      ...rogue,
+      data: filterTestLogs(rogue.data),
+    });
+  };
 
 /**
  *

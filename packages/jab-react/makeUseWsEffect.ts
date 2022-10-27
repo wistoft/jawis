@@ -17,18 +17,20 @@ export type UseWsEffect<ServerMessage> = (
  *
  * - Open/close websocket with the component.
  */
-export const makeUseWsEffect = <ClientMessage, ServerMessage>(
-  bws: BrowserWebSocket<ClientMessage, ServerMessage>,
-  eventStream: EventStream<ServerMessage>
-): UseWsEffect<ServerMessage> => (deps) => {
-  useEffect(() => {
-    bws.openWebSocket().then(deps.onOpen || (() => {}));
+export const makeUseWsEffect =
+  <ClientMessage, ServerMessage>(
+    bws: BrowserWebSocket<ClientMessage, ServerMessage>,
+    eventStream: EventStream<ServerMessage>
+  ): UseWsEffect<ServerMessage> =>
+  (deps) => {
+    useEffect(() => {
+      bws.openWebSocket().then(deps.onOpen || (() => {}));
 
-    eventStream.addListener(deps.onServerMessage);
+      eventStream.addListener(deps.onServerMessage);
 
-    return () => {
-      bws.closeWebSocket();
-      eventStream.removeListener(deps.onServerMessage);
-    };
-  }, Object.values(deps));
-};
+      return () => {
+        bws.closeWebSocket();
+        eventStream.removeListener(deps.onServerMessage);
+      };
+    }, Object.values(deps));
+  };

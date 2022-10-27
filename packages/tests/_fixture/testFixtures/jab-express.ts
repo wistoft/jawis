@@ -11,7 +11,8 @@ export type Deps<MS extends SocketData> = {
  *
  */
 export class WsPoolMock<MS extends SocketData, MR extends SocketData>
-  implements WsPoolProv<MS, MR> {
+  implements WsPoolProv<MS, MR>
+{
   constructor(private deps: Deps<MS>) {}
 
   public send = (data: MS) => {

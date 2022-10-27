@@ -42,9 +42,9 @@ export const startJaviServer = (deps: Deps) => {
 
   //compile service
 
-  const makeJacsBee = (makeMakeJacsWorkerBee(
+  const makeJacsBee = makeMakeJacsWorkerBee(
     deps.mainProv
-  ) as unknown) as MakeBee; //bug for development: there is a different between dev/released version.
+  ) as unknown as MakeBee; //bug for development: there is a different between dev/released version.
 
   //jates
 

@@ -77,31 +77,30 @@ export const useObject = <T extends {}>(obj: T) =>
  * note
  *  taken deps isn't necessary. It's easy for user to do, but it removes boilerplate in user.
  */
-export const makeSetStateCallback = <D, S>(
-  updater: PartialStateUpdater<D, S>,
-  setState: HookSetState<S>
-) => (deps: D) => {
-  const upd = updater(deps);
+export const makeSetStateCallback =
+  <D, S>(updater: PartialStateUpdater<D, S>, setState: HookSetState<S>) =>
+  (deps: D) => {
+    const upd = updater(deps);
 
-  if (typeof upd === "object") {
-    setState((old) => ({ ...old, ...upd }));
-  } else {
-    setState((old) => ({ ...old, ...upd(old) }));
-  }
-};
+    if (typeof upd === "object") {
+      setState((old) => ({ ...old, ...upd }));
+    } else {
+      setState((old) => ({ ...old, ...upd(old) }));
+    }
+  };
 
 /**
  * Turn a hook setState into a class setState.
  */
-export const makeSetPartialState = <S>(setState: HookSetState<S>) => (
-  updater: PartialStateUpdater2<S>
-) => {
-  if (typeof updater === "object") {
-    setState((old) => ({ ...old, ...updater }));
-  } else {
-    setState((old) => ({ ...old, ...updater(old) }));
-  }
-};
+export const makeSetPartialState =
+  <S>(setState: HookSetState<S>) =>
+  (updater: PartialStateUpdater2<S>) => {
+    if (typeof updater === "object") {
+      setState((old) => ({ ...old, ...updater }));
+    } else {
+      setState((old) => ({ ...old, ...updater(old) }));
+    }
+  };
 
 /**
  * Make a function into a hook.
@@ -109,8 +108,10 @@ export const makeSetPartialState = <S>(setState: HookSetState<S>) => (
  * - The hook takes deps at render, and returns a callback, that takes no arguments. A perfect callback function.
  * - Components can use the hook to make referentially stable callbacks.
  */
-export const makeUseFunction = <D>(func: (deps: D) => void) => (deps: D) =>
-  useMemo(() => () => func(deps), [func, ...Object.values(deps)]);
+export const makeUseFunction =
+  <D>(func: (deps: D) => void) =>
+  (deps: D) =>
+    useMemo(() => () => func(deps), [func, ...Object.values(deps)]);
 
 /**
  * Wrap a function, so it's a no-op, after the component has unmounted.
@@ -139,11 +140,12 @@ export const useUnmountSafeFunction = <F extends (...a: any[]) => any>(
   // wrap the inner function
 
   return useMemo(
-    () => (...args: Parameters<F>): ReturnType<F> | void => {
-      if (!holder.unmounted) {
-        return func(...args);
-      }
-    },
+    () =>
+      (...args: Parameters<F>): ReturnType<F> | void => {
+        if (!holder.unmounted) {
+          return func(...args);
+        }
+      },
     [func]
   );
 };

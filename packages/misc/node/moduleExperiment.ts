@@ -14,11 +14,12 @@ export const makeExpriment = (deps: { cacheResolve: boolean }) => {
 
   //load
 
-  plugIntoModuleLoad((original) => (request, parent, isMain) =>
-    measure(() => original(request, parent, isMain), {
-      type: "all",
-      request: request + "\n",
-    })
+  plugIntoModuleLoad(
+    (original) => (request, parent, isMain) =>
+      measure(() => original(request, parent, isMain), {
+        type: "all",
+        request: request + "\n",
+      })
   );
 
   //resolve

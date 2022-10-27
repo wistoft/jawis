@@ -31,44 +31,40 @@ export class BeeRunner implements TestRunner {
 
     this.curTest = bee;
 
-    return promise.then(
-      (data): TestResult => {
-        const userLog: UserTestLogs = {};
+    return promise.then((data): TestResult => {
+      const userLog: UserTestLogs = {};
 
-        if (data.stdout !== "") {
-          userLog.stdout = [data.stdout];
-        }
-
-        if (data.stderr !== "") {
-          userLog.stderr = [data.stderr];
-        }
-
-        if (data.status !== 0) {
-          userLog.exitCode = [data.status];
-        }
-
-        if (data.messages.length !== 0) {
-          userLog.messages = data.messages.map((msg) => clone(msg));
-        }
-
-        //the rest
-
-        const result: TestResult = {
-          cur: {
-            user: userLog,
-          },
-          execTime: Date.now() - startTime,
-        };
-
-        if (data.errors.length !== 0) {
-          result.cur.err = data.errors.map((error) =>
-            unknownToErrorData(error)
-          );
-        }
-
-        return result;
+      if (data.stdout !== "") {
+        userLog.stdout = [data.stdout];
       }
-    );
+
+      if (data.stderr !== "") {
+        userLog.stderr = [data.stderr];
+      }
+
+      if (data.status !== 0) {
+        userLog.exitCode = [data.status];
+      }
+
+      if (data.messages.length !== 0) {
+        userLog.messages = data.messages.map((msg) => clone(msg));
+      }
+
+      //the rest
+
+      const result: TestResult = {
+        cur: {
+          user: userLog,
+        },
+        execTime: Date.now() - startTime,
+      };
+
+      if (data.errors.length !== 0) {
+        result.cur.err = data.errors.map((error) => unknownToErrorData(error));
+      }
+
+      return result;
+    });
   };
 
   /**

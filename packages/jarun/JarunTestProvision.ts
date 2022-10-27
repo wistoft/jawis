@@ -54,10 +54,8 @@ export class JarunTestProvision implements TestProvision {
 
   private finallyFuncs: Array<() => void | undefined | Promise<void>> = [];
 
-  private filterFuncs: Map<
-    string,
-    (...val: unknown[]) => unknown[]
-  > = new Map();
+  private filterFuncs: Map<string, (...val: unknown[]) => unknown[]> =
+    new Map();
 
   //cleared from outside, during await phase.
   public awaitPromises: Promise<unknown>[] = [];

@@ -110,7 +110,7 @@ export class JacsProducer {
         default:
           //the message belongs to the user.
 
-          beeDeps.onMessage((msg as unknown) as MR);
+          beeDeps.onMessage(msg as unknown as MR);
       }
     };
 

@@ -14,20 +14,19 @@ export type MakeUpgradeHandlerDeps = {
 /**
  * todo: delete this.
  */
-export const makeMakeRouter = (
-  deps: MakeUpgradeHandlerDeps
-) => (): WsRouter => {
-  const router = express.Router() as WsRouter;
+export const makeMakeRouter =
+  (deps: MakeUpgradeHandlerDeps) => (): WsRouter => {
+    const router = express.Router() as WsRouter;
 
-  router.wsMessage = <MS extends SocketData, MR extends SocketData>(
-    route: PathParams,
-    onMessage: WsMessageListener<MS, MR>
-  ) => {
-    router.ws(route, makeUpgradeHandler(deps, onMessage));
+    router.wsMessage = <MS extends SocketData, MR extends SocketData>(
+      route: PathParams,
+      onMessage: WsMessageListener<MS, MR>
+    ) => {
+      router.ws(route, makeUpgradeHandler(deps, onMessage));
+    };
+
+    return router;
   };
-
-  return router;
-};
 
 /**
  * Wrap the WebSocket object in NodeWs, to get:
@@ -35,33 +34,32 @@ export const makeMakeRouter = (
  * - Typed send funtion.
  * - Strict management of ws state.
  */
-export const makeUpgradeHandler = <
-  MS extends SocketData,
-  MR extends SocketData
->(
-  deps: MakeUpgradeHandlerDeps,
-  onMessage: WsMessageListener<MS, MR>,
-  onOpen = (_nws: NodeWS<MS, MR>) => {},
-  onClose = () => {}
-): WebsocketRequestHandler => (ws, _req, _next) => {
-  const nws = new NodeWS<MS, MR>({
-    ...deps,
-    ws,
-    startState: "running",
+export const makeUpgradeHandler =
+  <MS extends SocketData, MR extends SocketData>(
+    deps: MakeUpgradeHandlerDeps,
+    onMessage: WsMessageListener<MS, MR>,
+    onOpen = (_nws: NodeWS<MS, MR>) => {},
+    onClose = () => {}
+  ): WebsocketRequestHandler =>
+  (ws, _req, _next) => {
+    const nws = new NodeWS<MS, MR>({
+      ...deps,
+      ws,
+      startState: "running",
 
-    onMessage: (data) => {
-      onMessage(data, nws);
-    },
+      onMessage: (data) => {
+        onMessage(data, nws);
+      },
 
-    onOpen: () => {
-      deps.logProv.log("makeUpgradeHandler() - expected socket to be open.");
-    },
+      onOpen: () => {
+        deps.logProv.log("makeUpgradeHandler() - expected socket to be open.");
+      },
 
-    onClose,
-  });
+      onClose,
+    });
 
-  onOpen(nws);
-};
+    onOpen(nws);
+  };
 
 /**
  * hacky

@@ -120,32 +120,31 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  private addScript = (dynamicallyLoaded: boolean) => (
-    def: ScriptDefinition
-  ) => {
-    //status
+  private addScript =
+    (dynamicallyLoaded: boolean) => (def: ScriptDefinition) => {
+      //status
 
-    this.status.push({
-      id: crypto.createHash("md5").update(def.script).digest("hex"),
-      script: def.script,
-      status: "stopped",
-      dynamicallyLoaded,
-    });
+      this.status.push({
+        id: crypto.createHash("md5").update(def.script).digest("hex"),
+        script: def.script,
+        status: "stopped",
+        dynamicallyLoaded,
+      });
 
-    //state
+      //state
 
-    this.state.set(def.script, {
-      ...def,
-      dynamicallyLoaded,
-    });
+      this.state.set(def.script, {
+        ...def,
+        dynamicallyLoaded,
+      });
 
-    //auto start
+      //auto start
 
-    if (def.autoStart) {
-      //depends on state being set.
-      this.restartScript(def.script);
-    }
-  };
+      if (def.autoStart) {
+        //depends on state being set.
+        this.restartScript(def.script);
+      }
+    };
 
   /**
    * Read scriptFolders again to find new script, and deleted scripts.

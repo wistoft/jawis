@@ -171,16 +171,18 @@ export const assertPropString = (
 /**
  *
  */
-export const intersect = <A, B>(
-  a: (value: unknown) => value is A,
-  b: (value: unknown) => value is B
-) => (value: unknown) => {
-  if (a(value) || b(value)) {
-    return value;
-  } else {
-    throw err("intersect failed for: ", value);
-  }
-};
+export const intersect =
+  <A, B>(
+    a: (value: unknown) => value is A,
+    b: (value: unknown) => value is B
+  ) =>
+  (value: unknown) => {
+    if (a(value) || b(value)) {
+      return value;
+    } else {
+      throw err("intersect failed for: ", value);
+    }
+  };
 
 /**
  * - return undefined if not an object

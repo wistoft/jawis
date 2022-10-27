@@ -13,31 +13,33 @@ import { TestProvision } from "^jarun";
 /**
  *
  */
-export const syntheticWait = (
-  type: "success" | "error",
-  controlArray: Int32Array,
-  dataArray: Uint8Array,
-  data = "the result"
-): WaitFunc => (arr, index, value) => {
-  const curValue = arr[index];
+export const syntheticWait =
+  (
+    type: "success" | "error",
+    controlArray: Int32Array,
+    dataArray: Uint8Array,
+    data = "the result"
+  ): WaitFunc =>
+  (arr, index, value) => {
+    const curValue = arr[index];
 
-  setCompiling(controlArray);
+    setCompiling(controlArray);
 
-  // put a response into memory.
-  signalConsumerSync(
-    type,
-    data,
-    controlArray,
-    dataArray,
-    () => 1 /* successful notify */
-  );
+    // put a response into memory.
+    signalConsumerSync(
+      type,
+      data,
+      controlArray,
+      dataArray,
+      () => 1 /* successful notify */
+    );
 
-  if (curValue === value) {
-    return "ok"; //simulate notify
-  } else {
-    return "not-equal";
-  }
-};
+    if (curValue === value) {
+      return "ok"; //simulate notify
+    } else {
+      return "not-equal";
+    }
+  };
 
 /**
  *

@@ -22,20 +22,19 @@ export class JabHttpProvider<HttpRequest> {
    * impl
    *   can't use response.json(). Because response text will be unreachable if json can't be parsed.
    */
-  private handleRawResponse = (request: HttpRequest) => (
-    responseObject: Response
-  ) =>
-    responseObject.text().then((json) => {
-      try {
-        return JSON.parse(json);
-      } catch (error) {
-        err("Error parsing server response: " + error.message, {
-          json,
-          request,
-          URL: this.URL,
-        });
-      }
-    });
+  private handleRawResponse =
+    (request: HttpRequest) => (responseObject: Response) =>
+      responseObject.text().then((json) => {
+        try {
+          return JSON.parse(json);
+        } catch (error) {
+          err("Error parsing server response: " + error.message, {
+            json,
+            request,
+            URL: this.URL,
+          });
+        }
+      });
 
   /**
    *

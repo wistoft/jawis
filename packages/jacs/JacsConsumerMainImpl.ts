@@ -14,7 +14,7 @@ import {
 } from ".";
 import { JacsConsumer } from "./JacsConsumer";
 
-const Module = (nativeModule as unknown) as FullNativeModule & {
+const Module = nativeModule as unknown as FullNativeModule & {
   prototype: { _compile: CompileFunction; _jacsUninstall?: () => void };
 };
 

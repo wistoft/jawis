@@ -55,13 +55,11 @@ const createCallbacks = ({
   let startX: number;
   let startY: number;
   let dragged: boolean;
-  let double: boolean;
 
   const onMouseDown = (e: React.MouseEvent<HTMLDivElement>): void => {
     startX = e.pageX;
     startY = e.pageY;
     dragged = false;
-    double = false;
   };
 
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>): void => {
@@ -72,12 +70,6 @@ const createCallbacks = ({
     ) {
       dragged = true;
     }
-  };
-
-  // double happens too late to be detected.
-  const onDoubleClick = () => {
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
-    double = true;
   };
 
   /**
@@ -93,5 +85,5 @@ const createCallbacks = ({
     depsOnClick(e);
   };
 
-  return { onMouseDown, onMouseMove, onDoubleClick, onClick };
+  return { onMouseDown, onMouseMove, onClick };
 };

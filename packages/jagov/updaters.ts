@@ -4,8 +4,7 @@ import { State } from ".";
 /**
  *
  */
-export const setProcessStatusUpdater = (deps: {
-  processStatus: ScriptStatus[];
-}) => (): Partial<State> => ({
-  processStatus: deps.processStatus,
-});
+export const setProcessStatusUpdater =
+  (deps: { processStatus: ScriptStatus[] }) => (): Partial<State> => ({
+    processStatus: deps.processStatus,
+  });

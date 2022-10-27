@@ -10,27 +10,27 @@ export type Deps = ActionProv & BehaviorProv;
 /**
  *
  */
-export const makeOnClientMesssage = (
-  deps: Deps
-): WsMessageListener<ServerMessage, ClientMessage> => (msg, nws) => {
-  switch (msg.type) {
-    case "ping":
-      nws.send({ type: "pong" });
-      break;
+export const makeOnClientMesssage =
+  (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
+  (msg, nws) => {
+    switch (msg.type) {
+      case "ping":
+        nws.send({ type: "pong" });
+        break;
 
-    case "pingClients":
-      deps.onPingAll();
-      break;
+      case "pingClients":
+        deps.onPingAll();
+        break;
 
-    case "stopServer":
-      console.log("Stopping server.");
-      process.exit();
+      case "stopServer":
+        console.log("Stopping server.");
+        process.exit();
 
-    case "poisonReceiveEmptyObject":
-      nws.send({} as any);
-      break;
+      case "poisonReceiveEmptyObject":
+        nws.send({} as any);
+        break;
 
-    default:
-      throw assertNever(msg, "Unknown client message type.");
-  }
-};
+      default:
+        throw assertNever(msg, "Unknown client message type.");
+    }
+  };

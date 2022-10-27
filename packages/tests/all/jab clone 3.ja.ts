@@ -9,6 +9,7 @@ export default ({ eq }: TestProvision) => {
   //
 
   eq(1212121212121212, clone(1212121212121212));
+  // eslint-disable-next-line @typescript-eslint/no-loss-of-precision
   eq(121212121212121212, clone(121212121212121212)); //not sure this works, but they are wrong in the same way :-)
 
   eq(["bigint", "1212121212121212"], clone(BigInt(1212121212121212)));
