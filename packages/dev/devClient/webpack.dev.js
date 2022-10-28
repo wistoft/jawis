@@ -45,12 +45,14 @@ module.exports = {
   },
 
   devtool: "inline-cheap-module-source-map",
-  // devtool: "eval-cheap-module-source-map",
   devServer: {
-    contentBase: "./dist",
-    inline: false,
     port: conf.clientPort,
     historyApiFallback: true,
+    hot: false,
+    liveReload: false,
+    client: {
+      logging: "error",
+      reconnect: false,
+    },
   },
 };
-//

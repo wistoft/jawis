@@ -24,7 +24,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.4",
     "enzyme-to-json": "^3.5.0",
-    "ws": "^7.3.0",
+    "ws": "^7.4.6",
     "@reach/router": "^1.3.4",
     "@types/reach__router": "^1.3.7",
     "shallow-equal": "^1.2.1",
@@ -36,12 +36,12 @@
     "@testing-library/react-hooks": "^5.1.0",
     "css-loader": "^5.1.1",
     "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^5.2.0",
+    "html-webpack-plugin": "^5.5.0",
     "source-map-loader": "^2.0.1",
     "style-loader": "^2.0.0",
     "ts-loader": "^8.0.17",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^4.11.1"
   },
   "keywords": [
     "prototype",

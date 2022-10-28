@@ -6,7 +6,7 @@ import type { JabShutdownMessage } from ".";
 type States = "running" | "stopping" | "stopped";
 type Events = "message";
 
-type Beehavior<MS, MR> = {
+type Beehavior<MS extends {}, MR extends {}> = {
   onInit?: (bee: InMemoryBee<MS, MR>) => void;
   onSend?: (
     data: JabShutdownMessage | MS,
@@ -63,10 +63,7 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
    */
   public sendBack = (data: MR) => {
     if (this.terminated) {
-      console.log(
-        "InMemoryBee terminated, so user will not receive this message",
-        data
-      );
+      console.log( "InMemoryBee terminated, so user will not receive this message", data ); // prettier-ignore
       return;
     }
 

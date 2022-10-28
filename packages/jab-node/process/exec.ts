@@ -25,8 +25,8 @@ export const execSync = (command: string, args?: string[]) =>
 /**
  *
  */
-export const execSyncAndGetStdout = (cmd: string, args?: string[]) => {
-  const result = execSync(cmd, args);
+export const execSyncAndGetStdout = (command: string, args?: string[]) => {
+  const result = execSync(command, args);
 
   // check the stdout, stderr and exit code
 
@@ -39,7 +39,7 @@ export const execSyncAndGetStdout = (cmd: string, args?: string[]) => {
   throw new Error(
     "execAndGetStdoutNew() - error: \n" +
       formatExecInformation({
-        cmd,
+        command,
         args,
         retval: result.status,
         stdout: result.stdout,
@@ -125,7 +125,9 @@ export const exec = (command: string, args?: string[]) =>
 /**
  *
  */
-export const mapSpawnSyncResult = (result: SpawnSyncReturns<string>) => {
+export const mapSpawnSyncResult = (
+  result: SpawnSyncReturns<string | Buffer>
+): SpawnResult => {
   if (result.error) {
     // would be nice to incorporate the other information here.
     throw result.error;
@@ -142,7 +144,7 @@ export const mapSpawnSyncResult = (result: SpawnSyncReturns<string>) => {
  *
  */
 const mapSilent = (
-  cmd: string,
+  command: string,
   args: string[] | undefined,
   result: SpawnResult
 ) => {
@@ -157,7 +159,7 @@ const mapSilent = (
   throw new Error(
     "execAndThrowOnStdout() - error: \n" +
       formatExecInformation({
-        cmd,
+        command,
         args,
         retval: result.status,
         stdout: result.stdout,
@@ -170,13 +172,13 @@ const mapSilent = (
  *
  */
 const formatExecInformation = ({
-  cmd,
+  command,
   args = [],
   retval,
   stdout,
   stderr,
 }: {
-  cmd: string;
+  command: string;
   args?: string[];
   retval: number | null;
   stdout: string;
@@ -185,7 +187,7 @@ const formatExecInformation = ({
   let errMsg = "";
 
   errMsg = "";
-  errMsg += "\nCOMMAND\n" + indent(cmd, 2, " ");
+  errMsg += "\nCOMMAND\n" + indent(command, 2, " ");
   errMsg += "\nARGS\n" + indent(args.toString(), 2, " ");
   errMsg += "\nRET: " + retval;
   errMsg += "\nOUT\n" + indent(stdout, 2, " ") + "\nEND";

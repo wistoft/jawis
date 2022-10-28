@@ -9,7 +9,7 @@
     "@types/ws": "^7.2.4",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
-    "ws": "^7.3.0"
+    "ws": "^7.4.6"
   },
   "keywords": [
     "express",

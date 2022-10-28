@@ -1,4 +1,3 @@
-import * as d3 from "d3";
 import { runSelfScaleExp } from "^misc";
 
 // allocate ArrayBuffer
@@ -16,11 +15,4 @@ runSelfScaleExp({
   const values = Array.from(res.values());
 
   console.log(res);
-
-  console.log([
-    d3.min(values),
-    d3.mean(values),
-    d3.median(values),
-    d3.max(values),
-  ]);
 });
