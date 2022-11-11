@@ -19,11 +19,11 @@ import {
 import { OpenFile } from "^util-javi";
 
 import { makeOnServerMessage } from "./onServerMessage";
-import { ViewAction, Props as ViewActionProps } from "./ViewAction";
+import { ViewAction, ViewActionProps } from "./ViewAction";
 import { ViewControls } from "./ViewControls";
 import { makeOnKeydown } from "./onKeydown";
 import { testSelectionToCollection } from "./TestCollection";
-import { Callbacks, State } from ".";
+import { StateCallbacks, State } from ".";
 import {
   makeTestCaseUpdater,
   makeShowTestUpdater,
@@ -33,9 +33,7 @@ import {
 } from "./updaters";
 import { getTestLogsThatDiffer } from "./util";
 
-//props
-
-export type Props = {
+export type DirectorProps = {
   getRandomToken: () => number;
   useKeyListener: typeof useKeyListener;
   showDtpLink?: boolean; //default false
@@ -61,7 +59,9 @@ export const useDirector = ({
   useKeyListener,
   showDtpLink,
   ...extra
-}: Props) => {
+}: DirectorProps) => {
+  // state
+
   const [state, setState] = useState<State>({
     isRunning: false,
     userMessage: "",
@@ -144,19 +144,19 @@ export const useDirector = ({
     },
     {
       name: "cur",
-      elm: ( <ViewAction action={{ action: "runCurrentSelection" }} {...viewProps} /> ), // prettier-ignore
+      elm: ( <ViewAction action={{ type: "runCurrentSelection" }} {...viewProps} /> ), // prettier-ignore
     },
 
     {
       name: "all",
-      elm: ( <ViewAction action={{ action: "runAllTests" }} {...viewProps} /> ), // prettier-ignore
+      elm: ( <ViewAction action={{ type: "runAllTests" }} {...viewProps} /> ), // prettier-ignore
     },
   ];
 
   if (showDtpLink) {
     routes.push({
       name: "dtp",
-      elm: ( <ViewAction action={{ action: "runDtp" }} {...viewProps} /> ), // prettier-ignore
+      elm: ( <ViewAction action={{ type: "runDtp" }} {...viewProps} /> ), // prettier-ignore
     });
   }
 
@@ -193,7 +193,7 @@ const createStructure = ({
 
   const openFile: OpenFile = (deps: { file: string; line?: number }) => {
     apiSend({
-      action: "openFile",
+      type: "openFile",
       ...deps,
     });
   };
@@ -203,7 +203,7 @@ const createStructure = ({
   const onRunCurrentTest = () => {
     if (stateRef.current.currentTest) {
       apiSend({
-        action: "prependTests",
+        type: "prependTests",
         ids: [stateRef.current.currentTest.id],
       });
     }
@@ -212,7 +212,7 @@ const createStructure = ({
   const onEditCurrentTest = () => {
     if (stateRef.current.currentTest) {
       apiSend({
-        action: "openTest",
+        type: "openTest",
         file: stateRef.current.currentTest.id,
       });
     }
@@ -221,7 +221,7 @@ const createStructure = ({
   const runFailedTests = () => {
     if (stateRef.current.tests) {
       apiSend({
-        action: "prependTests",
+        type: "prependTests",
         ids: getTestLogsThatDiffer(stateRef.current.tests.tests, true),
       });
     }
@@ -230,7 +230,7 @@ const createStructure = ({
   const acceptAllLogs = () => {
     if (stateRef.current.tests) {
       apiSend({
-        action: "acceptTestLogs",
+        type: "acceptTestLogs",
         testIds: getTestLogsThatDiffer(stateRef.current.tests.tests, false),
       });
     }
@@ -254,7 +254,7 @@ const createStructure = ({
 export const getCallbacks = (
   setState: HookSetState<State>,
   getRandomToken: () => number
-): Callbacks => {
+): StateCallbacks => {
   //quick fix - use: makeSetStateCallback
 
   const setPartialState = makeSetPartialState(setState);

@@ -9,7 +9,7 @@ import {
 import { getRandomInteger } from "^jab";
 import { ClientMessage, ServerMessage } from "^jatec";
 
-import { useDirector, Props as DirectorProps } from "./useDirector";
+import { useDirector, DirectorProps } from "./useDirector";
 
 export type Props = {
   apiPath: string;
@@ -32,11 +32,11 @@ export const Main: React.FC<Props> = memo(({ apiPath, ...extra }) => {
 
   const prov = useDirector({
     ...extra,
-    apiSend: apiSend,
-    wsState: wsState,
-    useWsEffect: useWsEffect,
+    apiSend,
+    wsState,
+    useWsEffect,
+    useKeyListener,
     getRandomToken: getRandomInteger,
-    useKeyListener: useKeyListener,
   });
 
   return (
@@ -45,3 +45,5 @@ export const Main: React.FC<Props> = memo(({ apiPath, ...extra }) => {
     </ErrorBoundary>
   );
 });
+
+Main.displayName = "JatevMain";

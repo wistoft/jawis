@@ -59,6 +59,8 @@ export class BeeRunner implements TestRunner {
         execTime: Date.now() - startTime,
       };
 
+      //errors
+
       if (data.errors.length !== 0) {
         result.cur.err = data.errors.map((error) => unknownToErrorData(error));
       }

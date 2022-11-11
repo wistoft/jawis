@@ -11,7 +11,7 @@ import {
 
 import { errLogDiff } from "./util";
 
-export type Props = {
+export type ViewErrorLogProps = {
   testLog: ErrorLog;
 } & Omit<
   ViewExceptionProps,
@@ -21,55 +21,57 @@ export type Props = {
 /**
  *
  */
-export const ViewErrorLog: React.FC<Props> = memo(({ testLog, ...extra }) => {
-  const diff = errLogDiff(testLog.exp || [], testLog.cur);
+export const ViewErrorLog: React.FC<ViewErrorLogProps> = memo(
+  ({ testLog, ...extra }) => {
+    const diff = errLogDiff(testLog.exp || [], testLog.cur);
 
-  const mappedDiff = diff.map((elm, index) => {
-    switch (elm[0]) {
-      case "del":
-        return (
-          <pre key={index}>
-            <del>{filterErrorMessage(elm[1])}</del>
-          </pre>
-        );
+    const mappedDiff = diff.map((elm, index) => {
+      switch (elm[0]) {
+        case "del":
+          return (
+            <pre key={index}>
+              <del>{filterErrorMessage(elm[1])}</del>
+            </pre>
+          );
 
-      case "eq":
-        return (
-          <ViewException
-            {...extra}
-            key={index}
-            errorData={parseErrorData(elm[1])}
-            onToggleEntry={() => {
-              console.log("onToggleEntry");
-            }}
-          />
-        );
+        case "eq":
+          return (
+            <ViewException
+              {...extra}
+              key={index}
+              errorData={parseErrorData(elm[1])}
+              onToggleEntry={() => {
+                console.log("onToggleEntry");
+              }}
+            />
+          );
 
-      case "ins":
-        return (
-          <ViewException
-            {...extra}
-            key={index}
-            errorData={parseErrorData(elm[1])}
-            messageStyle={{ color: "var(--green)" }}
-            onToggleEntry={() => {
-              console.log("onToggleEntry");
-            }}
-          />
-        );
+        case "ins":
+          return (
+            <ViewException
+              {...extra}
+              key={index}
+              errorData={parseErrorData(elm[1])}
+              messageStyle={{ color: "var(--green)" }}
+              onToggleEntry={() => {
+                console.log("onToggleEntry");
+              }}
+            />
+          );
 
-      default:
-        throw assertNever(elm[0]);
-    }
-  });
+        default:
+          throw assertNever(elm[0]);
+      }
+    });
 
-  return (
-    <div
-      style={{ marginLeft: "16px" }} //equivalent to 2 spaces.
-    >
-      {mappedDiff}
-    </div>
-  );
-});
+    return (
+      <div
+        style={{ marginLeft: "16px" }} //equivalent to 2 spaces.
+      >
+        {mappedDiff}
+      </div>
+    );
+  }
+);
 
 ViewErrorLog.displayName = "ViewErrorLog";

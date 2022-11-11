@@ -4,7 +4,7 @@ import { err, splitSurroundingWhitespace } from "^jab";
 import { replaceAtoms } from "^jab-react";
 import { diff } from "^util-javi/algs";
 
-export type Props = {
+type Props = {
   left: string;
   right: string;
 };

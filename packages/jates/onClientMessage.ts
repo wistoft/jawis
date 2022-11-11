@@ -24,7 +24,7 @@ type Deps = {
 export const makeOnClientMessage =
   (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
   async (msg) => {
-    switch (msg.action) {
+    switch (msg.type) {
       case "stopRunning":
         deps.onToggleRunning();
         return;
@@ -78,6 +78,6 @@ export const makeOnClientMessage =
         return;
 
       default:
-        return assertNever(msg, "Unknown action.");
+        assertNever(msg, "Unknown client message type.");
     }
   };

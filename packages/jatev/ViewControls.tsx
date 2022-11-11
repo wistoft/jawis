@@ -17,7 +17,7 @@ export const ViewControls: React.FC<Props> = memo((props) => {
   const startStopLink = (
     <JsLink
       name={props.isRunning ? "stop" : "start"}
-      onClick={() => props.apiSend({ action: "stopRunning" })}
+      onClick={() => props.apiSend({ type: "stopRunning" })}
       title={props.isRunning ? "Stop test execution" : "Start test execution"}
     />
   );

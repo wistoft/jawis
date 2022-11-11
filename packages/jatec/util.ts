@@ -398,23 +398,6 @@ export const flatToTestExpLogs_compat = (
 };
 
 /**
- *
- */
-const testLogsToFlat = (logs: TestCurLogs | TestExpLogs): UserTestLogs => {
-  const res: any = { ...logs };
-
-  const user = logs.user;
-
-  delete res.user;
-
-  Object.entries(user).forEach(([key, value]) => {
-    res[key] = value;
-  });
-
-  return res;
-};
-
-/**
  * note
  * - very cumbersome.
  * - actually no need to handle chk log, because Jarun never sends that.
@@ -559,4 +542,21 @@ export const mergeTestLogsAndRogue_helper_by_ref = (
       cur: value,
     });
   });
+};
+
+/**
+ *
+ */
+const testLogsToFlat = (logs: TestCurLogs | TestExpLogs): UserTestLogs => {
+  const res: any = { ...logs };
+
+  const user = logs.user;
+
+  delete res.user;
+
+  Object.entries(user).forEach(([key, value]) => {
+    res[key] = value;
+  });
+
+  return res;
 };

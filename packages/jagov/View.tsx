@@ -3,10 +3,7 @@ import { Link, Router } from "@reach/router";
 
 import { JsLink, NoRoute, ReachRoute, WsStates } from "^jab-react";
 
-import {
-  ViewScriptRoute,
-  Props as ViewScriptRouteProps,
-} from "./ViewScriptRoute";
+import { ViewScriptRoute, ViewScriptRouteProps } from "./ViewScriptRoute";
 import { ViewHome, ViewHomeProps } from "./ViewHome";
 
 //props

@@ -2,8 +2,8 @@ import React, { memo } from "react";
 
 import { def } from "^jab";
 
-import { ViewTest, Props as ViewTestProps } from "./ViewTest";
-import { Callbacks, State } from ".";
+import { ViewTest, ViewTestProps } from "./ViewTest";
+import { StateCallbacks, State } from ".";
 import { ViewExecutionList } from "./ViewExecutionList";
 import { ViewTestLog } from "./ViewTestLog";
 
@@ -11,7 +11,7 @@ import { ViewTestLog } from "./ViewTestLog";
 
 export type ViewProps = {
   state: State;
-  callbacks: Callbacks;
+  callbacks: StateCallbacks;
 } & Omit<
   ViewTestProps,
   "currentTest" | "onCloseTestCase" | "onPrev" | "onNext"

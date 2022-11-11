@@ -24,9 +24,9 @@ import {
 } from "^jatev/updaters";
 import {
   ViewExecutionLevel,
-  Props as ViewExecutionLevelProps,
+  ViewExecutionLevelProps,
 } from "^jatev/ViewExecutionLevel";
-import { ViewTestLog, Props as ViewTestLogProps } from "^jatev/ViewTestLog";
+import { ViewTestLog, ViewTestLogProps } from "^jatev/ViewTestLog";
 import { TestState, TestStateUpdate } from "^jatev";
 import { useDirector } from "^jatev/useDirector";
 
@@ -39,7 +39,7 @@ import {
 } from ".";
 import {
   ViewTestLogContent,
-  Props as ViewTestLogContentProps,
+  ViewTestLogContentProps,
 } from "^jatev/ViewTestLogContent";
 
 export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.

@@ -1,11 +1,11 @@
 import React, { memo } from "react";
 
 import { JsLink } from "^jab-react";
-import { ViewTestLog, Props as ViewTestLogProps } from "./ViewTestLog";
+import { ViewTestLog, ViewTestLogProps } from "./ViewTestLog";
 
 import { TestState } from ".";
 
-export type Props = {
+export type ViewTestProps = {
   currentTest: TestState;
   onCloseTestCase: () => void;
   onPrev: () => void;
@@ -14,7 +14,7 @@ export type Props = {
   onEditCurrentTest: () => void;
 } & Omit<ViewTestLogProps, "testId" | "testLog" | "rogue">;
 
-export const ViewTest: React.FC<Props> = memo(
+export const ViewTest: React.FC<ViewTestProps> = memo(
   ({
     currentTest,
     onCloseTestCase,

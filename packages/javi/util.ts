@@ -12,8 +12,8 @@ import { createDefaultTestRunners } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";
 import { makeApp, Route } from "^jab-express";
-import { Deps as JatesDeps } from "^jates/director";
-import { Deps as JagosDeps } from "^jagos/director";
+import { DirectorDeps as JatesDeps } from "^jates/director";
+import { DirectorDeps as JagosDeps } from "^jagos/director";
 import { MainProv, MakeBee } from "^jab-node";
 
 import { JaviClientConf } from "./types";

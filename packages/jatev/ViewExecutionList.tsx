@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { TestState } from ".";
 import { ViewExecutionLevel } from "./ViewExecutionLevel";
 
-export type Props = {
+type Props = {
   tests?: TestState[][];
   currentTestId?: string;
   executingTestId?: string;

@@ -103,7 +103,7 @@ export const getTestListController = (
   return new TestListController({
     onError: prov.onError,
 
-    tf: new TestFrameworkMock(),
+    testFramework: new TestFrameworkMock(),
     ta: getTestAnalytics(prov, absTestFolder),
 
     setTestExecutionList: (tests) => {

@@ -11,10 +11,10 @@ import {
 } from "./util";
 import {
   ViewTestLogContent,
-  Props as ViewTestLogContentProps,
+  ViewTestLogContentProps,
 } from "./ViewTestLogContent";
 
-export type Props = {
+export type ViewTestLogProps = {
   testId: string;
   testLog: ZippedTestLog;
   rogue: boolean;
@@ -24,7 +24,7 @@ export type Props = {
 /**
  *
  */
-export const ViewTestLog: React.FC<Props> = memo(
+export const ViewTestLog: React.FC<ViewTestLogProps> = memo(
   ({ testId, testLog, rogue, apiSend, ...extra }) => {
     const [showTestLog, setShowTestLog] = useState(() =>
       getDefaultShowTestState(testLog)
@@ -121,7 +121,7 @@ export const getControlLinks = (
       name="acc"
       onClick={() =>
         apiSend({
-          action: "acceptTestLog",
+          type: "acceptTestLog",
           testId: testId,
           logName: testLog.name,
         })
@@ -135,7 +135,7 @@ export const getControlLinks = (
       name="del"
       onClick={() =>
         apiSend({
-          action: "acceptTestLog",
+          type: "acceptTestLog",
           testId: testId,
           logName: testLog.name,
         })
@@ -200,7 +200,7 @@ const getTestLogLinks = (
         name="cmp"
         onClick={() =>
           apiSend({
-            action: "compareTestLog",
+            type: "compareTestLog",
             testId: testId,
             logName: testLog.name,
           })

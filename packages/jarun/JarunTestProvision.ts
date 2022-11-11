@@ -8,11 +8,11 @@ import {
   def,
   err,
   FinallyFunc,
-  JabError,
   looping,
   tryProp,
   unknownToErrorData,
 } from "^jab";
+import { OnError } from "^jab-node";
 
 import { JarunEqAssertation } from "./JarunEqAssertation";
 
@@ -24,7 +24,7 @@ export type TestProvision = {
   div: (...val: unknown[]) => void;
   log: (logName: string, ...value: unknown[]) => void;
   logStream: (logName: string, value: string) => void;
-  onError: (error: unknown, extraInfo?: Array<unknown>) => void;
+  onError: OnError;
   catch: <T>(func: () => T) => T | undefined;
   filter: (logName: string, func: (...val: unknown[]) => unknown[]) => void;
   finally: FinallyFunc;
@@ -159,7 +159,7 @@ export class JarunTestProvision implements TestProvision {
     } else if (tmp instanceof Buffer) {
       this.logStreamString(logName, tmp.toString());
     } else {
-      throw err("logStream only supports string and Buffer.", tmp);
+      err("logStream only supports string and Buffer.", tmp);
     }
   };
 
@@ -224,8 +224,8 @@ export class JarunTestProvision implements TestProvision {
 
   /**
    * - Rogue allowed, because we need a way to report those errors.
-   * - Explicit return undefined. It's a stronger guarantee, than 'returning' void.
    * - no motivation to handle rogue chk logs specially.
+   * - Explicit return type: undefined. It's a stronger guarantee, than void.
    */
   public onError = (error: unknown, extraInfo?: Array<unknown>): undefined => {
     const name = tryProp(error, "name");
@@ -356,7 +356,7 @@ export class JarunTestProvision implements TestProvision {
     this.await(
       prom.then(
         (cur) => {
-          throw new JabError("Expected rejection, but got:", cur);
+          err("Expected rejection, but got:", cur);
         },
         (error) => {
           if (tryProp(error, "getErrorData")) {

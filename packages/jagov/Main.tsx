@@ -4,7 +4,7 @@ import { useWebSocketProv } from "^jab-react";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { View, Props as ViewProps } from "./View";
-import { useDirector, Props as DirectorProps } from "./useDirector";
+import { useDirector, DirectorProps } from "./useDirector";
 
 //props
 

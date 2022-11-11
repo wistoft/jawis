@@ -1,7 +1,7 @@
 import { err, assertNever, prej, Waiter } from "^jab";
 
 import { TestFrameworkProv } from ".";
-
+import { ClientComProv } from "./ClientComController";
 import { TestAnalytics } from "./TestAnalytics";
 
 // prov
@@ -15,12 +15,11 @@ export type TestListControllerProv = {
 // deps
 
 export type TestListControllerDeps = {
-  tf: TestFrameworkProv;
+  testFramework: TestFrameworkProv;
   ta: TestAnalytics;
   setTestExecutionList: (ids: string[]) => void;
-  onTestSelectionReady: (tests: string[][]) => void;
   onError: (error: unknown) => void;
-};
+} & Pick<ClientComProv, "onTestSelectionReady">;
 
 type States = "idle" | "fetching" | "stopping" | "done";
 type Events = never;
@@ -75,7 +74,7 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        this.deps.tf.getTestIds().then(this.onFetchDone);
+        this.deps.testFramework.getTestIds().then(this.onFetchDone);
         break;
 
       case "stopping":
@@ -99,7 +98,9 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        this.deps.tf.getCurrentSelectionTestIds().then(this.onFetchDone);
+        this.deps.testFramework
+          .getCurrentSelectionTestIds()
+          .then(this.onFetchDone);
         break;
 
       case "stopping":
@@ -124,7 +125,7 @@ export class TestListController implements TestListControllerProv {
       case "idle":
         this.waiter.set("fetching");
 
-        return this.deps.tf.getTestIds().then(this.onDtpFetchDone);
+        return this.deps.testFramework.getTestIds().then(this.onDtpFetchDone);
 
       case "stopping":
       case "done":

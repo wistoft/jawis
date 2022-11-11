@@ -18,7 +18,7 @@ import { makeOnServerMessage } from "./onServerMessage";
 import { State } from ".";
 import { setProcessStatusUpdater } from "./updaters";
 
-export type Props = {
+export type DirectorProps = {
   useConsoleStream?: UseConsoleStream;
 } & Omit<WebSocketProv<ClientMessage, ServerMessage>, "wsState">;
 
@@ -29,12 +29,12 @@ export const useDirector = ({
   apiSend,
   useWsEffect,
   useConsoleStream,
-}: Props) => {
-  //we take hooks, so they must not change. React has no semantics for changing hooks.
+}: DirectorProps) => {
+  // we take hooks, so they must not change.
 
   useAssertStatic({ useWsEffect, useConsoleStream });
 
-  //console state
+  // console state
 
   const consoleState = useConsoleState(getRandomInteger);
 
@@ -44,18 +44,22 @@ export const useDirector = ({
     useConsoleStream((entries) => consoleState.addData(entries, true));
   }
 
-  //own state
+  // state
 
   const [state, setState] = useState<State>({});
 
+  // structure
+
   const { useApiSend, onServerMessage, onOpen, openFile } = useMemoDep(
-    { setState, apiSend, addConsoleData: consoleState.addData },
+    { apiSend, setState, addConsoleData: consoleState.addData },
     createStructure
   );
 
+  // web socket
+
   useWsEffect({ onOpen, onServerMessage });
 
-  //done
+  // done
 
   return {
     ...state,
@@ -70,8 +74,8 @@ export const useDirector = ({
 //
 
 type StructureDeps = {
-  setState: HookSetState<State>;
   apiSend: (data: ClientMessage) => void;
+  setState: HookSetState<State>;
   addConsoleData: (event: ConsoleEntry[]) => void;
 };
 
@@ -87,13 +91,9 @@ const createStructure = ({
     setProcessStatus: makeSetStateCallback(setProcessStatusUpdater, setState),
   };
 
-  const onServerMessage = makeOnServerMessage({ ...callbacks, addConsoleData });
-
   const onOpen = () => {
     apiSend({ type: "startListen" });
   };
-
-  const useApiSend = makeUseFunction(apiSend);
 
   const openFile: OpenFile = (deps: { file: string; line?: number }) => {
     apiSend({
@@ -101,6 +101,10 @@ const createStructure = ({
       ...deps,
     });
   };
+
+  const useApiSend = makeUseFunction(apiSend);
+
+  const onServerMessage = makeOnServerMessage({ ...callbacks, addConsoleData });
 
   return {
     useApiSend,

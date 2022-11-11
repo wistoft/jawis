@@ -2,9 +2,9 @@ import { assertNever } from "^jab";
 
 import { ServerMessage } from "^jatec";
 
-import { Callbacks } from ".";
+import { StateCallbacks } from ".";
 
-type Deps = Callbacks;
+type Deps = StateCallbacks;
 
 /**
  *

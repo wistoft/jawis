@@ -1,7 +1,7 @@
 import path from "path";
 import { TestProvision } from "^jarun";
 import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
-import { director, Deps as DirectorDeps } from "^jagos/director";
+import { director, DirectorDeps } from "^jagos/director";
 import { NodeWS } from "^jab-express";
 
 import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";

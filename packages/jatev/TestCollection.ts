@@ -23,14 +23,15 @@ type Methods = {
  * - all operations are immutable, so the data structure can be used in react.
  *
  * notes
- * - test update should perform well. It is called for each test result. All others are called by UI only, and less important.
- *  - for test update be constant time, re-render needs to be too, otherwise it's a minor improvement to make
- *      data structure update in contant time. Therefore we accept linear time
- *      to update a test case. If it gets too slow, we can batch updates as a first approach. If that gets too slow,
+ *  - Test update should perform well, because it's called for each test result.
+ *      All other methods are called only by UI, so performance is less important.
+ *  - To make test update constant time, re-render needs to be constant too, otherwise it's a minor improvement to make
+ *      data structure update in contant time. Therefore we can accept linear time to
+ *      update a test case. If it gets too slow, we can batch updates as a first approach. If that gets too slow,
  *      we can make update and re-render both into log(n), by rendering a tree of tests, rather than a list.
- *  - it's complex to implement first, last, prev and next on a 2dArray. And performance isn't important. So a
+ *  - It's complex to implement first, last, prev and next on a 2dArray. And performance isn't important. So a
  *      flat list of test ids is contructed to make it easy. The test object is looked up afterwards.
- *      We don't have to support insert or delete, so flatIds is only calculated on construction.
+ *      We don't have to support insert or delete, so flatIds are only calculated on construction.
  */
 export const testSelectionToCollection = (
   tests: TestState[][] = []
@@ -83,7 +84,7 @@ const methods: Methods = {
    */
   getPrevTest: function (this, testId) {
     if (this.flatIds.length === 0) {
-      throw err("Impossible.");
+      err("Impossible.");
     }
 
     if (testId === undefined) {
@@ -105,7 +106,7 @@ const methods: Methods = {
    */
   getNextTest: function (this, testId?) {
     if (this.flatIds.length === 0) {
-      throw err("Impossible.");
+      err("Impossible.");
     }
 
     if (testId === undefined) {

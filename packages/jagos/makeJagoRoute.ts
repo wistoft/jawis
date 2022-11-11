@@ -3,7 +3,7 @@ import express from "express";
 
 import { expressErrorsThrow, ServerAppRouter } from "^jab-express";
 
-import { director, Deps as DirectorDeps } from "./director";
+import { director, DirectorDeps as DirectorDeps } from "./director";
 
 /**
  * jago/jates are nearly identically

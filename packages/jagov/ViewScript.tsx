@@ -13,7 +13,7 @@ import {
 } from "./util";
 import { ApiProv } from ".";
 
-export type Props = {
+export type ViewScriptProps = {
   singleProcessStatus: ScriptStatus;
   jcvProps: Omit<ConsoleProps, "showClearLink">;
 } & ApiProv;
@@ -21,7 +21,7 @@ export type Props = {
 /**
  *
  */
-export const ViewScript: React.FC<Props> = memo((props) => {
+export const ViewScript: React.FC<ViewScriptProps> = memo((props) => {
   const {
     singleProcessStatus: { script, status },
     jcvProps,

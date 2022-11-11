@@ -6,9 +6,7 @@ import { ClientApiSendProv } from "./util";
 
 import { View, ViewProps } from "./View";
 
-// props
-
-export type Props = {
+export type ViewActionProps = {
   action: ClientMessage;
   wsState: WsStates;
   apiSend: ClientApiSendProv["apiSend"];
@@ -22,9 +20,9 @@ export type Props = {
  * impl
  *  - Ensure the inner component isn't mounted before there's a connection.
  */
-export const ViewAction: React.FC<Props> = memo((props) => {
+export const ViewAction: React.FC<ViewActionProps> = memo((props) => {
   if (props.wsState === "connected" || props.wsState === "reconnecting") {
-    return <Inner {...props} />;
+    return <ViewActionInner {...props} />;
   } else {
     return null;
   }
@@ -37,7 +35,7 @@ ViewAction.displayName = "ViewAction";
  *    for connection to become online. Because this might get unmounted in the meantime, and a
  *    cancel would be needed in that case.
  */
-const Inner: React.FC<Props> = memo(
+const ViewActionInner: React.FC<ViewActionProps> = memo(
   ({ action, wsState, apiSend, ...extra }) => {
     useFirstRouteEffect(() => {
       if (wsState === "connected") {
@@ -55,4 +53,4 @@ const Inner: React.FC<Props> = memo(
   }
 );
 
-Inner.displayName = "Inner";
+ViewActionInner.displayName = "ViewActionInner";

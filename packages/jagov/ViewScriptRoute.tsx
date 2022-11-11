@@ -6,11 +6,11 @@ import { assertPropString } from "^jab";
 
 import { ScriptStatus } from "^jagoc";
 
-import { ViewScript, Props as Sub1 } from "./ViewScript";
+import { ViewScript, ViewScriptProps } from "./ViewScript";
 import { ApiProv } from ".";
 
-export type Props = ApiProv &
-  Omit<Sub1, "singleProcessStatus"> & {
+export type ViewScriptRouteProps = ApiProv &
+  Omit<ViewScriptProps, "singleProcessStatus"> & {
     processStatus?: ScriptStatus[];
   };
 
@@ -19,7 +19,7 @@ export type Props = ApiProv &
  * impl
  *  socket is guaranteed to be open, when sending `restartScript`, because processStatus !== undefined.
  */
-export const ViewScriptRoute: React.FC<Props> = memo(
+export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo(
   ({ processStatus, apiSend, useApiSend, jcvProps }) => {
     if (processStatus === undefined) {
       return null;
@@ -33,26 +33,26 @@ export const ViewScriptRoute: React.FC<Props> = memo(
 
     //lookup "props"
 
-    const found = processStatus.find((x) => x.id === id);
+    const script = processStatus.find((x) => x.id === id);
 
     // restart script "onload"
 
     const useFirstRouteEffect = useContext(UseFirstRouteEffectContext);
 
     useFirstRouteEffect(() => {
-      if (found) {
-        apiSend({ type: "restartScript", script: found.script });
+      if (script) {
+        apiSend({ type: "restartScript", script: script.script });
       }
     }, []);
 
     //render
 
-    if (found) {
+    if (script) {
       return (
         <>
           {
             <ViewScript
-              singleProcessStatus={found}
+              singleProcessStatus={script}
               jcvProps={jcvProps}
               apiSend={apiSend}
               useApiSend={useApiSend}

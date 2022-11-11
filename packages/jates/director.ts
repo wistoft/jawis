@@ -20,7 +20,7 @@ import { TestLogController } from "./TestLogController";
 import { TestExecutionController } from "./TestExecutionController";
 import { TestListController } from "./TestListController";
 
-export type Deps = Readonly<{
+export type DirectorDeps = Readonly<{
   absTestFolder: string;
   absTestLogFolder: string;
   tecTimeout: number;
@@ -42,7 +42,7 @@ export type Deps = Readonly<{
  * state
  *   cur test logs are only stored if they are different from expected test logs. Note they aren't remove on accept, though.
  */
-export const director = (deps: Deps) => {
+export const director = (deps: DirectorDeps) => {
   if (!path.isAbsolute(deps.absTestFolder)) {
     err("absTestFolder must be absolute");
   }
@@ -53,12 +53,9 @@ export const director = (deps: Deps) => {
 
   deps.finally(() => behavior.onShutdown()); //trick to register onShutdown, before it has been defined.
 
-  const wsPool = new WsPoolController<ServerMessage, ClientMessage>({
-    ...deps,
-    onError: deps.onError,
-  });
+  const wsPool = new WsPoolController<ServerMessage, ClientMessage>(deps);
 
-  const event = new ClientComController({
+  const clientCom = new ClientComController({
     wsPool,
   });
 
@@ -73,7 +70,7 @@ export const director = (deps: Deps) => {
   });
 
   const runners = deps.createTestRunners({
-    onRogueTest: event.onRogueTest,
+    onRogueTest: clientCom.onRogueTest,
     makeTsProcess: deps.makeTsProcess,
     makeTsBee: deps.makeTsBee,
     onError: deps.onError,
@@ -82,7 +79,7 @@ export const director = (deps: Deps) => {
     onRequire: tac.onRequire,
   });
 
-  const tf = new ComposedTestFramework({
+  const testFramework = new ComposedTestFramework({
     absTestFolder: deps.absTestFolder,
     runners,
     subFolderIgnore: [], //extract to conf
@@ -100,14 +97,14 @@ export const director = (deps: Deps) => {
         testLogController.setCurLogs(id, result.cur);
       }
 
-      event.onTestReport(report);
+      clientCom.onTestReport(report);
     });
 
   const tec = new TestExecutionController({
-    ...event,
+    ...clientCom,
     absTestFolder: deps.absTestFolder,
     timeoutms: deps.tecTimeout,
-    tr: tf,
+    tr: testFramework,
     onError: deps.onError,
     onTestResult,
 
@@ -115,8 +112,8 @@ export const director = (deps: Deps) => {
   });
 
   const testListController = new TestListController({
-    ...event,
-    tf,
+    ...clientCom,
+    testFramework,
     ta: tac.ta,
     setTestExecutionList: tec.setTestList,
     onError: deps.onError,
@@ -125,12 +122,12 @@ export const director = (deps: Deps) => {
   const behavior = new Behavior({
     onError: deps.onError,
     wsPool,
-    tf,
+    testFramework,
   });
 
   const onWsUpgrade = wsPool.makeUpgradeHandler(
     makeOnClientMessage({
-      ...event,
+      ...clientCom,
       ...testLogController,
       ...tec,
       ...testListController,

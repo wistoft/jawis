@@ -9,7 +9,7 @@ import { ActionProvider } from "./ActionProvider";
 import { ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
 
-export type Deps = Readonly<{
+export type DirectorDeps = Readonly<{
   projectRoot: string;
   scriptFolders?: string[];
   scripts?: ScriptDefinition[];
@@ -26,7 +26,7 @@ export type Deps = Readonly<{
 /**
  *
  */
-export const director = (deps: Deps) => {
+export const director = (deps: DirectorDeps) => {
   deps.finally(() => behaviorProv.onShutdown()); //trick to register onShutdown, before it has been defined.
 
   const wsPool =

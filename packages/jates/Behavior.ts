@@ -11,7 +11,7 @@ export type BehaviorProv = {};
 
 export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
-  tf: TestFrameworkProv;
+  testFramework: TestFrameworkProv;
   onError: (error: unknown) => void;
 };
 
@@ -26,7 +26,7 @@ export class Behavior implements BehaviorProv {
    */
   public onShutdown = () =>
     safeAll(
-      [this.deps.tf.kill(), this.deps.wsPool.shutdown()],
+      [this.deps.testFramework.kill(), this.deps.wsPool.shutdown()],
       this.deps.onError
     ).then(() => {}); //just for typing
 }

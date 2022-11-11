@@ -20,9 +20,7 @@ export type ClientComProv = {
   onRogueTest: OnRogue;
 };
 
-// deps
-
-export type Deps = {
+type Deps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
 };
 

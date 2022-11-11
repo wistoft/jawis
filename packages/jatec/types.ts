@@ -14,33 +14,33 @@ export type OnRogue = (rogue: RogueData) => void;
 
 export type ClientMessage =
   | {
-      action: "stopRunning" | "runAllTests" | "runCurrentSelection" | "runDtp";
+      type: "stopRunning" | "runAllTests" | "runCurrentSelection" | "runDtp";
     }
   | {
-      action: "prependTests";
+      type: "prependTests";
       ids: string[];
     }
   | {
-      action: "acceptTestLogs";
+      type: "acceptTestLogs";
       testIds: string[];
     }
   | {
-      action: "acceptTestLog";
+      type: "acceptTestLog";
       testId: string;
       logName: string; //assumes user logs can't have the names in 'reserved' logs.
     }
   | {
-      action: "compareTestLog";
+      type: "compareTestLog";
       testId: string;
       logName: string;
     }
   | {
-      action: "openFile";
+      type: "openFile";
       file: string;
       line?: number;
     }
   | {
-      action: "openTest";
+      type: "openTest";
       file: string;
     };
 

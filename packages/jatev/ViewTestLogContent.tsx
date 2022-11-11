@@ -5,12 +5,12 @@ import { ZippedTestLog } from "^jatec";
 import { toAtomizedString, replaceAtoms } from "^jab-react";
 
 import { ViewDiff } from "./ViewDiff";
-import { ViewErrorLog, Props as ViewErrorLogProps } from "./ViewErrorLog";
+import { ViewErrorLog, ViewErrorLogProps } from "./ViewErrorLog";
 import { parseErrorData, ViewException } from "^util-javi/web";
 
 export type ShowType = "cmp" | "exp" | "cur";
 
-export type Props = {
+export type ViewTestLogContentProps = {
   testLog: ZippedTestLog;
   showTestLogType: ShowType;
 } & Omit<ViewErrorLogProps, "testLog">;
@@ -19,7 +19,7 @@ export type Props = {
  * - Presents the test log.
  * - The test log is converted to string, before expected and current are diff'ed.
  */
-export const ViewTestLogContent: React.FC<Props> = memo(
+export const ViewTestLogContent: React.FC<ViewTestLogContentProps> = memo(
   ({ testLog, showTestLogType, ...extra }) => {
     switch (testLog.type) {
       case "err":

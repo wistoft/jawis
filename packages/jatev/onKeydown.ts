@@ -1,4 +1,4 @@
-import { ClientMessage } from "^jatec";
+import { ClientMessage } from "./internal";
 
 type Deps = {
   onCloseTestCase: () => void;
@@ -23,11 +23,8 @@ export const makeOnKeydown = (deps: Deps) => (e: KeyboardEvent) => {
     case "n":
       deps.onNext();
       break;
-    case "a":
-      // deps.apiSend({ action: "runAllTests" });
-      break;
     case "s":
-      deps.apiSend({ action: "stopRunning" });
+      deps.apiSend({ type: "stopRunning" });
       break;
     case "r":
       deps.onRunCurrentTest();

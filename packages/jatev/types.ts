@@ -1,6 +1,10 @@
 import { ZippedTestLog, ClientTestReport, RogueData, TestStatus } from "^jatec";
 import { TestCollection } from "./TestCollection";
 
+//
+// state
+//
+
 export type State = Readonly<{
   isRunning: boolean;
   currentTest?: TestState;
@@ -11,7 +15,11 @@ export type State = Readonly<{
   unknownRogue?: ZippedTestLog[];
 }>;
 
-export type Callbacks = {
+//
+// callbacks/hooks
+//
+
+export type StateCallbacks = {
   setIsRunning: (isRunning: boolean) => void;
   setTestSelection: (testCases: string[][]) => void;
   setExecutingTestCase: (testId?: string) => void;
