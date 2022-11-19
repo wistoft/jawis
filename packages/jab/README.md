@@ -6,12 +6,6 @@ projects.
 ## Installation
 
 ```
-yarn add @jawis/jab
-```
-
-or
-
-```
 npm i @jawis/jab
 ```
 

@@ -5,12 +5,6 @@ Collection of utilities for working with react.
 ## Installation
 
 ```
-yarn add @jawis/jab-react
-```
-
-or
-
-```
 npm i @jawis/jab-react
 ```
 

@@ -5,12 +5,6 @@ Collection of utilities for working with nodejs environment.
 ## Installation
 
 ```
-yarn add @jawis/jab-node
-```
-
-or
-
-```
 npm i @jawis/jab-node
 ```
 

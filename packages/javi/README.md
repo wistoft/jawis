@@ -12,12 +12,6 @@ browser, so no CLI needed for running neither test cases nor scripts.
 ## Installation
 
 ```
-yarn add --dev @jawis/javi
-```
-
-or
-
-```
 npm i --save-dev @jawis/javi
 ```
 

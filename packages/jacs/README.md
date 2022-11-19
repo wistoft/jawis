@@ -5,12 +5,6 @@ Delivers transpiled TypeScript to a Node.js worker thread.
 ## Installation
 
 ```
-yarn add @jawis/jacs
-```
-
-or
-
-```
 npm i @jawis/jacs
 ```
 
