@@ -410,8 +410,8 @@ const makeJawisBuildManager = (
 
     json.repository = {
       type: "git",
-      url:
-        "https://github.com/wistoft/jawis/tree/master/packages/" + packageName,
+      url: "https://github.com/wistoft/jawis.git",
+      directory: "packages/" + packageName,
     };
 
     if (json.sideEffects) {

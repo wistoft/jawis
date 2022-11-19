@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "~jab",
   "description": "Collection of basic utilities for JavaScript",
   "keywords": [

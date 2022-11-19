@@ -83,6 +83,23 @@ export const getRandomRange = (min: number, max: number) =>
 export const getRandomInteger = (max = 1000000) => getRandomRange(0, max);
 
 /**
+ * A random length Uint8Array with random data.
+ *
+ * note: Can do this in node 15: https://nodejs.org/api/webcrypto.html#cryptogetrandomvaluestypedarray
+ */
+export const getRandomUint8Array = (maxLength = 1000) => {
+  const length = Math.floor(Math.random() * maxLength);
+
+  const array = new Uint8Array(length);
+
+  for (let i = 0; i < length; i++) {
+    array[i] = Math.floor(Math.random() * 256);
+  }
+
+  return array;
+};
+
+/**
  * Check whether the runtime is node.js.
  */
 export const isNode = () =>
@@ -287,6 +304,21 @@ export function toBytes(str: string) {
     result += str.charCodeAt(i);
   }
   return result;
+}
+
+/**
+ * Convert from int32 or uint32 to readable bits.
+ */
+export function toBits(val: number) {
+  if (!Number.isInteger(val)) {
+    throw new Error("Number must be integer: " + val);
+  }
+
+  if (val > 0xffffffff) {
+    throw new Error("Number too large: " + val);
+  }
+
+  return "0b" + Uint32Array.from([val])[0].toString(2);
 }
 
 /**

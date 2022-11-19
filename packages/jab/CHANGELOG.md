@@ -6,6 +6,12 @@
 
 ## :boom: Breaking changes
 
+# 1.0.3
+
+## :tada: Enhancements
+
+- Add functions: `getRandomUint8Array` and `toBits`
+
 # 1.0.2
 
 ## :tada: Enhancements
