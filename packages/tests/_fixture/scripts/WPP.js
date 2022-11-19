@@ -1,10 +1,7 @@
-const path = require("path");
-const os = require("os");
-
 // - require files, so WPP can change them, and test its reloading.
 
-const library = require(path.join(os.tmpdir(), "jawis-tests-scratchFolder/FileThatChanges")); // prettier-ignore
-const library2 = require(path.join(os.tmpdir(), "jawis-tests-scratchFolder/FileThatChanges2")); // prettier-ignore
+const library = require("../scratchFolder/FileThatChanges");
+const library2 = require("../scratchFolder/FileThatChanges2");
 
 //values that can change in files
 
