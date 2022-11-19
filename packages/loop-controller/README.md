@@ -11,16 +11,17 @@ npm i loop-controller
 ## Usage
 
 ```ts
+import { LoopController } from "loop-controller";
+
 //create a loop controller, that runs five iterations.
 //It starts execution automatically.
 
 const lc = new LoopController({
-  arr: [1, 2, 3, 4, 5],
+  initialArray: [1, 2, 3, 4, 5],
   makePromise: (index) => {
     console.log("iteration: " + index);
-    return sleeping(10);
+    return Promise.resolve();
   },
-  onError: console.log,
 });
 
 // at any point call

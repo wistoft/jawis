@@ -6,7 +6,7 @@ export type LoopControllerDeps<T> = {
   autoStart?: boolean;
   onStart?: () => void;
   onStop?: () => void;
-  onError: (error: unknown) => void;
+  onError?: (error: unknown) => void;
 };
 
 type States = "running" | "pausing" | "paused" | "done";
@@ -50,7 +50,7 @@ export class LoopController<T> {
    */
   constructor(private deps: LoopControllerDeps<T>) {
     this.waiter = new Waiter<States, Events>({
-      onError: this.deps.onError,
+      onError: this.deps.onError || console.log,
       startState: "paused",
     });
 

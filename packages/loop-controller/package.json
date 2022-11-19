@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "~loop-controller",
   "description": "Controls serial execution of promises.",
   "dependencies": {},
