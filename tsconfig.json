@@ -22,6 +22,7 @@
     { "path": "./packages/javi" },
     { "path": "./packages/javi-client" },
     { "path": "./packages/lazy-require-ts" },
+    { "path": "./packages/loop-controller" },
     { "path": "./packages/misc" },
     { "path": "./packages/util-javi" },
     { "path": "./packages/tests" }

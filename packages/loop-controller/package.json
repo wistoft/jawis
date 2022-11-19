@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "name": "~loop-controller",
+  "description": "Controls serial execution of promises.",
+  "dependencies": {},
+  "keywords": [
+    "loop",
+    "queue",
+    "promise",
+    "serial",
+    "async"
+  ]
+}

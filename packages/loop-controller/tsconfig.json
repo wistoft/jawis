@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/loop-controller",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }]
+}
