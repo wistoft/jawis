@@ -4,7 +4,7 @@ const fastGlob = require("fast-glob");
 const fse = require("fs-extra");
 const del = require("del");
 
-const { copyingFiles } = require("./util");
+const { copyingFiles, sortObject } = require("./util");
 
 const tscBuildFolderName = "build-tsc";
 
@@ -33,6 +33,7 @@ const makeJawisBuildManager = (
   const packagesPattern =
     "{" + [...scopedPackages, ...unscopedPackages].join(",") + "}"; //bug: for one package it's: `{jab,}` or `jab`
 
+  //duplicated
   const packagesPatternIncludingPrivate =
     "{" +
     [...scopedPackages, ...unscopedPackages, ...privatePackages].join(",") +
@@ -458,21 +459,6 @@ const makeJawisBuildManager = (
     json.license = "MIT";
 
     return json;
-  };
-
-  /**
-   *
-   */
-  const sortObject = (obj) => {
-    const keys = Object.keys(obj).sort((a, b) => a.localeCompare(b));
-
-    const res = {};
-
-    for (const key of keys) {
-      res[key] = obj[key];
-    }
-
-    return res;
   };
 
   /**

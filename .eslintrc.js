@@ -56,5 +56,7 @@ module.exports = {
     "react/display-name": "off",
     "import/no-extraneous-dependencies": ["error"],
     "import/no-duplicates": ["error"],
+    "import/no-self-import": ["error"],
+    "import/export": ["error"],
   },
 };

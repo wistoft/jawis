@@ -49,6 +49,15 @@ const privatePackages = [
 const phpPackages = [];
 
 //
+// derived
+//
+
+const packagesPatternIncludingPrivate =
+  "{" +
+  [...scopedPackages, ...unscopedPackages, ...privatePackages].join(",") +
+  "}";
+
+//
 // export
 //
 
@@ -65,4 +74,5 @@ module.exports = {
   unscopedPackages,
   privatePackages,
   phpPackages,
+  packagesPatternIncludingPrivate,
 };

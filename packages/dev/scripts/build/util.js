@@ -20,10 +20,26 @@ const copyingFiles = (paths, options) =>
     }
   });
 
+/**
+ *
+ */
+const sortObject = (obj) => {
+  const keys = Object.keys(obj).sort((a, b) => a.localeCompare(b));
+
+  const res = {};
+
+  for (const key of keys) {
+    res[key] = obj[key];
+  }
+
+  return res;
+};
+
 //
 // exports
 //
 
 module.exports = {
   copyingFiles,
+  sortObject,
 };
