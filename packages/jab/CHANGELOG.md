@@ -1,11 +1,3 @@
-# new
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes
-
 # 1.0.3
 
 ## :tada: Enhancements
@@ -26,3 +18,13 @@
   - `refable`
   - `makeTypedArray`
   - `base64ToTypedArray`
+
+# upcoming
+
+## :tada: Enhancements
+
+## :bug: Bug fixes
+
+## :boom: Breaking changes
+
+- Extracted `LoopController` into own package: `loop-controler`.

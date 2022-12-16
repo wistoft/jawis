@@ -20,40 +20,13 @@ Here are some highlights:
 ### Waiter
 
 `Waiter` is meant to be used by an object, that wishes to keep control over
-asynchronous state. It's most instructive to show how `LoopController` gives
-access to its underlying `Waiter`.
+asynchronous state.
 
-```ts
-//create a loop controller, that runs five iterations.
-//It starts execution automatically.
-
-const lc = new LoopController({
-  arr: [1, 2, 3, 4, 5],
-  makePromise: (index) => {
-    console.log("iteration: " + index);
-    return sleeping(10);
-  },
-  onError: console.log,
-});
-
-//await first iteration finishes, and pause it.
-
-lc.waiter.await("iteration-done").then(() => {
-  //LoopController will receice a pause command
-  // in a certain state.
-  lc.pause();
-});
-```
-
-This way we can 'inject' actions when `LoopController` makes state transitions
-or emit events. It's a powerful way to do white-box testing.
-
-The example is a little flaky though. There's no guarantee when the pause will
-execute. So `Waiter` should also support callback style. The promise style is
-less intrusive though. Injecting actions synchronous when `LoopController`
-changes state or emits events could break its assumptions. One would have to
-ensure it has finished its execution for the current tick, when it set state or
-emits event.
+Injecting actions synchronous on state transition or emits events could break
+its assumptions. One would have to ensure actions have finished and the object
+is ready for the next tick. But it's worthwhile to have that extra constraint,
+because it's possible to inject actions at precise transitions or event, which
+makes white-box test possible. The test case essentially because deterministic.
 
 ### FinallyProvider
 

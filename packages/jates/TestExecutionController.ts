@@ -1,6 +1,7 @@
 import path from "path";
 
-import { LoopController, timeRace } from "^jab";
+import { timeRace } from "^jab";
+import { LoopController } from "^loop-controller";
 
 import {
   OnRogue,

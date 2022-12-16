@@ -1,11 +1,3 @@
-# new
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes
-
 # 1.0.4
 
 ## :tada: Enhancements

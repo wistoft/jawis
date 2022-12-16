@@ -11,6 +11,7 @@
     { "path": "../jab-node" },
     { "path": "../jab-react" },
     { "path": "../jatec" },
+    { "path": "../loop-controller" },
     { "path": "../console" },
     { "path": "../jacs" },
     { "path": "../jagos" },

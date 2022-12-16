@@ -9,6 +9,7 @@
     { "path": "../jab-express" },
     { "path": "../jab-node" },
     { "path": "../jatec" },
+    { "path": "../loop-controller" },
     { "path": "../util-javi" }
   ]
 }
