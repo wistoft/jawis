@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "~jabc",
+  "description": "Common for jab packages.",
+  "dependencies": {},
+  "keywords": [
+    "util",
+    "utilities",
+    "stdlib"
+  ]
+}

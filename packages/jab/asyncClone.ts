@@ -1,17 +1,12 @@
 import {
   clone,
+  ClonedPromisePending,
   ClonedValue,
   CustomClone,
   fullRace,
   sleeping,
   unknownToErrorData,
 } from ".";
-
-export type ClonedPromisePending = {
-  resolve?: ClonedValue;
-  reject?: ClonedValue;
-  timeout?: string;
-};
 
 /**
  * - The returned value is mutable. onUpdate is called each time it is mutated.

@@ -17,8 +17,3 @@ export type ConsumerMessage = {
   type: "jacs-compile"; // this will clash with user's messages
   file: string;
 };
-
-//place somewhere general
-export type CompileService = {
-  load: (absPath: string) => Promise<string>;
-};

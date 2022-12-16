@@ -4,5 +4,6 @@
     "outDir": "../../build-tsc/jab",
     "rootDir": ".",
     "types": []
-  }
+  },
+  "references": [{ "path": "../jabc" }]
 }

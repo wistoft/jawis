@@ -21,6 +21,7 @@ const unscopedPackages = ["lazy-require-ts", "loop-controller"];
 const scopedPackages = [
   "console",
   "jab",
+  "jabc",
   "jab-express",
   "jab-node",
   "jab-react",

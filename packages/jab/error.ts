@@ -1,6 +1,6 @@
 import { cloneArrayEntries, ErrorData, JabError } from ".";
-import { ParsedStackFrame, UnparsedStack } from "./types";
-import { isNode } from "./util";
+import { ParsedStackFrame, UnparsedStack } from ".";
+import { isNode } from ".";
 
 /**
  *

@@ -10,13 +10,12 @@ import {
   TranspileOptions,
 } from "typescript";
 
-import { basename, JabError, prej, tos } from "^jab";
+import { basename, CompileService, JabError, prej, tos } from "^jab";
 
 import {
   dianosticToString,
   getTsPathsConfig,
   getTsConfigFromAbsConfigFile,
-  CompileService,
 } from ".";
 
 type Deps = {
