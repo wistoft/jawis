@@ -1,19 +1,19 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook as originalRenderHook } from "@testing-library/react-hooks";
 
 /**
  * Improved version of renderHook.
  *
  * - Arguments to the hook are taken as arguments after the hook.
  * - A `hook` function is returned, that takes the same arguments as the original hook.
- * - Errors are thrown, not returned. As is convention.
- * - rerender returns hook-result, as one would expect.
- * - No 'current' variable. It's confusing.
+ * - Errors are thrown, not returned.
+ * - rerender returns hook-result.
+ * - No 'current' variable.
  *
  * impl
  *  - renderHook returns error-object. But we access `result.current`, so the error is thrown there.
  *  - initialProps can't be used, because it only supports one argument.
  */
-export function wrapHook<H extends (...a: any[]) => any>(
+export function renderHook<H extends (...a: any[]) => any>(
   originalHook: H,
   ...args: Parameters<H>
 ) {
@@ -25,7 +25,7 @@ export function wrapHook<H extends (...a: any[]) => any>(
 
   //use renderHook
 
-  const prov = renderHook(wrapped);
+  const prov = originalRenderHook(wrapped);
 
   //new provision
 

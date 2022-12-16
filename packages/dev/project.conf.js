@@ -16,7 +16,7 @@ const npmVersion = "1.0.2-dev.1";
 
 const npmDistTag = "dev";
 
-const unscopedPackages = ["lazy-require-ts", "loop-controller"];
+const unscopedPackages = ["lazy-require-ts", "loop-controller", "render-hook"];
 
 const scopedPackages = [
   "console",

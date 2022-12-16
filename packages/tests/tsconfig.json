@@ -21,6 +21,7 @@
     { "path": "../jates" },
     { "path": "../jatev" },
     { "path": "../javi" },
+    { "path": "../render-hook" },
     { "path": "../misc" }
   ],
   "exclude": ["_fixture/testsuite", "_fixture/tsProject"]

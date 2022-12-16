@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "name": "~render-hook",
+  "description": "Improved version of `renderHook` from the library @testing-library/react-hooks",
+  "peerDependencies": {
+    "@testing-library/react-hooks": "*"
+  },
+  "keywords": [
+    "test",
+    "render",
+    "hook",
+    "react",
+    "react test",
+    "react hook",
+    "react hooks"
+  ]
+}

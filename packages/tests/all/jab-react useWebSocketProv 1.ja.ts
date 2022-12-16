@@ -1,11 +1,11 @@
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { useWebSocketProv } from "^jab-react";
 import { TestProvision } from "^jarun";
 
 //hello
 
 export default (prov: TestProvision) => {
-  const { result } = wrapHook(useWebSocketProv, {
+  const { result } = renderHook(useWebSocketProv, {
     URL: "dummy",
     reconnect: true,
   });

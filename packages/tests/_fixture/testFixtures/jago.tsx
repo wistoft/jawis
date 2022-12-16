@@ -3,7 +3,7 @@ import React from "react";
 import { TestProvision } from "^jarun";
 import { JagoLogEntry, ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^jab-react";
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 
 import { View } from "^jagov/View";
 import { useDirector } from "^jagov/useDirector";
@@ -30,7 +30,7 @@ export const renderUseJagoDirector = (prov: TestProvision) => {
 
   //render
 
-  const hookProv = wrapHook(useDirector, {
+  const hookProv = renderHook(useDirector, {
     apiSend: (data) => {
       prov.log("apiSend", data);
     },

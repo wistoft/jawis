@@ -1,10 +1,10 @@
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { TestProvision } from "^jarun";
 
 //throws in first render
 
 export default (prov: TestProvision) => {
-  wrapHook(() => {
+  renderHook(() => {
     throw new Error("ups");
   });
 };

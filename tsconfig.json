@@ -25,6 +25,7 @@
     { "path": "./packages/lazy-require-ts" },
     { "path": "./packages/loop-controller" },
     { "path": "./packages/misc" },
+    { "path": "./packages/render-hook" },
     { "path": "./packages/util-javi" },
     { "path": "./packages/tests" }
   ]

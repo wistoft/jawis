@@ -1,13 +1,13 @@
 import { TestProvision } from "^jarun";
 
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { useMemoDep } from "^jab-react";
 
 export default (prov: TestProvision) => {
   let i = 0;
   const func = () => ++i;
 
-  const { result, hook, rerender } = wrapHook(useMemoDep, { a: "hej" }, func);
+  const { result, hook, rerender } = renderHook(useMemoDep, { a: "hej" }, func);
 
   prov.eq(1, result);
 

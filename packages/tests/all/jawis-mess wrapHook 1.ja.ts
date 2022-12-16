@@ -1,10 +1,10 @@
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { TestProvision } from "^jarun";
 
 //no args
 
 export default (prov: TestProvision) => {
-  const { result } = wrapHook(() => 1);
+  const { result } = renderHook(() => 1);
 
   prov.eq(1, result);
 };

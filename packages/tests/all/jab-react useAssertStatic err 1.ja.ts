@@ -1,11 +1,11 @@
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { useAssertStatic } from "^jab-react";
 import { TestProvision } from "^jarun";
 
 //hello
 
 export default (prov: TestProvision) => {
-  const { hook } = wrapHook(useAssertStatic, { a: "dummy" });
+  const { hook } = renderHook(useAssertStatic, { a: "dummy" });
 
   //no problem
 

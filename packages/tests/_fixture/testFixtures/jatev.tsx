@@ -13,7 +13,8 @@ import {
   makeToAtomizedString,
   makeReplaceAtoms,
 } from "^jab-react";
-import { getHtmlRTR, wrapHook } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { asyncClone, clone } from "^jab";
 
 import { ViewTest } from "^jatev/ViewTest";
@@ -134,7 +135,7 @@ export const renderUseJatevDirector = (prov: TestProvision) => {
 
   //render
 
-  const hookProv = wrapHook(useDirector, {
+  const hookProv = renderHook(useDirector, {
     apiSend: (data) => {
       prov.log("apiSend", data);
     },

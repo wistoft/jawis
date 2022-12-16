@@ -1,11 +1,11 @@
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { TestProvision } from "^jarun";
 
 //throws in rerender
 
 export default (prov: TestProvision) => {
   let first = true;
-  const { result, rerender } = wrapHook(() => {
+  const { result, rerender } = renderHook(() => {
     if (first) {
       first = false;
       return 1;

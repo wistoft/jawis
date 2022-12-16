@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { wrapHook } from "^misc/node";
+import { renderHook } from "^render-hook";
 import { useMemoDep } from "^jab-react";
 
 // property key is seen.
@@ -10,7 +10,7 @@ export default (prov: TestProvision) => {
   // eslint-disable-next-line unused-imports/no-unused-vars-ts
   const func = (deps: { i?: string; j?: string }) => ++i;
 
-  const { result, hook } = wrapHook(useMemoDep, { i: "hej" }, func);
+  const { result, hook } = renderHook(useMemoDep, { i: "hej" }, func);
 
   prov.eq(1, result);
 
