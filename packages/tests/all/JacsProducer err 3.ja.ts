@@ -19,4 +19,3 @@ export default (prov: TestProvision) => {
     return onCompile("other file");
   });
 };
-//

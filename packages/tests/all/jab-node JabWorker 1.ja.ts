@@ -9,4 +9,3 @@ export default (prov: TestProvision) => {
 
   return worker.waiter.await("stopped", TS_TIMEOUT);
 };
-//

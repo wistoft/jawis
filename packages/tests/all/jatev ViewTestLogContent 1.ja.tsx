@@ -26,6 +26,3 @@ export default (prov: TestProvision) => {
     getHtmlEnzyme( getViewTestLogContent({ testLog: { type: "user", name: "myLog", exp: [2], cur: ["2"] }, }) ) // prettier-ignore
   );
 };
-//
-//
-//

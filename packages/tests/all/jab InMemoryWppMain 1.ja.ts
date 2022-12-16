@@ -7,4 +7,3 @@ export default (prov: TestProvision) => {
 
   return bee.waiter.await("message").then(bee.shutdown);
 };
-//

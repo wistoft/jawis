@@ -106,4 +106,3 @@ export class JarunProcessController implements TestRunner {
   public noisyKill = () =>
     this.waiter.noisyKill(() => this.pr.kill(), "JarunProcessController", true);
 }
-//

@@ -12,5 +12,3 @@ export default (prov: TestProvision) =>
   ).then((state) => {
     prov.imp(state);
   });
-//
-//

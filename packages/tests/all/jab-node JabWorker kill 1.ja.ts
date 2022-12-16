@@ -7,4 +7,3 @@ export default (prov: TestProvision) =>
   getJabWorker(prov, {
     filename: getScriptPath("silent.js"),
   }).kill();
-//

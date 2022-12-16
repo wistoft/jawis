@@ -16,5 +16,3 @@ export default (prov: TestProvision) => {
 
   prov.eq(ProducerStates.compiling, controlArray[CaIndex.producer_state]);
 };
-//
-//

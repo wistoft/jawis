@@ -43,5 +43,3 @@ export default ({ eq, imp }: TestProvision) => {
   imp(cloneTosGeneral_test(clone(Object.create(null))));
   imp(cloneTosGeneral_test(clone(/regex/)));
 };
-//
-//

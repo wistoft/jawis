@@ -9,5 +9,3 @@ export default (prov: TestProvision) => {
 
   return lc.getPromise().then(() => lc.pause());
 };
-//
-//

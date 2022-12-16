@@ -9,7 +9,3 @@ export default (prov: TestProvision) => {
 
   return jpr.send({}).finally(jpr.kill);
 };
-//
-//
-//
-//

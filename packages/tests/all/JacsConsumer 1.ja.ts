@@ -8,4 +8,3 @@ export default (prov: TestProvision) => {
 
   return consumer.compile("some file");
 };
-//

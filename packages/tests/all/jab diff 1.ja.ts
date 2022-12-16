@@ -35,5 +35,3 @@ export default ({ eq }: TestProvision) => {
 
   eq(["ab", ["ins", "c"]], diff_test("ab", "abc"));
 };
-//
-//

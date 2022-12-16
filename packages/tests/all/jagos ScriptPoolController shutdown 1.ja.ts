@@ -7,4 +7,3 @@ export default (prov: TestProvision) => {
 
   return pool.shutdown();
 };
-//

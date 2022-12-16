@@ -14,4 +14,3 @@ export default (prov: TestProvision) => {
     .finally(() => p1.then((process) => process.shutdown()))
     .finally(() => angel.shutdown()); //successful shutdown of angel
 };
-//

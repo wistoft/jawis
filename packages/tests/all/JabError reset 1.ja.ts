@@ -11,4 +11,3 @@ export default ({ imp }: TestProvision) => {
   imp(err);
   imp(filterErrorDataStack(err.getErrorData()));
 };
-//

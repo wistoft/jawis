@@ -152,6 +152,3 @@ export default (prov: TestProvision) => {
 
   prov.eq([], extractDeps(getSourceFile(`declare module "m";`), {}, host));
 };
-//
-//
-//

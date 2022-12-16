@@ -14,4 +14,3 @@ export default (prov: TestProvision) => {
 
   return [pausing, lc.getPromise()];
 };
-//

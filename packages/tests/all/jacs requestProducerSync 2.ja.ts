@@ -15,4 +15,3 @@ export default (prov: TestProvision) => {
     wait: syntheticWait("error", controlArray, dataArray, "the error messages"),
   });
 };
-//

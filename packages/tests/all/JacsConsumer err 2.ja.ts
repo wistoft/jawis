@@ -16,4 +16,3 @@ export default (prov: TestProvision) => {
 
   consumer.compile("some file");
 };
-//

@@ -6,4 +6,3 @@ import { getJagoView } from "../_fixture";
 export default (prov: TestProvision) => {
   prov.imp(getHtmlEnzyme(getJagoView()));
 };
-//

@@ -22,4 +22,3 @@ export class ServerWaiter extends Server {
    */
   public waitForClose = () => this.waiter.waitForClose();
 }
-//

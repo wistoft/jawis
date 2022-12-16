@@ -13,4 +13,3 @@ export default (prov: TestProvision) => {
     .await("message", TS_TIMEOUT)
     .then(() => worker.shutdown());
 };
-//
