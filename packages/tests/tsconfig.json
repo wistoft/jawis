@@ -6,6 +6,7 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../assorted-algorithms" },
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },

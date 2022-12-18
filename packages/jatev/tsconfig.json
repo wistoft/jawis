@@ -5,6 +5,7 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../assorted-algorithms" },
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../jatec" },

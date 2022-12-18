@@ -15,15 +15,13 @@ const makeJawisBuildManager = (
   projectFolder,
   buildFolder,
   npmScope,
-  npmVersion,
-  npmDistTag,
   scopedPackages,
   unscopedPackages,
   privatePackages,
   replacePathForRelease,
   phpPackages
 ) => {
-  const files = "{README.md,}";
+  const files = "{README.md,CHANGELOG.md}";
 
   //derived
 
@@ -172,9 +170,6 @@ const makeJawisBuildManager = (
 
       const json = JSON.parse(jsonStr);
 
-      const version =
-        json.version === "0.0.0" ? npmVersion : "^" + json.version;
-
       const fullName = getFullPackageName(
         packageName,
         npmScope,
@@ -183,7 +178,13 @@ const makeJawisBuildManager = (
         privatePackages
       );
 
-      versions[fullName] = version;
+      if (json.verison === "0.0.0") {
+        throw new Error(
+          "Package has wrong version: " + packageName + " " + json.version
+        );
+      }
+
+      versions[fullName] = "^" + json.version;
     }
 
     //make deps with right versions.
@@ -397,7 +398,9 @@ const makeJawisBuildManager = (
     checkSideEffects = true
   ) => {
     if (json.version === "0.0.0") {
-      json.version = npmVersion;
+      throw new Error(
+        "Package has wrong version: " + packageName + " " + json.version
+      );
     }
 
     json.name = getFullPackageName(packageName);

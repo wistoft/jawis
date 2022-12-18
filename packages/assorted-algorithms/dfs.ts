@@ -1,10 +1,10 @@
 /**
  * returns all reachable nodes from the given node.
  *
- * - Edges are defined by a map from node-ids to connected nodes.
+ * - Edges are defined by a map from node-id to node-ids.
  */
 export const dfs = <Id>(id: Id, adjList: (id: Id) => Set<Id> | undefined) => {
-  const res = dfsHelper(id, adjList, new Set());
+  const res = helper(id, adjList, new Set());
 
   if (res) {
     return res;
@@ -16,7 +16,7 @@ export const dfs = <Id>(id: Id, adjList: (id: Id) => Set<Id> | undefined) => {
 /**
  *
  */
-const dfsHelper = <Id>(
+const helper = <Id>(
   id: Id,
   adjList: (id: Id) => Set<Id> | undefined,
   seen: Set<Id>
@@ -31,7 +31,7 @@ const dfsHelper = <Id>(
     if (!seen.has(val)) {
       seen.add(val);
 
-      dfsHelper(val, adjList, seen);
+      helper(val, adjList, seen);
     }
   }
 

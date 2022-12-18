@@ -1,6 +1,6 @@
 import path from "path";
 
-import { dfs } from "^util-javi/algs";
+import { dfs } from "^assorted-algorithms";
 
 import { dtp } from "^util-javi/dtp";
 

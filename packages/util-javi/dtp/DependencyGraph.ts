@@ -1,5 +1,5 @@
 import { assert, assertNever, err } from "^jab";
-import { dfs } from "^util-javi/algs";
+import { dfs } from "^assorted-algorithms";
 
 import { DependencyInfo, ReExport } from "./extractDeps";
 

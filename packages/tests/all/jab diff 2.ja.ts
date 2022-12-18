@@ -1,4 +1,4 @@
-import { diff } from "^util-javi/algs";
+import { diff } from "^assorted-algorithms";
 import { TestProvision } from "^jarun";
 
 export default ({ imp }: TestProvision) => {

@@ -12,11 +12,12 @@ const getPackagePath = (file) => path.join(packageFolder, file || "");
 
 const npmScope = "@jawis";
 
-const npmVersion = "1.0.2-dev.1";
-
-const npmDistTag = "dev";
-
-const unscopedPackages = ["lazy-require-ts", "loop-controller", "render-hook"];
+const unscopedPackages = [
+  "assorted-algorithms",
+  "lazy-require-ts",
+  "loop-controller",
+  "render-hook",
+];
 
 const scopedPackages = [
   "console",
@@ -69,8 +70,6 @@ module.exports = {
   alphaBuildFolder,
   getPackagePath,
   npmScope,
-  npmVersion,
-  npmDistTag,
   scopedPackages,
   unscopedPackages,
   privatePackages,

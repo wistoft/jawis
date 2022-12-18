@@ -2,6 +2,7 @@
   "extends": "./tsconfig.base.web.json",
   "files": [],
   "references": [
+    { "path": "./packages/assorted-algorithms" },
     { "path": "./packages/dev-appc" },
     { "path": "./packages/dev-apps" },
     { "path": "./packages/dev-appv" },

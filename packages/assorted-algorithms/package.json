@@ -1,0 +1,10 @@
+{
+  "version": "0.0.1",
+  "name": "~assorted-algorithms",
+  "description": "Some useful algorithms",
+  "dependencies": {},
+  "keywords": [
+    "algorithms",
+    "diff"
+  ]
+}
