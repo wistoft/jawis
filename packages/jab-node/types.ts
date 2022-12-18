@@ -1,8 +1,12 @@
-import type { FinallyFunc, FinallyProvider, LogProv, Waiter } from "^jab";
+import type {
+  FinallyFunc,
+  FinallyProvider,
+  LogProv,
+  OnError,
+  Waiter,
+} from "^jab";
 
 import type { JabShutdownMessage } from ".";
-
-export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
 
 //covenience: duplicates some properties to be compatible with TestMainProv
 export type MainProv = {

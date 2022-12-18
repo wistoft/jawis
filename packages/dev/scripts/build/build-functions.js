@@ -206,7 +206,7 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const checkPackageDestinations = async () => {
+  const checkPackages = async () => {
     //check declared packages in build file
 
     await checkPackagesExistsInCodebase(scopedPackages);
@@ -217,7 +217,7 @@ const makeJawisBuildManager = (
     //check all packages in the codebase
 
     for (const packageName of fs.readdirSync("./packages/")) {
-      checkPackageHasDeclaredDestination(packageName);
+      checkPackageHasDeclaration(packageName);
 
       if (phpPackages.includes(packageName)) {
         //todo: check composer.json
@@ -253,7 +253,7 @@ const makeJawisBuildManager = (
   /*
    *
    */
-  const checkPackageHasDeclaredDestination = (packageName) => {
+  const checkPackageHasDeclaration = (packageName) => {
     let count = 0;
 
     if (scopedPackages.includes(packageName)) {
@@ -440,11 +440,6 @@ const makeJawisBuildManager = (
       }
     }
 
-    // json.publishConfig = {
-    //   access: "public",
-    //   tag: npmDistTag,
-    // };
-
     try {
       json.dependencies = sortObject({
         ...siblingDeps[packageName],
@@ -468,6 +463,19 @@ const makeJawisBuildManager = (
     copyingFiles(["packages/" + packagesPattern + "/" + files, buildFolder], {
       up: 1,
     });
+
+  /**
+   *
+   */
+  const addLicenceFiles = () =>
+    Promise.all(
+      [...scopedPackages, ...unscopedPackages].map((packageName) =>
+        fs.promises.copyFile(
+          path.join(projectFolder, "LICENCE"),
+          path.join(buildFolder, packageName, "LICENCE")
+        )
+      )
+    );
 
   /**
    *
@@ -515,7 +523,7 @@ const makeJawisBuildManager = (
       const target = path.join(buildFolder, file);
 
       await fse.ensureDir(path.dirname(target));
-      await fs.promises.writeFile(target, result);
+      await fs.promises.writeFile(target, result + "\n");
     }
   };
 
@@ -589,8 +597,9 @@ const makeJawisBuildManager = (
    */
   const build = async () => {
     await del(buildFolder);
-    await checkPackageDestinations();
+    await checkPackages();
     await copyFiles();
+    await addLicenceFiles();
     await buildTs();
     await buildPackageJson();
   };
@@ -600,9 +609,9 @@ const makeJawisBuildManager = (
     getSiblingPackages,
     getAllPackageDeps,
     getAllSiblingDeps,
-    checkPackageDestinations,
+    checkPackages,
     checkPackagesExistsInCodebase,
-    checkPackageHasDeclaredDestination,
+    checkPackageHasDeclaration,
     checkPackageJsonFile,
     checkRootTsConfigHasPackage,
     transformPackageJson,

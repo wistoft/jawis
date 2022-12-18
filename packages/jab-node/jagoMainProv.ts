@@ -8,6 +8,7 @@ import {
   indent,
   LogProv,
   unknownToErrorData,
+  OnError,
 } from "^jab";
 
 import {
@@ -15,7 +16,6 @@ import {
   JabShutdownMessage,
   MainProv,
   makeSend,
-  OnError,
   registerOnMessage,
 } from ".";
 

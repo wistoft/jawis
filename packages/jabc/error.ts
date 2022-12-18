@@ -1,5 +1,8 @@
 import { ClonedValue } from ".";
 
+export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
+export type OnErrorData = (error: ErrorData) => void;
+
 export type UnparsedStack =
   | {
       type: "node" | "other";

@@ -11,8 +11,8 @@ import {
   looping,
   tryProp,
   unknownToErrorData,
+  OnError,
 } from "^jab";
-import { OnError } from "^jab-node";
 
 import { JarunEqAssertation } from "./JarunEqAssertation";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { getRandomInteger } from "^jab";
+import { getRandomInteger, OpenFile } from "^jab";
 import { ConsoleEntry, UseConsoleStream, useConsoleState } from "^console";
 
 import {
@@ -11,7 +11,6 @@ import {
   WebSocketProv,
   useAssertStatic,
 } from "^jab-react";
-import { OpenFile } from "^util-javi";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { makeOnServerMessage } from "./onServerMessage";
