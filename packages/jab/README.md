@@ -15,42 +15,6 @@ npm i @jawis/jab
 are the best place to find information about the individual functions and
 classes.
 
-Here are some highlights:
-
-### Waiter
-
-`Waiter` is meant to be used by an object, that wishes to keep control over
-asynchronous state.
-
-Injecting actions synchronous on state transition or emits events could break
-its assumptions. One would have to ensure actions have finished and the object
-is ready for the next tick. But it's worthwhile to have that extra constraint,
-because it's possible to inject actions at precise transitions or event, which
-makes white-box test possible. The test case essentially because deterministic.
-
-### FinallyProvider
-
-Provides the ability to register functions, that should be executed before
-shutdown.
-
-```ts
-const finalProv = new FinallyProvider({
-  onError: console.log,
-});
-
-//Execute where needed
-
-finalProv.finally(() => {
-  console.log("Clean up stuff here.");
-});
-
-//Execute just before shutdown
-
-finalProv.runFinally().then(() => {
-  console.log("Ready to exit.");
-});
-```
-
 ### Small utilities
 
 - **getProtoChain**: Returns the prototype chain of an object as an array of

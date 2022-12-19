@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 import { getTestExecutionController } from "../_fixture";
 

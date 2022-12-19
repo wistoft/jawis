@@ -11,7 +11,8 @@ import {
 } from "^jab-express";
 
 import { director } from "./director";
-import { LogProv, FinallyFunc } from "^jab";
+import { LogProv } from "^jab";
+import { FinallyFunc } from "^finally-provider";
 
 export type Deps = {
   wsServer: WebSocket.Server;

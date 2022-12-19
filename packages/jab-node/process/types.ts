@@ -3,7 +3,7 @@ import type { Worker, WorkerOptions } from "worker_threads";
 import type { Bee, MakeBee, StructuredCloneable } from "..";
 
 import type { ProcessDeps, Process, JabWorker, JabWorkerDeps } from ".";
-import { FinallyFunc } from "^jab";
+import { FinallyFunc } from "^finally-provider";
 
 //
 // scripts/exec

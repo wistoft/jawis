@@ -1,4 +1,4 @@
-import { sleeping, sleepingValue } from "^jab";
+import { sleeping, sleepingValue } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";

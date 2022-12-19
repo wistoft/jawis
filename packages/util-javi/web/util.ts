@@ -8,9 +8,9 @@ import {
   isNode,
   ParsedErrorData,
   ParsedStackFrame,
-  sleeping,
   UnparsedStack,
 } from "^jab";
+import { sleeping } from "^yapu";
 
 export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
 

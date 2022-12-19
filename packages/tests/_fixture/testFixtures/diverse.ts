@@ -4,9 +4,10 @@ import fs from "fs";
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
-import { LogProv, tryProp, FinallyFunc, ErrorData } from "^jab";
+import { LogProv, tryProp, ErrorData } from "^jab";
 import { httpRequest } from "^jab-node";
 import { WsUrl } from "^jab-express";
+import { FinallyFunc } from "^finally-provider";
 
 /**
  *

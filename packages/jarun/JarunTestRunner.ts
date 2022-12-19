@@ -1,11 +1,4 @@
-import {
-  JabError,
-  timeRace,
-  asyncClone,
-  clone,
-  ClonedValue,
-  tryProp,
-} from "^jab";
+import { JabError, clone, ClonedValue, tryProp } from "^jab";
 import {
   OnRogue,
   TestResult,
@@ -22,6 +15,8 @@ import {
 } from "./util";
 import { JarunTestProvision } from "./JarunTestProvision";
 import { createJarunPromise } from "./JarunPromise";
+import { timeRace } from "^yapu";
+import { asyncCapture } from "^async-capture";
 
 export type JarunTestRunnerDeps = Readonly<{
   timeoutms: number;
@@ -240,7 +235,7 @@ export class JarunTestRunner {
       } else if (res === undefined) {
         return;
       } else {
-        return asyncClone(
+        return asyncCapture(
           res,
           this.deps.timeoutms,
           (updatedCloned, type) => {

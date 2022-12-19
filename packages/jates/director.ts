@@ -1,7 +1,7 @@
 import path from "path";
 
 import { MakeBee, MakeJabProcess } from "^jab-node";
-import { LogProv, err, FinallyFunc } from "^jab";
+import { LogProv, err } from "^jab";
 import {
   ClientMessage,
   getJatesTestReport,
@@ -19,6 +19,7 @@ import { TestAnalyticsController } from "./TestAnalyticsController";
 import { TestLogController } from "./TestLogController";
 import { TestExecutionController } from "./TestExecutionController";
 import { TestListController } from "./TestListController";
+import { FinallyFunc } from "^finally-provider";
 
 export type DirectorDeps = Readonly<{
   absTestFolder: string;

@@ -5,7 +5,7 @@ import {
   getScriptPath,
   mapScriptFilesToDefault,
 } from "../_fixture";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 //shutdown, when script is ipc.
 

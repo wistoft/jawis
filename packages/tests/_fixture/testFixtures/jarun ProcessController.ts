@@ -1,4 +1,3 @@
-import { then } from "^jab";
 import {
   TestProvision,
   JarunProcessControllerDeps,
@@ -11,6 +10,7 @@ import {
 } from "^jarun/JarunProcessControllerInner";
 
 import { getLogProv, makeDormentInMemoryBee } from ".";
+import { then } from "^yapu";
 
 /**
  *

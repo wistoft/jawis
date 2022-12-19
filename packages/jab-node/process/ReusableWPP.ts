@@ -1,9 +1,10 @@
 import { Serializable } from "child_process";
 
-import { def, Waiter } from "^jab";
+import { def } from "^jab";
 
 import { Bee, BeeListeners } from "..";
 import { WatchableProcessPreloaderDeps, WatchableProcessPreloader } from ".";
+import { Waiter } from "^state-waiter";
 
 type States = "ready" | "using" | "stopping" | "done";
 

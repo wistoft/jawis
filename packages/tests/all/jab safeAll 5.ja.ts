@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { safeAll } from "^jab";
+import { safeAll } from "^yapu";
 
 export default (prov: TestProvision) => {
   const e = new Error("hello zeros");

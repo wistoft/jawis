@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
+import { sleeping } from "^yapu";
 
-import { sleeping } from "^jab";
 import { getJarunTestProvision } from "../_fixture";
 
 //ordinary use

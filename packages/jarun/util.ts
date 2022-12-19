@@ -1,5 +1,4 @@
 import { RogueData, TestResult } from "^jatec";
-import { FinallyFunc, safeAllWait } from "^jab";
 import { CreateTestRunners } from "^jates";
 
 import { JarunTestProvision, TestProvision } from "./JarunTestProvision";
@@ -7,6 +6,8 @@ import { BeeRunner } from "./BeeRunner";
 import { JarunProcessController } from ".";
 import { makeTsNodeJabProcess } from "^util-javi/node";
 import { MakeJabProcess, makeMakeTsJabProcessConditonally } from "^jab-node";
+import { safeAllWait } from "^yapu";
+import { FinallyFunc } from "^finally-provider";
 
 export type TestFunction = (prov: TestProvision) => unknown;
 

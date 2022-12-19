@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";
-import { sleeping, getPromise, PromiseTriple } from "^jab";
+import { sleeping, getPromise, PromiseTriple } from "^yapu";
 
 //using prov after test ends. (in promise.then)
 

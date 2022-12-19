@@ -4,5 +4,10 @@
     "outDir": "../../build-tsc/jab-express",
     "rootDir": "."
   },
-  "references": [{ "path": "../jab" }, { "path": "../jab-node" }]
+  "references": [
+    { "path": "../finally-provider" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../state-waiter" }
+  ]
 }

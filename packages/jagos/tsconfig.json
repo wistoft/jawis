@@ -5,10 +5,13 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../finally-provider" },
     { "path": "../jagoc" },
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
-    { "path": "../util-javi" }
+    { "path": "../state-waiter" },
+    { "path": "../util-javi" },
+    { "path": "../yapu" }
   ]
 }

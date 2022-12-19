@@ -1,6 +1,5 @@
 import path from "path";
 
-import { timeRace } from "^jab";
 import { LoopController } from "^loop-controller";
 
 import {
@@ -14,6 +13,7 @@ import {
 
 import { TestRunner } from ".";
 import { ClientComProv } from "./ClientComController";
+import { timeRace } from "^yapu";
 
 // prov
 

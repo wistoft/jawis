@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { getComposedTestFramework } from "../_fixture";
-import { safeFinally } from "^jab";
+import { safeFinally } from "^yapu";
 
 export default (prov: TestProvision) => {
   const tf = getComposedTestFramework(prov);

@@ -1,6 +1,7 @@
 import { TestFrameworkProv } from "^jates";
-import { nightmare, prej, sleepingValue } from "^jab";
+import { prej } from "^jab";
 import { TestResult } from "^jatec";
+import { nightmare, sleepingValue } from "^yapu";
 
 /**
  *

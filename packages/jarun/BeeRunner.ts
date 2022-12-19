@@ -1,7 +1,8 @@
-import { clone, FinallyFunc, unknownToErrorData } from "^jab";
+import { clone, unknownToErrorData } from "^jab";
 import { TestRunner } from "^jates";
 import { execBee, Bee, MakeBee } from "^jab-node";
 import { TestResult, UserTestLogs } from "^jatec";
+import { FinallyFunc } from "^finally-provider";
 
 export type Deps = Readonly<{
   makeBee: MakeBee;

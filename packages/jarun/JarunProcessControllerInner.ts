@@ -1,17 +1,9 @@
-import {
-  def,
-  assert,
-  assertNever,
-  prej,
-  getPromise,
-  PromiseTriple,
-  LogProv,
-  Waiter,
-  clone,
-} from "^jab";
+import { def, assert, assertNever, prej, LogProv, clone } from "^jab";
 import { OnRequire, RequireSenderMessage } from "^jab-node";
 
 import { OnRogue, TestResult } from "^jatec";
+import { Waiter } from "^state-waiter";
+import { getPromise, PromiseTriple } from "^yapu";
 
 import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
 

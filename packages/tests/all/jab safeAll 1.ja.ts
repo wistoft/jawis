@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { safeAll } from "^jab";
+import { safeAll } from "^yapu";
 import { youWaitedForMe } from "../_fixture";
 
 //simple promises

@@ -1,6 +1,7 @@
 import { TestProvision } from "^jarun";
-import { ClonedValue, clonedTosGeneral, ErrorData, sleeping } from "^jab";
+import { ClonedValue, clonedTosGeneral, ErrorData } from "^jab";
 import { diff, dynamicDiff } from "^assorted-algorithms";
+import { sleeping } from "^yapu";
 
 export const errorData = (msg: string): ErrorData => ({
   msg,

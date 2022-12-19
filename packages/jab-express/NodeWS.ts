@@ -1,6 +1,8 @@
 import WebSocket from "ws";
 
-import { err, FinallyFunc, JabError, Waiter } from "^jab";
+import { err, JabError } from "^jab";
+import { FinallyFunc } from "^finally-provider";
+import { Waiter } from "^state-waiter";
 
 export type WsUrl = { host: string; port: number; path: string };
 

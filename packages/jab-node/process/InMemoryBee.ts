@@ -1,4 +1,5 @@
-import { then, Waiter } from "^jab";
+import { then } from "^yapu";
+import { Waiter } from "^state-waiter";
 
 import type { Bee, BeeDeps } from "..";
 import type { JabShutdownMessage } from ".";

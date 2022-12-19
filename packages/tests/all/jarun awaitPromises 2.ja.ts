@@ -1,4 +1,4 @@
-import { nightmare } from "^jab";
+import { nightmare } from "^yapu";
 import { awaitPromises, TestProvision } from "^jarun";
 
 import { filterTestLogs, getJarunTestProvision } from "../_fixture";

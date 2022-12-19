@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { nightmare, safeAll, sleeping } from "^jab";
+import { nightmare, safeAll, sleeping } from "^yapu";
 
 export default (prov: TestProvision) =>
   safeAll(

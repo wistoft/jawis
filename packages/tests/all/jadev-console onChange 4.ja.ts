@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { getConsoleFire } from "../_fixture";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 //when exceeding max entries, data should not be emitted.
 

@@ -1,5 +1,5 @@
 import fs from "fs";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import {

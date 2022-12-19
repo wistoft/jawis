@@ -1,5 +1,4 @@
-import { Waiter } from "^jab";
-
+import { Waiter } from "^state-waiter";
 import { TestMainProv } from ".";
 
 type States = "starting" | "ready" | "stopping" | "done";

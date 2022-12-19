@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { sleeping, getPromise } from "^jab";
+import { sleeping, getPromise } from "^yapu";
 
 import {
   getJabWatchableProcess_ipc_changeable,

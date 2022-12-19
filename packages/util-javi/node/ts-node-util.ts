@@ -1,7 +1,8 @@
 import path from "path";
 import { Worker } from "worker_threads";
+import { FinallyFunc } from "^finally-provider";
 
-import { assert, FinallyFunc } from "^jab";
+import { assert } from "^jab";
 import {
   makePlainJabProcess,
   MakeJabProcess,

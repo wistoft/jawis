@@ -1,4 +1,4 @@
-import { err, FinallyProv, looping, TypedArray, TypedArrayContructor } from ".";
+import { err, TypedArray, TypedArrayContructor } from ".";
 import { assert } from "./error";
 
 /**
@@ -46,7 +46,7 @@ export function indent(str: string, amount = 1, indentChar = "\t") {
 }
 
 /**
- * Return the the next element in the array. If end-of-array the first element is returned.
+ * Return the next element in the array. If end-of-array the first element is returned.
  */
 export const arrayCircularNext = <T extends {}>(arr: T[], curIdx: number) => {
   let idx = curIdx + 1;
@@ -59,7 +59,7 @@ export const arrayCircularNext = <T extends {}>(arr: T[], curIdx: number) => {
 };
 
 /**
- * Return the the prev element in the array. If start-of-array the last element is returned.
+ * Return the prev element in the array. If start-of-array the last element is returned.
  */
 export const arrayCircularPrev = <T extends {}>(arr: T[], curIdx: number) => {
   let idx = curIdx - 1;
@@ -166,56 +166,6 @@ export const def = <T>(
   }
   return val as any;
 };
-
-/**
- *
- */
-export type FinallyProviderDeps = {
-  onError: (error: unknown, extraInfo?: Array<unknown>) => void;
-};
-
-/**
- * Register finally functions, and run them all before shutdown.
- */
-export class FinallyProvider implements FinallyProv {
-  private finallyFuncs: Array<() => void | undefined | Promise<void>> = [];
-  private active = true;
-
-  constructor(private deps: FinallyProviderDeps) {}
-
-  /**
-   *
-   */
-  public isActive = () => this.active;
-
-  /**
-   * Register a function to run before shutdown.
-   */
-  public finally = (func: () => void | undefined | Promise<void>) => {
-    if (!this.active) {
-      err("Not active.");
-    }
-
-    this.finallyFuncs.push(func);
-  };
-
-  /**
-   * Run all the registered functions serially.
-   */
-  public runFinally = () => {
-    assert(this.active, "Has already run finally functions.");
-
-    this.active = false;
-
-    return looping(this.finallyFuncs, (finalTasks) =>
-      Promise.resolve() //
-        .then(() => finalTasks())
-        .catch((error: unknown) => {
-          this.deps.onError(error, ["Finally threw."]);
-        })
-    );
-  };
-}
 
 /**
  * The prototype chain is returned as an array of names.

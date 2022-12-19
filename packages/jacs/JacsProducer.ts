@@ -1,4 +1,4 @@
-import { FinallyFunc, safeCatch, unknownToErrorData } from "^jab";
+import { unknownToErrorData } from "^jab";
 import {
   BeeDeps,
   getFileToRequire,
@@ -11,6 +11,8 @@ import { getControlArray, setCompiling, signalConsumerSync } from "./protocol";
 import { SourceFileLoader } from "./SourceFileLoader";
 
 import { ConsumerMessage, WorkerData } from ".";
+import { FinallyFunc } from "^finally-provider";
+import { safeCatch } from "^yapu";
 
 export type JacsProducerDeps = {
   consumerTimeout: number;

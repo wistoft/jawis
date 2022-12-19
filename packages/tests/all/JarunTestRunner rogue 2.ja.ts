@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";
-import { sleeping, getPromise, PromiseTriple } from "^jab";
+import { sleeping, getPromise, PromiseTriple } from "^yapu";
 
 //reject a promise after test ends.
 

@@ -1,5 +1,5 @@
-import { asyncClone } from "^jab";
+import { asyncCapture } from "^async-capture";
 import { TestProvision } from "^jarun";
 
 export default (prov: TestProvision) =>
-  asyncClone([new Promise(() => {})], 10, () => {});
+  asyncCapture([new Promise(() => {})], 10, () => {});

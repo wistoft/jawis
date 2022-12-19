@@ -1,5 +1,6 @@
-import { asyncClone, sleepingValue } from "^jab";
+import { asyncCapture } from "^async-capture";
 import { TestProvision } from "^jarun";
+import { sleepingValue } from "^yapu";
 
 export default async (prov: TestProvision) =>
-  await asyncClone([Promise.resolve("hej"), sleepingValue(10, true)]);
+  await asyncCapture([Promise.resolve("hej"), sleepingValue(10, true)]);

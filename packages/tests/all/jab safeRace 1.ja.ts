@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { nightmare, safeRace, sleeping, sleepingValue } from "^jab";
+import { nightmare, safeRace, sleeping, sleepingValue } from "^yapu";
 
 export const helper = (d1: number, d2: number) => (prov: TestProvision) => {
   const sleep1 = sleepingValue(d1, "sweet");

@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { getConsoleFire } from "../_fixture";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 //two events are in their own "catch", when separated in time.
 

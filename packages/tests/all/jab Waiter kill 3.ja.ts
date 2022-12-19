@@ -1,4 +1,4 @@
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import { getWaiter_stuck_in_stopping_state } from "../_fixture";

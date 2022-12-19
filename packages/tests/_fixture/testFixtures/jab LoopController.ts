@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
-import { sleeping } from "^jab";
 import { LoopController } from "^loop-controller";
+import { sleeping } from "^yapu";
 
 /**
  *

@@ -7,7 +7,7 @@ import { makeOnRequest } from "./onRequest";
 import { Behavior } from "./Behavior";
 import { ActionProvider } from "./ActionProvider";
 import { makeOnClientMesssage } from "./onClientMesssage";
-import { FinallyFunc } from "^jab";
+import { FinallyFunc } from "^finally-provider";
 
 export type Deps = Readonly<{
   wsServer: WebSocket.Server;

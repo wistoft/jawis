@@ -1,7 +1,8 @@
 import { TestProvision } from "^jarun";
 
 import { getJabProcessPreloaderAndDeps, getScriptPath } from "../_fixture";
-import { err, sleeping } from "^jab";
+import { err } from "^jab";
+import { sleeping } from "^yapu";
 
 export default (prov: TestProvision) => {
   const [pp, deps] = getJabProcessPreloaderAndDeps(prov, {

@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { FinallyProvider } from "^jab";
+import { FinallyProvider } from "^finally-provider";
 
 // call `runFinally` twice.
 

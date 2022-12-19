@@ -2,10 +2,9 @@ import { nodeRequire, registerPrecompilers } from "^jab-node";
 
 import { parentPort } from "worker_threads";
 
-import { Waiter } from "^jab";
-
 import { requestProducerSync, WaitFunc } from "./protocol";
 import type { ConsumerMessage, WorkerData } from ".";
+import { Waiter } from "^state-waiter";
 
 export type JacsConsumerDeps = {
   shared: Pick<

@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
+import { getPromise } from "^yapu";
 
 import { getJabProcessPreloaderAndDeps, getScriptPath } from "../_fixture";
-import { getPromise } from "^jab";
 
 export default (prov: TestProvision) => {
   const pro = getPromise(); //to avoid registering waiter

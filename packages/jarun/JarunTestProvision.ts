@@ -7,14 +7,14 @@ import {
   clone,
   def,
   err,
-  FinallyFunc,
-  looping,
   tryProp,
   unknownToErrorData,
   OnError,
 } from "^jab";
 
 import { JarunEqAssertation } from "./JarunEqAssertation";
+import { FinallyFunc } from "^finally-provider";
+import { looping } from "^yapu";
 
 export type TestProvision = {
   chk: (val: unknown) => void;

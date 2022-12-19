@@ -1,5 +1,6 @@
+import { prej } from "^jab";
 import { TestProvision } from "^jarun";
-import { fullRace, prej, sleepingValue, nightmare } from "^jab";
+import { fullRace, sleepingValue, nightmare } from "^yapu";
 
 export default ({ rej, res, await, imp }: TestProvision) => {
   rej(

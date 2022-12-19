@@ -1,10 +1,6 @@
-import type {
-  FinallyFunc,
-  FinallyProvider,
-  LogProv,
-  OnError,
-  Waiter,
-} from "^jab";
+import { FinallyFunc, FinallyProvider } from "^finally-provider";
+import type { LogProv, OnError } from "^jab";
+import { Waiter } from "^state-waiter";
 
 import type { JabShutdownMessage } from ".";
 

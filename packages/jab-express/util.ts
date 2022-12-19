@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import { PathParams } from "express-serve-static-core";
 import { WebsocketRequestHandler } from "express-ws";
-import { LogProv, FinallyFunc } from "^jab";
+import { FinallyFunc } from "^finally-provider";
+import { LogProv } from "^jab";
 
 import { NodeWS, SocketData, WsMessageListener, WsRouter } from ".";
 

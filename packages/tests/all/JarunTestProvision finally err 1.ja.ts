@@ -1,7 +1,8 @@
 import { TestProvision } from "^jarun";
 
-import { err, sleeping } from "^jab";
+import { err } from "^jab";
 import { getJarunTestProvision, filterTestLogs } from "../_fixture";
+import { sleeping } from "^yapu";
 
 //async exception
 

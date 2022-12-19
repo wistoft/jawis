@@ -1,7 +1,8 @@
 import path from "path";
 import { StdioOptions, Serializable } from "child_process";
 
-import { getPromise, FinallyFunc } from "^jab";
+import { getPromise } from "^yapu";
+import { FinallyFunc } from "^finally-provider";
 
 import { BeeResult, ProcessDeps } from ".";
 import { ExecBee } from "./types";

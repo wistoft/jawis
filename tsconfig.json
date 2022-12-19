@@ -2,11 +2,13 @@
   "extends": "./tsconfig.base.web.json",
   "files": [],
   "references": [
+    { "path": "./packages/async-capture" },
     { "path": "./packages/assorted-algorithms" },
     { "path": "./packages/dev-appc" },
     { "path": "./packages/dev-apps" },
     { "path": "./packages/dev-appv" },
     { "path": "./packages/dev" },
+    { "path": "./packages/finally-provider" },
     { "path": "./packages/jab" },
     { "path": "./packages/jabc" },
     { "path": "./packages/jab-express" },
@@ -28,6 +30,8 @@
     { "path": "./packages/misc" },
     { "path": "./packages/render-hook-plus" },
     { "path": "./packages/util-javi" },
-    { "path": "./packages/tests" }
+    { "path": "./packages/state-waiter" },
+    { "path": "./packages/tests" },
+    { "path": "./packages/yapu" }
   ]
 }

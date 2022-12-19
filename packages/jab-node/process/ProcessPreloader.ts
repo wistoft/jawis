@@ -1,9 +1,11 @@
 import path from "path";
 
-import { Waiter, err, LogProv, FinallyFunc } from "^jab";
+import { err, LogProv } from "^jab";
 
 import type { Bee, BeeListeners, MakeBee } from "..";
 import { TS_TIMEOUT } from ".";
+import { FinallyFunc } from "^finally-provider";
+import { Waiter } from "^state-waiter";
 
 //can't be in main, couldn't be required there.
 export type BooterMessage = {

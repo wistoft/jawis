@@ -1,5 +1,6 @@
-import { err, sleeping } from "^jab";
+import { err } from "^jab";
 import { TestProvision } from "^jarun";
+import { sleeping } from "^yapu";
 
 import { jtrRunTest } from "../_fixture";
 

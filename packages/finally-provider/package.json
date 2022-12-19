@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "~finally-provider",
+  "description": "Register functions for execution at a later time.",
+  "dependencies": {},
+  "keywords": [
+    "shutdown",
+    "cleanup",
+    "scheduler"
+  ]
+}

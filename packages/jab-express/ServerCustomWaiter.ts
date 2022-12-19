@@ -1,6 +1,7 @@
 import http from "http";
 
-import { err, safeRace, sleepingValue } from "^jab";
+import { err } from "^jab";
+import { safeRace, sleepingValue } from "^yapu";
 
 import { ServerDeps } from ".";
 

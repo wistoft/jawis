@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { safeAll } from "^jab";
+import { safeAll } from "^yapu";
 
 import { HookSetState, useMemoDep } from "^jab-react";
 

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "name": "~state-waiter",
+  "description": "Handle async states conveniently.",
+  "dependencies": {},
+  "keywords": [
+    "state",
+    "shutdown",
+    "cleanup",
+    "async",
+    "promise"
+  ]
+}

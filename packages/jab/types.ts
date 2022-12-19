@@ -18,18 +18,6 @@ export type LogProv = {
   status: (type: string, status: string) => void;
 };
 
-/**
- *
- */
-export type FinallyProv = {
-  finally: FinallyFunc;
-  runFinally: () => Promise<void>;
-};
-
-export type FinallyFunc = (
-  func: () => void | undefined | Promise<void>
-) => void;
-
 //
 // not found in official places
 //

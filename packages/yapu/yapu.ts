@@ -1,4 +1,4 @@
-import { err, JabError } from ".";
+import { err, JabError } from "^jab";
 
 export type PromiseTriple<T> = {
   promise: Promise<T>;
@@ -32,7 +32,7 @@ export const nightmare = (ms: number, msg = "You asked for nightmare") =>
 export const then = (func: () => void) => Promise.resolve().then(func);
 
 /**
- * Keep execute the promises, until one returns false.
+ * Keep executing the promises, until false is returned.
  */
 export const whiling = (makePromise: () => Promise<boolean>) =>
   new Promise<void>((resolve) => {
@@ -51,6 +51,10 @@ export const whiling = (makePromise: () => Promise<boolean>) =>
 /**
  * Sequential execute promises over elements of an array.
  * Break/reject on first rejection.
+ *
+ * impl
+ *  - There is no need to protect against throw in first `makePromise`, because the
+ *      promise will reject, if the executor function throws.
  */
 export const looping = <T>(arr: T[], makePromise: (elm: T) => Promise<void>) =>
   new Promise<void>((resolve, reject) => {
@@ -115,7 +119,7 @@ export const safeAllWait = <T>(
  *
  * - Rejects at first rejection
  * - Reports if subsequent promises reject.
- * - The first, if any, rejection is not given to onError. User can handle that.
+ * - The first rejection, if any, is not given to onError. User can handle that.
  *
  * note
  *  Code duplication with safeRace.
@@ -202,7 +206,7 @@ export const timeRace = <T>(
 };
 
 /**
- * Like Promise.race, and a callback is called for each of the loosing promises.
+ * Like Promise.race, but callbacks are called with the loosing promises as args.
  */
 export const fullRace = <T>(
   arr: Array<{ promise: Promise<T>; fallback: (promise: Promise<T>) => void }>

@@ -3,18 +3,17 @@ import {
   ClonedPromisePending,
   ClonedValue,
   CustomClone,
-  fullRace,
-  sleeping,
   unknownToErrorData,
-} from ".";
+} from "^jab";
+import { fullRace, sleeping } from "^yapu";
 
 /**
  * - The returned value is mutable. onUpdate is called each time it is mutated.
  * - No timeout: set timeout to zero.
- * - Doesn't recurse into values form resolved promises. Ordinary clone is just used for that.
+ * - Doesn't recurse into values from resolved promises. Ordinary capture is just used for that.
  * - onError is called for all rejections.
  */
-export const asyncClone = (
+export const asyncCapture = (
   value: unknown,
   timeoutms = 0,
   onUpdate: (
@@ -22,7 +21,7 @@ export const asyncClone = (
     type: "resolved" | "rejected"
   ) => void = () => {},
   onError: (error: unknown) => void = () => {},
-  externalCustomClone: CustomClone = () => null,
+  externalCustomCapture: CustomClone = () => null,
   includeErrorStack = false,
   orgPromise: PromiseConstructor = Promise //quick fix
 ): Promise<ClonedValue> => {
@@ -30,10 +29,10 @@ export const asyncClone = (
 
   const readyArray = [] as Promise<unknown>[];
 
-  const customClone: CustomClone = (value: unknown) => {
+  const customCapture: CustomClone = (value: unknown) => {
     //custom
 
-    const tmp = externalCustomClone(value);
+    const tmp = externalCustomCapture(value);
 
     if (tmp !== null) {
       return tmp;
@@ -55,7 +54,7 @@ export const asyncClone = (
           holder.resolve = clone(data);
 
           if (resolved) {
-            onUpdate(cloned, "resolved");
+            onUpdate(captured, "resolved");
           }
         })
         .catch((error) => {
@@ -68,7 +67,7 @@ export const asyncClone = (
           onError(error);
 
           if (resolved) {
-            onUpdate(cloned, "rejected");
+            onUpdate(captured, "rejected");
           }
         });
 
@@ -90,10 +89,10 @@ export const asyncClone = (
     }
   };
 
-  const cloned = clone(value, undefined, customClone);
+  const captured = clone(value, undefined, customCapture);
 
   return Promise.all(readyArray).then(() => {
     resolved = true;
-    return cloned;
+    return captured;
   });
 };

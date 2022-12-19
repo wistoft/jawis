@@ -1,4 +1,6 @@
-import { assertNever, def, Waiter, getPromise, PromiseTriple } from "^jab";
+import { getPromise, PromiseTriple } from "^yapu";
+import { assertNever, def } from "^jab";
+import { Waiter } from "^state-waiter";
 
 export type LoopControllerDeps<T> = {
   initialArray: T[];

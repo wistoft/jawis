@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { getJabScriptPoolController_one } from "../_fixture";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 //stop all scripts, when script (probably) have stopped.
 

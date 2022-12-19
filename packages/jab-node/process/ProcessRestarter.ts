@@ -1,18 +1,9 @@
 import { Serializable } from "child_process";
 
-import {
-  def,
-  assert,
-  err,
-  FinallyFunc,
-  LogProv,
-  assertNever,
-  looping,
-  prej,
-  Waiter,
-  getPromise,
-  PromiseTriple,
-} from "^jab";
+import { def, assert, err, LogProv, assertNever, prej } from "^jab";
+import { FinallyFunc } from "^finally-provider";
+import { Waiter } from "^state-waiter";
+import { getPromise, looping, PromiseTriple } from "^yapu";
 
 import { Bee, BeeDeps, BeeListeners, MakeBee } from "..";
 import { ReusableWPP, WatchableProcessPreloaderDeps } from ".";

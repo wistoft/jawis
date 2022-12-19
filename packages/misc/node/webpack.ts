@@ -3,9 +3,10 @@ import TsconfigPathsPlugin from "tsconfig-paths-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 
-import { getPromise, JabError } from "^jab";
+import { getPromise } from "^yapu";
 import { getAbsConfigFilePath } from "^jacs";
 import { nodeExternals } from "^misc";
+import { JabError } from "^jab";
 
 /**
  *

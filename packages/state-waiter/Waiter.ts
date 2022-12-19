@@ -1,4 +1,5 @@
-import { safeRace, sleepingValue, getPromise, tryProp, prej, def } from ".";
+import { tryProp, prej, def } from "^jab";
+import { getPromise, sleepingValue, safeRace } from "^yapu";
 
 const TIMEOUT_ERROR_CODE = "JAB_WAITER_TIMEOUT";
 const CANCEL_ERROR_CODE = "JAB_WAITER_CANCEL";
@@ -16,11 +17,10 @@ type Deps<States> = {
  * - One can wait for state changes or events.
  * - Implements convention for async kill and shutdown. For async kill and shutdown there is a 'stopping state'.
  *
- *
  * notes
  * - Waiting is meant for development testing. It's possible to test specific async execution paths, when
  *    a test case can 'inject' actions at specific state changes or events of the object under test.
- * - Only one thing can wait at a time. This is to reduce complexity. If more things wait there is no
+ * - Only one thing can wait at a time. This is to reduce complexity. If more things wait there's no
  *    way to know what will execute first. The result is likely flaky test cases.
  * - this.eventTrace is useful the see what has happened with this waiter.
  *
@@ -282,7 +282,7 @@ export class Waiter<States, Events = never> {
   /**
    * Use this as an error-callback in the object under state control.
    *
-   * - Gurantees the error will occur somewhere.
+   * - Guarantees the error will occur somewhere.
    * - If there is a waiter it will be rejected with the error.
    * - If there is no waiter the error will be reported.
    */

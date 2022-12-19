@@ -1,4 +1,4 @@
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 import { makeLogServiceToConsole } from "^jab-node";
 import { TestProvision } from "^jarun";
 

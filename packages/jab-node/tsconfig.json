@@ -4,5 +4,11 @@
     "outDir": "../../build-tsc/jab-node",
     "rootDir": "."
   },
-  "references": [{ "path": "../jab" }, { "path": "../jagoc" }]
+  "references": [
+    { "path": "../finally-provider" },
+    { "path": "../jab" },
+    { "path": "../jagoc" },
+    { "path": "../state-waiter" },
+    { "path": "../yapu" }
+  ]
 }

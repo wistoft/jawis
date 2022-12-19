@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { safeFinally } from "^jab";
+import { safeFinally } from "^yapu";
 
 //error only in source-promise
 

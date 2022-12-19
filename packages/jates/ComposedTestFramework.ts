@@ -2,9 +2,10 @@ import fs from "fs";
 import path from "path";
 import readdirRecursive from "fs-readdir-recursive";
 
-import { err, looping } from "^jab";
+import { err } from "^jab";
 
 import { TestRunner } from ".";
+import { looping } from "^yapu";
 
 export type TestFrameworkProv = TestRunner & {
   getTestIds: () => Promise<string[]>; //Relative to absTestFolder.

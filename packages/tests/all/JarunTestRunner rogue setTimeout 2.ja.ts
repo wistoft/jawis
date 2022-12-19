@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 //using prov after test ends. (in setTimeout)
 

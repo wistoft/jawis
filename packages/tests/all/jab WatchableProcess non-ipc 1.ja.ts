@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 import { getJabWatchableProcess_nonIpc_changeable } from "../_fixture";
 

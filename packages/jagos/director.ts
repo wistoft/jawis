@@ -1,5 +1,5 @@
 import { WsPoolController, WsPoolProv } from "^jab-express";
-import { FinallyFunc, LogProv } from "^jab";
+import { LogProv } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { MakeBee } from "^jab-node";
 
@@ -8,6 +8,7 @@ import { ScriptPoolController } from "./ScriptPoolController";
 import { ActionProvider } from "./ActionProvider";
 import { ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
+import { FinallyFunc } from "^finally-provider";
 
 export type DirectorDeps = Readonly<{
   projectRoot: string;

@@ -1,7 +1,8 @@
 import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
-
-import { FinallyFunc, LogProv, safeAll } from "^jab";
+import { FinallyFunc } from "^finally-provider";
+import { LogProv } from "^jab";
+import { safeAll } from "^yapu";
 
 import { NodeWS, SocketData, makeUpgradeHandler, WsMessageListener } from ".";
 

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
-import { sleeping } from "^jab";
+import { sleeping } from "^yapu";
 
 import { getScratchPath, removeCarriageReturn } from "../_fixture";
 

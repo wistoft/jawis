@@ -8,6 +8,7 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../jagoc" },
-    { "path": "../util-javi" }
+    { "path": "../util-javi" },
+    { "path": "../yapu" }
   ]
 }

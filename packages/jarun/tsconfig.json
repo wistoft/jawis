@@ -5,8 +5,12 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../async-capture" },
+    { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-node" },
-    { "path": "../jates" }
+    { "path": "../jates" },
+    { "path": "../state-waiter" },
+    { "path": "../yapu" }
   ]
 }

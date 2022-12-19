@@ -27,4 +27,26 @@
 
 ## :boom: Breaking changes
 
-- Extracted `LoopController` into own package: `loop-controler`.
+- Extracted `LoopController` to own package: `loop-controler`.
+- Extracted `asyncClone` to own package: `async-capture`.
+- Extracted `Waiter` to own package: `state-waiter`.
+- Extracted `FinallyProvider` to own package: `finally-provider`.
+- Extracted functions in `async.ts` to own package: `yapu`.
+  - `assertUnsettled`
+  - `fullRace`
+  - `getPromise`
+  - `looping`
+  - `nightmare`
+  - `paralleling`
+  - `PromiseTriple`
+  - `safeAll`
+  - `safeAllChoice`
+  - `safeAllWait`
+  - `safeCatch`
+  - `safeFinally`
+  - `safeRace`
+  - `sleeping`
+  - `sleepingValue`
+  - `then`
+  - `timeRace`
+  - `whiling`

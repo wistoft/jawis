@@ -15,7 +15,7 @@ import {
 } from "^jab-react";
 import { getHtmlRTR } from "^misc/node";
 import { renderHook } from "^render-hook-plus";
-import { asyncClone, clone } from "^jab";
+import { clone } from "^jab";
 
 import { ViewTest } from "^jatev/ViewTest";
 import {
@@ -42,6 +42,7 @@ import {
   ViewTestLogContent,
   ViewTestLogContentProps,
 } from "^jatev/ViewTestLogContent";
+import { asyncCapture } from "^async-capture";
 
 export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.
 
@@ -69,7 +70,7 @@ export const tos_test = (val: unknown) => toAtomizedString_test(clone(val));
  *
  */
 export const tos_async = async (val: unknown) =>
-  toAtomizedString_test(await asyncClone(val));
+  toAtomizedString_test(await asyncCapture(val));
 
 /**
  *

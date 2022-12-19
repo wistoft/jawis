@@ -4,7 +4,7 @@ import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { ScriptPoolProv } from "./ScriptPoolController";
 import { ActionProv } from "./ActionProvider";
-import { safeAll } from "^jab";
+import { safeAll } from "^yapu";
 
 // prov
 

@@ -4,5 +4,9 @@
     "outDir": "../../build-tsc/loop-controller",
     "rootDir": "."
   },
-  "references": [{ "path": "../jab" }]
+  "references": [
+    { "path": "../jab" },
+    { "path": "../state-waiter" },
+    { "path": "../yapu" }
+  ]
 }

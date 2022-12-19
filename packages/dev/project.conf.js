@@ -13,10 +13,14 @@ const getPackagePath = (file) => path.join(packageFolder, file || "");
 const npmScope = "@jawis";
 
 const unscopedPackages = [
+  "async-capture",
   "assorted-algorithms",
+  "finally-provider",
   "lazy-require-ts",
   "loop-controller",
   "render-hook-plus",
+  "state-waiter",
+  "yapu",
 ];
 
 const scopedPackages = [
