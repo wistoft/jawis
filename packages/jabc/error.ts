@@ -1,15 +1,15 @@
-import { ClonedValue } from ".";
+import { CapturedValue } from ".";
 
 export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
 export type OnErrorData = (error: ErrorData) => void;
 
-export type UnparsedStack =
+export type CapturedStack =
   | {
       type: "node" | "other";
       stack: string;
     }
   | {
-      type: "node-parsed";
+      type: "parsed";
       stack: ParsedStackFrame[];
     };
 
@@ -29,13 +29,13 @@ export type ErrorWithParsedNodeStack = Error & {
 
 export type ErrorData = {
   msg: string;
-  info: Array<ClonedValue>;
-  stack: UnparsedStack;
+  info: Array<CapturedValue>;
+  stack: CapturedStack;
 };
 
 export type ParsedErrorData = {
   msg: string;
-  info: Array<ClonedValue>;
+  info: Array<CapturedValue>;
   parsedStack?: ParsedStack;
 };
 

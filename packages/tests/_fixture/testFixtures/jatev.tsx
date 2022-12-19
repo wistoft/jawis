@@ -15,7 +15,7 @@ import {
 } from "^jab-react";
 import { getHtmlRTR } from "^misc/node";
 import { renderHook } from "^render-hook-plus";
-import { clone } from "^jab";
+import { capture } from "^jab";
 
 import { ViewTest } from "^jatev/ViewTest";
 import {
@@ -59,12 +59,12 @@ export const replaceAtoms_test = makeReplaceAtoms(
  *
  */
 export const toHtml_test = (val: unknown) =>
-  getHtmlRTR(<>{replaceAtoms_test(toAtomizedString_test(clone(val)))}</>);
+  getHtmlRTR(<>{replaceAtoms_test(toAtomizedString_test(capture(val)))}</>);
 
 /**
  *
  */
-export const tos_test = (val: unknown) => toAtomizedString_test(clone(val));
+export const tos_test = (val: unknown) => toAtomizedString_test(capture(val));
 
 /**
  *

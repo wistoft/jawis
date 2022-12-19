@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { ClonedValue, clonedTosGeneral, ErrorData } from "^jab";
+import { CapturedValue, capturedTosGeneral, ErrorData } from "^jab";
 import { diff, dynamicDiff } from "^assorted-algorithms";
 import { sleeping } from "^yapu";
 
@@ -48,8 +48,8 @@ export const diff_test = (str: string, right: string) => diff(str, right, 1);
 export const dynamicDiff_test = (left: string[], right: string[]) =>
   dynamicDiff(left, right, (l, r) => l === r);
 
-export const cloneTosGeneral_test = (value: ClonedValue) =>
-  clonedTosGeneral(value, {
+export const cloneTosGeneral_test = (value: CapturedValue) =>
+  capturedTosGeneral(value, {
     true: "TRUE",
     false: "FALSE",
     null: "NULL",

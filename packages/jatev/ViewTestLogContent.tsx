@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { assertNever, ClonedValue, indent, tos } from "^jab";
+import { assertNever, CapturedValue, indent, tos } from "^jab";
 import { ZippedTestLog } from "^jatec";
 import { toAtomizedString, replaceAtoms } from "^jab-react";
 
@@ -107,14 +107,11 @@ export const renderHelper = (
  *
  * Like clonedArrayEntriesTos(), but for toAtomizedString()
  */
-export const clonedArrayToString = (arr: ClonedValue[]) => {
+export const clonedArrayToString = (arr: CapturedValue[]) => {
   try {
     return arr.reduce<string>(
       (acc, value) =>
-        acc +
-        (acc === "" ? "" : "\n") +
-        "\t" +
-        indent(toAtomizedString(value), 1),
+        acc + (acc === "" ? "" : "\n") + indent(toAtomizedString(value), 1),
       ""
     );
   } catch (unk) {
@@ -125,7 +122,7 @@ export const clonedArrayToString = (arr: ClonedValue[]) => {
 /**
  *
  */
-export const clonedToString = (value?: ClonedValue) => {
+export const clonedToString = (value?: CapturedValue) => {
   if (value === undefined) {
     return "";
   }

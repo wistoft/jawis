@@ -1,4 +1,4 @@
-import { ClonedValue, ErrorData } from "^jab";
+import { CapturedValue, ErrorData } from "^jab";
 
 //
 // log provision and jago logging convention.
@@ -6,7 +6,7 @@ import { ClonedValue, ErrorData } from "^jab";
 
 export type LogEntry = {
   type: "log";
-  data: ClonedValue[];
+  data: CapturedValue[];
   logName?: string;
 };
 

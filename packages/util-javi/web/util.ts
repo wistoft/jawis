@@ -8,7 +8,7 @@ import {
   isNode,
   ParsedErrorData,
   ParsedStackFrame,
-  UnparsedStack,
+  CapturedStack,
 } from "^jab";
 import { sleeping } from "^yapu";
 
@@ -32,7 +32,7 @@ export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
  *    use v8 format. So there is no need to think about capturing anything but the
  *    `error.stack` property. It will work for all (modern) browsers and node.
  */
-export const parseTrace = (stack: UnparsedStack): ParsedStackFrame[] => {
+export const parseTrace = (stack: CapturedStack): ParsedStackFrame[] => {
   if (stack.stack === undefined || stack.stack === "") {
     //error-stack-parser can't handle this case
     return [];
@@ -40,7 +40,10 @@ export const parseTrace = (stack: UnparsedStack): ParsedStackFrame[] => {
 
   if (stack.type === "node") {
     return parseNodeTrace(stack.stack);
-  } else if (stack.type === "node-parsed") {
+  } else if ((stack as any).type === "node-parsed") {
+    //backwards compatible. To be deprecated.
+    return (stack as any).stack;
+  } else if (stack.type === "parsed") {
     return stack.stack;
   } else {
     return ErrorStackParser.parse({
@@ -62,7 +65,7 @@ export const parseTrace = (stack: UnparsedStack): ParsedStackFrame[] => {
  *  StackTraceGPS does a lot of good work. So if the function name enhancing could be disabled,
  *    we could just use StackTrace.fromError().
  */
-export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
+export const parseTraceAndSourceMap = (stack: CapturedStack) => {
   const gps = new StackTraceGPS();
 
   const frames = ErrorStackParser.parse({
@@ -98,7 +101,7 @@ export const parseTraceAndSourceMap = (stack: UnparsedStack) => {
  *    stack to be ready. It's not a problem on the first parse. In other words, it only
  *    happens, when StackTrace use cached source map.
  */
-export const parseTraceAndSourceMapOld = (stack: UnparsedStack) =>
+export const parseTraceAndSourceMapOld = (stack: CapturedStack) =>
   sleeping(10).then(() =>
     StackTrace.fromError({
       stack: stack.stack,

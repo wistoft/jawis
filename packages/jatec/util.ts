@@ -2,8 +2,8 @@ import deepEqual from "deep-equal";
 
 import {
   assertNever,
-  cloneArrayEntries,
-  ClonedValue,
+  captureArrayEntries,
+  CapturedValue,
   def,
   err,
   ErrorData,
@@ -93,7 +93,7 @@ export const errorToTestLog = (
  */
 export const errMsgAndReturnToTestLog = (
   msg: string,
-  testReturn?: ClonedValue
+  testReturn?: CapturedValue
 ): TestCurLogs =>
   addReturnToTestLogs(
     {
@@ -111,7 +111,7 @@ export const errMsgAndReturnToTestLog = (
  */
 export const addReturnToTestLogs = (
   logs: TestCurLogs,
-  testReturn?: ClonedValue
+  testReturn?: CapturedValue
 ): TestCurLogs => {
   if (testReturn !== undefined) {
     return { ...logs, return: testReturn };
@@ -133,7 +133,7 @@ export const addErrMsgToTestLog = (
     ...(testLog.err || []),
     {
       msg,
-      info: cloneArrayEntries(info),
+      info: captureArrayEntries(info),
       stack: { type: "node", stack: "dummy" },
     },
   ],
@@ -470,7 +470,7 @@ export const mergeTestLogsAndRogue_map_testlog = (
   if (elm.type === "return") {
     return {
       ...elm,
-      cur: flatRogue[logName] as ClonedValue,
+      cur: flatRogue[logName] as CapturedValue,
     };
   }
 
@@ -519,7 +519,7 @@ export const mergeTestLogsAndRogue_helper_by_ref = (
       output.push({
         type: "return",
         name: prefix + "return",
-        cur: value as ClonedValue,
+        cur: value as CapturedValue,
       });
       return;
     }

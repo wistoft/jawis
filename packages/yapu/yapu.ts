@@ -1,4 +1,4 @@
-import { err, JabError } from "^jab";
+import { err, makeJabError } from "^jab";
 
 export type PromiseTriple<T> = {
   promise: Promise<T>;
@@ -334,7 +334,7 @@ export const assertUnsettled = (
   timeout = 10
 ) => {
   //somewhat hacky, but the stack trace in lambda below gives no relevant information. So why not?
-  const betterError = new JabError("assertUnsettled() - placeholder.");
+  const betterError = makeJabError("assertUnsettled() - placeholder.");
 
   //setup
 

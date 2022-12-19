@@ -6,6 +6,6 @@ import { captureStack, err } from "^jab";
 
 const data = captureStack(new Error("hej"));
 
-if (data.type !== "node-parsed") {
-  throw err("expected 'node-parsed', was: ", data);
+if (data.type !== "parsed") {
+  throw err("expected 'parsed', was: ", data);
 }

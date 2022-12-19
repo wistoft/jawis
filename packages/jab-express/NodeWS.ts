@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-import { err, JabError } from "^jab";
+import { err, makeJabError } from "^jab";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 
@@ -152,7 +152,7 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
 
     if (!this.waiter.is("running")) {
       this.deps.onError(
-        new JabError(
+        makeJabError(
           "Received message while not open." +
             " (state:" +
             this.waiter.getState() +

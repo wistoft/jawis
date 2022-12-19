@@ -10,7 +10,7 @@ import {
   TranspileOptions,
 } from "typescript";
 
-import { basename, CompileService, JabError, prej, tos } from "^jab";
+import { basename, CompileService, err, prej, tos } from "^jab";
 
 import {
   dianosticToString,
@@ -120,7 +120,7 @@ export class SourceFileLoader implements CompileService {
     const result = transpileModule(data, options);
 
     if (result.diagnostics && result.diagnostics.length > 0) {
-      throw new JabError(
+      err(
         "Could not transpile: " + dianosticToString(result.diagnostics),
         tos(result.diagnostics)
       );

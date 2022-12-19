@@ -1,5 +1,5 @@
 import fs from "fs";
-import { err, JabError, tos } from "^jab";
+import { err, tos } from "^jab";
 import path from "path";
 import ts, { Diagnostic, DiagnosticMessageChain, MapLike } from "typescript";
 
@@ -33,7 +33,7 @@ export function getTsConfigFromAbsConfigFile(absConfigFilePath: string) {
   const confResult = ts.readConfigFile(absConfigFilePath, ts.sys.readFile);
 
   if (confResult.error) {
-    throw new JabError(
+    err(
       "Error reading ts config file: " + dianosticToString(confResult.error),
       tos(confResult.error)
     );
@@ -46,7 +46,7 @@ export function getTsConfigFromAbsConfigFile(absConfigFilePath: string) {
   );
 
   if (parsed.errors && parsed.errors.length > 0) {
-    throw new JabError(
+    err(
       "Could not parse tsconfig.json: " + dianosticToString(parsed.errors),
       tos(parsed.errors)
     );
@@ -130,7 +130,7 @@ export const getTsPathsConfig = (
         const abs = path.resolve(baseUrl, rel);
 
         if (!fs.existsSync(abs)) {
-          throw new JabError( "Jacs: The path replacement does not exist:", pathEntry + " => " + abs ); // prettier-ignore
+          err( "Jacs: The path replacement does not exist:", pathEntry + " => " + abs ); // prettier-ignore
         }
       }
     }

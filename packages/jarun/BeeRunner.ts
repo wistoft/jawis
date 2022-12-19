@@ -1,4 +1,4 @@
-import { clone, unknownToErrorData } from "^jab";
+import { capture, unknownToErrorData } from "^jab";
 import { TestRunner } from "^jates";
 import { execBee, Bee, MakeBee } from "^jab-node";
 import { TestResult, UserTestLogs } from "^jatec";
@@ -48,7 +48,7 @@ export class BeeRunner implements TestRunner {
       }
 
       if (data.messages.length !== 0) {
-        userLog.messages = data.messages.map((msg) => clone(msg));
+        userLog.messages = data.messages.map((msg) => capture(msg));
       }
 
       //the rest

@@ -1,4 +1,4 @@
-import { cloneArrayEntries } from "^jab";
+import { captureArrayEntries } from "^jab";
 import { CaptureCache, ConsoleEntry } from ".";
 
 /**
@@ -17,7 +17,7 @@ export const createConsoleFunction = (
       type: "log",
       logName,
       context,
-      data: cloneArrayEntries(entry),
+      data: captureArrayEntries(entry),
     });
     captureCache.onChange && captureCache.onChange();
   };

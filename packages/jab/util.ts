@@ -31,9 +31,14 @@ export function basename(path: string) {
  *
  * todo: fix bug, that first line isn't indented.
  */
-export function indent(str: string, amount = 1, indentChar = "\t") {
+export function indent(
+  str: string,
+  amount = 1,
+  indentChar = "\t",
+  firstLine?: string
+) {
   if (str === "") {
-    return "";
+    return firstLine ?? "";
   }
 
   let tabs = "";
@@ -42,7 +47,9 @@ export function indent(str: string, amount = 1, indentChar = "\t") {
     tabs += indentChar;
   }
 
-  return str.replace(/\n/g, "\n" + tabs);
+  const first = firstLine ?? tabs;
+
+  return first + str.replace(/\n/g, "\n" + tabs);
 }
 
 /**
@@ -80,7 +87,8 @@ export const getRandomRange = (min: number, max: number) =>
 /**
  * A random non-negative integer.
  */
-export const getRandomInteger = (max = 1000000) => getRandomRange(0, max);
+export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
+  Math.floor(Math.random() * max);
 
 /**
  * A random length Uint8Array with random data.
@@ -330,7 +338,7 @@ export const numberOfRightZeroBits = (n: number) => {
  */
 export const preserveHeighestBit = (n: number) => {
   if (n <= 0) {
-    err("not impl");
+    err("preserveHeighestBit: not impl");
   }
 
   return 2 ** Math.floor(Math.log2(n));

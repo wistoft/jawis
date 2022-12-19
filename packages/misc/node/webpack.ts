@@ -6,7 +6,7 @@ import webpack from "webpack";
 import { getPromise } from "^yapu";
 import { getAbsConfigFilePath } from "^jacs";
 import { nodeExternals } from "^misc";
-import { JabError } from "^jab";
+import { makeJabError } from "^jab";
 
 /**
  *
@@ -18,7 +18,7 @@ export const webpackCompile = (conf: webpack.Configuration) => {
     if (err) {
       prom.reject(err);
     } else if (stats && (stats.hasErrors() || stats.hasWarnings())) {
-      prom.reject(new JabError("Webpack errors: ", "" + stats));
+      prom.reject(makeJabError("Webpack errors: ", "" + stats));
     } else {
       prom.resolve(stats);
     }

@@ -4,7 +4,7 @@ import expressWs from "express-ws";
 import WebSocket from "ws";
 import path from "path";
 
-import { assertNever, err, Json } from "^jab";
+import { assertNever, err, Jsonable } from "^jab";
 import { MainProv } from "^jab-node";
 
 import { expressErrorsThrow, ServerAppRouter } from ".";
@@ -30,7 +30,7 @@ export type Deps = {
   staticWebFolder: string;
   clientConf?: {
     variable: string;
-    value: Json;
+    value: Jsonable;
   };
   mainProv: MainProv;
   makeRoutes: Route[]; //routes must be created after we monkey patch. Therefore 'make'.

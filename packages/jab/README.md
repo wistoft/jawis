@@ -15,7 +15,7 @@ npm i @jawis/jab
 are the best place to find information about the individual functions and
 classes.
 
-### Small utilities
+Here are some highlights:
 
 - **getProtoChain**: Returns the prototype chain of an object as an array of
   'class' names.
@@ -26,12 +26,10 @@ All imports are side effect free. So this library is ideal for tree-shaking.
 
 ## Known issues
 
-- indent has a bug.
-- clone
+- capture
   - Handles binary data superficially.
   - Sparsity in arrays is not preserved.
   - Non-enumerable properties is not preserved.
-- ES6 is required minimum. Because `JabError` inherits from `Error`
 
 ## Related work
 

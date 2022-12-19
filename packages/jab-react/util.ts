@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqualObjects } from "shallow-equal";
-import { JabError } from "^jab";
+import { err } from "^jab";
 
 //
 // component set state
@@ -158,7 +158,7 @@ export const useAssertStatic = (value: {}) => {
   const [initialValue] = useState(value);
 
   if (!shallowEqualObjects(initialValue, value)) {
-    throw new JabError("Value has changed", initialValue, value);
+    err("Value has changed", initialValue, value);
   }
 };
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { clonedTos } from "^jab";
+import { capturedTos } from "^jab";
 import { clonedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
 
 import { LogEntry } from "^jagoc";
@@ -19,7 +19,7 @@ export const ViewLogEntry = ({
   onToggleEntry,
 }: Props) => {
   const firstValueIsMultiLine =
-    data.length === 1 && clonedTos(data[0]).includes("\n");
+    data.length === 1 && capturedTos(data[0]).includes("\n");
 
   const moreThanOneLine = firstValueIsMultiLine || data.length > 1;
 

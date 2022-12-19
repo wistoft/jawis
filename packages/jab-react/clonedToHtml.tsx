@@ -1,18 +1,18 @@
 /* eslint-disable react/jsx-key */
 import React from "react";
 
-import { clonedTosGeneral, ClonedValue, StringKeys, Strings } from "^jab";
+import { capturedTosGeneral, CapturedValue, StringKeys, Strings } from "^jab";
 
 /**
  *
  */
-export const clonedToHtml = (value: ClonedValue) =>
+export const clonedToHtml = (value: CapturedValue) =>
   replaceAtoms(toAtomizedString(value));
 
 /**
  *
  */
-export const clonedArrayEntriesToHtml = (arr: ClonedValue[]) =>
+export const clonedArrayEntriesToHtml = (arr: CapturedValue[]) =>
   arr.map((entry, argIndex) => (
     <React.Fragment key={argIndex}>
       <div />
@@ -25,8 +25,8 @@ export const clonedArrayEntriesToHtml = (arr: ClonedValue[]) =>
  *
  */
 export const makeToAtomizedString =
-  (mapToAtoms: Strings) => (value: ClonedValue) =>
-    clonedTosGeneral(value, mapToAtoms);
+  (mapToAtoms: Strings) => (value: CapturedValue) =>
+    capturedTosGeneral(value, mapToAtoms);
 
 /**
  *

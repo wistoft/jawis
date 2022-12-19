@@ -1,58 +1,63 @@
-import {
-  cloneArrayEntries,
-  clonedTos,
-  ClonedValue,
-  captureStack,
-  fixErrorInheritence,
-} from ".";
+import { captureArrayEntries, capturedTos, captureStack, ErrorData } from ".";
 
 /**
  * An replacement for Error, that supports capturing variable with the error message.
  *
  * impl
- *  methods can't be "properties", because super is called in constructor.
+ *  - Can't extend Error, because that makes it impossible to monkey-patch Error. Because the
+ *      import order would be critical: monkey patch must happen before extension. But monkey patching
+ *      at load is an anti-pattern. Module load should be pure.
  */
-export class JabError extends Error {
-  private clonedInfo: ClonedValue[];
-  private jabMessage: string;
+export const makeJabError = (message: string, ...info: Array<unknown>) => {
+  type JabError = Error & {
+    reset: (message: string, ...info: Array<unknown>) => void;
+    getErrorData: (extraInfo?: Array<unknown>) => ErrorData;
+  };
 
-  constructor(message: string, ...info: Array<unknown>) {
-    const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
+  //prepare message
 
-    // make the Error return a reasonable message, if it's used as ordinary Error.
-    super(rawMessage);
+  const state = { message, ...safeCloneInfo(message, info) };
 
-    fixErrorInheritence(this, JabError.prototype);
+  // make the Error return a reasonable message, if it's used as ordinary Error.
 
-    this.clonedInfo = clonedInfo;
-    this.jabMessage = message;
-  }
+  const error = new Error(state.rawMessage) as JabError;
 
   /**
    * Change the message associated with this error object.
    *
    * - This will not update the message in the stack. But that should never be a problem, as that's "junk" data, anyway.
    */
-  public reset(message: string, ...info: Array<unknown>): void {
+  const reset = (message: string, ...info: Array<unknown>): void => {
     const { clonedInfo, rawMessage } = safeCloneInfo(message, info);
 
-    this.message = rawMessage;
-
-    this.clonedInfo = clonedInfo;
-    this.jabMessage = message;
-  }
+    state.message = message;
+    state.clonedInfo = clonedInfo;
+    state.rawMessage = rawMessage;
+  };
 
   /**
    * Return the error message, cloned info and the stack, with information about how to parse it.
    */
-  public getErrorData(extraInfo: Array<unknown> = []) {
-    return {
-      msg: this.jabMessage,
-      info: [...this.clonedInfo, ...cloneArrayEntries(extraInfo)],
-      stack: captureStack(this),
-    };
-  }
-}
+  const getErrorData = (extraInfo: Array<unknown> = []) => ({
+    msg: state.message,
+    info: [...state.clonedInfo, ...captureArrayEntries(extraInfo)],
+    stack: captureStack(error),
+  });
+
+  Object.defineProperty(error, "reset", {
+    value: reset,
+    enumerable: false,
+    configurable: true,
+  });
+
+  Object.defineProperty(error, "getErrorData", {
+    value: getErrorData,
+    enumerable: false,
+    configurable: true,
+  });
+
+  return error;
+};
 
 //
 // util
@@ -64,10 +69,10 @@ export class JabError extends Error {
  */
 export const safeCloneInfo = (message: string, info: Array<unknown>) => {
   try {
-    const clonedInfo = cloneArrayEntries(info);
+    const clonedInfo = captureArrayEntries(info);
 
     const rawInfo = clonedInfo.reduce<string>(
-      (acc, cur) => acc + "\n" + clonedTos(cur),
+      (acc, cur) => acc + "\n" + capturedTos(cur),
       ""
     );
 

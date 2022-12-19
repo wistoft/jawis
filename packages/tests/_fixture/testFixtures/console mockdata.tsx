@@ -1,5 +1,5 @@
 import { State, UiEntry } from "^console";
-import { cloneArrayEntries } from "^jab";
+import { captureArrayEntries } from "^jab";
 
 import { errorData1, errorData2 } from ".";
 
@@ -18,7 +18,7 @@ export const uiEntries: UiEntry[] = [
     type: "log",
     context: "browser",
     logName: "error",
-    data: cloneArrayEntries([{ hej: 1, dav: true, hi: [1, 2, 3] }]),
+    data: captureArrayEntries([{ hej: 1, dav: true, hi: [1, 2, 3] }]),
   },
   {
     id: 3,

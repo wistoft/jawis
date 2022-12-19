@@ -1,4 +1,4 @@
-import { clone } from "^jab";
+import { capture } from "^jab";
 import { TestProvision } from "^jarun";
 import { cloneTosGeneral_test } from "../_fixture";
 
@@ -40,6 +40,6 @@ export default ({ eq, imp }: TestProvision) => {
   eq("INFINITY", cloneTosGeneral_test(["Infinity"]));
   eq("NAN", cloneTosGeneral_test(["NaN"]));
 
-  imp(cloneTosGeneral_test(clone(Object.create(null))));
-  imp(cloneTosGeneral_test(clone(/regex/)));
+  imp(cloneTosGeneral_test(capture(Object.create(null))));
+  imp(cloneTosGeneral_test(capture(/regex/)));
 };

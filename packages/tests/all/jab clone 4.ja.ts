@@ -1,4 +1,4 @@
-import { clone } from "^jab";
+import { capture } from "^jab";
 import { TestProvision } from "^jarun";
 
 // prototype chains
@@ -10,19 +10,19 @@ export default ({ eq }: TestProvision) => {
 
   eq(
     ["object", { protoChain: ["null"], fields: {} }],
-    clone(Object.create(null))
+    capture(Object.create(null))
   );
 
   eq(
     ["object", { protoChain: ["null"], fields: { hello: 1 } }],
-    clone(withoutPrototype)
+    capture(withoutPrototype)
   );
 
   //
   // constructors can't be detected
   //
 
-  eq(["function", "Dav"], clone(Dav));
+  eq(["function", "Dav"], capture(Dav));
 
   //
   // others
@@ -30,7 +30,7 @@ export default ({ eq }: TestProvision) => {
 
   eq(
     ["object", { protoChain: ["Dav", "Object"], fields: { hej: "dav" } }],
-    clone(new Dav())
+    capture(new Dav())
   );
 
   eq(
@@ -42,7 +42,7 @@ export default ({ eq }: TestProvision) => {
         toStringValue: "pretty toString: davdav",
       },
     ],
-    clone(new DavDavDav())
+    capture(new DavDavDav())
   );
 };
 

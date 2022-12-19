@@ -1,54 +1,54 @@
-import { clone } from "^jab";
+import { capture } from "^jab";
 import { TestProvision } from "^jarun";
 
 export default ({ imp, eq }: TestProvision) => {
-  eq(1, clone(1));
-  eq(1.2, clone(1.2));
-  eq(true, clone(true));
-  eq(null, clone(null));
+  eq(1, capture(1));
+  eq(1.2, capture(1.2));
+  eq(true, capture(true));
+  eq(null, capture(null));
 
-  eq(["NaN"], clone(NaN));
-  eq(["Infinity"], clone(Infinity));
+  eq(["NaN"], capture(NaN));
+  eq(["Infinity"], capture(Infinity));
 
-  eq(["undefined"], clone(undefined));
-  eq(["symbol", "Symbol(Symbol.iterator)"], clone(Symbol.iterator));
+  eq(["undefined"], capture(undefined));
+  eq(["symbol", "Symbol(Symbol.iterator)"], capture(Symbol.iterator));
 
   //
   // arrays
   //
 
-  eq(["value", []], clone([]));
-  eq(["value", ["hej", {}]], clone(["hej", {}]));
-  eq(["value", [1, ["circular"]]], clone(arrCirc));
+  eq(["value", []], capture([]));
+  eq(["value", ["hej", {}]], capture(["hej", {}]));
+  eq(["value", [1, ["circular"]]], capture(arrCirc));
 
   //
   // objects
   //
 
-  eq({ arr: ["value", []] }, clone({ arr: [] }));
-  eq({ ok: 1, oops: ["circular"] }, clone(objCirc));
+  eq({ arr: ["value", []] }, capture({ arr: [] }));
+  eq({ ok: 1, oops: ["circular"] }, capture(objCirc));
 
   //
   // ArrayBuffers, etc.
   //
 
-  imp(clone(new ArrayBuffer(10)));
-  imp(clone(new SharedArrayBuffer(10)));
-  imp(clone(new DataView(new ArrayBuffer(10))));
+  imp(capture(new ArrayBuffer(10)));
+  imp(capture(new SharedArrayBuffer(10)));
+  imp(capture(new DataView(new ArrayBuffer(10))));
 
   // views
 
-  imp(clone(new Uint8Array()));
-  imp(clone(Buffer.from("\x00\x01\x02", "binary")));
-  imp(clone(Buffer.from("hejsa", "binary")));
+  imp(capture(new Uint8Array()));
+  imp(capture(Buffer.from("\x00\x01\x02", "binary")));
+  imp(capture(Buffer.from("hejsa", "binary")));
 
-  imp(clone(Buffer.from("\u0100\u0200\u0300", "binary"))); //truncates high bytes.
-  imp(clone(Buffer.from("\u0100\u0200\u0300")));
-  imp(clone(Buffer.from("æøå𐍈𝟙€✓")));
+  imp(capture(Buffer.from("\u0100\u0200\u0300", "binary"))); //truncates high bytes.
+  imp(capture(Buffer.from("\u0100\u0200\u0300")));
+  imp(capture(Buffer.from("æøå𐍈𝟙€✓")));
 
   //very large
 
-  imp(clone(Buffer.alloc(1000 * 1000)));
+  imp(capture(Buffer.alloc(1000 * 1000)));
 };
 
 //

@@ -1,4 +1,4 @@
-import { ClonedValue, ParsedStack } from "^jab";
+import { CapturedValue, ParsedStack } from "^jab";
 import { HtmlEntry, JagoLogEntry, LogEntry } from "^jagoc";
 
 //
@@ -26,7 +26,7 @@ export type UiErrorEntry = {
   type: "error";
   data: {
     msg: string;
-    info: Array<ClonedValue>;
+    info: Array<CapturedValue>;
     parsedStack?: ParsedStack;
   };
   logName?: string;

@@ -25,8 +25,18 @@
 
 ## :bug: Bug fixes
 
+- `indent` now indents first line also.
+
 ## :boom: Breaking changes
 
+- Renamed `clone` to `capture`. Including related functions and types.
+- Renamed `UnparsedStack` to `CapturedStack`.
+- Renamed `JabError` to `makeJabError`. And it's not a class anymore. To avoid
+  inheriting the native `Error` class.
+- `CapturedStack` (inherited from @jawic/jabc) is changed by renaming type
+  `node-parsed` to `parsed`.
+- Renamed `Json` to `Jsonable`, and `JsonArray` to `JsonableArray`
+- Increated default value in `getRandomInteger` to `Number.MAX_SAFE_INTEGER`.
 - Extracted `LoopController` to own package: `loop-controler`.
 - Extracted `asyncClone` to own package: `async-capture`.
 - Extracted `Waiter` to own package: `state-waiter`.

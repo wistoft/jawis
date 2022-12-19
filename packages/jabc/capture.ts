@@ -1,28 +1,30 @@
-export type ClonedArray = ["value", ClonedValue[]];
+export type CapturedArray = ["value", CapturedValue[]];
 
-export type ClonedValue =
+export type CapturedValue =
   | null
   | boolean
   | number
   | string
-  | { [_: string]: ClonedValue }
-  | ClonedValueNonPrimitive;
+  | { [_: string]: CapturedValue }
+  | CapturedNonPrimitiveValue;
 
-export type ClonedObjectNonPlain = {
+export type CapturedNonPlainObject = {
   protoChain: string[];
-  fields: { [_: string]: ClonedValue };
+  fields: { [_: string]: CapturedValue };
   toStringValue?: string;
 };
 
-export type ClonedTypedArray = {
+export type CapturedTypedArray = {
   type: string;
   length: number;
   base64: string; //only part of the data.
 };
 
-export type CustomClone = (value: unknown) => null | { replace: ClonedValue };
+export type CustomCapture = (
+  value: unknown
+) => null | { replace: CapturedValue };
 
-export type ClonedValueNonPrimitive =
+export type CapturedNonPrimitiveValue =
   | ["undefined"]
   | ["Infinity"]
   | ["NaN"]
@@ -32,18 +34,18 @@ export type ClonedValueNonPrimitive =
   | ["symbol", string]
   | ["date", string]
   | ["function", string]
-  | ["set", ClonedValue]
-  | ["map", ClonedValue]
-  | ["value", Array<ClonedValue>]
+  | ["set", CapturedValue]
+  | ["map", CapturedValue]
+  | ["value", Array<CapturedValue>]
   | ["ArrayBuffer", number]
   | ["SharedArrayBuffer", number]
   | ["DataView", number]
-  | ["TypedArray", ClonedTypedArray]
-  | ["object", ClonedObjectNonPlain]
-  | ["promise", ClonedPromisePending]; //from clone async.
+  | ["TypedArray", CapturedTypedArray]
+  | ["object", CapturedNonPlainObject]
+  | ["promise", PendingCapturedPromise]; //used in capture async.
 
-export type ClonedPromisePending = {
-  resolve?: ClonedValue;
-  reject?: ClonedValue;
+export type PendingCapturedPromise = {
+  resolve?: CapturedValue;
+  reject?: CapturedValue;
   timeout?: string;
 };

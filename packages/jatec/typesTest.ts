@@ -1,4 +1,4 @@
-import { ClonedValue, ErrorData, UnparsedStack } from "^jab";
+import { CapturedValue, ErrorData, CapturedStack } from "^jab";
 
 //
 // base types
@@ -13,25 +13,25 @@ export type TestLogMatchType =
   | "match"
   | "different";
 
-export type UserTestLogs = { [_: string]: ClonedValue[] };
+export type UserTestLogs = { [_: string]: CapturedValue[] };
 
 export type TestCurLogs = {
   err?: ErrorData[];
-  return?: ClonedValue;
+  return?: CapturedValue;
   chk?: ChkInfo;
   user: UserTestLogs;
 };
 
 export type TestExpLogs = {
   err?: string[];
-  return?: ClonedValue;
+  return?: CapturedValue;
   user: UserTestLogs;
 };
 
 export type ChkInfo = {
-  exp: ClonedValue;
-  cur: ClonedValue;
-  stack: UnparsedStack;
+  exp: CapturedValue;
+  cur: CapturedValue;
+  stack: CapturedStack;
 };
 
 //
@@ -73,8 +73,8 @@ export type ErrorLog = {
 export type ReturnLog = {
   type: "return";
   name: string;
-  exp?: ClonedValue;
-  cur?: ClonedValue;
+  exp?: CapturedValue;
+  cur?: CapturedValue;
 };
 
 export type ChkLog = {
@@ -85,6 +85,6 @@ export type ChkLog = {
 export type UserLog = {
   type: "user";
   name: string;
-  exp: ClonedValue[];
-  cur: ClonedValue[];
+  exp: CapturedValue[];
+  cur: CapturedValue[];
 };

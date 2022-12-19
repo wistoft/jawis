@@ -1,7 +1,7 @@
 import { JagoLogEntry } from "^jagoc";
 
 import {
-  cloneArrayEntries,
+  captureArrayEntries,
   err,
   fixErrorInheritence,
   indent,
@@ -83,7 +83,7 @@ export const makeJagoLogProv = (
   log: (...args) =>
     sendImpl({
       type: "log",
-      data: cloneArrayEntries(args),
+      data: captureArrayEntries(args),
       logName: logPrefix,
     }),
   logStream: (type, data) =>
@@ -176,7 +176,7 @@ export const makeLogServiceToConsole = (
       const nextPrefix = "".padEnd(largestType, " ") + " : ";
 
       //send
-      console.log(firstPrefix + indent(data as string, 1, nextPrefix));
+      console.log(indent(data as string, 1, nextPrefix, firstPrefix));
 
       //reset
       streamData = {};

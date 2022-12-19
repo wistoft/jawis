@@ -1,7 +1,7 @@
 import { parentPort } from "worker_threads";
 import { JagoLogEntry } from "^jagoc";
 
-import { cloneArrayEntries, tos } from "^jab";
+import { captureArrayEntries, tos } from "^jab";
 
 import { makeSend } from ".";
 
@@ -23,7 +23,7 @@ if (process.send || parentPort) {
  */
 export const out = (...data: unknown[]) => {
   if (parentSend) {
-    parentSend({ type: "log", data: cloneArrayEntries(data) });
+    parentSend({ type: "log", data: captureArrayEntries(data) });
   } else {
     console.log(tos(data));
   }

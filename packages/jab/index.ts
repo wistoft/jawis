@@ -1,5 +1,5 @@
-export * from "./clone.tos";
-export * from "./clone";
+export * from "./capture.tos";
+export * from "./capture";
 export * from "./error";
 export * from "./EventController";
 export * from "./JabError";

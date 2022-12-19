@@ -1,17 +1,18 @@
 import {
-  cloneArrayEntries,
+  captureArrayEntries,
   ErrorData,
-  JabError,
+  makeJabError,
   ParsedStackFrame,
-  UnparsedStack,
+  CapturedStack,
   isNode,
+  tryProp,
 } from ".";
 
 /**
  *
  */
-export const err = (msg: string, ...args: Array<unknown>) => {
-  throw new JabError(msg, ...args);
+export const err = (msg: string, ...args: Array<unknown>): never => {
+  throw makeJabError(msg, ...args);
 };
 
 /**
@@ -23,7 +24,7 @@ export const pres = <T>(value: T) => Promise.resolve(value);
  *
  */
 export const prej = (msg: string, ...args: Array<unknown>) =>
-  Promise.reject(new JabError(msg, ...args));
+  Promise.reject(makeJabError(msg, ...args));
 
 /**
  *
@@ -61,8 +62,8 @@ export const assertEq = (
 export const captureStack = (error: {
   stack?: string;
   __jawisNodeStack?: ParsedStackFrame[];
-}): UnparsedStack => {
-  //ensure `Error.prepareStackTrace` is by accessing `error.stack`
+}): CapturedStack => {
+  //ensure `Error.prepareStackTrace` is executed by accessing `error.stack`
 
   if (error.stack === undefined) {
     return {
@@ -75,7 +76,7 @@ export const captureStack = (error: {
 
   if (error.__jawisNodeStack !== undefined) {
     return {
-      type: "node-parsed",
+      type: "parsed",
       stack: error.__jawisNodeStack,
     };
   } else {
@@ -94,26 +95,16 @@ export const unknownToErrorData = (
   error: unknown,
   extraInfo: Array<unknown> = []
 ): ErrorData => {
-  if (error instanceof JabError) {
-    return error.getErrorData(extraInfo);
-  } else if (
-    //use tryUProp
-    typeof error === "object" &&
-    error !== null &&
-    "getErrorData" in error
-  ) {
-    // quick fix, when jarun is run from another node_modules. Because then JabError
-    // is two different class "instances"
-    const any: any = error;
-    return any.getErrorData(extraInfo);
+  if (tryProp(error, "getErrorData")) {
+    return (error as any).getErrorData(extraInfo);
   } else if (error instanceof Error) {
     return {
       msg: error.toString(),
-      info: cloneArrayEntries(extraInfo),
+      info: captureArrayEntries(extraInfo),
       stack: captureStack(error),
     };
   } else {
-    const wrapper = new JabError("Unknown Error object: ", error);
+    const wrapper = makeJabError("Unknown Error object: ", error);
 
     return wrapper.getErrorData(extraInfo);
   }
@@ -132,7 +123,7 @@ export const getSyntheticError = (
     msg: msg,
     info: [],
     stack: {
-      type: "node-parsed",
+      type: "parsed",
       stack: [{ file, line }],
     },
   }),

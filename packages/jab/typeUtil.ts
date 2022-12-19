@@ -1,4 +1,4 @@
-import { err, JabError } from ".";
+import { err } from ".";
 
 /**
  *
@@ -77,7 +77,7 @@ export const assertHelper = <T>(
   if (msg) {
     throw new Error(msg);
   } else {
-    throw new JabError(defaultMsg, value);
+    throw err(defaultMsg, value);
   }
 };
 
@@ -119,7 +119,7 @@ export const assertProp = <T>(
     if (msg) {
       throw new Error(msg);
     } else {
-      throw new JabError("Failed to find: " + propertyName + " in:", value);
+      err("Failed to find: " + propertyName + " in:", value);
     }
   }
 
@@ -134,7 +134,7 @@ export const assertProp = <T>(
   if (msg) {
     throw new Error(msg);
   } else {
-    throw new JabError(
+    throw err(
       "Property must be " + propertyType + ". " + propertyName + " in:",
       value
     );

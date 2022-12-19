@@ -1,4 +1,4 @@
-import { JabError } from "^jab";
+import { makeJabError } from "^jab";
 import { TestProvision } from "^jarun";
 
 import { jtrRunTest } from "../_fixture";
@@ -7,5 +7,5 @@ import { jtrRunTest } from "../_fixture";
 
 export default (prov: TestProvision) =>
   jtrRunTest(prov, () => () => {
-    throw new JabError("Some values: ", 1, 2, undefined);
+    throw makeJabError("Some values: ", 1, 2, undefined);
   });

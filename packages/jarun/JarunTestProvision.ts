@@ -4,7 +4,7 @@ import type { OnRogue, TestCurLogs } from "^jatec";
 import { errorToTestLog } from "^jatec";
 import {
   assert,
-  clone,
+  capture,
   def,
   err,
   tryProp,
@@ -218,7 +218,7 @@ export class JarunTestProvision implements TestProvision {
         this.logs.user[logName] = [];
       }
 
-      def(this.logs.user[logName]).push(clone(value));
+      def(this.logs.user[logName]).push(capture(value));
     });
   };
 

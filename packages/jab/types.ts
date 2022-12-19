@@ -22,11 +22,20 @@ export type LogProv = {
 // not found in official places
 //
 
-export interface Json {
-  [x: string]: string | number | boolean | Date | Json | JsonArray | undefined;
+export interface Jsonable {
+  [x: string]:
+    | string
+    | number
+    | boolean
+    | Date
+    | Jsonable
+    | JsonableArray
+    | undefined;
 }
 
-type JsonArray = Array<string | number | boolean | Date | Json | JsonArray>;
+type JsonableArray = Array<
+  string | number | boolean | Date | Jsonable | JsonableArray
+>;
 
 export type TypedArray =
   | Int8Array

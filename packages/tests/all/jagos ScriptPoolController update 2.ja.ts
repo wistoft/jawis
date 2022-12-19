@@ -3,6 +3,7 @@ import { sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import {
+  emptyScratchFolder,
   getJabScriptPoolController,
   getScratchPath,
   getScriptPath,
@@ -12,6 +13,7 @@ import {
 //When it's stopped, it will be removed.
 
 export default (prov: TestProvision) => {
+  emptyScratchFolder();
   const script = getScratchPath("script.js");
 
   fs.copyFileSync(getScriptPath("beeSendAndWait.js"), script);

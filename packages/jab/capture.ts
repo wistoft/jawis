@@ -5,37 +5,39 @@ import {
   isNode,
   getProtoChain,
   assert,
-  CustomClone,
-  ClonedValue,
-  ClonedObjectNonPlain,
+  CustomCapture,
+  CapturedValue,
+  CapturedNonPlainObject,
 } from ".";
 
-const CLONE_MAX_DEPTH = 10;
+const MAX_DEPTH = 10;
 
 type Context = {
   seenStack: Array<unknown>;
   nodeCount: number;
-  customClone: CustomClone; //return null to have no effect.
+  customCapture: CustomCapture; //return null to have no effect.
 };
 
 /**
- * Clones only the entries in the array. No the array itself.
+ * Captures only the entries in the array. No the array itself.
  */
-export const cloneArrayEntries = (
+export const captureArrayEntries = (
   value: unknown[],
-  maxDepth = CLONE_MAX_DEPTH,
-  customClone: CustomClone = () => null
+  maxDepth = MAX_DEPTH,
+  customCapture: CustomCapture = () => null
 ) => {
   const context = {
     seenStack: [],
     nodeCount: 0,
-    customClone,
+    customCapture,
   };
 
-  return value.map((elm) => internalClone(elm, maxDepth - 1, context));
+  return value.map((elm) => internalCapture(elm, maxDepth - 1, context));
 };
 
 /**
+ * Capture a javascript value, and preserve as much information as possible.
+ *
  * - Deep clone. Has no reference to the input value, so it may mutate after this has returned.
  * - Is transferrable via JSON encoding.
  * - Detects cycles.
@@ -45,25 +47,25 @@ export const cloneArrayEntries = (
  * Todo
  * - Protection against large values. Isn't it just having a max node count?
  */
-export const clone = (
+export const capture = (
   value: unknown,
-  maxDepth = CLONE_MAX_DEPTH,
-  customClone: CustomClone = () => null
-): ClonedValue =>
-  internalClone(value, maxDepth, {
+  maxDepth = MAX_DEPTH,
+  customCapture: CustomCapture = () => null
+): CapturedValue =>
+  internalCapture(value, maxDepth, {
     seenStack: [],
     nodeCount: 0,
-    customClone,
+    customCapture,
   });
 
 /**
  *
  */
-const internalClone = (
+const internalCapture = (
   value: unknown,
-  maxDepth = CLONE_MAX_DEPTH,
+  maxDepth = MAX_DEPTH,
   context: Context
-): ClonedValue => {
+): CapturedValue => {
   // detect cycles
 
   if (context.seenStack.indexOf(value) !== -1) {
@@ -73,25 +75,24 @@ const internalClone = (
   // work
 
   context.seenStack.push(value);
-  const clone = cloneReal(value, maxDepth, context);
+  const tmp = coreCapture(value, maxDepth, context);
   context.seenStack.pop();
-  return clone;
+  return tmp;
 };
 
 /**
  *
- * Best effort deep clone, for preserving as much information as possible.
  */
-const cloneReal = (
+const coreCapture = (
   value: unknown,
   maxDepth: number,
   context: Context
-): ClonedValue => {
+): CapturedValue => {
   context.nodeCount++;
 
   //custom
 
-  const tmp = context.customClone(value);
+  const tmp = context.customCapture(value);
   if (tmp !== null) {
     return tmp.replace;
   }
@@ -133,7 +134,7 @@ const cloneReal = (
         return ["MaxDepth"];
       }
 
-      return cloneObjectish(value, maxDepth - 1, context) as ClonedValue;
+      return captureObjectish(value, maxDepth - 1, context) as CapturedValue;
 
     default:
       throw err("Unknown type: ", value); //typeof makes assertNever impossible.
@@ -143,11 +144,11 @@ const cloneReal = (
 /**
  *
  */
-const cloneObjectish = (
+const captureObjectish = (
   value: {},
   maxDepth: number,
   context: Context
-): ClonedValue => {
+): CapturedValue => {
   //can't be combined with the below if-else.
 
   if (typeof SharedArrayBuffer !== "undefined") {
@@ -183,11 +184,14 @@ const cloneObjectish = (
   //the rest
 
   if (Array.isArray(value)) {
-    return ["value", value.map((elm) => internalClone(elm, maxDepth, context))];
+    return [
+      "value",
+      value.map((elm) => internalCapture(elm, maxDepth, context)),
+    ];
   } else if (isPlainObject(value)) {
     //
     return objMap(value, (key, value) =>
-      internalClone(value, maxDepth, context)
+      internalCapture(value, maxDepth, context)
     );
     //
   } else if (value instanceof Date && value.constructor === Date) {
@@ -198,14 +202,14 @@ const cloneObjectish = (
     //
     return [
       "set",
-      internalClone(Array.from(value.values()), maxDepth, context),
+      internalCapture(Array.from(value.values()), maxDepth, context),
     ];
     //
   } else if (value instanceof Map && value.constructor === Map) {
     //
     return [
       "map",
-      internalClone(Array.from(value.entries()), maxDepth, context),
+      internalCapture(Array.from(value.entries()), maxDepth, context),
     ];
     //
   } else if (value instanceof ArrayBuffer) {
@@ -220,10 +224,10 @@ const cloneObjectish = (
     const protoChain = getProtoChain(value);
 
     const fields = objMap(value, (key, value) =>
-      internalClone(value, maxDepth, context)
+      internalCapture(value, maxDepth, context)
     );
 
-    const result: ClonedObjectNonPlain = { protoChain, fields };
+    const result: CapturedNonPlainObject = { protoChain, fields };
 
     if (
       typeof value.toString === "function" &&

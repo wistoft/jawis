@@ -4,9 +4,9 @@ import {
   base64ToBinary,
   splitSurroundingWhitespace,
   binaryStringToUInt8Array,
-  clone,
-  ClonedValue,
-  ClonedValueNonPrimitive,
+  capture,
+  CapturedValue,
+  CapturedNonPrimitiveValue,
   toBytes,
 } from ".";
 
@@ -44,22 +44,22 @@ export type Strings = { [K in StringKeys]: string };
 /**
  *
  */
-export const tos = (value: unknown) => clonedTos(clone(value));
+export const tos = (value: unknown) => capturedTos(capture(value));
 
 /**
  *
  */
-export const clonedArrayEntriesTos = (arr: ClonedValue[]) =>
+export const capturedArrayEntriesTos = (arr: CapturedValue[]) =>
   arr.reduce<string>(
-    (acc, value) => acc + (acc === "" ? "" : "\n") + clonedTos(value),
+    (acc, value) => acc + (acc === "" ? "" : "\n") + capturedTos(value),
     ""
   );
 
 /**
- * converts a cloned value to string.
+ * converts a captured value to string.
  */
-export const clonedTos = (value: ClonedValue) =>
-  clonedTosGeneral(value, {
+export const capturedTos = (value: CapturedValue) =>
+  capturedTosGeneral(value, {
     true: "Boolean: true",
     false: "Boolean: false",
     null: "Null",
@@ -95,10 +95,10 @@ export const clonedTos = (value: ClonedValue) =>
 
 /**
  * - All primitive values produced are configurable.
- * - Trusts, that clone handled max depth and circular references.
+ * - Trusts, that capture handled max depth and circular references.
  */
-export const clonedTosGeneral = (
-  value: ClonedValue,
+export const capturedTosGeneral = (
+  value: CapturedValue,
   strings: Strings
 ): string => {
   if (value === true) {
@@ -130,7 +130,7 @@ export const clonedTosGeneral = (
     return objectTos(value, strings);
   }
 
-  throw assertNever(value, "Unknown cloned value.");
+  throw assertNever(value, "Unknown captured value.");
 };
 
 /**
@@ -179,7 +179,7 @@ const objectTos = (obj: object, strings: Strings, name = ""): string => {
       "\t" +
       key +
       ": " +
-      indent(clonedTosGeneral(property, strings), 1) +
+      indent(capturedTosGeneral(property, strings), 1) +
       "\n",
     ""
   );
@@ -196,14 +196,14 @@ const objectTos = (obj: object, strings: Strings, name = ""): string => {
 /**
  *
  */
-const arrayTos = (value: Array<ClonedValue>, strings: Strings) => {
+const arrayTos = (value: Array<CapturedValue>, strings: Strings) => {
   if (value.length === 0) {
     return strings["bracket-start"] + strings["bracket-end"];
   }
 
   const content = value.reduce(
     (acc, property) =>
-      acc + ".\t" + indent(clonedTosGeneral(property, strings), 1) + "\n",
+      acc + ".\t" + indent(capturedTosGeneral(property, strings), 1) + "\n",
     ""
   );
 
@@ -213,7 +213,10 @@ const arrayTos = (value: Array<ClonedValue>, strings: Strings) => {
 /**
  *
  */
-const arrayEncodedTos = (value: ClonedValueNonPrimitive, strings: Strings) => {
+const arrayEncodedTos = (
+  value: CapturedNonPrimitiveValue,
+  strings: Strings
+) => {
   switch (value[0]) {
     case "undefined":
       return strings["undefined"];
@@ -240,10 +243,10 @@ const arrayEncodedTos = (value: ClonedValueNonPrimitive, strings: Strings) => {
       return strings["date-prefix"] + value[1];
 
     case "set":
-      return strings["set-prefix"] + clonedTosGeneral(value[1], strings);
+      return strings["set-prefix"] + capturedTosGeneral(value[1], strings);
 
     case "map":
-      return strings["map-prefix"] + clonedTosGeneral(value[1], strings);
+      return strings["map-prefix"] + capturedTosGeneral(value[1], strings);
 
     case "function":
       return strings["function-prefix"] + value[1];
@@ -304,10 +307,11 @@ const arrayEncodedTos = (value: ClonedValueNonPrimitive, strings: Strings) => {
         res += "Timeout: " + value[1].timeout + "\n";
       }
       if (value[1].resolve) {
-        res += "Resolve: " + clonedTosGeneral(value[1].resolve, strings) + "\n";
+        res +=
+          "Resolve: " + capturedTosGeneral(value[1].resolve, strings) + "\n";
       }
       if (value[1].reject) {
-        res += "Reject: " + clonedTosGeneral(value[1].reject, strings) + "\n";
+        res += "Reject: " + capturedTosGeneral(value[1].reject, strings) + "\n";
       }
       return res;
     }

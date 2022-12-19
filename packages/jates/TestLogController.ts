@@ -6,10 +6,10 @@ import path from "path";
 import {
   assert,
   err,
-  clonedArrayEntriesTos,
+  capturedArrayEntriesTos,
   tryProp,
-  ClonedValue,
-  clonedTos,
+  CapturedValue,
+  capturedTos,
 } from "^jab";
 
 import {
@@ -221,8 +221,8 @@ export class TestLogController implements TestLogsProv {
 /**
  *
  */
-export const optionalOrClonedTos = (value?: ClonedValue) =>
-  value === undefined ? "" : clonedTos(value);
+export const optionalOrClonedTos = (value?: CapturedValue) =>
+  value === undefined ? "" : capturedTos(value);
 
 /**
  *
@@ -261,5 +261,5 @@ const logTosHelper = (logs: TestCurLogs | TestExpLogs, logName: string) => {
 
   //it must be a user log.
 
-  return clonedArrayEntriesTos(logs.user[logName]);
+  return capturedArrayEntriesTos(logs.user[logName]);
 };

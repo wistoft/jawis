@@ -7,6 +7,7 @@ import { TestProvision } from "^jarun";
 export default (prov: TestProvision) => {
   const logProv = makeLogServiceToConsole("root.", 10);
 
+  logProv.logStream("nothing", "");
   logProv.logStream("log1", "hej");
   logProv.logStream("IamLargest", "dav");
 

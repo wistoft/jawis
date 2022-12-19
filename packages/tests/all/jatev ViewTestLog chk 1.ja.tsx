@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { getHtmlEnzyme } from "^misc/node";
-import { clone } from "^jab";
+import { capture } from "^jab";
 import { errorData1, getViewTestLog } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
@@ -11,8 +11,8 @@ export default ({ imp }: TestProvision) => {
         testLog: {
           type: "chk",
           name: "chk",
-          exp: clone(1),
-          cur: clone(2),
+          exp: capture(1),
+          cur: capture(2),
           stack: errorData1.stack,
         },
       })

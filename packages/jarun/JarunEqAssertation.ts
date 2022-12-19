@@ -1,6 +1,6 @@
 import {
-  clone,
-  ClonedValue,
+  capture,
+  CapturedValue,
   tos,
   fixErrorInheritence,
   captureStack,
@@ -11,14 +11,14 @@ import {
  */
 export class JarunEqAssertation extends Error {
   public readonly name: string = "JarunEqAssertation";
-  private exp: ClonedValue;
-  private cur: ClonedValue;
+  private exp: CapturedValue;
+  private cur: CapturedValue;
 
   constructor(exp: unknown, cur: unknown) {
     super("JarunEqAssertation: " + tos(exp) + ", " + tos(cur));
 
-    this.exp = clone(exp);
-    this.cur = clone(cur);
+    this.exp = capture(exp);
+    this.cur = capture(cur);
 
     fixErrorInheritence(this, JarunEqAssertation.prototype);
   }

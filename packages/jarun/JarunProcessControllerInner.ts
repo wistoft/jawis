@@ -1,4 +1,4 @@
-import { def, assert, assertNever, prej, LogProv, clone } from "^jab";
+import { def, assert, assertNever, prej, LogProv, capture } from "^jab";
 import { OnRequire, RequireSenderMessage } from "^jab-node";
 
 import { OnRogue, TestResult } from "^jatec";
@@ -180,7 +180,7 @@ export class JarunProcessControllerInner {
               onMessage: [
                 {
                   ["Recieved while this test executed"]: testId,
-                  msg: clone(msg),
+                  msg: capture(msg),
                 },
               ],
             },

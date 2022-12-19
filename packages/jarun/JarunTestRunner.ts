@@ -1,4 +1,4 @@
-import { JabError, clone, ClonedValue, tryProp } from "^jab";
+import { capture, CapturedValue, err, tryProp } from "^jab";
 import {
   OnRogue,
   TestResult,
@@ -169,7 +169,7 @@ export class JarunTestRunner {
     makeTest: () => TestFileExport,
     prov: JarunTestProvision
   ): Promise<{
-    testReturn: ClonedValue | undefined;
+    testReturn: CapturedValue | undefined;
     execTime?: number;
     requireTime?: number;
   }> =>
@@ -193,7 +193,7 @@ export class JarunTestRunner {
         }
 
         if (typeof testFunc !== "function") {
-          throw new JabError( "Unknown export from test case.", testMod ); // prettier-ignore
+          err( "Unknown export from test case.", testMod ); // prettier-ignore
         }
       } catch (e) {
         prov.onError(e);
@@ -226,7 +226,7 @@ export class JarunTestRunner {
     testId: string,
     func: TestFunction,
     prov: JarunTestProvision
-  ): Promise<ClonedValue | undefined> =>
+  ): Promise<CapturedValue | undefined> =>
     Promise.resolve().then(() => {
       const res = func(prov);
 
@@ -320,8 +320,8 @@ export class JarunTestRunner {
 // util
 //
 
-const cloneTestReturn = (testReturn: unknown): ClonedValue | undefined => {
+const cloneTestReturn = (testReturn: unknown): CapturedValue | undefined => {
   if (testReturn !== undefined) {
-    return clone(testReturn);
+    return capture(testReturn);
   }
 };

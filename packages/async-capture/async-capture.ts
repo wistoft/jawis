@@ -1,8 +1,8 @@
 import {
-  clone,
-  ClonedPromisePending,
-  ClonedValue,
-  CustomClone,
+  capture,
+  PendingCapturedPromise,
+  CapturedValue,
+  CustomCapture,
   unknownToErrorData,
 } from "^jab";
 import { fullRace, sleeping } from "^yapu";
@@ -17,19 +17,19 @@ export const asyncCapture = (
   value: unknown,
   timeoutms = 0,
   onUpdate: (
-    value: ClonedValue,
+    value: CapturedValue,
     type: "resolved" | "rejected"
   ) => void = () => {},
   onError: (error: unknown) => void = () => {},
-  externalCustomCapture: CustomClone = () => null,
+  externalCustomCapture: CustomCapture = () => null,
   includeErrorStack = false,
   orgPromise: PromiseConstructor = Promise //quick fix
-): Promise<ClonedValue> => {
+): Promise<CapturedValue> => {
   let resolved = false;
 
   const readyArray = [] as Promise<unknown>[];
 
-  const customCapture: CustomClone = (value: unknown) => {
+  const customCapture: CustomCapture = (value: unknown) => {
     //custom
 
     const tmp = externalCustomCapture(value);
@@ -43,7 +43,7 @@ export const asyncCapture = (
     if (!(value instanceof orgPromise)) {
       return null;
     } else {
-      const holder = {} as ClonedPromisePending;
+      const holder = {} as PendingCapturedPromise;
 
       const fallback = () => {
         holder.timeout = "Timeout (" + timeoutms + "ms)";
@@ -51,7 +51,7 @@ export const asyncCapture = (
 
       const wrapped = value
         .then((data) => {
-          holder.resolve = clone(data);
+          holder.resolve = capture(data);
 
           if (resolved) {
             onUpdate(captured, "resolved");
@@ -62,7 +62,7 @@ export const asyncCapture = (
           if (!includeErrorStack) {
             data.stack = "filtered" as any;
           }
-          holder.reject = clone(data);
+          holder.reject = capture(data);
 
           onError(error);
 
@@ -89,7 +89,7 @@ export const asyncCapture = (
     }
   };
 
-  const captured = clone(value, undefined, customCapture);
+  const captured = capture(value, undefined, customCapture);
 
   return Promise.all(readyArray).then(() => {
     resolved = true;
