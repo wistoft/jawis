@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "~finally-provider",
   "description": "Register functions for execution at a later time.",
   "dependencies": {},

@@ -1,8 +1,8 @@
 # 2.0.0
 
-## :boom: Breaking changes
+## :tada: Enhancements
 
-- `director.ts/Deps` is renamed to `DirectorDeps`.
+- Major bump, just to keep up with `server` and `view`.
 
 # upcoming
 

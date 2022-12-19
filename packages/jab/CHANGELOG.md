@@ -1,27 +1,4 @@
-# 1.0.3
-
-## :tada: Enhancements
-
-- Add functions: `getRandomUint8Array` and `toBits`
-
-# 1.0.2
-
-## :tada: Enhancements
-
-- Update `README.md`.
-- Add functions
-  - `assertEq`
-  - `numberOfRightZeroBits`
-  - `preserveHeighestBit`
-  - `escapeBashArgument`
-  - `once`
-  - `refable`
-  - `makeTypedArray`
-  - `base64ToTypedArray`
-
-# upcoming
-
-## :tada: Enhancements
+# 2.0.0
 
 ## :bug: Bug fixes
 
@@ -60,3 +37,32 @@
   - `then`
   - `timeRace`
   - `whiling`
+
+# 1.0.3
+
+## :tada: Enhancements
+
+- Add functions: `getRandomUint8Array` and `toBits`
+
+# 1.0.2
+
+## :tada: Enhancements
+
+- Update `README.md`.
+- Add functions
+  - `assertEq`
+  - `numberOfRightZeroBits`
+  - `preserveHeighestBit`
+  - `escapeBashArgument`
+  - `once`
+  - `refable`
+  - `makeTypedArray`
+  - `base64ToTypedArray`
+
+# upcoming
+
+## :tada: Enhancements
+
+## :bug: Bug fixes
+
+## :boom: Breaking changes

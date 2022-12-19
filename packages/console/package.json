@@ -2,7 +2,7 @@
   "sideEffects": [
     "./consoleCaptureMain.ts"
   ],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "~console",
   "description": "Console output from both node and browser shown in the browser",
   "dependencies": {

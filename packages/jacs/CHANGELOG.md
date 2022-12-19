@@ -1,3 +1,13 @@
+# 2.0.0
+
+## :tada: Enhancements
+
+## :bug: Bug fixes
+
+## :boom: Breaking changes
+
+- Moved `CompileService` type to `@jawis/jabc`
+
 # 1.0.4
 
 ## :tada: Enhancements
@@ -18,5 +28,3 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
-
-- Moved `CompileService` type to `@jawis/jabc`

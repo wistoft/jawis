@@ -1,8 +1,4 @@
-# upcoming
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
+# 2.0.0
 
 ## :boom: Breaking changes
 
@@ -16,4 +12,10 @@
 - `ClonedValueNonPrimitive` type to `CapturedValueNonPrimitive`
 - `ClonedPromisePending` type to `CapturedPromisePending`
 
-S
+# upcoming
+
+## :tada: Enhancements
+
+## :bug: Bug fixes
+
+## :boom: Breaking changes

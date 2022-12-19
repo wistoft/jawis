@@ -2,7 +2,7 @@
   "sideEffects": [
     "./javiServerMain.ts"
   ],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "~javi",
   "bin": {
     "javi": "./javiServerMain.js"
