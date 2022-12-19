@@ -1,4 +1,4 @@
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 import { useAssertStatic } from "^jab-react";
 import { TestProvision } from "^jarun";
 

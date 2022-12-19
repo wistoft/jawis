@@ -1,4 +1,4 @@
-# Render Hook
+# Render hook plus
 
 Improved version of `renderHook` from the library
 [@testing-library/react-hooks](https://www.npmjs.com/package/@testing-library/react-hooks)
@@ -6,13 +6,13 @@ Improved version of `renderHook` from the library
 ## Installation
 
 ```
-npm i render-hook
+npm i render-hook-plus
 ```
 
 ## Usage
 
 ```js
-import { renderHook } from "render-hook";
+import { renderHook } from "render-hook-plus";
 
 // Arguments to the hook (useCounter) are taken as additional arguments.
 const { result, unmount, hook, rerender } = renderHook(

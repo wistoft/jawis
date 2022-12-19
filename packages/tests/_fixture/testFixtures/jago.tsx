@@ -3,7 +3,7 @@ import React from "react";
 import { TestProvision } from "^jarun";
 import { JagoLogEntry, ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^jab-react";
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 
 import { View } from "^jagov/View";
 import { useDirector } from "^jagov/useDirector";

@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { useUnmountSafeFunction } from "^jab-react";
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 
 export default ({ eq, chk }: TestProvision) => {
   const innerFunc = (x: string) => x;

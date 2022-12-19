@@ -1,4 +1,4 @@
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 import { TestProvision } from "^jarun";
 
 //one arg

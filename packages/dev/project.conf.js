@@ -16,7 +16,7 @@ const unscopedPackages = [
   "assorted-algorithms",
   "lazy-require-ts",
   "loop-controller",
-  "render-hook",
+  "render-hook-plus",
 ];
 
 const scopedPackages = [

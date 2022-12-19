@@ -14,7 +14,7 @@ import {
   makeReplaceAtoms,
 } from "^jab-react";
 import { getHtmlRTR } from "^misc/node";
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 import { asyncClone, clone } from "^jab";
 
 import { ViewTest } from "^jatev/ViewTest";

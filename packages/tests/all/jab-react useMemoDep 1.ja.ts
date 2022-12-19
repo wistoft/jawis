@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { renderHook } from "^render-hook";
+import { renderHook } from "^render-hook-plus";
 import { useMemoDep } from "^jab-react";
 
 export default (prov: TestProvision) => {
