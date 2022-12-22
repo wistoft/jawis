@@ -6,8 +6,8 @@ import { assertPropString } from "^jab";
 
 import { ViewComponent } from "./ViewComponent";
 
-import { ComponentDef } from ".";
 import { toUrl } from "./util";
+import { ComponentDef } from ".";
 
 export type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];

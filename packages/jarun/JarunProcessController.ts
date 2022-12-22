@@ -6,12 +6,11 @@ import { getFileToRequire, MakeBee, ProcessRestarter } from "^jab-node";
 import { TestRunner } from "^jates";
 import { Waiter } from "^state-waiter";
 
-import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
-
 import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,
 } from "./JarunProcessControllerInner";
+import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
 
 export type JarunProcessControllerDeps = {
   customBooter?: string;

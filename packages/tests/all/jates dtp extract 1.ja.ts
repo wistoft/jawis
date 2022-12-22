@@ -1,5 +1,5 @@
-import { extractDeps } from "^util-javi/dtp";
 import { TestProvision } from "^jarun";
+import { extractDeps } from "^util-javi/dtp";
 import {
   getInMemoryCompilerHost,
   getJsxSourceFile,

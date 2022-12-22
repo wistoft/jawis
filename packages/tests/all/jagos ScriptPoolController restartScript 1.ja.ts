@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController_one, getScriptPath } from "../_fixture";
 import { sleeping } from "^yapu";
+import { getJabScriptPoolController_one, getScriptPath } from "../_fixture";
 
 //start single script
 

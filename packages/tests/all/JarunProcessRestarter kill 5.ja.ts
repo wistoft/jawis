@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getProcessRestarter_running } from "../_fixture";
 import { TS_TIMEOUT } from "^jab-node";
+import { getProcessRestarter_running } from "../_fixture";
 
 //kill after restart (async)
 

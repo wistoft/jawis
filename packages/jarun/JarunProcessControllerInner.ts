@@ -165,7 +165,7 @@ export class JarunProcessControllerInner {
         break;
 
       default: {
-        // eslint-disable-next-line unused-imports/no-unused-vars-ts
+        // eslint-disable-next-line unused-imports/no-unused-vars
         const nev: never = msg; // we want exhaustive check, but not to throw.
 
         //send rogue report

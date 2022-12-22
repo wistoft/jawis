@@ -1,5 +1,5 @@
-import { getControlArray } from "^jacs/protocol";
 import { TestProvision } from "^jarun";
+import { getControlArray } from "^jacs/protocol";
 import { requestProducerSync_test, syntheticWait } from "../_fixture";
 
 // consumer responds between soft and hard timeout.

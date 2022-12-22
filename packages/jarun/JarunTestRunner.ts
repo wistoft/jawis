@@ -7,6 +7,8 @@ import {
   errorToTestLog,
 } from "^jatec";
 
+import { timeRace } from "^yapu";
+import { asyncCapture } from "^async-capture";
 import {
   createJarunSetTimeout,
   TestFunction,
@@ -15,8 +17,6 @@ import {
 } from "./util";
 import { JarunTestProvision } from "./JarunTestProvision";
 import { createJarunPromise } from "./JarunPromise";
-import { timeRace } from "^yapu";
-import { asyncCapture } from "^async-capture";
 
 export type JarunTestRunnerDeps = Readonly<{
   timeoutms: number;

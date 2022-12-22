@@ -7,14 +7,14 @@ import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 //import development versions for `devServerMain.ts`
 
-import { makeTsNodeJabProcess } from "^util-javi/node";
 import { createDefaultTestRunners } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";
 import { makeApp, Route } from "^jab-express";
+import { MainProv, MakeBee } from "^jab-node";
 import { DirectorDeps as JatesDeps } from "^jates/director";
 import { DirectorDeps as JagosDeps } from "^jagos/director";
-import { MainProv, MakeBee } from "^jab-node";
+import { makeTsNodeJabProcess } from "^util-javi/node";
 
 import { JaviClientConf } from "./types";
 

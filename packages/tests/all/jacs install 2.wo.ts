@@ -1,9 +1,9 @@
+import { install } from "^jacs";
+import { def } from "^jab";
 import {
   getWorkerData,
   uninstallLiveJacs,
 } from "../_fixture/testFixtures/jacs";
-import { install } from "^jacs";
-import { def } from "^jab";
 
 uninstallLiveJacs();
 

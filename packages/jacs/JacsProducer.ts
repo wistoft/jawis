@@ -7,12 +7,12 @@ import {
   makePlainWorker,
 } from "^jab-node";
 
+import { FinallyFunc } from "^finally-provider";
+import { safeCatch } from "^yapu";
 import { getControlArray, setCompiling, signalConsumerSync } from "./protocol";
 import { SourceFileLoader } from "./SourceFileLoader";
 
 import { ConsumerMessage, WorkerData } from ".";
-import { FinallyFunc } from "^finally-provider";
-import { safeCatch } from "^yapu";
 
 export type JacsProducerDeps = {
   consumerTimeout: number;

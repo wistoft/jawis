@@ -1,10 +1,9 @@
 import { TestProvision } from "^jarun";
+import { basename } from "^jab";
+import { ScriptDefinition } from "^jagos";
 import { ScriptPoolController, Deps } from "^jagos/ScriptPoolController";
 
-import { basename } from "^jab";
-
 import { getLogProv, getScriptPath, makeJacsWorker } from ".";
-import { ScriptDefinition } from "^jagos";
 
 /**
  *

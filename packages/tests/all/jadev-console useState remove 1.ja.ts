@@ -1,9 +1,9 @@
+import { act } from "@testing-library/react-hooks";
 import { TestProvision } from "^jarun";
 
-import { act } from "@testing-library/react-hooks";
 import { useConsoleState } from "^console";
-import { makeGetRandomInteger, uiEntries } from "../_fixture";
 import { renderHook } from "^render-hook-plus";
+import { makeGetRandomInteger, uiEntries } from "../_fixture";
 
 //
 

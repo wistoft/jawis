@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getScriptPath } from "../_fixture";
 import { getJagosDirector_with_script } from "^tests/_fixture/testFixtures/jagos";
+import { getScriptPath } from "../_fixture";
 
 //start script
 

@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getConsoleFire } from "../_fixture";
 import { sleeping } from "^yapu";
+import { getConsoleFire } from "../_fixture";
 
 //two events are batch together, when they are close (in time)
 

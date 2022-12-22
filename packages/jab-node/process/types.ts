@@ -1,9 +1,9 @@
 import type { Serializable } from "child_process";
 import type { Worker, WorkerOptions } from "worker_threads";
+import { FinallyFunc } from "^finally-provider";
 import type { Bee, MakeBee, StructuredCloneable } from "..";
 
 import type { ProcessDeps, Process, JabWorker, JabWorkerDeps } from ".";
-import { FinallyFunc } from "^finally-provider";
 
 //
 // scripts/exec

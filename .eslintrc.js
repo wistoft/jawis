@@ -38,8 +38,8 @@ module.exports = {
 
   rules: {
     "@typescript-eslint/no-unused-vars": "off", //replaced by unused-imports
-    "unused-imports/no-unused-imports-ts": "warn",
-    "unused-imports/no-unused-vars-ts": [
+    "unused-imports/no-unused-imports": "warn",
+    "unused-imports/no-unused-vars": [
       "warn",
       {
         varsIgnorePattern: "^_",
@@ -58,5 +58,23 @@ module.exports = {
     "import/no-duplicates": ["error"],
     "import/no-self-import": ["error"],
     "import/export": ["error"],
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", "parent", "sibling"],
+        pathGroups: [
+          {
+            pattern: "^**",
+            group: "external",
+            position: "after",
+          },
+          {
+            pattern: "^*/**",
+            group: "external",
+            position: "after",
+          },
+        ],
+      },
+    ],
   },
 };

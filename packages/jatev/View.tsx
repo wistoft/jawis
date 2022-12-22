@@ -3,9 +3,9 @@ import React, { memo } from "react";
 import { def } from "^jab";
 
 import { ViewTest, ViewTestProps } from "./ViewTest";
-import { StateCallbacks, State } from ".";
 import { ViewExecutionList } from "./ViewExecutionList";
 import { ViewTestLog } from "./ViewTestLog";
+import { StateCallbacks, State } from ".";
 
 // props
 

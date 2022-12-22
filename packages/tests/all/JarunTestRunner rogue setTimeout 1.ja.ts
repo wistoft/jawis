@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { jtrRunTest } from "../_fixture";
 import { sleeping } from "^yapu";
+import { jtrRunTest } from "../_fixture";
 
 //throws in timeout after test has ended.
 

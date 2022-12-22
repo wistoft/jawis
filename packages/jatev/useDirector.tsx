@@ -23,7 +23,6 @@ import { ViewAction, ViewActionProps } from "./ViewAction";
 import { ViewControls } from "./ViewControls";
 import { makeOnKeydown } from "./onKeydown";
 import { testSelectionToCollection } from "./TestCollection";
-import { StateCallbacks, State } from ".";
 import {
   makeTestCaseUpdater,
   makeShowTestUpdater,
@@ -32,6 +31,7 @@ import {
   makeRogueUpdater,
 } from "./updaters";
 import { getTestLogsThatDiffer } from "./util";
+import { StateCallbacks, State } from ".";
 
 export type DirectorProps = {
   getRandomToken: () => number;

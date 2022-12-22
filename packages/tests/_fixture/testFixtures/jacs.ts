@@ -11,14 +11,13 @@ import {
   WorkerData,
   TsPathsConfig,
 } from "^jacs";
-import { makeTsNodeWorker } from "^util-javi/node";
 import { TestProvision } from "^jarun";
+import { assertString } from "^jab";
+import { makeTsNodeWorker } from "^util-javi/node";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";
 import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
-
-import { assertString } from "^jab";
 
 import { syntheticWait } from "./jacs protocol";
 

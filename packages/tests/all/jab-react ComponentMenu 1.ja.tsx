@@ -1,8 +1,8 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { getHtmlEnzyme } from "^misc/node";
 import { ComponentMenu } from "^jab-react";
+import { getHtmlEnzyme } from "^misc/node";
 
 import { getComponentMenu } from "../_fixture";
 

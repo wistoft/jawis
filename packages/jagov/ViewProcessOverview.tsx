@@ -2,13 +2,13 @@ import React, { memo } from "react";
 import { Link } from "@reach/router";
 import { basename } from "^jab";
 
-import { ApiProv, State } from ".";
 import {
   getEditLink,
   getRestartLink,
   getScriptColor,
   getStopLink,
 } from "./util";
+import { ApiProv, State } from ".";
 
 export type ViewProcessOverviewProps = Pick<State, "processStatus"> & ApiProv;
 

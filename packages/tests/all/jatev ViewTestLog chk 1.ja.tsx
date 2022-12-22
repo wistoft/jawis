@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^misc/node";
 import { capture } from "^jab";
+import { getHtmlEnzyme } from "^misc/node";
 import { errorData1, getViewTestLog } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {

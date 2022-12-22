@@ -14,8 +14,8 @@ import {
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { makeOnServerMessage } from "./onServerMessage";
-import { State } from ".";
 import { setProcessStatusUpdater } from "./updaters";
+import { State } from ".";
 
 export type DirectorProps = {
   useConsoleStream?: UseConsoleStream;

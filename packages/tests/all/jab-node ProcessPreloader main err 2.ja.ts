@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getJabProcessPreloaderAndDeps, getScriptPath } from "../_fixture";
 import { err } from "^jab";
+import { getJabProcessPreloaderAndDeps, getScriptPath } from "../_fixture";
 
 // exit, while waiting
 

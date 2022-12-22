@@ -1,7 +1,7 @@
 import fs from "fs";
-import { err, tos } from "^jab";
 import path from "path";
 import ts, { Diagnostic, DiagnosticMessageChain, MapLike } from "typescript";
+import { err, tos } from "^jab";
 
 export type TsPathsConfig = {
   baseUrl: string;

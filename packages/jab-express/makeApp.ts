@@ -1,7 +1,7 @@
+import path from "path";
 import express from "express";
 import expressWs from "express-ws";
 import WebSocket from "ws";
-import path from "path";
 
 import { assertNever, err, Jsonable } from "^jab";
 import { MainProv } from "^jab-node";

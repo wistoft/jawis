@@ -1,6 +1,6 @@
 import { objMap } from "^jab";
-import { getHtmlRTR } from "^misc/node";
 import { TestProvision } from "^jarun";
+import { getHtmlRTR } from "^misc/node";
 import { defaultConf } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {

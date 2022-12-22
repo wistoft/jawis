@@ -11,7 +11,7 @@ import {
 } from "^jatec";
 import { WsPoolController } from "^jab-express";
 
-import { ComposedTestFramework, CreateTestRunners } from ".";
+import { FinallyFunc } from "^finally-provider";
 import { ClientComController } from "./ClientComController";
 import { Behavior } from "./Behavior";
 import { makeOnClientMessage } from "./onClientMessage";
@@ -19,7 +19,7 @@ import { TestAnalyticsController } from "./TestAnalyticsController";
 import { TestLogController } from "./TestLogController";
 import { TestExecutionController } from "./TestExecutionController";
 import { TestListController } from "./TestListController";
-import { FinallyFunc } from "^finally-provider";
+import { ComposedTestFramework, CreateTestRunners } from ".";
 
 export type DirectorDeps = Readonly<{
   absTestFolder: string;

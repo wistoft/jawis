@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getScriptPath } from "../_fixture";
 import { getJagosDirector } from "^tests/_fixture/testFixtures/jagos";
+import { getScriptPath } from "../_fixture";
 
 //shutdown with started script: is just silent
 

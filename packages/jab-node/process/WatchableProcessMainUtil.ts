@@ -1,7 +1,6 @@
 import { plugIntoModuleLoadOld } from "..";
-import { makeRequireSender, makeSend } from ".";
-
 import { ppMain } from "./ProcessPreloaderMainUtil";
+import { makeRequireSender, makeSend } from ".";
 
 export const wppMain = () => {
   //process preloader

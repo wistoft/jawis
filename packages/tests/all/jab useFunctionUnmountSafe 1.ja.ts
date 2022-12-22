@@ -5,7 +5,7 @@ import { renderHook } from "^render-hook-plus";
 
 export default ({ eq, chk }: TestProvision) => {
   const innerFunc = (x: string) => x;
-  // eslint-disable-next-line unused-imports/no-unused-vars-ts
+  // eslint-disable-next-line unused-imports/no-unused-vars
   const innerFunc2 = (x: string) => "new";
 
   const { result, unmount, hook, rerender } = renderHook(

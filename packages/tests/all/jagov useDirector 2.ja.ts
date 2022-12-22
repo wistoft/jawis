@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { renderUseJagoDirector } from "^tests/_fixture";
 import { def } from "^jab";
+import { renderUseJagoDirector } from "^tests/_fixture";
 
 // onOpen sends a message to server
 

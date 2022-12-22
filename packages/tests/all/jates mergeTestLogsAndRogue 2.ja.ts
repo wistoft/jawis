@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { errorData, errorData0 } from "../_fixture";
 import { mergeTestLogsAndRogue } from "^jatec";
+import { errorData, errorData0 } from "../_fixture";
 
 // rogue errors
 

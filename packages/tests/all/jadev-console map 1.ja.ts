@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { mapConsoleEntry } from "^console/util";
 import { ConsoleEntry } from "^console";
+import { mapConsoleEntry } from "^console/util";
 
 export default (prov: TestProvision) => {
   const entry: ConsoleEntry = {

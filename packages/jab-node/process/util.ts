@@ -4,6 +4,7 @@ import { Worker, WorkerOptions } from "worker_threads";
 
 import { err } from "^jab";
 
+import type { MakeBee, LoadFunction } from "..";
 import {
   RequireSenderMessage,
   JabWorker,
@@ -11,8 +12,6 @@ import {
   MakeJabProcess,
   MakeNodeWorker,
 } from ".";
-
-import type { MakeBee, LoadFunction } from "..";
 
 //We start TypeScript, so we need a large timeout :-)
 export const TS_TIMEOUT = 4000;

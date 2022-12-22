@@ -1,4 +1,4 @@
-/* eslint-disable unused-imports/no-unused-vars-ts */
+/* eslint-disable unused-imports/no-unused-vars */
 
 export const returnSomething = () => {
   return "returnSomething";

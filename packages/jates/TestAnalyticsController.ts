@@ -1,5 +1,5 @@
-import { OnRequire } from "^jab-node";
 import filewatcher from "filewatcher";
+import { OnRequire } from "^jab-node";
 import { TestAnalytics } from "./TestAnalytics";
 
 type Deps = {

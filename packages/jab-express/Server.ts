@@ -1,7 +1,7 @@
-import { Application } from "express";
 import http from "http";
 
 import { Socket } from "net";
+import { Application } from "express";
 
 export type ServerDeps = {
   port: number;

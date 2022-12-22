@@ -6,13 +6,13 @@ import sourceMapSupport from "source-map-support";
 import { def, ErrorWithParsedNodeStack } from "^jab";
 import { CompileFunction, FullNativeModule, nodeRequire } from "^jab-node";
 
+import { JacsConsumer } from "./JacsConsumer";
 import {
   extractStackTraceInfo,
   unRegisterSourceMapSupport,
   unRegisterTsCompiler,
   WorkerData,
 } from ".";
-import { JacsConsumer } from "./JacsConsumer";
 
 const Module = nativeModule as unknown as FullNativeModule & {
   prototype: { _compile: CompileFunction; _jacsUninstall?: () => void };

@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
-import { TestState } from ".";
 import { ViewExecutionLevel } from "./ViewExecutionLevel";
+import { TestState } from ".";
 
 type Props = {
   tests?: TestState[][];

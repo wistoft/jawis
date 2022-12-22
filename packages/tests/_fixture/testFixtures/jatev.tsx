@@ -13,9 +13,11 @@ import {
   makeToAtomizedString,
   makeReplaceAtoms,
 } from "^jab-react";
-import { getHtmlRTR } from "^misc/node";
 import { renderHook } from "^render-hook-plus";
 import { capture } from "^jab";
+import { TestState, TestStateUpdate } from "^jatev";
+import { asyncCapture } from "^async-capture";
+import { getHtmlRTR } from "^misc/node";
 
 import { ViewTest } from "^jatev/ViewTest";
 import {
@@ -28,9 +30,12 @@ import {
   ViewExecutionLevelProps,
 } from "^jatev/ViewExecutionLevel";
 import { ViewTestLog, ViewTestLogProps } from "^jatev/ViewTestLog";
-import { TestState, TestStateUpdate } from "^jatev";
 import { useDirector } from "^jatev/useDirector";
 
+import {
+  ViewTestLogContent,
+  ViewTestLogContentProps,
+} from "^jatev/ViewTestLogContent";
 import {
   defaultState,
   makeGetRandomInteger,
@@ -38,11 +43,6 @@ import {
   stateWithTestReports,
   stateWithTests,
 } from ".";
-import {
-  ViewTestLogContent,
-  ViewTestLogContentProps,
-} from "^jatev/ViewTestLogContent";
-import { asyncCapture } from "^async-capture";
 
 export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.
 

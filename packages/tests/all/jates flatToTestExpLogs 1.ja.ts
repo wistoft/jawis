@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { errorData1 } from "../_fixture";
 import { flatToTestExpLogs_compat } from "^jatec";
+import { errorData1 } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
   imp(flatToTestExpLogs_compat({}));

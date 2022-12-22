@@ -2,11 +2,10 @@ import { assertNever } from "^jab";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 
+import { WsMessageListener } from "^jab-express";
+import { handleOpenFileInVsCode } from "^util-javi/node";
 import { BehaviorProv } from "./Behavior";
 import { ScriptPoolProv } from "./ScriptPoolController";
-
-import { handleOpenFileInVsCode } from "^util-javi/node";
-import { WsMessageListener } from "^jab-express";
 
 export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };
 

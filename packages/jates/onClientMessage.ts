@@ -1,7 +1,7 @@
 import { assertNever } from "^jab";
 import { ServerMessage, ClientMessage } from "^jatec";
-import { compareFiles, handleOpenFileInVsCode } from "^util-javi/node";
 import { WsMessageListener } from "^jab-express";
+import { compareFiles, handleOpenFileInVsCode } from "^util-javi/node";
 
 import { BehaviorProv } from "./Behavior";
 import { ClientComProv } from "./ClientComController";

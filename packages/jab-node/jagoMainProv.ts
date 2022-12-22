@@ -10,6 +10,7 @@ import {
   OnError,
 } from "^jab";
 
+import { FinallyProvider } from "^finally-provider";
 import {
   flushAndExit,
   JabShutdownMessage,
@@ -17,7 +18,6 @@ import {
   makeSend,
   registerOnMessage,
 } from ".";
-import { FinallyProvider } from "^finally-provider";
 
 //for testing
 export type JagoSend = (msg: JagoLogEntry) => void;

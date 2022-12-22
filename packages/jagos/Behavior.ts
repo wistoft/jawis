@@ -2,9 +2,9 @@ import { WsPoolProv } from "^jab-express";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 
+import { safeAll } from "^yapu";
 import { ScriptPoolProv } from "./ScriptPoolController";
 import { ActionProv } from "./ActionProvider";
-import { safeAll } from "^yapu";
 
 // prov
 

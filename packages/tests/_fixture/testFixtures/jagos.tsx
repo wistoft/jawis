@@ -1,11 +1,11 @@
 import path from "path";
 import { TestProvision } from "^jarun";
 import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
-import { director, DirectorDeps } from "^jagos/director";
 import { NodeWS } from "^jab-express";
+import { assertNever } from "^jab";
+import { director, DirectorDeps } from "^jagos/director";
 
 import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
-import { assertNever } from "^jab";
 
 const projectConf = require("../../../../packages/dev/project.conf");
 

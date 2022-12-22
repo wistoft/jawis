@@ -7,8 +7,8 @@ import {
   zipTestLogs,
 } from "^jatec";
 
-import { TestState, State, TestStateUpdate } from ".";
 import { sortTestLogs } from "./util";
+import { TestState, State, TestStateUpdate } from ".";
 
 /**
  *

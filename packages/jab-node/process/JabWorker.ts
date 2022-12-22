@@ -3,10 +3,10 @@ import { Worker, MessagePort } from "worker_threads";
 
 import { def, err } from "^jab";
 
-import { nodeRequire, StructuredCloneable } from "..";
-import type { JabShutdownMessage, MakeNodeWorker } from ".";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
+import { nodeRequire, StructuredCloneable } from "..";
+import type { JabShutdownMessage, MakeNodeWorker } from ".";
 
 export type JabWorkerDeps<MR, WD> = {
   filename: string;

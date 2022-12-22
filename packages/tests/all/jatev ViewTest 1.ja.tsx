@@ -1,8 +1,8 @@
 import { TestProvision } from "^jarun";
 
 import { getHtmlEnzyme } from "^misc/node";
-import { getViewTest } from "../_fixture";
 import { TestState } from "^jatev/types";
+import { getViewTest } from "../_fixture";
 
 export default (prov: TestProvision) => {
   const test: TestState = {

@@ -1,8 +1,8 @@
 import { TestProvision } from "^jarun";
 
+import { UiEntry } from "^console";
 import { getHtmlRTR } from "^misc/node";
 import { getViewEntry } from "../_fixture";
-import { UiEntry } from "^console";
 
 export default ({ log }: TestProvision) => {
   const a: UiEntry = {

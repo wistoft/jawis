@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix packages",
     "pretty": "prettier -l \"packages/**/{*.{ts,tsx,js,jsx,json,md,css,html},.prettierrc}\"",
     "pretty:fix": "yarn -s pretty --write",
-    "custom:fix": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/lint-package-json.ts",
+    "custom:fix": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/lint-fix-all.ts",
     ".": "",
     "compile": "yarn -s tsc -b",
     "recompile": "rimraf build-tsc && yarn -s tsc -b",

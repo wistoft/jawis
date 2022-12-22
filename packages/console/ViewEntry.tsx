@@ -1,12 +1,12 @@
 import React, { CSSProperties } from "react";
 
-import { ViewException, ViewExceptionProps } from "^util-javi/web";
 import { assertNever } from "^jab";
+import { JsLink } from "^jab-react";
+import { ViewException, ViewExceptionProps } from "^util-javi/web";
 
 import { ConsoleStateProv } from "./useConsoleState";
-import { UiEntry } from ".";
 import { ViewLogEntry } from "./ViewLogEntry";
-import { JsLink } from "^jab-react";
+import { UiEntry } from ".";
 
 export type Props = {
   entry: UiEntry;

@@ -1,8 +1,8 @@
 import ts, { CompilerOptions } from "typescript";
 
-import { dtp } from ".";
 import { DependencyGraph } from "./DependencyGraph";
 import { extractDeps } from "./extractDeps";
+import { dtp } from ".";
 
 type Deps = {
   compilerHost: ts.CompilerHost;
@@ -34,11 +34,11 @@ export class DtpController {
    *  3. get tests from the graph using the standalone algorithm.
    */
   public getTests = (
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    // eslint-disable-next-line unused-imports/no-unused-vars
     cachedDtp: string[][],
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    // eslint-disable-next-line unused-imports/no-unused-vars
     changedFiles: string[],
-    // eslint-disable-next-line unused-imports/no-unused-vars-ts
+    // eslint-disable-next-line unused-imports/no-unused-vars
     tests: Map<string, number>
   ) => {};
 

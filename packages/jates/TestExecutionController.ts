@@ -11,9 +11,9 @@ import {
   OnTestResult,
 } from "^jatec";
 
-import { TestRunner } from ".";
-import { ClientComProv } from "./ClientComController";
 import { timeRace } from "^yapu";
+import { ClientComProv } from "./ClientComController";
+import { TestRunner } from ".";
 
 // prov
 

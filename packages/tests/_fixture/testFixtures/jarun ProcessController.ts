@@ -4,13 +4,13 @@ import {
   JarunProcessController,
 } from "^jarun";
 import { RogueData } from "^jatec";
+import { then } from "^yapu";
 import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,
 } from "^jarun/JarunProcessControllerInner";
 
 import { getLogProv, makeDormentInMemoryBee } from ".";
-import { then } from "^yapu";
 
 /**
  *

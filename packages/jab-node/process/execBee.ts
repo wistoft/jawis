@@ -4,9 +4,9 @@ import { StdioOptions, Serializable } from "child_process";
 import { getPromise } from "^yapu";
 import { FinallyFunc } from "^finally-provider";
 
-import { BeeResult, ProcessDeps } from ".";
-import { ExecBee } from "./types";
 import { MakeBee } from "^jab-node/types";
+import { ExecBee } from "./types";
+import { BeeResult, ProcessDeps } from ".";
 
 //
 // Similar to `exec.ts`

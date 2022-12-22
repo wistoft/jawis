@@ -5,6 +5,7 @@ import {
   LocationProvider,
 } from "@reach/router";
 
+import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 import {
   InnerPanel,
   Props as DevComponentPanelProps,
@@ -17,8 +18,6 @@ import {
   ViewExceptionCallStackProps,
   ViewExceptionProps,
 } from "^util-javi/web";
-
-import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 
 import { errorData0 } from ".";
 

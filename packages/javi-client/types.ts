@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
 import { ComponentMenuProps } from "^jab-react";
-import { Props as JagoConsoleMainProps } from "^jagov/console/ConsoleMain";
 import { Props as JagovProps } from "^jagov";
 import { Props as JatevProps } from "^jatev";
+import { Props as JagoConsoleMainProps } from "^jagov/console/ConsoleMain";
 
 /**
  * - can't be with JaviDirector, because it's '.tsx', while `getClientConf` is '.ts'

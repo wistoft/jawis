@@ -1,7 +1,7 @@
+import { render } from "enzyme";
 import { TestProvision } from "^jarun";
 
 import { getJagoView } from "../_fixture";
-import { render } from "enzyme";
 
 export default (prov: TestProvision) => {
   const container = render(getJagoView());

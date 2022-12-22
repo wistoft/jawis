@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import { webpackCompileHelper } from "./util/build";
 import fastGlob from "fast-glob";
 import { packagesPatternIncludingPrivate, projectRoot } from "../project.conf";
 import { sortObject } from "./build/util";
@@ -8,7 +7,7 @@ import { sortObject } from "./build/util";
 /**
  *
  */
-(async () => {
+export const doit = async () => {
   const versions = new Map<string, string>();
 
   /**
@@ -62,4 +61,6 @@ import { sortObject } from "./build/util";
       path.join(projectRoot, "packages", packageName, "package.json")
     );
   }
-})();
+};
+
+doit();

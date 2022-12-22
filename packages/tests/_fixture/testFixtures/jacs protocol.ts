@@ -1,3 +1,5 @@
+import { ConsumerMessage } from "^jacs";
+import { TestProvision } from "^jarun";
 import {
   ConsumerStates,
   CaIndex,
@@ -7,8 +9,6 @@ import {
   signalConsumerSync,
   WaitFunc,
 } from "^jacs/protocol";
-import { ConsumerMessage } from "^jacs";
-import { TestProvision } from "^jarun";
 
 /**
  *

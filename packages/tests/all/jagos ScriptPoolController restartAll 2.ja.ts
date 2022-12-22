@@ -1,11 +1,11 @@
 import { TestProvision } from "^jarun";
 
+import { sleeping } from "^yapu";
 import {
   getJabScriptPoolController_one,
   getScriptPath,
   mapScriptFilesToDefault,
 } from "../_fixture";
-import { sleeping } from "^yapu";
 
 //shutdown, when script is ipc.
 

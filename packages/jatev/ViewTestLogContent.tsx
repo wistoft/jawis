@@ -4,9 +4,9 @@ import { assertNever, CapturedValue, indent, tos } from "^jab";
 import { ZippedTestLog } from "^jatec";
 import { toAtomizedString, replaceAtoms } from "^jab-react";
 
+import { parseErrorData, ViewException } from "^util-javi/web";
 import { ViewDiff } from "./ViewDiff";
 import { ViewErrorLog, ViewErrorLogProps } from "./ViewErrorLog";
-import { parseErrorData, ViewException } from "^util-javi/web";
 
 export type ShowType = "cmp" | "exp" | "cur";
 

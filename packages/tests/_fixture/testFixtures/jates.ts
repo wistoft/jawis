@@ -7,8 +7,8 @@ import {
   makeProcessRunner,
 } from "^jarun";
 import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
-import { makeTsNodeJabProcess } from "^util-javi/node";
 import { ComposedTestFramework } from "^jates";
+import { makeTsNodeJabProcess } from "^util-javi/node";
 import {
   TestExecutionController,
   TestExecutionControllerDeps,
