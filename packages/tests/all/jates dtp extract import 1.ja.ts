@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { extractDeps } from "^util-javi/dtp";
+import { extractDeps } from "^misc/dtp";
 import { getInMemoryCompilerHost } from "^tests/_fixture";
 import { getSourceFile } from "../_fixture";
 

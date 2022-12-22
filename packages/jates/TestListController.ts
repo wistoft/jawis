@@ -10,7 +10,6 @@ import { TestFrameworkProv } from ".";
 export type TestListControllerProv = {
   onRunAllTests: () => void;
   onRunCurrentSelection: () => void;
-  onRunDtp: () => void;
 };
 
 // deps
@@ -113,67 +112,6 @@ export class TestListController implements TestListControllerProv {
     }
   };
 
-  /**
-   * - return is just for test cases.
-   */
-  public onRunDtp = () => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "fetching":
-        throw err("not impl.");
-
-      case "idle":
-        this.waiter.set("fetching");
-
-        return this.deps.testFramework.getTestIds().then(this.onDtpFetchDone);
-
-      case "stopping":
-      case "done":
-        return prej("Not active");
-
-      default:
-        return assertNever(state);
-    }
-  };
-
-  /**
-   *
-   */
-  private onDtpFetchDone = (ids: string[]): void => {
-    const state = this.waiter.getState();
-
-    switch (state) {
-      case "fetching": {
-        this.waiter.set("idle");
-
-        //get impact.
-
-        this.deps.ta.setTests(ids); // this must be done before getImpact.
-
-        const impact = this.deps.ta.getImpact();
-
-        this.deps.onTestSelectionReady(impact);
-
-        //start execution
-
-        const flat = impact.reduce<string[]>((acc, cur) => acc.concat(cur), []);
-
-        this.deps.setTestExecutionList(flat);
-
-        return;
-      }
-
-      case "idle":
-      case "stopping":
-      case "done":
-        err("Impossible: " + state);
-        return;
-
-      default:
-        return assertNever(state);
-    }
-  };
   /**
    *
    */

@@ -12,3 +12,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Removed dtp.

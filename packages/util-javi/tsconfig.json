@@ -5,7 +5,6 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../assorted-algorithms" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-node" },

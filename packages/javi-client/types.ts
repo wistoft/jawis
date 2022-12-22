@@ -13,13 +13,12 @@ export type JaviDirectorProps = {
   //for developement
   serverPort?: number;
   consolePanel?: ReactNode;
-  showDtpLink?: boolean;
 } & Partial<Omit<ComponentMenuProps, "provideFirstRouteEffect">> &
   JaviClientConf;
 
 /**
  * - All the configuration that comes from server. But not the props that are directly for JaviDirector.
  */
-export type JaviClientConf = Omit<JatevProps, "apiPath" | "showDtpLink"> &
+export type JaviClientConf = Omit<JatevProps, "apiPath"> &
   Omit<JagovProps, "apiPath"> &
   Omit<JagoConsoleMainProps, "apiPath" | "useConsoleStream">;

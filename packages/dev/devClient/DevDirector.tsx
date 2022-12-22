@@ -58,7 +58,6 @@ export const DevDirector: React.FC<Props> = ({
       postNav={postNav}
       consolePanel={consolePanel}
       routes={extraRoutes}
-      showDtpLink={true}
     />
   );
 };

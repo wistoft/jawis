@@ -37,10 +37,6 @@ export const makeOnClientMessage =
         deps.onRunCurrentSelection();
         return;
 
-      case "runDtp":
-        deps.onRunDtp();
-        return;
-
       case "prependTests":
         deps.prependTestList(msg.ids);
         return;

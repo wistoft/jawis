@@ -14,7 +14,7 @@ export type OnRogue = (rogue: RogueData) => void;
 
 export type ClientMessage =
   | {
-      type: "stopRunning" | "runAllTests" | "runCurrentSelection" | "runDtp";
+      type: "stopRunning" | "runAllTests" | "runCurrentSelection";
     }
   | {
       type: "prependTests";

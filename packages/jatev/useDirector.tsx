@@ -36,7 +36,6 @@ import { StateCallbacks, State } from ".";
 export type DirectorProps = {
   getRandomToken: () => number;
   useKeyListener: typeof useKeyListener;
-  showDtpLink?: boolean; //default false
 } & WebSocketProv<ClientMessage, ServerMessage> &
   Omit<
     ViewActionProps,
@@ -57,7 +56,6 @@ export const useDirector = ({
   useWsEffect,
   getRandomToken,
   useKeyListener,
-  showDtpLink,
   ...extra
 }: DirectorProps) => {
   // state
@@ -152,13 +150,6 @@ export const useDirector = ({
       elm: ( <ViewAction action={{ type: "runAllTests" }} {...viewProps} /> ), // prettier-ignore
     },
   ];
-
-  if (showDtpLink) {
-    routes.push({
-      name: "dtp",
-      elm: ( <ViewAction action={{ type: "runDtp" }} {...viewProps} /> ), // prettier-ignore
-    });
-  }
 
   // done
 

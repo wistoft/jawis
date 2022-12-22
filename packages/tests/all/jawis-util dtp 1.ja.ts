@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { dtp } from "^util-javi/dtp";
+import { dtp } from "^misc/dtp";
 
 export default (prov: TestProvision) => {
   const tests = new Map([["1", 0]]);

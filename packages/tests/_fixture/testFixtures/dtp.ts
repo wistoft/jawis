@@ -1,4 +1,4 @@
-import { DependencyGraph, DtpController, extractDeps } from "^util-javi/dtp";
+import { DependencyGraph, DtpController, extractDeps } from "^misc/dtp";
 
 import { getSourceFile } from "./ts";
 import { getInMemoryCompilerHost } from "./ts compiler host";

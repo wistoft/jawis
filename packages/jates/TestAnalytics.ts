@@ -2,8 +2,6 @@ import path from "path";
 
 import { dfs } from "^assorted-algorithms";
 
-import { dtp } from "^util-javi/dtp";
-
 type Deps = {
   absTestFolder: string;
 };
@@ -179,21 +177,4 @@ export class TestAnalytics {
    */
   public getTransitiveRequired = (id: string) =>
     dfs(id, (id) => this.directRequired.get(id));
-
-  /**
-   *
-   */
-  public getImpact = () => {
-    this.cachedDtp = dtp(
-      this.cachedDtp,
-      Array.from(this.changedFiles),
-      this.deps.absTestFolder,
-      this.tests,
-      this.directImpact
-    );
-
-    this.changedFiles = new Set();
-
-    return this.cachedDtp;
-  };
 }

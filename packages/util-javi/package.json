@@ -14,8 +14,7 @@
     "stack-trace": "^0.0.10",
     "stacktrace-gps": "^3.0.4",
     "stacktrace-js": "^2.0.2",
-    "ts-node": "^10.8.1",
-    "typescript": "^4.6.2"
+    "ts-node": "^10.8.1"
   },
   "keywords": [
     "prototype",
