@@ -66,3 +66,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Rename `fixErrorInheritence` to `fixErrorInheritance`

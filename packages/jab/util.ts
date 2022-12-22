@@ -118,7 +118,7 @@ export const isNode = () =>
  * Fix inheritance when inheriting from native classes in node.js.
  *
  */
-export const fixErrorInheritence = (obj: {}, cls: {} | null) => {
+export const fixErrorInheritance = (obj: {}, cls: {} | null) => {
   if (isNode()) {
     Object.setPrototypeOf(obj, cls);
   }

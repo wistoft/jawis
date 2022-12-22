@@ -3,7 +3,7 @@ import { JagoLogEntry } from "^jagoc";
 import {
   captureArrayEntries,
   err,
-  fixErrorInheritence,
+  fixErrorInheritance,
   indent,
   LogProv,
   unknownToErrorData,
@@ -35,7 +35,7 @@ export class UserMessage extends Error {
     // fallback message for when this is caught as Error
     super(ownMessage);
 
-    fixErrorInheritence(this, UserMessage.prototype);
+    fixErrorInheritance(this, UserMessage.prototype);
   }
 
   public getUserMessage() {

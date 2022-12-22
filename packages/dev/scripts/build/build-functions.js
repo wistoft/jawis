@@ -84,10 +84,6 @@ const makeJawisBuildManager = (
       conf.references.forEach((def) => {
         const tmp = getFullPackageName(
           def.path.replace(/^\.\.\//, ""),
-          npmScope,
-          scopedPackages,
-          unscopedPackages,
-          privatePackages,
           allowPrivate
         );
 
@@ -135,7 +131,11 @@ const makeJawisBuildManager = (
     });
 
     for (const packageName of packages) {
-      res[packageName] = await getSiblingPackages(
+      const tmp = fullPackageName
+        ? getFullPackageName(packageName, allowPrivate)
+        : packageName;
+
+      res[tmp] = await getSiblingPackages(
         packageName,
         fullPackageName,
         allowPrivate
@@ -170,13 +170,7 @@ const makeJawisBuildManager = (
 
       const json = JSON.parse(jsonStr);
 
-      const fullName = getFullPackageName(
-        packageName,
-        npmScope,
-        scopedPackages,
-        unscopedPackages,
-        privatePackages
-      );
+      const fullName = getFullPackageName(packageName);
 
       if (json.verison === "0.0.0") {
         throw new Error(
