@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import enzyme, { render, shallow } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import toJson from "enzyme-to-json";
-import prettyFormat from "pretty-format";
+import { format as prettyFormat, plugins } from "pretty-format";
 
 //not that nice with side effects
 enzyme.configure({ adapter: new Adapter() });
@@ -12,7 +12,7 @@ enzyme.configure({ adapter: new Adapter() });
  */
 export const cheerioTos = (cheerio: any) =>
   prettyFormat(toJson(cheerio, { noKey: true }), {
-    plugins: [prettyFormat.plugins.ReactTestComponent],
+    plugins: [plugins.ReactTestComponent],
     printFunctionName: false,
   });
 

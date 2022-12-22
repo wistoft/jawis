@@ -1,7 +1,6 @@
 import path from "path";
 
 import { startJaviServer } from "^javi/util";
-import { makeDefaultRoute } from "^dev-apps";
 import { MainProv, mainWrapper } from "^jab-node";
 
 import conf from "../dev.conf";
@@ -42,19 +41,7 @@ const main = (mainProv: MainProv) => {
       ],
     },
 
-    makeRoutes: [
-      {
-        type: "serverApp",
-        path: "/default",
-        makeHandler: ({ mainProv, wsServer }) =>
-          makeDefaultRoute({
-            wsServer,
-            onError: mainProv.onError,
-            finally: mainProv.finally,
-            logProv: mainProv.logProv,
-          }),
-      },
-    ],
+    makeRoutes: [],
   });
 };
 

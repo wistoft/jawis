@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-import { err, makeJabError } from "^jab";
+import { err } from "^jab";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 
@@ -98,7 +98,6 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
    */
   public send = (data: MS) => {
     if (!this.waiter.is("running")) {
-      // throw new Error("Socket not open.");
       return Promise.reject(
         new Error(
           "Can't send. Socket not open." +
@@ -147,12 +146,10 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
   /**
    *
    */
-  private onMessage = (rawMsg: string) => {
-    // console.log("nodews message", message);
-
+  private onMessage = (rawMsg: string | Buffer) => {
     if (!this.waiter.is("running")) {
       this.deps.onError(
-        makeJabError(
+        new Error(
           "Received message while not open." +
             " (state:" +
             this.waiter.getState() +
@@ -166,11 +163,11 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
     let msg: MR;
 
     try {
-      if (typeof rawMsg !== "string") {
-        throw err("Unknown message type.", rawMsg);
+      if (typeof rawMsg !== "string" && !(rawMsg instanceof Buffer)) {
+        err("Unknown message type.", rawMsg);
       }
 
-      msg = JSON.parse(rawMsg);
+      msg = JSON.parse(rawMsg.toString());
     } catch (e) {
       this.deps.onError(e);
       return;

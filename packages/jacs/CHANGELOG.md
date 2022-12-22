@@ -28,3 +28,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- new versions of `typescript` and `ts-config-paths`

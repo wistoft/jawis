@@ -12,8 +12,8 @@
     "@types/source-map-support": "^0.5.3",
     "filewatcher": "^3.0.1",
     "source-map-support": "^0.5.19",
-    "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.2.3"
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.2"
   },
   "keywords": [
     "typescript",

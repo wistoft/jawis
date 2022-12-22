@@ -42,15 +42,7 @@ const scopedPackages = [
   "util-javi",
 ];
 
-const privatePackages = [
-  "dev",
-  "dev-appc",
-  "dev-apps",
-  "dev-appv",
-  "javi-client",
-  "misc",
-  "tests",
-];
+const privatePackages = ["dev", "javi-client", "misc", "tests"];
 
 const phpPackages = [];
 

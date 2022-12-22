@@ -16,3 +16,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Moved `dtp` to misc.

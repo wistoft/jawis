@@ -5,7 +5,6 @@ import { makeUseConsoleStream } from "@jawis/console";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
 
-import { Director } from "^dev-appv";
 import { JaviDirector, JaviDirectorProps } from "^javi-client";
 import { getApiPath } from "^util-javi";
 import { Main as DevComponentPanel } from "^util-javi/web/devComponentPanel";
@@ -41,10 +40,6 @@ export const DevDirector: React.FC<Props> = ({
           contexts={devComponents}
         />
       ),
-    },
-    {
-      name: "App",
-      elm: <Director apiPath={"localhost:" + serverPort + "/default"} />,
     },
   ];
 

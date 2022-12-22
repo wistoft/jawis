@@ -13,3 +13,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- new versions of express, ws and express-ws

@@ -27,7 +27,7 @@ export class JabHttpProvider<HttpRequest> {
       responseObject.text().then((json) => {
         try {
           return JSON.parse(json);
-        } catch (error) {
+        } catch (error: any) {
           err("Error parsing server response: " + error.message, {
             json,
             request,

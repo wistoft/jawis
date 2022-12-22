@@ -1,14 +1,16 @@
 import { ReactElement } from "react";
 import RTR, { ReactTestRenderer } from "react-test-renderer";
 import { createRenderer, ShallowRenderer } from "react-test-renderer/shallow";
-import prettyFormat from "pretty-format";
+import { format as prettyFormat, plugins } from "pretty-format";
+
+//in own folder, because 'react-test-renderer' is not possible to tree shake in webpack build.
 
 /**
  *
  */
 export const rendererTos = (renderer: ReactTestRenderer) =>
   prettyFormat(renderer.toJSON(), {
-    plugins: [prettyFormat.plugins.ReactTestComponent],
+    plugins: [plugins.ReactTestComponent],
     printFunctionName: false,
   });
 
@@ -17,7 +19,7 @@ export const rendererTos = (renderer: ReactTestRenderer) =>
  */
 export const shallowRendererTos = (renderer: ShallowRenderer) =>
   prettyFormat(renderer.getRenderOutput(), {
-    plugins: [prettyFormat.plugins.ReactElement],
+    plugins: [plugins.ReactElement],
     printFunctionName: false,
   });
 

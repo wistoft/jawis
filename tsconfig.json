@@ -4,9 +4,6 @@
   "references": [
     { "path": "./packages/async-capture" },
     { "path": "./packages/assorted-algorithms" },
-    { "path": "./packages/dev-appc" },
-    { "path": "./packages/dev-apps" },
-    { "path": "./packages/dev-appv" },
     { "path": "./packages/dev" },
     { "path": "./packages/finally-provider" },
     { "path": "./packages/jab" },
