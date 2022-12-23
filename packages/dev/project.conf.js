@@ -18,8 +18,12 @@ const unscopedPackages = [
   "finally-provider",
   "lazy-require-ts",
   "loop-controller",
+  "parse-stack",
   "render-hook-plus",
   "state-waiter",
+  "ts-config-util",
+  "use-websocket",
+  "view-exception",
   "yapu",
 ];
 

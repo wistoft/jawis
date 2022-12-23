@@ -3,7 +3,8 @@ import React, { memo, useCallback } from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ClientMessage, ServerMessage } from "@jawis/jagoc";
 
-import { useKeyListener, useWebSocketProv } from "^jab-react";
+import { useKeyListener } from "^jab-react";
+import { useWebSocketProv } from "^use-websocket";
 
 import { InnerPanel } from "./InnerPanel";
 import { mapWebpackContext } from "./util";

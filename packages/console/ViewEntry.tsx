@@ -2,7 +2,7 @@ import React, { CSSProperties } from "react";
 
 import { assertNever } from "^jab";
 import { JsLink } from "^jab-react";
-import { ViewException, ViewExceptionProps } from "^util-javi/web";
+import { ViewException, ViewExceptionProps } from "^view-exception";
 
 import { ConsoleStateProv } from "./useConsoleState";
 import { ViewLogEntry } from "./ViewLogEntry";

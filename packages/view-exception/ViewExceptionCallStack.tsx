@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import path from "path-browserify";
 
-import { ParsedStack, basename, ParsedStackFrame, OpenFile } from "^jab";
+import { OpenFile, ParsedStack, basename, ParsedStackFrame } from "^jab";
 import { JsLink } from "^jab-react";
 
 //props

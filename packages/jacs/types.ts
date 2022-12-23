@@ -1,4 +1,4 @@
-import { TsPathsConfig } from "./ts-util";
+import { TsPathsConfig } from "^ts-config-util";
 
 export type WorkerData = {
   controlArray: Int32Array;

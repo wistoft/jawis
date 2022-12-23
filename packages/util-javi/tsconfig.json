@@ -9,6 +9,7 @@
     { "path": "../jab" },
     { "path": "../jab-node" },
     { "path": "../jab-react" },
+    { "path": "../use-websocket" },
     { "path": "../yapu" }
   ]
 }

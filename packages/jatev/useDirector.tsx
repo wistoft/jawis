@@ -10,7 +10,6 @@ import {
 import {
   useMemoDep,
   makeUseFunction,
-  WebSocketProv,
   useKeyListener,
   HookSetState,
   makeSetPartialState,
@@ -18,6 +17,7 @@ import {
 
 import { OpenFile } from "^jab";
 
+import { WebSocketProv } from "^use-websocket";
 import { makeOnServerMessage } from "./onServerMessage";
 import { ViewAction, ViewActionProps } from "./ViewAction";
 import { ViewControls } from "./ViewControls";

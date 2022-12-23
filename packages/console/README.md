@@ -35,7 +35,6 @@ export const MyConsole: React.FC<Props> = () => {
 ## Related work
 
 - [react-error-overlay](https://www.npmjs.com/package/react-error-overlay)
-- [react-error-boundary](https://www.npmjs.com/package/react-error-boundary)
 - [redbox-react](https://www.npmjs.com/package/redbox-react)
 - [error-overlay-webpack-plugin](https://www.npmjs.com/package/error-overlay-webpack-plugin)
 - [pretty-error](https://www.npmjs.com/package/pretty-error)

@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { parseTrace } from "^util-javi/web";
+import { parseTrace } from "^parse-stack";
 
 export default (prov: TestProvision) => {
   prov.eq([], parseTrace({ type: "node", stack: "" }));

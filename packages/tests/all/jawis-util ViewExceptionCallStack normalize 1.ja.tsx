@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { normalize } from "^util-javi/web";
+import { normalize } from "^view-exception";
 
 export default ({ eq }: TestProvision) => {
   eq("/", normalize("/"));

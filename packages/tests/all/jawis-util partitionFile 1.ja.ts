@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { partitionFile } from "^util-javi/web";
+import { partitionFile } from "^view-exception";
 
 export default ({ eq }: TestProvision) => {
   //no folder

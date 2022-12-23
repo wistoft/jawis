@@ -1,19 +1,10 @@
 import { useState } from "react";
 
-import { BrowserWebSocket, WsStates, Deps as BwsDeps } from "^jab-react";
 import { EventController } from "^jab";
-import {
-  makeUseWsEffect,
-  useAssertStatic,
-  useUnmountSafeFunction,
-  UseWsEffect,
-} from ".";
+import { useAssertStatic, useUnmountSafeFunction } from "^jab-react";
 
-export type WebSocketProv<MS, MR> = {
-  apiSend: (data: MS) => void;
-  wsState: WsStates;
-  useWsEffect: UseWsEffect<MR>;
-};
+import { makeUseWsEffect } from "./makeUseWsEffect";
+import { BrowserWebSocket, WsStates, Deps as BwsDeps, WebSocketProv } from ".";
 
 type Deps = {
   URL: string;

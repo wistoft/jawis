@@ -1,26 +1,9 @@
-import ErrorStackParser from "error-stack-parser";
 import NodeStackTrace from "stack-trace";
-import StackTrace, { StackFrame } from "stacktrace-js";
+import { StackFrame } from "stacktrace-js";
 import StackTraceGPS from "stacktrace-gps";
+import ErrorStackParser from "error-stack-parser";
 
-import {
-  ErrorData,
-  isNode,
-  ParsedErrorData,
-  ParsedStackFrame,
-  CapturedStack,
-} from "^jab";
-import { sleeping } from "^yapu";
-
-export const filterErrorMessage = (msg: string) => msg.replace(/^Error: /, "");
-
-/**
- * Produce a parsed stack for ViewException component.
- */
-export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
-  ...error,
-  parsedStack: parseTrace(error.stack),
-});
+import { isNode, ParsedStackFrame, CapturedStack } from "^jab";
 
 /**
  *
@@ -29,7 +12,7 @@ export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
  *
  * note
  *  error-stack-parser has a lot of logic for Opera, but it's outdated. Current Opera
- *    use v8 format. So there is no need to think about capturing anything but the
+ *    uses v8 format. So there's no need to think about capturing anything but the
  *    `error.stack` property. It will work for all (modern) browsers and node.
  */
 export const parseTrace = (stack: CapturedStack): ParsedStackFrame[] => {
@@ -96,29 +79,9 @@ export const parseTraceAndSourceMap = (stack: CapturedStack) => {
 
 /**
  *
- * note
- *  - It's hacky, but sleeping a bit, makes it more likely, that the message is rendered, and not waiting for the
- *    stack to be ready. It's not a problem on the first parse. In other words, it only
- *    happens, when StackTrace use cached source map.
- */
-export const parseTraceAndSourceMapOld = (stack: CapturedStack) =>
-  sleeping(10).then(() =>
-    StackTrace.fromError({
-      stack: stack.stack,
-    } as Error).then((frames) =>
-      frames.map((elm) => ({
-        line: elm.lineNumber,
-        file: elm.fileName,
-        func: elm.functionName,
-      }))
-    )
-  );
-
-/**
- *
  */
 export const parseNodeTrace = (stack: string) => {
-  //note parse can't be call alone, it must have 'this === StackTrace'
+  //note parse can't be called alone, it must have 'this === NodeStackTrace'
   const trace = NodeStackTrace.parse({ stack } as any);
 
   return trace.map((frame) => {

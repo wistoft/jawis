@@ -1,4 +1,4 @@
-import { getAbsConfigFilePath, getTsPathsConfig } from "^jacs";
+import { getAbsConfigFilePath, getTsPathsConfig } from "^ts-config-util";
 import { TestProvision } from "^jarun";
 import { filterTsPathConfig } from "^tests/_fixture";
 

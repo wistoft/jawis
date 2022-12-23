@@ -4,7 +4,7 @@ import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 
 import { getPromise } from "^yapu";
-import { getAbsConfigFilePath } from "^jacs";
+import { getAbsConfigFilePath } from "^ts-config-util";
 import { nodeExternals } from "^misc";
 import { makeJabError } from "^jab";
 

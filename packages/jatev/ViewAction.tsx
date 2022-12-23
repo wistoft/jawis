@@ -1,7 +1,8 @@
 import React, { memo } from "react";
 
-import { useFirstRouteEffect, WsStates } from "^jab-react";
+import { useFirstRouteEffect } from "^jab-react";
 import { ClientMessage } from "^jatec";
+import { WsStates } from "^use-websocket";
 import { ClientApiSendProv } from "./util";
 
 import { View, ViewProps } from "./View";

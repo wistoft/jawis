@@ -9,10 +9,10 @@ import {
   MakeMakeJacsBeeDeps,
   SourceFileLoader,
   WorkerData,
-  TsPathsConfig,
 } from "^jacs";
 import { TestProvision } from "^jarun";
 import { assertString } from "^jab";
+import { TsPathsConfig } from "^ts-config-util";
 import { makeTsNodeWorker } from "^util-javi/node";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";

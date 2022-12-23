@@ -16,7 +16,7 @@ import {
   dianosticToString,
   getTsPathsConfig,
   getTsConfigFromAbsConfigFile,
-} from ".";
+} from "^ts-config-util";
 
 type Deps = {
   onError: (error: unknown) => void;

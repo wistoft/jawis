@@ -9,6 +9,7 @@
     { "path": "../jab" },
     { "path": "../jab-node" },
     { "path": "../state-waiter" },
+    { "path": "../ts-config-util" },
     { "path": "../yapu" }
   ]
 }

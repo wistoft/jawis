@@ -8,7 +8,8 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../jagoc" },
-    { "path": "../util-javi" },
+    { "path": "../parse-stack" },
+    { "path": "../view-exception" },
     { "path": "../yapu" }
   ]
 }

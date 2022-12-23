@@ -1,16 +1,7 @@
 import { useEffect } from "react";
 
-import { BrowserWebSocket } from "^jab-react";
 import { EventStream } from "^jab";
-
-export type UseWsEffectArgs<ServerMessage> = {
-  onOpen?: () => void;
-  onServerMessage: (data: ServerMessage) => void;
-};
-
-export type UseWsEffect<ServerMessage> = (
-  deps: UseWsEffectArgs<ServerMessage>
-) => void;
+import { BrowserWebSocket, UseWsEffect } from ".";
 
 /**
  * Make a hook that gives it easy to use a web socket.

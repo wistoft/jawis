@@ -1,5 +1,5 @@
 import { renderHook } from "^render-hook-plus";
-import { useWebSocketProv } from "^jab-react";
+import { useWebSocketProv } from "^use-websocket";
 import { TestProvision } from "^jarun";
 
 //URL must not change between renders

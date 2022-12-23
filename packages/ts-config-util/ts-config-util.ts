@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import ts, { Diagnostic, DiagnosticMessageChain, MapLike } from "typescript";
+
 import { err, tos } from "^jab";
 
 export type TsPathsConfig = {
@@ -95,7 +96,7 @@ export function dianosticChainToString(diag: DiagnosticMessageChain): string {
 
 /**
  *
- * - Make baseUrl absolute for ts-config-paths.
+ * - Make baseUrl absolute for tsconfig-paths.
  * - Make some checks the configuration.
  */
 export const getTsPathsConfig = (

@@ -18,3 +18,10 @@
 ## :boom: Breaking changes
 
 - Moved `dtp` to misc.
+- Moved error-parsing functions to new package `parse-stack`.
+  - `parseTrace`
+  - `parseTraceAndSourceMap`
+  - `parseNodeTrace`
+- Moved react components to new package `view-exception`.
+  - `ViewException`
+  - `ViewExceptionCallStack`

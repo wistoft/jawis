@@ -1,4 +1,4 @@
-import { getAbsConfigFilePath, getTsPathsConfig } from "^jacs";
+import { getAbsConfigFilePath, getTsPathsConfig } from "^ts-config-util";
 import { TestProvision } from "^jarun";
 
 // when no paths, return undefined

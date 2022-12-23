@@ -1,14 +1,13 @@
 import React, { memo } from "react";
 
 import { ParsedErrorData } from "^jab";
-
 import { ClickableDivBackground, clonedArrayEntriesToHtml } from "^jab-react";
 
 import {
   filterErrorMessage,
   ViewExceptionCallStack,
   ViewExceptionCallStackProps,
-} from ".";
+} from "./internal";
 
 export type ViewExceptionProps = {
   errorData: ParsedErrorData;

@@ -2,7 +2,7 @@ import React from "react";
 
 import { TestProvision } from "^jarun";
 import { JagoLogEntry, ServerMessage } from "^jagoc";
-import { UseWsEffectArgs } from "^jab-react";
+import { UseWsEffectArgs } from "^use-websocket";
 import { renderHook } from "^render-hook-plus";
 
 import { View } from "^jagov/View";

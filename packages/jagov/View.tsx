@@ -1,8 +1,9 @@
 import React, { memo } from "react";
 import { Link, Router } from "@reach/router";
 
-import { JsLink, NoRoute, ReachRoute, WsStates } from "^jab-react";
+import { JsLink, NoRoute, ReachRoute } from "^jab-react";
 
+import { WsStates } from "^use-websocket";
 import { ViewScriptRoute, ViewScriptRouteProps } from "./ViewScriptRoute";
 import { ViewHome, ViewHomeProps } from "./ViewHome";
 

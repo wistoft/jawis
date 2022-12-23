@@ -7,17 +7,16 @@ import {
 
 import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 import {
-  InnerPanel,
-  Props as DevComponentPanelProps,
-} from "^util-javi/web/devComponentPanel/InnerPanel";
-
-import {
   parseErrorData,
   ViewException,
   ViewExceptionCallStack,
   ViewExceptionCallStackProps,
   ViewExceptionProps,
-} from "^util-javi/web";
+} from "^view-exception";
+import {
+  InnerPanel,
+  Props as DevComponentPanelProps,
+} from "^util-javi/web/devComponentPanel/InnerPanel";
 
 import { errorData0 } from ".";
 

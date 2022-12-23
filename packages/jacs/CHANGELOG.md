@@ -29,4 +29,10 @@
 
 ## :boom: Breaking changes
 
-- new versions of `typescript` and `ts-config-paths`
+- new versions of `typescript` and `tsconfig-paths`
+- Moved functions to new package `ts-config-util`
+  - `getAbsConfigFilePath`
+  - `getTsConfigFromAbsConfigFile`
+  - `dianosticToString`
+  - `dianosticChainToString`
+  - `getTsPathsConfig`

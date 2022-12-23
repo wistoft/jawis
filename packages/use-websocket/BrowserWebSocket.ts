@@ -1,11 +1,5 @@
 import { def, err } from "^jab";
-
-export type WsStates =
-  | "connecting"
-  | "connected"
-  | "reconnecting"
-  | "closing"
-  | "closed";
+import { WsStates } from "./types";
 
 export type Deps<MR> = {
   URL: string;

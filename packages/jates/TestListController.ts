@@ -1,4 +1,4 @@
-import { err, assertNever, prej } from "^jab";
+import { err, assertNever } from "^jab";
 import { Waiter } from "^state-waiter";
 
 import { ClientComProv } from "./ClientComController";

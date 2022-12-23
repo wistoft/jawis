@@ -8,11 +8,11 @@ import {
   makeUseFunction,
   HookSetState,
   makeSetStateCallback,
-  WebSocketProv,
   useAssertStatic,
 } from "^jab-react";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
+import { WebSocketProv } from "^use-websocket";
 import { makeOnServerMessage } from "./onServerMessage";
 import { setProcessStatusUpdater } from "./updaters";
 import { State } from ".";

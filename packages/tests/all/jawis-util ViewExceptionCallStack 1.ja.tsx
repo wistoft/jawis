@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
+import { parseTrace } from "^parse-stack";
 import { getHtmlEnzyme } from "^misc/node";
-import { parseTrace } from "^util-javi/web";
 
 import { errorData1, errorData2, getViewExceptionCallStack } from "../_fixture";
 

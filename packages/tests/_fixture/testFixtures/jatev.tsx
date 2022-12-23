@@ -7,16 +7,12 @@ import {
   ServerMessage,
 } from "^jatec";
 import { TestProvision } from "^jarun";
-import {
-  UseWsEffectArgs,
-  getConf,
-  makeToAtomizedString,
-  makeReplaceAtoms,
-} from "^jab-react";
+import { getConf, makeToAtomizedString, makeReplaceAtoms } from "^jab-react";
 import { renderHook } from "^render-hook-plus";
 import { capture } from "^jab";
 import { TestState, TestStateUpdate } from "^jatev";
 import { asyncCapture } from "^async-capture";
+import { UseWsEffectArgs } from "^use-websocket";
 import { getHtmlRTR } from "^misc/node";
 
 import { ViewTest } from "^jatev/ViewTest";
