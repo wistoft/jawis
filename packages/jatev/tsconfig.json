@@ -9,7 +9,7 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../jatec" },
-    { "path": "../parse-stack" },
+    { "path": "../parse-captured-stack" },
     { "path": "../use-websocket" },
     { "path": "../view-exception" }
   ]

@@ -1,5 +1,5 @@
 import { ErrorEntry } from "^jagoc";
-import { parseErrorData, parseTraceAndSourceMap } from "^parse-stack";
+import { parseErrorData, parseTraceAndSourceMap } from "^parse-captured-stack";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
 import { State } from "./useConsoleState";
 import { mapConsoleEntry, preserveConsoleEntry } from "./util";

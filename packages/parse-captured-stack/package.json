@@ -1,6 +1,6 @@
 {
   "version": "0.0.1",
-  "name": "~parse-stack",
+  "name": "~parse-captured-stack",
   "description": "Wrappers around established stack-parsing libraries",
   "dependencies": {
     "@types/stack-trace": "^0.0.30",

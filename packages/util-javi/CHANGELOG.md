@@ -18,7 +18,7 @@
 ## :boom: Breaking changes
 
 - Moved `dtp` to misc.
-- Moved error-parsing functions to new package `parse-stack`.
+- Moved error-parsing functions to new package `parse-captured-stack`.
   - `parseTrace`
   - `parseTraceAndSourceMap`
   - `parseNodeTrace`

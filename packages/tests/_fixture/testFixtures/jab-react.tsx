@@ -12,7 +12,7 @@ import {
   ViewExceptionCallStackProps,
   ViewExceptionProps,
 } from "^view-exception";
-import { parseErrorData } from "^parse-stack";
+import { parseErrorData } from "^parse-captured-stack";
 import {
   InnerPanel,
   Props as DevComponentPanelProps,

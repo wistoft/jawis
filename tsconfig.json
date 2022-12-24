@@ -25,7 +25,7 @@
     { "path": "./packages/lazy-require-ts" },
     { "path": "./packages/loop-controller" },
     { "path": "./packages/misc" },
-    { "path": "./packages/parse-stack" },
+    { "path": "./packages/parse-captured-stack" },
     { "path": "./packages/render-hook-plus" },
     { "path": "./packages/util-javi" },
     { "path": "./packages/state-waiter" },

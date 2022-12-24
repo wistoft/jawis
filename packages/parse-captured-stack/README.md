@@ -5,7 +5,7 @@ Wrappers around established stack-parsing libraries.
 ## Installation
 
 ```
-npm i parse-stack
+npm i parse-captured-stack
 ```
 
 ## Usage

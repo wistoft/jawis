@@ -18,7 +18,7 @@ const unscopedPackages = [
   "finally-provider",
   "lazy-require-ts",
   "loop-controller",
-  "parse-stack",
+  "parse-captured-stack",
   "render-hook-plus",
   "state-waiter",
   "ts-config-util",

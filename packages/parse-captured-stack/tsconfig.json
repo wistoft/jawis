@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../build-tsc/parse-stack",
+    "outDir": "../../build-tsc/parse-captured-stack",
     "rootDir": "."
   },
   "references": [{ "path": "../jab" }]

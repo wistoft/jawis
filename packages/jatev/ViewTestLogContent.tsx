@@ -5,7 +5,7 @@ import { ZippedTestLog } from "^jatec";
 import { toAtomizedString, replaceAtoms } from "^jab-react";
 
 import { ViewException } from "^view-exception";
-import { parseErrorData } from "^parse-stack";
+import { parseErrorData } from "^parse-captured-stack";
 import { ViewDiff } from "./ViewDiff";
 import { ViewErrorLog, ViewErrorLogProps } from "./ViewErrorLog";
 
