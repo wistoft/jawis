@@ -22,7 +22,7 @@ const unscopedPackages = [
   "render-hook-plus",
   "state-waiter",
   "ts-config-util",
-  "use-websocket",
+
   "view-exception",
   "yapu",
 ];
@@ -43,6 +43,7 @@ const scopedPackages = [
   "jates",
   "jatev",
   "javi",
+  "use-websocket",
   "util-javi",
 ];
 
