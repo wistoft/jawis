@@ -3,7 +3,22 @@ import { StackFrame } from "stacktrace-js";
 import StackTraceGPS from "stacktrace-gps";
 import ErrorStackParser from "error-stack-parser";
 
-import { isNode, ParsedStackFrame, CapturedStack } from "^jab";
+import {
+  isNode,
+  ParsedStackFrame,
+  CapturedStack,
+  ErrorData,
+  ParsedErrorData,
+} from "^jab";
+
+/**
+ * Produce a parsed stack for ViewException component.
+ */
+export const parseErrorData = (error: ErrorData): ParsedErrorData => ({
+  msg: error.msg,
+  info: error.info,
+  parsedStack: parseTrace(error.stack),
+});
 
 /**
  *

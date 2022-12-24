@@ -1,5 +1,5 @@
 import { ErrorEntry } from "^jagoc";
-import { parseTrace, parseTraceAndSourceMap } from "^parse-stack";
+import { parseErrorData, parseTraceAndSourceMap } from "^parse-stack";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
 import { State } from "./useConsoleState";
 import { mapConsoleEntry, preserveConsoleEntry } from "./util";
@@ -106,11 +106,7 @@ export const getErrorLogUpdateHelper = (
       sync: {
         id: makeReactKey(),
         ...entry,
-        data: {
-          msg: entry.data.msg,
-          info: entry.data.info,
-          parsedStack: parseTrace(entry.data.stack),
-        },
+        data: parseErrorData(entry.data),
       },
     };
   }

@@ -4,7 +4,8 @@ import { assertNever, CapturedValue, indent, tos } from "^jab";
 import { ZippedTestLog } from "^jatec";
 import { toAtomizedString, replaceAtoms } from "^jab-react";
 
-import { parseErrorData, ViewException } from "^view-exception";
+import { ViewException } from "^view-exception";
+import { parseErrorData } from "^parse-stack";
 import { ViewDiff } from "./ViewDiff";
 import { ViewErrorLog, ViewErrorLogProps } from "./ViewErrorLog";
 

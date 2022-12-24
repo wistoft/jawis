@@ -743,6 +743,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-trace/-/stack-trace-0.0.29.tgz#eb7a7c60098edb35630ed900742a5ecb20cfcb4d"
   integrity sha512-TgfOX+mGY/NyNxJLIbDWrO9DjGoVSW9+aB8H2yy1fy32jsvxijhmyJI9fDFgvz3YP4lvJaq9DzdR/M1bOgVc9g==
 
+"@types/stack-trace@^0.0.30":
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/@types/stack-trace/-/stack-trace-0.0.30.tgz#6a3c0aee5e91d8c0086926013be0ec125cafa17f"
+  integrity sha512-g58ZMrK7OLAzzxqeGF/w9jYsIWMuA9I/p/d493+x5vz3LyIEhrh3swszq28poF45X0ZD8vpAznMLBTyKPYFBeA==
+
 "@types/terser-webpack-plugin@^5.0.1":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@types/terser-webpack-plugin/-/terser-webpack-plugin-5.0.2.tgz#ebc935cfb9a0cc5ef33934ab63202e16cdf6a961"

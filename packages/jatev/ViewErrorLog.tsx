@@ -2,9 +2,9 @@ import React, { memo } from "react";
 
 import { assertNever } from "^jab";
 import { ErrorLog } from "^jatec";
+import { parseErrorData } from "^parse-stack";
 import {
   filterErrorMessage,
-  parseErrorData,
   ViewException,
   ViewExceptionProps,
 } from "^view-exception";

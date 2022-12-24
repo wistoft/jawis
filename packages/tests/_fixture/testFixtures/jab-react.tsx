@@ -7,12 +7,12 @@ import {
 
 import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 import {
-  parseErrorData,
   ViewException,
   ViewExceptionCallStack,
   ViewExceptionCallStackProps,
   ViewExceptionProps,
 } from "^view-exception";
+import { parseErrorData } from "^parse-stack";
 import {
   InnerPanel,
   Props as DevComponentPanelProps,

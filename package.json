@@ -37,8 +37,6 @@
     "@jawis/console": "^1.0.3",
     "@jawis/jagov": "^2.0.0",
     "@jawis/javi": "^1.0.3",
-    "@types/react": "^16.14.4",
-    "@types/react-dom": "^16.9.11",
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "concurrently": "^7.2.2",
