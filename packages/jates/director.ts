@@ -1,7 +1,7 @@
 import path from "path";
 
 import { MakeJabProcess } from "^jab-node";
-import { LogProv, err } from "^jab";
+import { LogProv, err, CompareFiles, HandleOpenFileInEditor } from "^jab";
 import {
   ClientMessage,
   getJatesTestReport,
@@ -26,6 +26,8 @@ export type DirectorDeps = Readonly<{
   absTestFolder: string;
   absTestLogFolder: string;
   tecTimeout: number;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
+  compareFiles: CompareFiles;
 
   createTestRunners: CreateTestRunners;
   makeTsProcess: MakeJabProcess;
@@ -129,6 +131,7 @@ export const director = (deps: DirectorDeps) => {
 
   const onWsUpgrade = wsPool.makeUpgradeHandler(
     makeOnClientMessage({
+      ...deps,
       ...clientCom,
       ...testLogController,
       ...tec,

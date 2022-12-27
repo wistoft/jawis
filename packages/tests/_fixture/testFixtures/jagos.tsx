@@ -2,7 +2,7 @@ import path from "path";
 import { TestProvision } from "^jarun";
 import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
 import { NodeWS } from "^jab-express";
-import { assertNever } from "^jab";
+import { assertNever, FileService } from "^jab";
 import { director, DirectorDeps } from "^jagos/director";
 
 import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
@@ -16,8 +16,13 @@ export const getJagosDirector = (
   prov: TestProvision,
   extraDeps?: Partial<DirectorDeps>
 ) => {
+  const fileService: FileService = {
+    handleOpenFileInEditor: () => {},
+    handleOpenRelativeFileInEditor: () => {},
+    compareFiles: () => {},
+  };
+
   const d = director({
-    projectRoot: "projectRoot",
     alwaysTypeScript: true, //development needs typescript for the preloader.
     makeTsBee: makeJacsWorker,
     onError: prov.onError,
@@ -27,6 +32,7 @@ export const getJagosDirector = (
       log: prov.log,
       filterMessage: filterJagosMessage,
     }),
+    ...fileService,
     ...extraDeps,
   });
 

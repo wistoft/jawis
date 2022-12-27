@@ -1,4 +1,5 @@
 import path from "path";
+
 //javi always import released version, but dev wants to choose:
 
 // import released versions for `devServerMain.ts`
@@ -8,16 +9,19 @@ import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 //import development versions for `devServerMain.ts`
 
-import { BeeRunner } from "^jarun";
-import { makeJatesRoute } from "^jates";
-import { makeJagosRoute } from "^jagos";
-import { makeApp, Route } from "^jab-express";
+import { assertString, undefinedOr, isInt } from "^jab";
 import {
+  execSilent,
+  execSyncAndGetStdout,
   MainProv,
   MakeJabProcess,
   makePlainJabProcess,
   Process,
 } from "^jab-node";
+import { BeeRunner } from "^jarun";
+import { makeJatesRoute } from "^jates";
+import { makeJagosRoute } from "^jagos";
+import { makeApp, Route } from "^jab-express";
 import { MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 import { DirectorDeps as JatesDeps } from "^jates/director";
@@ -32,8 +36,8 @@ export type Deps = {
   serverPort: number;
   staticWebFolder: string;
   clientConf: JaviClientConf;
-  jates: Partial<JatesDeps> & Pick<JatesDeps, "absTestFolder" | "absTestLogFolder" | "tecTimeout">; // prettier-ignore
-  jagos: Partial<JagosDeps> & Pick<JagosDeps, "scriptFolders" | "scripts" | "projectRoot">; // prettier-ignore
+  jates: Omit<JatesDeps, | "createTestRunners" | "makeTsProcess" | "makeTsBee" | "onError" | "finally" | "logProv">; // prettier-ignore
+  jagos: Omit<JagosDeps, "makeTsBee" | "onError" | "finally" | "logProv">; // prettier-ignore
   makeRoutes?: Route[];
 };
 
@@ -158,3 +162,56 @@ export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
     cwd: path.dirname(deps.filename),
   });
 };
+
+/**
+ *
+ */
+export const openFileInVsCode = (file: string, line?: number) => {
+  let fileSpec = file;
+
+  if (line) {
+    fileSpec += ":" + line;
+  }
+
+  const stdoutNoisy = execSyncAndGetStdout(
+    "C:\\Program Files\\Microsoft VS Code\\Code.exe",
+    ["-g", fileSpec]
+  );
+
+  //this doesn't filter exceptions in `execSyncAndGetStdout`
+  const stdout = stdoutNoisy
+    .replace(
+      "(electron) Sending uncompressed crash reports is deprecated and will be removed in a future version of Electron. Set { compress: true } to opt-in to the new behavior. Crash reports will be uploaded gzipped, which most crash reporting servers support.",
+      ""
+    )
+    .trim();
+
+  if (stdout !== "") {
+    //the information that `execSyncAndGetStdout` gives isn't presented here.
+    throw new Error("Message from vs code: " + JSON.stringify(stdout));
+  }
+};
+
+/**
+ *
+ */
+export const handleOpenFileInVsCode = (
+  msg: {
+    file: string;
+    line?: number;
+  },
+  baseFolder = ""
+) => {
+  const file = assertString(msg.file);
+  const line = undefinedOr(isInt)(msg.line);
+  openFileInVsCode(path.join(baseFolder, file), line);
+};
+
+/**
+ *
+ */
+export const compareFiles = (file1: string, file2: string) =>
+  execSilent("C:\\Program Files (x86)\\WinMerge\\WinMergeU.exe", [
+    file1,
+    file2,
+  ]);

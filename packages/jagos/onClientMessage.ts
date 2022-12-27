@@ -1,13 +1,16 @@
-import { assertNever } from "^jab";
+import { assertNever, HandleOpenFileInEditor } from "^jab";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { WsMessageListener } from "^jab-express";
-import { handleOpenFileInVsCode } from "^util-javi/node";
 import { BehaviorProv } from "./Behavior";
 import { ScriptPoolProv } from "./ScriptPoolController";
 
-export type Deps = ScriptPoolProv & BehaviorProv & { projectRoot: string };
+export type Deps = ScriptPoolProv &
+  BehaviorProv & {
+    handleOpenRelativeFileInEditor: HandleOpenFileInEditor;
+    handleOpenFileInEditor: HandleOpenFileInEditor;
+  };
 
 /**
  *
@@ -37,11 +40,11 @@ export const makeOnClientMesssage =
         break;
 
       case "openFile":
-        handleOpenFileInVsCode(msg);
+        deps.handleOpenFileInEditor(msg);
         break;
 
       case "openRelFile":
-        handleOpenFileInVsCode(msg, deps.projectRoot);
+        deps.handleOpenRelativeFileInEditor(msg);
         break;
 
       default:

@@ -5,6 +5,7 @@ import { MainProv, mainWrapper } from "^jab-node";
 
 import { startJaviServer } from "./util";
 import { getJaviConf } from "./getConf";
+import { makeJaviDeps } from "./makeJaviDeps";
 
 /**
  *
@@ -13,6 +14,10 @@ const main = (mainProv: MainProv) => {
   //conf
 
   const conf = getJaviConf(process.cwd());
+
+  //default things
+
+  const defaultThings = makeJaviDeps(conf);
 
   //start
 
@@ -32,12 +37,13 @@ const main = (mainProv: MainProv) => {
       absTestFolder: conf.absTestFolder,
       absTestLogFolder: conf.absTestLogFolder,
       tecTimeout: conf.tecTimeout,
+      ...defaultThings.fileService,
     },
 
     jagos: {
-      projectRoot: conf.projectRoot,
       scriptFolders: conf.scriptFolders,
       scripts: conf.scripts,
+      ...defaultThings.fileService,
     },
   });
 };

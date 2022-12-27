@@ -1,7 +1,10 @@
 import { TestProvision } from "^jarun";
 import { basename } from "^jab";
 import { ScriptDefinition } from "^jagos";
-import { ScriptPoolController, Deps } from "^jagos/ScriptPoolController";
+import {
+  ScriptPoolController,
+  ScriptPoolControllerDeps,
+} from "^jagos/ScriptPoolController";
 
 import { getLogProv, getScriptPath, makeJacsWorker } from ".";
 
@@ -10,7 +13,7 @@ import { getLogProv, getScriptPath, makeJacsWorker } from ".";
  */
 export const getJabScriptPoolController = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) => new ScriptPoolController(getJabScriptPoolControllerDeps(prov, extraDeps));
 
 /**
@@ -18,7 +21,7 @@ export const getJabScriptPoolController = (
  */
 export const getJabScriptPoolController_one = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
@@ -31,7 +34,7 @@ export const getJabScriptPoolController_one = (
  */
 export const getJabScriptPoolController_many = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
+  extraDeps?: Partial<ScriptPoolControllerDeps>
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
@@ -49,8 +52,8 @@ export const getJabScriptPoolController_many = (
  */
 export const getJabScriptPoolControllerDeps = (
   prov: TestProvision,
-  extraDeps?: Partial<Deps>
-): Deps => {
+  extraDeps?: Partial<ScriptPoolControllerDeps>
+): ScriptPoolControllerDeps => {
   const logProv = getLogProv(prov);
 
   return {

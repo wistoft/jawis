@@ -12,7 +12,6 @@
     { "path": "../jab-express" },
     { "path": "../jab-node" },
     { "path": "../state-waiter" },
-    { "path": "../util-javi" },
     { "path": "../yapu" }
   ]
 }

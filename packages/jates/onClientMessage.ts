@@ -1,7 +1,6 @@
-import { assertNever } from "^jab";
+import { assertNever, CompareFiles, HandleOpenFileInEditor } from "^jab";
 import { ServerMessage, ClientMessage } from "^jatec";
 import { WsMessageListener } from "^jab-express";
-import { compareFiles, handleOpenFileInVsCode } from "^util-javi/node";
 
 import { BehaviorProv } from "./Behavior";
 import { ClientComProv } from "./ClientComController";
@@ -11,6 +10,8 @@ import { TestListControllerProv } from "./TestListController";
 
 type Deps = {
   absTestFolder: string;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
+  compareFiles: CompareFiles;
   onError: (error: unknown) => void;
 } & ClientComProv &
   TestExecutionControllerProv &
@@ -61,16 +62,16 @@ export const makeOnClientMessage =
         deps
           .getTempTestLogFiles(msg.testId, msg.logName)
           .then(({ exp, cur }) => {
-            compareFiles(exp, cur);
+            deps.compareFiles(exp, cur);
           });
         return;
 
       case "openTest":
-        handleOpenFileInVsCode(msg, deps.absTestFolder);
+        deps.handleOpenFileInEditor(msg, deps.absTestFolder);
         return;
 
       case "openFile":
-        handleOpenFileInVsCode(msg);
+        deps.handleOpenFileInEditor(msg);
         return;
 
       default:

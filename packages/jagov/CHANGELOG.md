@@ -11,6 +11,8 @@
 
 ## :tada: Enhancements
 
+- Trimmed dependencies
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes

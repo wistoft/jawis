@@ -1,28 +1,23 @@
 import { WsPoolController, WsPoolProv } from "^jab-express";
-import { LogProv } from "^jab";
+import { HandleOpenFileInEditor } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
-import { MakeBee } from "^bee-common";
 
-import { FinallyFunc } from "^finally-provider";
 import { Behavior } from "./Behavior";
-import { ScriptPoolController } from "./ScriptPoolController";
+import {
+  ScriptPoolController,
+  ScriptPoolControllerDeps,
+} from "./ScriptPoolController";
 import { ActionProvider } from "./ActionProvider";
-import { ScriptDefinition } from "./util";
 import { makeOnClientMesssage } from "./onClientMessage";
 
 export type DirectorDeps = Readonly<{
-  projectRoot: string;
-  scriptFolders?: string[];
-  scripts?: ScriptDefinition[];
-  alwaysTypeScript?: boolean; //default false.
-  makeTsBee: MakeBee;
-  onError: (error: unknown) => void;
-  finally: FinallyFunc;
-  logProv: LogProv;
+  handleOpenRelativeFileInEditor: HandleOpenFileInEditor;
+  handleOpenFileInEditor: HandleOpenFileInEditor;
 
   //optional and abstract for testing
   wsPool?: WsPoolProv<ServerMessage, ClientMessage>;
-}>;
+}> &
+  Omit<ScriptPoolControllerDeps, keyof ActionProvider | "onStatusChange">;
 
 /**
  *
@@ -38,15 +33,7 @@ export const director = (deps: DirectorDeps) => {
   });
 
   const poolProv = new ScriptPoolController({
-    scriptFolders: deps.scriptFolders,
-    scripts: deps.scripts,
-    makeTsBee: deps.makeTsBee,
-    alwaysTypeScript: deps.alwaysTypeScript,
-
-    onError: deps.onError,
-    finally: deps.finally,
-    logProv: deps.logProv,
-
+    ...deps,
     ...actionProv,
   });
 

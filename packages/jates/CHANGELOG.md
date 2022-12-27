@@ -9,8 +9,12 @@
 
 ## :tada: Enhancements
 
+- Trimmed dependencies
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
 
 - Removed dtp.
+- Director deps is changed
+  - Added: `handleOpenFileInEditor`, `compareFiles`

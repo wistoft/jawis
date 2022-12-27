@@ -1,16 +1,6 @@
 # Utilities for javi
 
-## Installation
-
-```
-npm i util-javi
-```
-
-## Usage
-
-## Known issues
-
-## Related work
+This package has been deprecated. See changelog for where things are moved to.
 
 ## License
 

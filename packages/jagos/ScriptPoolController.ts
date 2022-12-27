@@ -32,7 +32,7 @@ export type ScriptPoolProv = {
   shutdown: () => Promise<void>;
 };
 
-export type Deps = {
+export type ScriptPoolControllerDeps = {
   scriptFolders?: string[];
   scripts?: ScriptDefinition[];
   makeTsBee: MakeBee;
@@ -84,7 +84,7 @@ export class ScriptPoolController implements ScriptPoolProv {
 
   private waiter: Waiter<States, never>;
 
-  constructor(private deps: Deps) {
+  constructor(private deps: ScriptPoolControllerDeps) {
     this.deps.finally(() => this.noisyKill()); //must be before the processes, because we want to shutdown, before them.
 
     //init

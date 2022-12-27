@@ -22,6 +22,10 @@
 - Moved things to `javi-client`
   - `getApiPath`
   - `DevTemplate`
+- Moved things to `javi`
+  - `openFileInVsCode`
+  - `handleOpenFileInVsCode`
+  - `compareFiles`
 - Moved error-parsing functions to new package `parse-captured-stack`.
   - `parseTrace`
   - `parseTraceAndSourceMap`

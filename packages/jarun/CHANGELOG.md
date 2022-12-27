@@ -11,3 +11,8 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Moved things to `javi`
+  - `makeProcessRunner`
+  - `getDefaultRunnersAssignments`
+  - `createDefaultTestRunners` => `makeJarunTestRunners`

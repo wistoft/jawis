@@ -8,6 +8,12 @@
 
 ## :tada: Enhancements
 
+- Trimmed dependencies
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Director deps is changed
+  - Removed: `projectRoot`
+  - Added: `handleOpenRelativeFileInEditor` `handleOpenFileInEditor`
