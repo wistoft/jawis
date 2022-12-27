@@ -7,7 +7,7 @@ import { ComponentDef } from "./Main";
 
 import { toUrl } from "./util";
 
-export type Props = {
+type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];
   openComponnent: (path: string) => void;
 };
@@ -36,6 +36,8 @@ export const ViewListFolders: React.FC<Props> = memo(
   )
 );
 
+ViewListFolders.displayName = "ViewListFolders";
+
 /**
  * Show individual exports components/functions
  */
@@ -59,3 +61,5 @@ export const ViewListComponents: React.FC<{
     ))}
   </div>
 ));
+
+ViewListComponents.displayName = "ViewListComponents";

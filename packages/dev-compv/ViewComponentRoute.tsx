@@ -9,7 +9,7 @@ import { ViewComponent } from "./ViewComponent";
 import { toUrl } from "./util";
 import { ComponentDef } from ".";
 
-export type Props = {
+export type ViewComponentRouteProps = {
   folders: { folder: string; comps: ComponentDef[] }[];
   openComponnent: (path: string) => void;
   useKeyListener: UseKeyListener;
@@ -18,51 +18,53 @@ export type Props = {
 /**
  *
  */
-export const ViewComponentRoute: React.FC<Props> = memo((props) => {
-  //get params from url
+export const ViewComponentRoute: React.FC<ViewComponentRouteProps> = memo(
+  (props) => {
+    //get params from url
 
-  const params = useParams();
+    const params = useParams();
 
-  const id = assertPropString(params, "component");
+    const id = assertPropString(params, "component");
 
-  //lookup "props"
+    //lookup "props"
 
-  const flat = props.folders.reduce<ComponentDef[]>(
-    (acc, cur) => acc.concat(cur.comps),
-    []
-  );
-
-  const found = flat.find((comp) => toUrl(comp.path) === id);
-
-  //key listener
-
-  props.useKeyListener((e) => {
-    if (e.key === "e") {
-      if (found) {
-        props.openComponnent(found.path);
-      }
-    }
-  });
-
-  //render
-
-  if (found) {
-    return (
-      <>
-        <nav style={{ color: "var(--link-color)" }}>
-          <Link to="..">Home</Link>,{" "}
-          <JsLink
-            name={found.path.replace(/^\.\//, "")}
-            onClick={() => props.openComponnent(found.path)}
-          />
-        </nav>
-        <br />
-        {<ViewComponent {...found} />}
-      </>
+    const flat = props.folders.reduce<ComponentDef[]>(
+      (acc, cur) => acc.concat(cur.comps),
+      []
     );
-  } else {
-    return <>Component not found</>;
+
+    const component = flat.find((comp) => toUrl(comp.path) === id);
+
+    //key listener
+
+    props.useKeyListener((e) => {
+      if (component) {
+        if (e.key === "e") {
+          props.openComponnent(component.path);
+        }
+      }
+    });
+
+    //render
+
+    if (component) {
+      return (
+        <>
+          <nav style={{ color: "var(--link-color)" }}>
+            <Link to="..">Home</Link>,{" "}
+            <JsLink
+              name={component.path.replace(/^\.\//, "")}
+              onClick={() => props.openComponnent(component.path)}
+            />
+          </nav>
+          <br />
+          {<ViewComponent {...component} />}
+        </>
+      );
+    } else {
+      return <>Component not found</>;
+    }
   }
-});
+);
 
 ViewComponentRoute.displayName = "ViewComponentRoute";

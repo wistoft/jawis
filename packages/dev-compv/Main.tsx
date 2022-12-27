@@ -3,10 +3,10 @@ import React, { memo, useCallback } from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { ClientMessage, ServerMessage } from "@jawis/jagoc";
 
-import { useKeyListener } from "^jab-react";
+import { ErrorBoundary, useKeyListener } from "^jab-react";
 import { useWebSocketProv } from "^use-websocket";
 
-import { InnerPanel } from "./InnerPanel";
+import { View } from "./View";
 import { mapWebpackContext } from "./util";
 
 export type ComponentDef = {
@@ -15,7 +15,7 @@ export type ComponentDef = {
   comp: React.ComponentType<unknown> | (() => void);
 };
 
-export type Props = {
+type Props = {
   apiPath: string;
   contexts: {
     folder: string;
@@ -45,23 +45,22 @@ export const Main: React.FC<Props> = memo(({ apiPath, contexts }) => {
 
   const openComponnent = useCallback(
     (compPath: string) => {
-      // const projectRoot = "E:\\work\\repos\\jawis";
-
       apiSend({ type: "openRelFile", file: compPath });
-      // apiSend({ type: "openFile", file: path.join(projectRoot, compPath) });
     },
     [apiSend]
   );
 
   return (
-    <InnerPanel
-      folders={contexts.map((elm) => ({
-        folder: elm.folder,
-        comps: mapWebpackContext(elm.context),
-      }))}
-      openComponnent={openComponnent}
-      useKeyListener={useKeyListener}
-    />
+    <ErrorBoundary renderOnError={"dev-compv failed"}>
+      <View
+        folders={contexts.map((elm) => ({
+          folder: elm.folder,
+          comps: mapWebpackContext(elm.context),
+        }))}
+        openComponnent={openComponnent}
+        useKeyListener={useKeyListener}
+      />
+    </ErrorBoundary>
   );
 });
 

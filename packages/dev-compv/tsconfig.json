@@ -7,7 +7,6 @@
   "references": [
     { "path": "../jab" },
     { "path": "../jab-react" },
-    { "path": "../use-websocket" },
-    { "path": "../yapu" }
+    { "path": "../use-websocket" }
   ]
 }

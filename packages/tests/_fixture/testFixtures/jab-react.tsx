@@ -13,10 +13,7 @@ import {
   ViewExceptionProps,
 } from "^view-exception";
 import { parseErrorData } from "^parse-captured-stack";
-import {
-  InnerPanel,
-  Props as DevComponentPanelProps,
-} from "^dev-compv/InnerPanel";
+import { View, ViewProps as DevComponentPanelProps } from "^dev-compv/internal";
 
 import { errorData0 } from ".";
 
@@ -28,7 +25,7 @@ export const getDevComponentPanel = (
   location = "/"
 ) => (
   <LocationProvider history={createHistory(createMemorySource(location))}>
-    <InnerPanel
+    <View
       folders={[]}
       {...props}
       openComponnent={() => {}}

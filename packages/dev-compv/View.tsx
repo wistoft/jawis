@@ -6,7 +6,7 @@ import { ComponentDef } from "./Main";
 import { ViewListFolders } from "./ViewList";
 import { ViewComponentRoute } from "./ViewComponentRoute";
 
-export type Props = {
+export type ViewProps = {
   folders: { folder: string; comps: ComponentDef[] }[];
   openComponnent: (path: string) => void;
   useKeyListener: UseKeyListener;
@@ -15,7 +15,7 @@ export type Props = {
 /**
  *
  */
-export const InnerPanel: React.FC<Props> = memo(
+export const View: React.FC<ViewProps> = memo(
   ({ folders, openComponnent, useKeyListener }) => (
     <Router>
       <ReachRoute
