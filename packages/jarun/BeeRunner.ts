@@ -1,6 +1,6 @@
 import { capture, unknownToErrorData } from "^jab";
 import { TestRunner } from "^jates";
-import { execBee, Bee, MakeBee } from "^jab-node";
+import { execBee, Bee, MakeBee } from "^bee-common";
 import { TestResult, UserTestLogs } from "^jatec";
 import { FinallyFunc } from "^finally-provider";
 

@@ -1,6 +1,7 @@
 import path from "path";
+import { BeeDeps } from "^bee-common";
 
-import { BeeDeps, RequireSenderMessage } from "^jab-node";
+import { RequireSenderMessage } from "^jab-node";
 
 import { getScriptPath, TestMainProv } from ".";
 

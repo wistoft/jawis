@@ -1,4 +1,4 @@
-import { MakeBee } from "^jab-node";
+import { MakeBee } from "^bee-common";
 
 import { JacsProducer, JacsProducerDeps } from "./JacsProducer";
 import { SourceFileLoader } from "./SourceFileLoader";

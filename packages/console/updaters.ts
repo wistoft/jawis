@@ -1,4 +1,4 @@
-import { ErrorEntry } from "^jagoc";
+import { ErrorEntry } from "^bee-common";
 import { parseErrorData, parseTraceAndSourceMap } from "^parse-captured-stack";
 import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
 import { State } from "./useConsoleState";

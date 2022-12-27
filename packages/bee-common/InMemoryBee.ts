@@ -1,8 +1,7 @@
 import { then } from "^yapu";
 import { Waiter } from "^state-waiter";
 
-import type { Bee, BeeDeps } from "..";
-import type { JabShutdownMessage } from ".";
+import { Bee, BeeDeps, JabShutdownMessage } from ".";
 
 type States = "running" | "stopping" | "stopped";
 type Events = "message";

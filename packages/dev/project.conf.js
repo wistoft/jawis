@@ -13,6 +13,7 @@ const getPackagePath = (file) => path.join(packageFolder, file || "");
 const npmScope = "@jawis";
 
 const unscopedPackages = [
+  "bee-common",
   "async-capture",
   "assorted-algorithms",
   "finally-provider",

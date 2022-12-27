@@ -1,6 +1,5 @@
 export * from "./exec";
 export * from "./execBee";
-export * from "./InMemoryBee";
 export * from "./JabWorker";
 export * from "./Process";
 export * from "./ProcessPreloader";

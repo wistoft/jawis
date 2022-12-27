@@ -1,4 +1,5 @@
-import { execBee, makePlainJabProcess } from "^jab-node";
+import { execBee } from "^bee-common";
+import { makePlainJabProcess } from "^jab-node";
 import { TestProvision } from "^jarun";
 
 import { getScriptPath } from "../_fixture";

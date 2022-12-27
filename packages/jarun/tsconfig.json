@@ -6,6 +6,7 @@
   },
   "references": [
     { "path": "../async-capture" },
+    { "path": "../bee-common" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-node" },

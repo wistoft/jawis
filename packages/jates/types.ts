@@ -1,6 +1,7 @@
+import { MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
-import { MakeBee, MakeJabProcess, OnRequire } from "^jab-node";
+import { MakeJabProcess, OnRequire } from "^jab-node";
 import { OnRogue, TestResult } from "^jatec";
 
 //

@@ -3,7 +3,7 @@ import React from "react";
 import { capturedTos } from "^jab";
 import { clonedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
 
-import { LogEntry } from "^jagoc";
+import { LogEntry } from "^bee-common";
 
 export const multiLineEntryMarginBottom = "10px";
 

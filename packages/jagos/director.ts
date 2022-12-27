@@ -1,7 +1,7 @@
 import { WsPoolController, WsPoolProv } from "^jab-express";
 import { LogProv } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
-import { MakeBee } from "^jab-node";
+import { MakeBee } from "^bee-common";
 
 import { FinallyFunc } from "^finally-provider";
 import { Behavior } from "./Behavior";

@@ -1,5 +1,6 @@
 import path from "path";
 import { Worker } from "worker_threads";
+import { execBee, MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 
 import { assert } from "^jab";
@@ -8,10 +9,8 @@ import {
   MakeJabProcess,
   MakeNodeWorker,
   Process,
-  execBee,
   JabWorker,
   JabWorkerDeps,
-  MakeBee,
 } from "^jab-node";
 
 /**

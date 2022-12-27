@@ -1,6 +1,6 @@
 import path from "path";
 
-import { MakeBee, MakeJabProcess } from "^jab-node";
+import { MakeJabProcess } from "^jab-node";
 import { LogProv, err } from "^jab";
 import {
   ClientMessage,
@@ -12,6 +12,7 @@ import {
 import { WsPoolController } from "^jab-express";
 
 import { FinallyFunc } from "^finally-provider";
+import { MakeBee } from "^bee-common";
 import { ClientComController } from "./ClientComController";
 import { Behavior } from "./Behavior";
 import { makeOnClientMessage } from "./onClientMessage";

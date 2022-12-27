@@ -2,8 +2,7 @@ import { Serializable } from "child_process";
 import filewatcher from "filewatcher";
 
 import { def } from "^jab";
-
-import type { BeeListeners } from "..";
+import { BeeListeners } from "^bee-common";
 
 import {
   RequireSenderMessage,

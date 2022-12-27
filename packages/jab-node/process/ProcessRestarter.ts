@@ -5,7 +5,7 @@ import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 import { getPromise, looping, PromiseTriple } from "^yapu";
 
-import { Bee, BeeDeps, BeeListeners, MakeBee } from "..";
+import { Bee, BeeDeps, BeeListeners, MakeBee } from "^bee-common";
 import { ReusableWPP, WatchableProcessPreloaderDeps } from ".";
 
 export type ProcessRestarterDeps<MR extends Serializable> = Omit<

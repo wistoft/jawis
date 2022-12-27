@@ -1,5 +1,5 @@
 import { CapturedValue, ParsedStack } from "^jab";
-import { HtmlEntry, JagoLogEntry, LogEntry } from "^jagoc";
+import { HtmlEntry, JagoLogEntry, LogEntry } from "^bee-common";
 
 //
 // console entries - the input data

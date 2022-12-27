@@ -1,16 +1,13 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "../../build-tsc/jacs",
+    "outDir": "../../build-tsc/bee-common",
     "rootDir": "."
   },
   "references": [
-    { "path": "../bee-common" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
-    { "path": "../jab-node" },
     { "path": "../state-waiter" },
-    { "path": "../ts-config-util" },
     { "path": "../yapu" }
   ]
 }

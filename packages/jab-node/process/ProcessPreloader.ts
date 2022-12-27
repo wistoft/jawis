@@ -4,7 +4,7 @@ import { err, LogProv } from "^jab";
 
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
-import type { Bee, BeeListeners, MakeBee } from "..";
+import { Bee, BeeListeners, MakeBee } from "^bee-common";
 import { TS_TIMEOUT } from ".";
 
 //can't be in main, couldn't be required there.

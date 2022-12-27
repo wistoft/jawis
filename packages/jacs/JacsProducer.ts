@@ -1,6 +1,5 @@
 import { unknownToErrorData } from "^jab";
 import {
-  BeeDeps,
   getFileToRequire,
   JabWorker,
   MakeNodeWorker,
@@ -9,6 +8,7 @@ import {
 
 import { FinallyFunc } from "^finally-provider";
 import { safeCatch } from "^yapu";
+import { BeeDeps } from "^bee-common";
 import { getControlArray, setCompiling, signalConsumerSync } from "./protocol";
 import { SourceFileLoader } from "./SourceFileLoader";
 

@@ -5,8 +5,9 @@ import { def, err } from "^jab";
 
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
+import { JabShutdownMessage } from "^bee-common";
 import { nodeRequire, StructuredCloneable } from "..";
-import type { JabShutdownMessage, MakeNodeWorker } from ".";
+import { MakeNodeWorker } from ".";
 
 export type JabWorkerDeps<MR, WD> = {
   filename: string;

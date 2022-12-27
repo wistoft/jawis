@@ -1,9 +1,5 @@
-import {
-  makeJagoOnError,
-  makeSend,
-  registerRejectionHandlers,
-  wppMain,
-} from "^jab-node";
+import { makeJagoOnError } from "^bee-common";
+import { makeSend, registerRejectionHandlers, wppMain } from "^jab-node";
 
 //register rejection handlers
 

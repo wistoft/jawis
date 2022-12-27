@@ -1,34 +1,4 @@
-import { CapturedValue, ErrorData } from "^jab";
-
-//
-// log provision and jago logging convention.
-//
-
-export type LogEntry = {
-  type: "log";
-  data: CapturedValue[];
-  logName?: string;
-};
-
-export type StreamEntry = {
-  type: "stream";
-  data: string;
-  logName?: string;
-};
-
-export type HtmlEntry = {
-  type: "html";
-  data: string;
-  logName?: string;
-};
-
-export type ErrorEntry = {
-  type: "error";
-  data: ErrorData;
-  logName?: string;
-};
-
-export type JagoLogEntry = LogEntry | StreamEntry | HtmlEntry | ErrorEntry;
+import { JagoLogEntry } from "^bee-common";
 
 //
 // script

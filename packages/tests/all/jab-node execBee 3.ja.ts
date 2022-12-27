@@ -1,4 +1,4 @@
-import { execBee } from "^jab-node";
+import { execBee } from "^bee-common";
 import { TestProvision } from "^jarun";
 
 import { getScriptPath, makeJacsWorker } from "../_fixture";

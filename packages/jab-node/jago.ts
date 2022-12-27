@@ -1,5 +1,5 @@
 import { parentPort } from "worker_threads";
-import { JagoLogEntry } from "^jagoc";
+import { JagoLogEntry } from "^bee-common";
 
 import { captureArrayEntries, tos } from "^jab";
 

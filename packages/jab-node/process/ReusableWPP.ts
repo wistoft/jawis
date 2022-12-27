@@ -3,7 +3,7 @@ import { Serializable } from "child_process";
 import { def } from "^jab";
 
 import { Waiter } from "^state-waiter";
-import { Bee, BeeListeners } from "..";
+import { Bee, BeeListeners } from "^bee-common";
 import { WatchableProcessPreloaderDeps, WatchableProcessPreloader } from ".";
 
 type States = "ready" | "using" | "stopping" | "done";

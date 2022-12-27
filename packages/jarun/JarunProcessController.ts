@@ -1,11 +1,12 @@
 import { FinallyFunc } from "^finally-provider";
 import { prej } from "^jab";
 
-import { getFileToRequire, MakeBee, ProcessRestarter } from "^jab-node";
+import { getFileToRequire, ProcessRestarter } from "^jab-node";
 
 import { TestRunner } from "^jates";
 import { Waiter } from "^state-waiter";
 
+import { MakeBee } from "^bee-common";
 import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,

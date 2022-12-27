@@ -11,3 +11,10 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Moved types to new packages `bee-common`
+  - `JagoLogEntry`
+  - `LogEntry`
+  - `StreamEntry`
+  - `HtmlEntry`
+  - `ErrorEntry`

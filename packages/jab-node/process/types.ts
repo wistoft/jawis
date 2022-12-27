@@ -1,7 +1,6 @@
 import type { Serializable } from "child_process";
 import type { Worker, WorkerOptions } from "worker_threads";
-import { FinallyFunc } from "^finally-provider";
-import type { Bee, MakeBee, StructuredCloneable } from "..";
+import type { StructuredCloneable } from "..";
 
 import type { ProcessDeps, Process, JabWorker, JabWorkerDeps } from ".";
 
@@ -14,20 +13,6 @@ export type SpawnResult = {
   stderr: string;
   status: number | null;
 };
-
-export type BeeResult<MR> = {
-  stdout: string;
-  stderr: string;
-  status: number | null;
-  messages: MR[];
-  errors: unknown[];
-};
-
-export type ExecBee = <MR extends {}, MS extends {}>(
-  script: string,
-  finallyFunc: FinallyFunc,
-  makeBee: MakeBee
-) => { bee: Bee<MS>; promise: Promise<BeeResult<MR>> };
 
 /**
  * URL for filename not supported, yet.

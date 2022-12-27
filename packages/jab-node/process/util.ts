@@ -4,7 +4,8 @@ import { Worker, WorkerOptions } from "worker_threads";
 
 import { err } from "^jab";
 
-import type { MakeBee, LoadFunction } from "..";
+import { MakeBee } from "^bee-common";
+import { LoadFunction } from "..";
 import {
   RequireSenderMessage,
   JabWorker,

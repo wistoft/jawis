@@ -1,4 +1,4 @@
-import { mainProvToJago } from "^jab-node";
+import { mainProvToJago } from "^bee-common";
 import { TestProvision } from "^jarun";
 import { makeJagoSend } from "^tests/_fixture";
 

@@ -1,26 +1,8 @@
-import { JagoLogEntry } from "^jagoc";
-
-import {
-  captureArrayEntries,
-  err,
-  fixErrorInheritance,
-  indent,
-  LogProv,
-  unknownToErrorData,
-  OnError,
-} from "^jab";
-
+import { fixErrorInheritance, indent, LogProv, OnError } from "^jab";
 import { FinallyProvider } from "^finally-provider";
-import {
-  flushAndExit,
-  JabShutdownMessage,
-  MainProv,
-  makeSend,
-  registerOnMessage,
-} from ".";
+import { JabShutdownMessage, mainProvToJago } from "^bee-common";
 
-//for testing
-export type JagoSend = (msg: JagoLogEntry) => void;
+import { flushAndExit, MainProv, makeSend, registerOnMessage } from ".";
 
 /**
  * For throwing user messages.
@@ -42,60 +24,6 @@ export class UserMessage extends Error {
     return this.ownMessage;
   }
 }
-
-/**
- * - sendImpl is needed for testing.
- */
-export const mainProvToJago = (sendImpl: JagoSend, logPrefix = "") => {
-  const onError = makeJagoOnError(sendImpl);
-  const finalProv = new FinallyProvider({ onError });
-  const logProv = makeJagoLogProv(sendImpl, logPrefix);
-
-  return {
-    onError,
-    finalProv,
-    finally: finalProv.finally,
-    logProv,
-    log: logProv.log,
-    logStream: logProv.logStream,
-  };
-};
-
-/**
- *
- */
-export const makeJagoOnError =
-  (sendImpl: JagoSend): OnError =>
-  (error, extraInfo) => {
-    sendImpl({
-      type: "error",
-      data: unknownToErrorData(error, extraInfo),
-    });
-  };
-
-/**
- * Tries to batch stream data, so it at least gets less mixed between different streams.
- */
-export const makeJagoLogProv = (
-  sendImpl: JagoSend,
-  logPrefix = ""
-): LogProv => ({
-  log: (...args) =>
-    sendImpl({
-      type: "log",
-      data: captureArrayEntries(args),
-      logName: logPrefix,
-    }),
-  logStream: (type, data) =>
-    sendImpl({
-      type: "stream",
-      data: typeof data === "string" ? data : data.toString(),
-      logName: logPrefix ? logPrefix + type : type,
-    }),
-  status: () => {
-    err("not impl");
-  },
-});
 
 /**
  *

@@ -4,12 +4,9 @@ import cp, {
   Serializable,
   ForkOptions,
 } from "child_process";
+import { JabShutdownMessage } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
-
-export type JabShutdownMessage = {
-  type: "shutdown";
-};
 
 export type ProcessDeps<MR extends Serializable> = {
   filename: string;

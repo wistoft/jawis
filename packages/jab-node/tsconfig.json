@@ -5,6 +5,7 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../bee-common" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jagoc" },

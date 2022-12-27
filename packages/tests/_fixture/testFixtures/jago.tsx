@@ -1,7 +1,8 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { JagoLogEntry, ServerMessage } from "^jagoc";
+import { JagoLogEntry } from "^bee-common";
+import { ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^use-websocket";
 import { renderHook } from "^render-hook-plus";
 

@@ -1,6 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { makeMakeJacsWorkerBee } from "@jawis/jacs";
-import { mainProvToConsole, MakeBee } from "^jab-node";
+import { MakeBee } from "^bee-common";
+import { mainProvToConsole } from "^jab-node";
 
 //compile service
 

@@ -1,4 +1,5 @@
-import { JabShutdownMessage, registerOnMessage } from "^jab-node";
+import { JabShutdownMessage } from "^bee-common";
+import { registerOnMessage } from "^jab-node";
 
 registerOnMessage((msg: JabShutdownMessage) => {
   switch (msg.type) {
