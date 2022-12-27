@@ -1,7 +1,7 @@
 import { then } from "^yapu";
 import { Waiter } from "^state-waiter";
 
-import { Bee, BeeDeps, JabShutdownMessage } from ".";
+import { Bee, BeeDeps, BeeShutdownMessage } from ".";
 
 type States = "running" | "stopping" | "stopped";
 type Events = "message";
@@ -9,7 +9,7 @@ type Events = "message";
 type Beehavior<MS extends {}, MR extends {}> = {
   onInit?: (bee: InMemoryBee<MS, MR>) => void;
   onSend?: (
-    data: JabShutdownMessage | MS,
+    data: BeeShutdownMessage | MS,
     bee: InMemoryBee<MS, MR>
   ) => Promise<void>;
 };
@@ -44,7 +44,7 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
    * async, because caller will not be ready to handle sync, when it sending.
    *
    */
-  public send = (data: JabShutdownMessage | MS) => {
+  public send = (data: BeeShutdownMessage | MS) => {
     if (!this.waiter.is("running")) {
       return Promise.reject(
         new Error(

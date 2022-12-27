@@ -1,5 +1,5 @@
 import { parentPort } from "worker_threads";
-import { JagoLogEntry } from "^bee-common";
+import { BeeLogEntry } from "^bee-common";
 
 import { captureArrayEntries, tos } from "^jab";
 
@@ -7,14 +7,14 @@ import { makeSend } from ".";
 
 //This is only contructed, if there is IPC connection or this is a worker.
 // But would be better to detect, if jago actually started this.
-let parentSend: (entry: JagoLogEntry) => void;
+let parentSend: (entry: BeeLogEntry) => void;
 
 //only send  if it's possible.
 
 if (process.send || parentPort) {
   parentSend = (entry) => {
     //wasteful to make it each time
-    makeSend<JagoLogEntry>()(entry);
+    makeSend<BeeLogEntry>()(entry);
   };
 }
 

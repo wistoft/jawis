@@ -13,7 +13,7 @@
 ## :boom: Breaking changes
 
 - Moved types to new packages `bee-common`
-  - `JagoLogEntry`
+  - `JagoLogEntry` => `BeeLogEntry`
   - `LogEntry`
   - `StreamEntry`
   - `HtmlEntry`

@@ -6,27 +6,27 @@ import {
   OnError,
   unknownToErrorData,
 } from "^jab";
-import { JagoSend } from "./types";
+import { SendBeeLog } from "./types";
 
 /**
  *
  */
-export const makeJagoOnError =
-  (sendImpl: JagoSend): OnError =>
+export const makeBeeOnError =
+  (sendLog: SendBeeLog): OnError =>
   (error, extraInfo) => {
-    sendImpl({
+    sendLog({
       type: "error",
       data: unknownToErrorData(error, extraInfo),
     });
   };
 
 /**
- * - sendImpl is needed for testing.
+ *
  */
-export const mainProvToJago = (sendImpl: JagoSend, logPrefix = "") => {
-  const onError = makeJagoOnError(sendImpl);
+export const makeMainBeeProv = (sendLog: SendBeeLog, logPrefix = "") => {
+  const onError = makeBeeOnError(sendLog);
   const finalProv = new FinallyProvider({ onError });
-  const logProv = makeJagoLogProv(sendImpl, logPrefix);
+  const logProv = makeBeeLogProv(sendLog, logPrefix);
 
   return {
     onError,
@@ -41,23 +41,23 @@ export const mainProvToJago = (sendImpl: JagoSend, logPrefix = "") => {
 /**
  *
  */
-export const makeJagoLogProv = (
-  sendImpl: JagoSend,
+export const makeBeeLogProv = (
+  sendLog: SendBeeLog,
   logPrefix = ""
 ): LogProv => ({
   log: (...args) =>
-    sendImpl({
+    sendLog({
       type: "log",
       data: captureArrayEntries(args),
       logName: logPrefix,
     }),
   logStream: (type, data) =>
-    sendImpl({
+    sendLog({
       type: "stream",
       data: typeof data === "string" ? data : data.toString(),
       logName: logPrefix ? logPrefix + type : type,
     }),
   status: () => {
-    err("not impl");
+    err("makeBeeLogProv.status: not impl");
   },
 });

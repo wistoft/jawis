@@ -4,7 +4,7 @@ import cp, {
   Serializable,
   ForkOptions,
 } from "child_process";
-import { JabShutdownMessage } from "^bee-common";
+import { BeeShutdownMessage } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 
@@ -75,7 +75,7 @@ export class Process<MR extends Serializable, MS extends Serializable> {
   /**
    *
    */
-  public send = (obj: JabShutdownMessage | MS) => {
+  public send = (obj: BeeShutdownMessage | MS) => {
     if (!this.waiter.is("running")) {
       return Promise.reject(
         new Error(
@@ -92,7 +92,7 @@ export class Process<MR extends Serializable, MS extends Serializable> {
   /**
    * Not needed.
    */
-  private rawSend = (obj: JabShutdownMessage | MS) =>
+  private rawSend = (obj: BeeShutdownMessage | MS) =>
     new Promise<void>((resolve, reject) => {
       this.cp.send(obj, (error) => {
         if (error === null) {

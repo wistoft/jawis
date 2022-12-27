@@ -1,11 +1,11 @@
 import { CapturedValue, ParsedStack } from "^jab";
-import { HtmlEntry, JagoLogEntry, LogEntry } from "^bee-common";
+import { HtmlEntry, BeeLogEntry, LogEntry } from "^bee-common";
 
 //
 // console entries - the input data
 //
 
-export type ConsoleEntry = JagoLogEntry & {
+export type ConsoleEntry = BeeLogEntry & {
   context: string;
 };
 

@@ -17,14 +17,14 @@
 - Moved functions and classes to new package `bee-common`
 
   - `execBee`
-  - `mainProvToJago`
-  - `makeJagoLogProv`
-  - `makeJagoOnError`
+  - `mainProvToJago` => `makeMainBeeProv`
+  - `makeJagoLogProv` => `makeBeeLogProv`
+  - `makeJagoOnError` => `makeBeeOnError`
   - `InMemoryBee`
 
 - Moved types to new package `bee-common`
-  - `JabShutdownMessage`
-  - `JagoSend`
+  - `JabShutdownMessage` => `BeeShutdownMessage`
+  - `JagoSend` => `SendBeeLog`
   - `BeeDeps`
   - `BeeListeners`
   - `Bee`

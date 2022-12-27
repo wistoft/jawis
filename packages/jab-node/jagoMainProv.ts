@@ -1,6 +1,6 @@
 import { fixErrorInheritance, indent, LogProv, OnError } from "^jab";
 import { FinallyProvider } from "^finally-provider";
-import { JabShutdownMessage, mainProvToJago } from "^bee-common";
+import { BeeShutdownMessage, makeMainBeeProv } from "^bee-common";
 
 import { flushAndExit, MainProv, makeSend, registerOnMessage } from ".";
 
@@ -159,7 +159,7 @@ export const mainWrapper = (
   doRegisterRejectionHandlers = true
 ) => {
   const mainProv =
-    type === "console" ? mainProvToConsole() : mainProvToJago(makeSend());
+    type === "console" ? mainProvToConsole() : makeMainBeeProv(makeSend());
 
   if (doRegisterRejectionHandlers) {
     registerRejectionHandlers(mainProv.onError);
@@ -173,7 +173,7 @@ export const mainWrapper = (
   });
 
   if (registerOnShutdown) {
-    registerOnMessage((msg: JabShutdownMessage) => {
+    registerOnMessage((msg: BeeShutdownMessage) => {
       if (msg.type === "shutdown") {
         Promise.resolve()
           .then(mainProv.finalProv.runFinally)

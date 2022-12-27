@@ -1,7 +1,7 @@
-import { JabShutdownMessage } from "^bee-common";
+import { BeeShutdownMessage } from "^bee-common";
 import { registerOnMessage } from "^jab-node";
 
-registerOnMessage((msg: JabShutdownMessage) => {
+registerOnMessage((msg: BeeShutdownMessage) => {
   switch (msg.type) {
     case "shutdown":
       process.exit();

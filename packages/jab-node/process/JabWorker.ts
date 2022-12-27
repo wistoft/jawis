@@ -5,7 +5,7 @@ import { def, err } from "^jab";
 
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
-import { JabShutdownMessage } from "^bee-common";
+import { BeeShutdownMessage } from "^bee-common";
 import { nodeRequire, StructuredCloneable } from "..";
 import { MakeNodeWorker } from ".";
 
@@ -114,7 +114,7 @@ export class JabWorker<
    *
    */
   public send = (
-    data: JabShutdownMessage | MS,
+    data: BeeShutdownMessage | MS,
     transferList?: Array<ArrayBuffer | MessagePort>
   ) => {
     if (!this.waiter.is("running")) {

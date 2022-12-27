@@ -1,7 +1,7 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { JagoLogEntry } from "^bee-common";
+import { BeeLogEntry } from "^bee-common";
 import { ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^use-websocket";
 import { renderHook } from "^render-hook-plus";
@@ -44,14 +44,14 @@ export const renderUseJagoDirector = (prov: TestProvision) => {
   return { ...hookProv, ...useWsEffectArgs };
 };
 
-export const makeJagoSend = (prov: TestProvision) => (msg: JagoLogEntry) => {
+export const makeJagoSend = (prov: TestProvision) => (msg: BeeLogEntry) => {
   prov.log("postMessage", filterJagoLog(msg));
 };
 
 /**
  *
  */
-export const filterJagoLog = (entry: JagoLogEntry) => {
+export const filterJagoLog = (entry: BeeLogEntry) => {
   if (entry.type === "error") {
     return {
       ...entry,

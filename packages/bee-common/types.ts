@@ -2,7 +2,7 @@ import { FinallyFunc } from "^finally-provider";
 import { CapturedValue, ErrorData } from "^jabc";
 import { Waiter } from "^state-waiter";
 
-export type JabShutdownMessage = {
+export type BeeShutdownMessage = {
   type: "shutdown";
 };
 
@@ -19,14 +19,14 @@ export type BeeListeners<MR> = {
   onExit: (exitCode: number | null) => void;
 };
 
-type BeeStates = "running" | "stopping" | "stopped";
-type BeeEvents = "message";
+export type BeeStates = "running" | "stopping" | "stopped";
+export type BeeEvents = "message";
 
 /**
  * A bee is an abstaction over processes/workers.
  */
 export type Bee<MS> = {
-  send: (msg: JabShutdownMessage | MS) => Promise<void>;
+  send: (msg: BeeShutdownMessage | MS) => Promise<void>;
   shutdown: () => Promise<void>;
   kill: () => Promise<void>;
   noisyKill: () => Promise<void>;
@@ -44,11 +44,7 @@ export type MakeBee = <MS extends {}, MR extends {}>(
 // messages, logs and output
 //
 
-export type JagoSend = (msg: JagoLogEntry) => void;
-
-//
-// log provision and jago logging convention.
-//
+export type SendBeeLog = (msg: BeeLogEntry) => void;
 
 export type LogEntry = {
   type: "log";
@@ -74,7 +70,7 @@ export type ErrorEntry = {
   logName?: string;
 };
 
-export type JagoLogEntry = LogEntry | StreamEntry | HtmlEntry | ErrorEntry;
+export type BeeLogEntry = LogEntry | StreamEntry | HtmlEntry | ErrorEntry;
 
 //
 // add ons

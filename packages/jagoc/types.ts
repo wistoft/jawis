@@ -1,4 +1,4 @@
-import { JagoLogEntry } from "^bee-common";
+import { BeeLogEntry } from "^bee-common";
 
 //
 // script
@@ -15,7 +15,7 @@ export type ScriptOutput =
     }
   | {
       type: "message";
-      data: JagoLogEntry;
+      data: BeeLogEntry;
     };
 
 export type ScriptStatusTypes =
