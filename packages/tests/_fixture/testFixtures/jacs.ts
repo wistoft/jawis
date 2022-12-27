@@ -13,12 +13,12 @@ import {
 import { TestProvision } from "^jarun";
 import { assertString } from "^jab";
 import { TsPathsConfig } from "^ts-config-util";
-import { makeTsNodeWorker } from "^util-javi/node";
 
 import { JacsConsumer, JacsConsumerDeps } from "^jacs/JacsConsumer";
 import { JacsProducer, JacsProducerDeps } from "^jacs/JacsProducer";
 import { CaIndex, ConsumerStates, getControlArray } from "^jacs/protocol";
 
+import { makeTsNodeWorker } from "^misc/node";
 import { syntheticWait } from "./jacs protocol";
 
 const projectConf = require("../../../../packages/dev/project.conf");

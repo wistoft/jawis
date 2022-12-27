@@ -1,13 +1,7 @@
 import { RogueData, TestResult } from "^jatec";
-import { CreateTestRunners } from "^jates";
 
-import { MakeJabProcess, makeMakeTsJabProcessConditonally } from "^jab-node";
 import { safeAllWait } from "^yapu";
-import { FinallyFunc } from "^finally-provider";
-import { makeTsNodeJabProcess } from "^util-javi/node";
 import { JarunTestProvision, TestProvision } from "./JarunTestProvision";
-import { BeeRunner } from "./BeeRunner";
-import { JarunProcessController } from ".";
 
 export type TestFunction = (prov: TestProvision) => unknown;
 
@@ -84,58 +78,4 @@ export const awaitPromises = (prov: JarunTestProvision): Promise<undefined> => {
         return awaitPromises(prov);
       }
     });
-};
-
-/**
- *
- */
-export const makeProcessRunner = (deps: {
-  makeTsProcess: MakeJabProcess;
-  finally: FinallyFunc;
-}) => {
-  const makeTsProcessConditonally = makeMakeTsJabProcessConditonally(
-    deps.makeTsProcess
-  );
-
-  return new BeeRunner({
-    ...deps,
-    makeBee: makeTsProcessConditonally,
-  });
-};
-
-/**
- *
- */
-export const getDefaultRunnersAssignments = (
-  jpc: JarunProcessController,
-  pr: BeeRunner,
-  wo: BeeRunner
-) => ({
-  ".ja.js": jpc,
-  ".ja.ts": jpc,
-  ".ja.jsx": jpc,
-  ".ja.tsx": jpc,
-  ".pr.js": pr,
-  ".pr.ts": pr,
-  ".wo.js": wo,
-  ".wo.ts": wo,
-});
-
-/**
- *
- */
-export const createDefaultTestRunners: CreateTestRunners = (deps) => {
-  const jpc = new JarunProcessController(deps);
-
-  const pr = makeProcessRunner({
-    ...deps,
-    makeTsProcess: makeTsNodeJabProcess,
-  });
-
-  const wo = new BeeRunner({
-    ...deps,
-    makeBee: deps.makeTsBee,
-  });
-
-  return getDefaultRunnersAssignments(jpc, pr, wo);
 };

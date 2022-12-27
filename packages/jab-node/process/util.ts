@@ -37,19 +37,6 @@ export const makePlainWorker: MakeNodeWorker = (
 ) => new Worker(filename, options);
 
 /**
- *
- */
-export const makeMakeTsJabProcessConditonally =
-  (makeTsJabProcess: MakeJabProcess): MakeJabProcess =>
-  (deps) => {
-    if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
-      return makeTsJabProcess(deps);
-    } else {
-      return makePlainJabProcess(deps);
-    }
-  };
-
-/**
  * Get files required, even though they've already been loaded.
  *
  * note

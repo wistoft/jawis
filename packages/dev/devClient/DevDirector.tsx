@@ -6,9 +6,9 @@ import { makeUseConsoleStream } from "@jawis/console";
 import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
 
 import { JaviDirector, JaviDirectorProps } from "^javi-client";
-import { getApiPath } from "^util-javi";
 import { Main as DevComponentPanel } from "^util-javi/web/devComponentPanel";
 import { devComponents } from "./devComponents";
+import { getApiPath } from "^javi-client/util";
 
 type Props = {
   serverPort: number; //mandatory in development, because server is on a different port than client.

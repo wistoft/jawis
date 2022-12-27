@@ -5,10 +5,9 @@ import React from "react";
 import { ErrorBoundary, useObject, ComponentMenu } from "^jab-react";
 import { Main as JatevMain, Props as JatevProps } from "^jatev";
 import { Main as JagovMain, Props as JagovProps } from "^jagov";
-import { getApiPath } from "^util-javi";
 
-import { DevTemplate } from "^util-javi/web";
-import { JaviDirectorProps } from ".";
+import { getApiPath } from "./util";
+import { DevTemplate, JaviDirectorProps } from ".";
 
 /**
  *

@@ -12,7 +12,6 @@
     { "path": "../jacs" },
     { "path": "../jarun" },
     { "path": "../jagos" },
-    { "path": "../jates" },
-    { "path": "../util-javi" }
+    { "path": "../jates" }
   ]
 }

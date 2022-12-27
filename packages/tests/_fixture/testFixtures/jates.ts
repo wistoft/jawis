@@ -1,14 +1,7 @@
 import { ErrorData } from "^jab";
-import {
-  TestProvision,
-  JarunProcessController,
-  BeeRunner,
-  getDefaultRunnersAssignments,
-  makeProcessRunner,
-} from "^jarun";
+import { TestProvision, JarunProcessController, BeeRunner } from "^jarun";
 import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
 import { ComposedTestFramework } from "^jates";
-import { makeTsNodeJabProcess } from "^util-javi/node";
 import {
   TestExecutionController,
   TestExecutionControllerDeps,
@@ -21,6 +14,7 @@ import { TestLogController } from "^jates/TestLogController";
 import { TestAnalytics } from "^jates/TestAnalytics";
 import { ClientComController } from "^jates/ClientComController";
 
+import { makeProcessRunner, makeTsNodeJabProcess } from "^javi/util";
 import {
   getLogProv,
   WsPoolMock,
@@ -30,6 +24,7 @@ import {
   makeJacsWorker,
   getScratchPath,
 } from ".";
+import { getDefaultRunnersAssignments } from "^javi/makeJarunTestRunners";
 
 /**
  *

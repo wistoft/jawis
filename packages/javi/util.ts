@@ -1,3 +1,4 @@
+import path from "path";
 //javi always import released version, but dev wants to choose:
 
 // import released versions for `devServerMain.ts`
@@ -7,17 +8,23 @@ import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 //import development versions for `devServerMain.ts`
 
-import { createDefaultTestRunners } from "^jarun";
+import { BeeRunner } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";
 import { makeApp, Route } from "^jab-express";
-import { MainProv } from "^jab-node";
+import {
+  MainProv,
+  MakeJabProcess,
+  makePlainJabProcess,
+  Process,
+} from "^jab-node";
 import { MakeBee } from "^bee-common";
+import { FinallyFunc } from "^finally-provider";
 import { DirectorDeps as JatesDeps } from "^jates/director";
 import { DirectorDeps as JagosDeps } from "^jagos/director";
-import { makeTsNodeJabProcess } from "^util-javi/node";
 
 import { JaviClientConf } from "./types";
+import { makeJarunTestRunners } from "./makeJarunTestRunners";
 
 export type Deps = {
   name: string;
@@ -54,7 +61,7 @@ export const startJaviServer = (deps: Deps) => {
     path: "/jate",
     makeHandler: () =>
       makeJatesRoute({
-        createTestRunners: createDefaultTestRunners,
+        createTestRunners: makeJarunTestRunners,
         makeTsProcess: makeTsNodeJabProcess,
         makeTsBee: makeJacsBee,
         onError,
@@ -96,4 +103,58 @@ export const startJaviServer = (deps: Deps) => {
   app.listen(deps.serverPort, () =>
     deps.mainProv.log(deps.name + " port: " + deps.serverPort)
   );
+};
+
+/**
+ *
+ */
+export const makeProcessRunner = (deps: {
+  makeTsProcess: MakeJabProcess;
+  finally: FinallyFunc;
+}) => {
+  const makeTsProcessConditonally = makeMakeTsJabProcessConditionally(
+    deps.makeTsProcess
+  );
+
+  return new BeeRunner({
+    ...deps,
+    makeBee: makeTsProcessConditonally,
+  });
+};
+
+/**
+ *
+ */
+export const makeMakeTsJabProcessConditionally =
+  (makeTsJabProcess: MakeJabProcess): MakeJabProcess =>
+  (deps) => {
+    if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
+      return makeTsJabProcess(deps);
+    } else {
+      return makePlainJabProcess(deps);
+    }
+  };
+
+/**
+ *
+ */
+export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
+  if (deps.execArgv && deps.execArgv.length > 0) {
+    throw new Error("not impl");
+  }
+
+  const tsNodeArgs = [
+    "-r",
+    "ts-node/register/transpile-only",
+    "-r",
+    "tsconfig-paths/register",
+  ];
+
+  const nodeArgs = [...tsNodeArgs];
+
+  return new Process({
+    ...deps,
+    execArgv: nodeArgs,
+    cwd: path.dirname(deps.filename),
+  });
 };

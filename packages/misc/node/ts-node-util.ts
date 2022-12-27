@@ -1,41 +1,9 @@
 import path from "path";
 import { Worker } from "worker_threads";
-import { execBee, MakeBee } from "^bee-common";
-import { FinallyFunc } from "^finally-provider";
+import { MakeBee } from "^bee-common";
 
 import { assert } from "^jab";
-import {
-  makePlainJabProcess,
-  MakeJabProcess,
-  MakeNodeWorker,
-  Process,
-  JabWorker,
-  JabWorkerDeps,
-} from "^jab-node";
-
-/**
- *
- */
-export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
-  if (deps.execArgv && deps.execArgv.length > 0) {
-    throw new Error("not impl");
-  }
-
-  const tsNodeArgs = [
-    "-r",
-    "ts-node/register/transpile-only",
-    "-r",
-    "tsconfig-paths/register",
-  ];
-
-  const nodeArgs = [...tsNodeArgs];
-
-  return new Process({
-    ...deps,
-    execArgv: nodeArgs,
-    cwd: path.dirname(deps.filename),
-  });
-};
+import { MakeNodeWorker, JabWorker, JabWorkerDeps } from "^jab-node";
 
 /**
  * Load a .ts file, even though that extension isn't allowed.
@@ -83,22 +51,3 @@ export const makeTsNodeWorker: MakeNodeWorker = (filename, options = {}) => {
 export const makeTsNodeWorkerBee: MakeBee = <MR, WD>(
   deps: Omit<JabWorkerDeps<MR, WD>, "makeWorker">
 ) => new JabWorker({ ...deps, makeWorker: makeTsNodeWorker });
-
-/**
- *
- */
-export const makeTsNodeJabProcessConditonally: MakeJabProcess = (deps) => {
-  if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
-    return makeTsNodeJabProcess(deps);
-  } else {
-    return makePlainJabProcess(deps);
-  }
-};
-
-/**
- *
- */
-export const nodeExecTsNodeConditonally = (
-  script: string,
-  finallyFunc: FinallyFunc = () => {}
-) => execBee(script, finallyFunc, makeTsNodeJabProcessConditonally);

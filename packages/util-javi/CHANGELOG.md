@@ -18,6 +18,9 @@
 ## :boom: Breaking changes
 
 - Moved `dtp` to misc.
+- Moved things to `javi-client`
+  - `getApiPath`
+  - `DevTemplate`
 - Moved error-parsing functions to new package `parse-captured-stack`.
   - `parseTrace`
   - `parseTraceAndSourceMap`
@@ -25,3 +28,8 @@
 - Moved react components to new package `view-exception`.
   - `ViewException`
   - `ViewExceptionCallStack`
+- Moved functions to `misc`
+  - `makeTsNodeWorker`
+- Removed functions
+  - `makeTsNodeJabProcessConditonally`
+  - `nodeExecTsNodeConditonally`

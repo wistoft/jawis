@@ -23,6 +23,7 @@
   - `InMemoryBee`
 
 - Moved types to new package `bee-common`
+
   - `JabShutdownMessage` => `BeeShutdownMessage`
   - `JagoSend` => `SendBeeLog`
   - `BeeDeps`
@@ -31,3 +32,6 @@
   - `MakeBee`
   - `ExecBee`
   - `BeeResult`
+
+- Moved function to `javi`
+  - `makeMakeTsJabProcessConditonally` => `makeMakeTsJabProcessConditionally`

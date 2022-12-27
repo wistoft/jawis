@@ -9,7 +9,6 @@
     { "path": "../jab-react" },
     { "path": "../jagov" },
     { "path": "../jatev" },
-    { "path": "../misc" },
-    { "path": "../util-javi" }
+    { "path": "../misc" }
   ]
 }
