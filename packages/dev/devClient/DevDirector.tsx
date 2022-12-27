@@ -6,7 +6,7 @@ import { makeUseConsoleStream } from "@jawis/console";
 import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
 
 import { JaviDirector, JaviDirectorProps } from "^javi-client";
-import { Main as DevComponentPanel } from "^util-javi/web/devComponentPanel";
+import { Main as DevComponentPanel } from "^dev-compv";
 import { devComponents } from "./devComponents";
 import { getApiPath } from "^javi-client/util";
 

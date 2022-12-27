@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/dev-compv",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-react" },
+    { "path": "../use-websocket" },
+    { "path": "../yapu" }
+  ]
+}

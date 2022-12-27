@@ -6,6 +6,7 @@
     { "path": "./packages/assorted-algorithms" },
     { "path": "./packages/bee-common" },
     { "path": "./packages/dev" },
+    { "path": "./packages/dev-compv" },
     { "path": "./packages/finally-provider" },
     { "path": "./packages/jab" },
     { "path": "./packages/jabc" },

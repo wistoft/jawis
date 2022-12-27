@@ -18,6 +18,7 @@
 ## :boom: Breaking changes
 
 - Moved `dtp` to misc.
+- Moved dev components to new package `dev-compv`.
 - Moved things to `javi-client`
   - `getApiPath`
   - `DevTemplate`

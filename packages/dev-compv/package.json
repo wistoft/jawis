@@ -1,0 +1,15 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~dev-compv",
+  "description": "Dev commponent panel view",
+  "dependencies": {
+    "@reach/router": "^1.3.4",
+    "@types/reach__router": "^1.3.7",
+    "@types/react": "^16.14.4",
+    "react": "^16.14.0"
+  },
+  "keywords": [
+    "view"
+  ]
+}

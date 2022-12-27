@@ -16,7 +16,7 @@ import { parseErrorData } from "^parse-captured-stack";
 import {
   InnerPanel,
   Props as DevComponentPanelProps,
-} from "^util-javi/web/devComponentPanel/InnerPanel";
+} from "^dev-compv/InnerPanel";
 
 import { errorData0 } from ".";
 

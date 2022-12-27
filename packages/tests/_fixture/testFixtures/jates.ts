@@ -15,6 +15,7 @@ import { TestAnalytics } from "^jates/TestAnalytics";
 import { ClientComController } from "^jates/ClientComController";
 
 import { makeProcessRunner, makeTsNodeJabProcess } from "^javi/util";
+import { getDefaultRunnersAssignments } from "^javi/makeJarunTestRunners";
 import {
   getLogProv,
   WsPoolMock,
@@ -24,7 +25,6 @@ import {
   makeJacsWorker,
   getScratchPath,
 } from ".";
-import { getDefaultRunnersAssignments } from "^javi/makeJarunTestRunners";
 
 /**
  *

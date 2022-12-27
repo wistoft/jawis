@@ -8,6 +8,7 @@
   "references": [
     { "path": "../assorted-algorithms" },
     { "path": "../async-capture" },
+    { "path": "../dev-compv" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-express" },

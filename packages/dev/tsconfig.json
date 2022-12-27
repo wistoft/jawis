@@ -5,6 +5,7 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../dev-compv" },
     { "path": "../jab" },
     { "path": "../jab-node" },
     { "path": "../jab-react" },
