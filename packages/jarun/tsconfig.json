@@ -13,7 +13,6 @@
     { "path": "../jatec" },
     { "path": "../jates" },
     { "path": "../state-waiter" },
-    { "path": "../util-javi" },
     { "path": "../yapu" }
   ]
 }

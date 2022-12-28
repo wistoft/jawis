@@ -29,7 +29,6 @@
     { "path": "./packages/misc" },
     { "path": "./packages/parse-captured-stack" },
     { "path": "./packages/render-hook-plus" },
-    { "path": "./packages/util-javi" },
     { "path": "./packages/state-waiter" },
     { "path": "./packages/tests" },
     { "path": "./packages/ts-config-util" },

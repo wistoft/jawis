@@ -45,7 +45,6 @@ const scopedPackages = [
   "jatev",
   "javi",
   "use-websocket",
-  "util-javi",
 ];
 
 const privatePackages = ["dev", "javi-client", "misc", "tests"];
