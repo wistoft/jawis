@@ -1,8 +1,8 @@
-import type { Serializable } from "child_process";
-import type { Worker, WorkerOptions } from "worker_threads";
-import type { StructuredCloneable } from "..";
+import { Serializable } from "child_process";
+import { Worker, WorkerOptions } from "worker_threads";
+import { StructuredCloneable } from "..";
 
-import type { ProcessDeps, Process, JabWorker, JabWorkerDeps } from ".";
+import { ProcessDeps, Process, JabWorker, JabWorkerDeps } from ".";
 
 //
 // scripts/exec

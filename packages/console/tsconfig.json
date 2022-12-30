@@ -8,7 +8,6 @@
     { "path": "../bee-common" },
     { "path": "../jab" },
     { "path": "../jab-react" },
-    { "path": "../jagoc" },
     { "path": "../parse-captured-stack" },
     { "path": "../view-exception" },
     { "path": "../yapu" }

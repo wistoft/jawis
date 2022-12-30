@@ -3,8 +3,9 @@ import sourceMapSupport from "source-map-support";
 
 import { ParsedStackFrame } from "^jab";
 import { nodeRequire } from "^jab-node";
-import { UninstallInfo } from "^jacs";
+
 import {
+  UninstallInfo,
   CaIndex,
   ConsumerShould,
   ConsumerStates,

@@ -5,7 +5,7 @@ import {
   addReturnToTestLogs,
   errMsgAndReturnToTestLog,
   errorToTestLog,
-} from "^jatec";
+} from "^jates";
 
 import { timeRace } from "^yapu";
 import { asyncCapture } from "^async-capture";

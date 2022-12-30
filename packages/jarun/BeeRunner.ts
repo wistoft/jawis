@@ -1,7 +1,6 @@
 import { capture, unknownToErrorData } from "^jab";
-import { TestRunner } from "^jates";
+import { TestRunner, TestResult, UserTestLogs } from "^jates";
 import { execBee, Bee, MakeBee } from "^bee-common";
-import { TestResult, UserTestLogs } from "^jatec";
 import { FinallyFunc } from "^finally-provider";
 
 export type Deps = Readonly<{

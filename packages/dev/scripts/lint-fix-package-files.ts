@@ -4,6 +4,7 @@ import path from "path";
 
 import { sortObject } from "./build/util";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
+import { tryGetCommonPackage } from "./util";
 
 /**
  *
@@ -15,7 +16,7 @@ export const doit = async () => {
 
   await fixPackageJson(path.join(projectRoot, "package.json"));
 
-  //in packages
+  //packages
 
   for (const packageName of allPackagesIncludingPrivate) {
     await fixPackageJson(
@@ -140,19 +141,9 @@ export const fixInternalFile = async (folder: string, packageName: string) => {
     ""
   );
 
-  //hacky
+  //add common package if it exists
 
-  let commonPackage: string | undefined;
-
-  if (await fse.pathExists(folder + "c")) {
-    commonPackage = packageName + "c";
-  }
-
-  if (!folder.endsWith("c")) {
-    if (await fse.pathExists(folder.slice(0, -1) + "c")) {
-      commonPackage = packageName.slice(0, -1) + "c";
-    }
-  }
+  const commonPackage = await tryGetCommonPackage(packageName);
 
   if (commonPackage) {
     internalFile += '\nexport * from "^' + commonPackage + '";\n';

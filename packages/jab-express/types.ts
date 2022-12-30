@@ -1,6 +1,6 @@
-import type express from "express";
+import express from "express";
 
-import type { NodeWS, SocketData } from "./internal";
+import { NodeWS, SocketData } from "./internal";
 
 export type ServerAppRouter = {
   router: express.Router;

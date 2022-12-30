@@ -3,6 +3,7 @@ import path from "path";
 import { ComposedTestFramework } from "^jates";
 import { TestLogController } from "^jates/TestLogController";
 import { projectRoot } from "^dev/project.conf";
+import { difference } from "./util";
 
 /**
  *
@@ -58,14 +59,6 @@ export const doit = async () => {
   }
 
   console.log(toDelete.length + " files deleted");
-};
-
-/**
- *
- */
-const difference = (a: string[], b: string[]) => {
-  const set = new Set(b);
-  return a.filter((x) => !set.has(x));
 };
 
 doit();

@@ -1,17 +1,20 @@
 import isBuiltin from "is-builtin-module";
 import fs from "fs";
-import path from "path";
+import path, { basename } from "path";
 
 import { err } from "^jab/error";
 import { assertNever } from "^jab/util";
 
-import { setDifference } from "./util/util";
+import { setDifference, tryGetCommonPackage } from "./util/util";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
+import { makeLiveJawisBuildManager } from "./build/util2";
 
 /**
  *
  */
 export const doit = async () => {
+  const buildManeger = makeLiveJawisBuildManager();
+
   //packages
 
   for (const packageName of allPackagesIncludingPrivate) {
@@ -28,7 +31,8 @@ export const doit = async () => {
     try {
       await checkRelativeImportsInPackage(
         path.join(projectRoot, "packages", packageName),
-        packageName
+        packageName,
+        buildManeger
       );
     } catch (error) {
       console.log(packageName);
@@ -44,7 +48,8 @@ export const doit = async () => {
  */
 const checkRelativeImportsInPackage = async (
   folder: string,
-  packageName: string
+  packageName: string,
+  buildManager: ReturnType<typeof makeLiveJawisBuildManager>
 ) => {
   const files = await fs.promises.readdir(folder);
   const seenNpmImports = new Set<string>();
@@ -68,15 +73,18 @@ const checkRelativeImportsInPackage = async (
     // break;
   }
 
-  //check npm dependencies
+  // maybe just ignore private packages
 
   if (
     packageName === "dev" ||
     packageName === "tests" ||
+    packageName === "javi-client" ||
     packageName === "misc"
   ) {
     return;
   }
+
+  //check npm dependencies
 
   const deps = new Set(
     (await getPackageDependencies(folder)).filter(
@@ -91,6 +99,24 @@ const checkRelativeImportsInPackage = async (
 
   if (unused.size > 0 || missing.size > 0) {
     console.log({ folder, unused, missing });
+  }
+
+  //check sibling dependencies
+
+  const commonPackage = await tryGetCommonPackage(packageName);
+  const commonPackageSet = new Set(commonPackage && ["^" + commonPackage]); //no need to report this is unused.
+
+  const siblings = new Set(
+    (await buildManager.getSiblingPackages(basename(folder), false, true)).map(
+      (sibling) => "^" + sibling
+    )
+  );
+
+  const unused2 = setDifference(siblings, seenSiblingImports, commonPackageSet);
+  const missing2 = setDifference(seenSiblingImports, siblings);
+
+  if (unused2.size > 0 || missing2.size > 0) {
+    console.log({ folder, unused: unused2, missing: missing2 });
   }
 };
 

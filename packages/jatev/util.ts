@@ -10,7 +10,7 @@ import {
 } from "^jatec";
 import { dynamicDiff } from "^assorted-algorithms";
 import { assertNever, ErrorData } from "^jab";
-import { TestState } from "^jatev";
+import { TestState } from "./internal";
 
 export type ClientApiSendProv = {
   apiSend: (data: ClientMessage) => void;

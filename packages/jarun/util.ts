@@ -1,4 +1,4 @@
-import { RogueData, TestResult } from "^jatec";
+import { RogueData, TestResult } from "^jates";
 
 import { safeAllWait } from "^yapu";
 import { JarunTestProvision, TestProvision } from "./internal";

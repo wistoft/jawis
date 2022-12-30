@@ -1,5 +1,5 @@
 import path from "path";
-import type { CompilerOptions } from "typescript";
+import { CompilerOptions } from "typescript";
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { uninstall } from "@jawis/jacs";

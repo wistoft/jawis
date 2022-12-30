@@ -1,7 +1,6 @@
 import deepEqual from "deep-equal";
 
-import type { OnRogue, TestCurLogs } from "^jatec";
-import { errorToTestLog } from "^jatec";
+import { OnRogue, TestCurLogs, errorToTestLog } from "^jates";
 import {
   assert,
   capture,

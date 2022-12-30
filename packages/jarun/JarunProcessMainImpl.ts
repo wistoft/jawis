@@ -1,13 +1,10 @@
 import { assertNever } from "^jab";
 import { makeSend, nodeRequire, registerOnMessage } from "^jab-node";
 
-import { errorToTestLog, RogueData } from "^jatec";
+import { errorToTestLog, RogueData } from "^jates";
 
 import { JarunTestRunner } from "./internal";
-import type {
-  JarunProcessControllerMessage,
-  JarunProcessMessage,
-} from "./internal";
+import { JarunProcessControllerMessage, JarunProcessMessage } from "./internal";
 
 /**
  *

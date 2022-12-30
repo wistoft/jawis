@@ -3,7 +3,7 @@ import { nodeRequire, registerPrecompilers } from "^jab-node";
 
 import { Waiter } from "^state-waiter";
 import { requestProducerSync, WaitFunc } from "./internal";
-import type { ConsumerMessage, WorkerData } from "./internal";
+import { ConsumerMessage, WorkerData } from "./internal";
 
 export type JacsConsumerDeps = {
   shared: Pick<

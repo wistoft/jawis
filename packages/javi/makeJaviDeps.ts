@@ -1,4 +1,4 @@
-import { FileService } from "^jabc";
+import { FileService } from "^jab";
 import { compareFiles, handleOpenFileInVsCode } from "./internal";
 
 export type JaviDefaultDeps = {

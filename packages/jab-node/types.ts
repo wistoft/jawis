@@ -1,5 +1,5 @@
 import { FinallyProvider } from "^finally-provider";
-import type { LogProv, OnError } from "^jab";
+import { LogProv, OnError } from "^jab";
 
 //covenience: duplicates some properties to be compatible with TestMainProv
 export type MainProv = {
