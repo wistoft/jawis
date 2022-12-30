@@ -1,4 +1,4 @@
-import { ClientTestReport, TestCurLogs, TestResult } from ".";
+import { ClientTestReport, TestCurLogs, TestResult } from "./internal";
 
 export type OnTestResult = (id: string, result: TestResult) => void;
 

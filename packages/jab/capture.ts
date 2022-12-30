@@ -8,7 +8,7 @@ import {
   CustomCapture,
   CapturedValue,
   CapturedNonPlainObject,
-} from ".";
+} from "./internal";
 
 const MAX_DEPTH = 10;
 

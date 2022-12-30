@@ -2,7 +2,7 @@ import { TextDecoder, TextEncoder } from "util";
 
 import { assert, assertNever, err } from "^jab";
 
-import { ConsumerMessage, getDebugSummary } from ".";
+import { ConsumerMessage, getDebugSummary } from "./internal";
 
 export const ControlArrayLength = 5; //must match CaIndex
 

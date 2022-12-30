@@ -15,3 +15,9 @@
 ## :boom: Breaking changes
 
 - new versions of express, ws and express-ws
+- Removed things
+  - `makeMakeRouter`
+  - `MakeServerAppRouter`
+  - `MakeServerApp`
+  - `WsMessageListenerOld`
+  - `WsRouter`

@@ -6,8 +6,7 @@ import { ErrorBoundary, useObject, ComponentMenu } from "^jab-react";
 import { Main as JatevMain, Props as JatevProps } from "^jatev";
 import { Main as JagovMain, Props as JagovProps } from "^jagov";
 
-import { getApiPath } from "./util";
-import { DevTemplate, JaviDirectorProps } from ".";
+import { getApiPath, DevTemplate, JaviDirectorProps } from "./internal";
 
 /**
  *

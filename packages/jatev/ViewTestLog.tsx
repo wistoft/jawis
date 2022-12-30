@@ -8,11 +8,9 @@ import {
   ClientApiSendProv,
   getDefaultShowTestState,
   getTestLogMatchType,
-} from "./util";
-import {
   ViewTestLogContent,
   ViewTestLogContentProps,
-} from "./ViewTestLogContent";
+} from "./internal";
 
 export type ViewTestLogProps = {
   testId: string;

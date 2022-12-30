@@ -12,8 +12,7 @@ import {
 } from "^jatec";
 
 import { timeRace } from "^yapu";
-import { ClientComProv } from "./ClientComController";
-import { TestRunner } from ".";
+import { ClientComProv, TestRunner } from "./internal";
 
 // prov
 

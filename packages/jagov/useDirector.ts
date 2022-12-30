@@ -13,9 +13,11 @@ import {
 
 import { ClientMessage, ServerMessage } from "^jagoc";
 import { WebSocketProv } from "^use-websocket";
-import { makeOnServerMessage } from "./onServerMessage";
-import { setProcessStatusUpdater } from "./updaters";
-import { State } from ".";
+import {
+  makeOnServerMessage,
+  setProcessStatusUpdater,
+  State,
+} from "./internal";
 
 export type DirectorProps = {
   useConsoleStream?: UseConsoleStream;

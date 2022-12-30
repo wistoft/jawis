@@ -2,10 +2,9 @@
 import path from "path";
 
 import { MainProv, mainWrapper } from "^jab-node";
+import { makeMakeJacsWorkerBee } from "^jacs";
 
-import { startJaviServer } from "./util";
-import { getJaviConf } from "./getConf";
-import { makeJaviDeps } from "./makeJaviDeps";
+import { startJaviServer, getJaviConf, makeJaviDeps } from "./internal";
 
 /**
  *
@@ -14,6 +13,10 @@ const main = (mainProv: MainProv) => {
   //conf
 
   const conf = getJaviConf(process.cwd());
+
+  //typescript worker threads
+
+  const makeTsBee = makeMakeJacsWorkerBee(mainProv);
 
   //default things
 
@@ -37,12 +40,14 @@ const main = (mainProv: MainProv) => {
       absTestFolder: conf.absTestFolder,
       absTestLogFolder: conf.absTestLogFolder,
       tecTimeout: conf.tecTimeout,
+      makeTsBee,
       ...defaultThings.fileService,
     },
 
     jagos: {
       scriptFolders: conf.scriptFolders,
       scripts: conf.scripts,
+      makeTsBee,
       ...defaultThings.fileService,
     },
   });

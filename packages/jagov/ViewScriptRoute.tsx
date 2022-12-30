@@ -6,8 +6,7 @@ import { assertPropString } from "^jab";
 
 import { ScriptStatus } from "^jagoc";
 
-import { ViewScript, ViewScriptProps } from "./ViewScript";
-import { ApiProv } from ".";
+import { ViewScript, ViewScriptProps, ApiProv } from "./internal";
 
 export type ViewScriptRouteProps = ApiProv &
   Omit<ViewScriptProps, "singleProcessStatus"> & {

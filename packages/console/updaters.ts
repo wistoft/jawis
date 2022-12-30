@@ -1,8 +1,13 @@
 import { ErrorEntry } from "^bee-common";
 import { parseErrorData, parseTraceAndSourceMap } from "^parse-captured-stack";
-import { ConsoleEntry, UiEntry, UiErrorEntry } from "./types";
-import { State } from "./useConsoleState";
-import { mapConsoleEntry, preserveConsoleEntry } from "./util";
+import {
+  ConsoleEntry,
+  UiEntry,
+  UiErrorEntry,
+  State,
+  mapConsoleEntry,
+  preserveConsoleEntry,
+} from "./internal";
 
 /**
  *

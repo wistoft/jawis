@@ -1,7 +1,7 @@
 import { RogueData, TestResult } from "^jatec";
 
 import { safeAllWait } from "^yapu";
-import { JarunTestProvision, TestProvision } from "./JarunTestProvision";
+import { JarunTestProvision, TestProvision } from "./internal";
 
 export type TestFunction = (prov: TestProvision) => unknown;
 

@@ -13,7 +13,7 @@ import {
 import { nodeRequire, UserMessage } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
-import { FullJaviConf } from "./types";
+import { FullJaviConf } from "./internal";
 
 /**
  * Read javi config file from disk.

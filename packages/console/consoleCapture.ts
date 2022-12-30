@@ -1,7 +1,10 @@
 import { unknownToErrorData } from "^jab";
 
-import { createConsoleFunction } from "./util";
-import { CaptureCache, defaultWindowPropertyName } from ".";
+import {
+  createConsoleFunction,
+  CaptureCache,
+  defaultWindowPropertyName,
+} from "./internal";
 
 declare const window: any; //quick fix
 

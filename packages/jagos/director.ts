@@ -2,13 +2,13 @@ import { WsPoolController, WsPoolProv } from "^jab-express";
 import { HandleOpenFileInEditor } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
-import { Behavior } from "./Behavior";
 import {
+  Behavior,
   ScriptPoolController,
   ScriptPoolControllerDeps,
-} from "./ScriptPoolController";
-import { ActionProvider } from "./ActionProvider";
-import { makeOnClientMesssage } from "./onClientMessage";
+  ActionProvider,
+  makeOnClientMesssage,
+} from "./internal";
 
 export type DirectorDeps = Readonly<{
   handleOpenRelativeFileInEditor: HandleOpenFileInEditor;

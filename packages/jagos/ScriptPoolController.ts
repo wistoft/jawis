@@ -13,8 +13,7 @@ import { ScriptStatus, ScriptStatusTypes } from "^jagoc";
 import { Waiter } from "^state-waiter";
 import { paralleling } from "^yapu";
 
-import { ActionProv } from "./ActionProvider";
-import { loadScriptFolders, ScriptDefinition } from "./util";
+import { ActionProv, loadScriptFolders, ScriptDefinition } from "./internal";
 
 const DO_PRELOAD_FOR_ACTIVE_SCRIPTS = true;
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { ComponentDef } from "./Main";
+import { ComponentDef } from "./internal";
 
 /**
  * - encode, so it doesn't interfere with the url.

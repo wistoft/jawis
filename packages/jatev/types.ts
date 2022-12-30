@@ -1,5 +1,5 @@
 import { ZippedTestLog, ClientTestReport, RogueData, TestStatus } from "^jatec";
-import { TestCollection } from "./TestCollection";
+import { TestCollection } from "./internal";
 
 //
 // state

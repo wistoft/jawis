@@ -1,32 +1,15 @@
-import express, { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { WebsocketRequestHandler } from "express-ws";
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 
-import { NodeWS, SocketData, WsMessageListener, WsRouter } from ".";
+import { NodeWS, SocketData, WsMessageListener } from "./internal";
 
 export type MakeUpgradeHandlerDeps = {
   onError: (error: unknown) => void;
   logProv: LogProv;
   finally: FinallyFunc;
 };
-
-/**
- * todo: delete this.
- */
-export const makeMakeRouter =
-  (deps: MakeUpgradeHandlerDeps) => (): WsRouter => {
-    const router = express.Router() as WsRouter;
-
-    router.wsMessage = <MS extends SocketData, MR extends SocketData>(
-      route: string | RegExp | Array<string | RegExp>,
-      onMessage: WsMessageListener<MS, MR>
-    ) => {
-      router.ws(route, makeUpgradeHandler(deps, onMessage));
-    };
-
-    return router;
-  };
 
 /**
  * Wrap the WebSocket object in NodeWs, to get:

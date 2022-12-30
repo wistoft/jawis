@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { EventStream } from "^jab";
-import { BrowserWebSocket, UseWsEffect } from ".";
+import { BrowserWebSocket, UseWsEffect } from "./internal";
 
 /**
  * Make a hook that gives it easy to use a web socket.

@@ -5,7 +5,7 @@ import { OnRogue, TestResult } from "^jatec";
 import { Waiter } from "^state-waiter";
 import { getPromise, PromiseTriple } from "^yapu";
 
-import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
+import { JarunProcessControllerMessage, JarunProcessMessage } from "./internal";
 
 export type JarunProcessControllerInnerDeps = {
   onRogueTest: OnRogue;

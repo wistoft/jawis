@@ -1,8 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import { JaviDirector } from "./JaviDirector";
-import { getClientConf } from "./getClientConf";
+import { JaviDirector, getClientConf } from "./internal";
 
 const conf = getClientConf();
 

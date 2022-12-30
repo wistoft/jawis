@@ -1,5 +1,5 @@
 import { arrayCircularNext, arrayCircularPrev, assert, err } from "^jab";
-import { TestState, TestStateUpdate } from ".";
+import { TestState, TestStateUpdate } from "./internal";
 
 export type TestCollection = {
   tests: TestState[][];

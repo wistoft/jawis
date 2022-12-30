@@ -1,7 +1,7 @@
 import { EventController } from "^jab";
 import { makeUseEventStream } from "^jab-react";
 
-import { ConsoleEntry, CaptureCache } from ".";
+import { ConsoleEntry, CaptureCache } from "./internal";
 
 declare const window: any; //quick fix
 

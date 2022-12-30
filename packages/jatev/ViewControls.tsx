@@ -3,9 +3,9 @@ import React, { memo } from "react";
 import { def } from "^jab";
 import { JsLink, TogglePanel } from "^jab-react";
 
-import { ClientApiSendProv } from "./util";
+import { ClientApiSendProv } from "./internal";
 
-export type Props = ClientApiSendProv & {
+type Props = ClientApiSendProv & {
   isRunning: boolean;
   executingTestId: string | undefined;
   runFailedTests: () => void;

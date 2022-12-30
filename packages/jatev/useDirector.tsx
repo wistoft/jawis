@@ -18,20 +18,22 @@ import {
 import { OpenFile } from "^jab";
 
 import { WebSocketProv } from "^use-websocket";
-import { makeOnServerMessage } from "./onServerMessage";
-import { ViewAction, ViewActionProps } from "./ViewAction";
-import { ViewControls } from "./ViewControls";
-import { makeOnKeydown } from "./onKeydown";
-import { testSelectionToCollection } from "./TestCollection";
 import {
+  makeOnServerMessage,
+  ViewAction,
+  ViewActionProps,
+  ViewControls,
+  makeOnKeydown,
+  testSelectionToCollection,
   makeTestCaseUpdater,
   makeShowTestUpdater,
   onNextUpdater,
   onPrevUpdater,
   makeRogueUpdater,
-} from "./updaters";
-import { getTestLogsThatDiffer } from "./util";
-import { StateCallbacks, State } from ".";
+  getTestLogsThatDiffer,
+  StateCallbacks,
+  State,
+} from "./internal";
 
 export type DirectorProps = {
   getRandomToken: () => number;

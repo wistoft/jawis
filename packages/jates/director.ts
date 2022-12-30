@@ -13,14 +13,17 @@ import { WsPoolController } from "^jab-express";
 
 import { FinallyFunc } from "^finally-provider";
 import { MakeBee } from "^bee-common";
-import { ClientComController } from "./ClientComController";
-import { Behavior } from "./Behavior";
-import { makeOnClientMessage } from "./onClientMessage";
-import { TestAnalyticsController } from "./TestAnalyticsController";
-import { TestLogController } from "./TestLogController";
-import { TestExecutionController } from "./TestExecutionController";
-import { TestListController } from "./TestListController";
-import { ComposedTestFramework, CreateTestRunners } from ".";
+import {
+  ClientComController,
+  Behavior,
+  makeOnClientMessage,
+  TestAnalyticsController,
+  TestLogController,
+  TestExecutionController,
+  TestListController,
+  ComposedTestFramework,
+  CreateTestRunners,
+} from "./internal";
 
 export type DirectorDeps = Readonly<{
   absTestFolder: string;

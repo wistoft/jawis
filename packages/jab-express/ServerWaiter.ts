@@ -1,4 +1,9 @@
-import { getServerWaiter, ServerCustomWaiter, Server, ServerDeps } from ".";
+import {
+  getServerWaiter,
+  ServerCustomWaiter,
+  Server,
+  ServerDeps,
+} from "./internal";
 
 /**
  * hacky

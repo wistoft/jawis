@@ -6,7 +6,7 @@ import {
   CapturedStack,
   isNode,
   tryProp,
-} from ".";
+} from "./internal";
 
 /**
  *

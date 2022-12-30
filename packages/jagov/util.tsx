@@ -4,7 +4,7 @@ import { assertNever } from "^jab";
 import { JsLink } from "^jab-react";
 import { ScriptStatusTypes } from "^jagoc";
 
-import { ApiProv } from ".";
+import { ApiProv } from "./internal";
 
 export const getScriptColor = (status: ScriptStatusTypes) => {
   switch (status) {

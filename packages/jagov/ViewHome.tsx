@@ -1,12 +1,12 @@
 import React, { memo } from "react";
 
-import { Props as ConsoleProps, View as ConsoleView } from "^console";
+import { ViewProps as ConsoleProps, View as ConsoleView } from "^console";
 
 import {
   ViewProcessOverview,
   ViewProcessOverviewProps,
-} from "./ViewProcessOverview";
-import { ApiProv } from ".";
+  ApiProv,
+} from "./internal";
 
 export type ViewHomeProps = ViewProcessOverviewProps &
   ApiProv & {

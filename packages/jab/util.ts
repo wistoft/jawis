@@ -1,5 +1,4 @@
-import { assert } from "./error";
-import { err, TypedArray, TypedArrayContructor } from ".";
+import { assert, err, TypedArray, TypedArrayContructor } from "./internal";
 
 /**
  *

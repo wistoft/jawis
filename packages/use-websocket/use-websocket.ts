@@ -3,8 +3,13 @@ import { useState } from "react";
 import { EventController } from "^jab";
 import { useAssertStatic, useUnmountSafeFunction } from "^jab-react";
 
-import { makeUseWsEffect } from "./makeUseWsEffect";
-import { BrowserWebSocket, WsStates, Deps as BwsDeps, WebSocketProv } from ".";
+import {
+  makeUseWsEffect,
+  BrowserWebSocket,
+  WsStates,
+  Deps as BwsDeps,
+  WebSocketProv,
+} from "./internal";
 
 type Deps = {
   URL: string;

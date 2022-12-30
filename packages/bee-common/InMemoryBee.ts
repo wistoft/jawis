@@ -1,7 +1,7 @@
 import { then } from "^yapu";
 import { Waiter } from "^state-waiter";
 
-import { Bee, BeeDeps, BeeShutdownMessage } from ".";
+import { Bee, BeeDeps, BeeShutdownMessage } from "./internal";
 
 type States = "running" | "stopping" | "stopped";
 type Events = "message";

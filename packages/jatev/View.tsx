@@ -2,10 +2,14 @@ import React, { memo } from "react";
 
 import { def } from "^jab";
 
-import { ViewTest, ViewTestProps } from "./ViewTest";
-import { ViewExecutionList } from "./ViewExecutionList";
-import { ViewTestLog } from "./ViewTestLog";
-import { StateCallbacks, State } from ".";
+import {
+  ViewTest,
+  ViewTestProps,
+  ViewExecutionList,
+  ViewTestLog,
+  StateCallbacks,
+  State,
+} from "./internal";
 
 // props
 

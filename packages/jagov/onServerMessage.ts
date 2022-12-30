@@ -2,7 +2,7 @@ import { assertNever, tos, tryPropString } from "^jab";
 import { ConsoleEntry } from "^console";
 import { ServerMessage } from "^jagoc";
 import { BeeLogEntry } from "^bee-common";
-import { StateCallbacks } from ".";
+import { StateCallbacks } from "./internal";
 
 type Deps = Pick<StateCallbacks, "setProcessStatus"> & {
   addConsoleData: (event: ConsoleEntry[]) => void;

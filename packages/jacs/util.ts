@@ -10,7 +10,7 @@ import {
   ConsumerStates,
   ProducerStates,
   ResultType,
-} from "./protocol";
+} from "./internal";
 
 /**
  * This is hacky

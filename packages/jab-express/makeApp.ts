@@ -6,7 +6,7 @@ import WebSocket from "ws";
 import { assertNever, err, Jsonable } from "^jab";
 import { MainProv } from "^jab-node";
 
-import { expressErrorsThrow, ServerAppRouter } from ".";
+import { expressErrorsThrow, ServerAppRouter } from "./internal";
 
 export type RouteDeps = {
   mainProv: MainProv;

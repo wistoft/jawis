@@ -1,4 +1,4 @@
-import { CapturedValue } from ".";
+import { CapturedValue } from "./internal";
 
 export type OnError = (error: unknown, extraInfo?: Array<unknown>) => void;
 export type OnErrorData = (error: ErrorData) => void;

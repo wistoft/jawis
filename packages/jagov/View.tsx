@@ -4,18 +4,22 @@ import { Link, Router } from "@reach/router";
 import { JsLink, NoRoute, ReachRoute } from "^jab-react";
 
 import { WsStates } from "^use-websocket";
-import { ViewScriptRoute, ViewScriptRouteProps } from "./ViewScriptRoute";
-import { ViewHome, ViewHomeProps } from "./ViewHome";
+import {
+  ViewScriptRoute,
+  ViewScriptRouteProps,
+  ViewHome,
+  ViewHomeProps,
+} from "./internal";
 
 //props
 
-export type Props = { wsState: WsStates } & ViewHomeProps &
+export type ViewProps = { wsState: WsStates } & ViewHomeProps &
   ViewScriptRouteProps;
 
 /**
  *
  */
-export const View: React.FC<Props> = memo(({ wsState, ...extra }) => {
+export const View: React.FC<ViewProps> = memo(({ wsState, ...extra }) => {
   const restartAll = extra.useApiSend({ type: "restartAll" });
   const stopAll = extra.useApiSend({ type: "stopAll" });
 

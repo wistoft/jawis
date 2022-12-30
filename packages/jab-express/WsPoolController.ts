@@ -4,7 +4,12 @@ import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 import { safeAll } from "^yapu";
 
-import { NodeWS, SocketData, makeUpgradeHandler, WsMessageListener } from ".";
+import {
+  NodeWS,
+  SocketData,
+  makeUpgradeHandler,
+  WsMessageListener,
+} from "./internal";
 
 export type WsPoolProv<
   MS extends SocketData,

@@ -1,4 +1,4 @@
-import { JarunTestProvision } from "./JarunTestProvision";
+import { JarunTestProvision } from "./internal";
 
 type Resolve<T> = (value: T | PromiseLike<T>) => void;
 

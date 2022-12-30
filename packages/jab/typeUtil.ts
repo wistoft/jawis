@@ -1,4 +1,4 @@
-import { err } from ".";
+import { err } from "./internal";
 
 /**
  *

@@ -5,7 +5,7 @@ import readdirRecursive from "fs-readdir-recursive";
 import { err } from "^jab";
 
 import { looping } from "^yapu";
-import { TestRunner } from ".";
+import { TestRunner } from "./internal";
 
 export type TestFrameworkProv = TestRunner & {
   getTestIds: () => Promise<string[]>; //Relative to absTestFolder.

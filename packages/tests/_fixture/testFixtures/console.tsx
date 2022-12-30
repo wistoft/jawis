@@ -5,19 +5,19 @@ import {
   CaptureCache,
   ConsoleEntry,
   createCallbacks,
-  Props as ConsoleProps,
+  ViewProps,
   State,
 } from "^console";
 import { TestProvision } from "^jarun";
 
 import { View } from "^console/View";
-import { ViewEntry, Props as ViewEntryProps } from "^console/ViewEntry";
+import { ViewEntry, ViewEntryProps } from "^console/ViewEntry";
 import { ViewLogEntry } from "^console/ViewLogEntry";
 import { makeConsoleChangeCallback } from "^console/makeUseConsoleStream";
 
 import { defaultConsoleState, makeGetRandomInteger, uiEntries } from ".";
 
-export const jcvProps: ConsoleProps = {
+export const jcvProps: ViewProps = {
   logs: uiEntries,
   projectRoot: "C:\\",
   clearAllLogs: () => {},

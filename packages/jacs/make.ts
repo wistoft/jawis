@@ -1,7 +1,6 @@
 import { MakeBee } from "^bee-common";
 
-import { JacsProducer, JacsProducerDeps } from "./JacsProducer";
-import { SourceFileLoader } from "./SourceFileLoader";
+import { JacsProducer, JacsProducerDeps, SourceFileLoader } from "./internal";
 
 export type MakeMakeJacsBeeDeps = Partial<
   Omit<JacsProducerDeps, "getTranspiledSource">

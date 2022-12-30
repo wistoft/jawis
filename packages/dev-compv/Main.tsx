@@ -1,13 +1,11 @@
 import React, { memo, useCallback } from "react";
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { ClientMessage, ServerMessage } from "@jawis/jagoc";
+import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { ErrorBoundary, useKeyListener } from "^jab-react";
 import { useWebSocketProv } from "^use-websocket";
 
-import { View } from "./View";
-import { mapWebpackContext } from "./util";
+import { View, mapWebpackContext } from "./internal";
 
 export type ComponentDef = {
   name: string;

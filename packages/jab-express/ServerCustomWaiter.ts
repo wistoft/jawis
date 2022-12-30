@@ -3,7 +3,7 @@ import http from "http";
 import { err } from "^jab";
 import { safeRace, sleepingValue } from "^yapu";
 
-import { ServerDeps } from ".";
+import { ServerDeps } from "./internal";
 
 export type WaiterServerSignalTypes = "open" | "data" | "close" | "never";
 

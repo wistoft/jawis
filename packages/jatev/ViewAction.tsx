@@ -3,9 +3,7 @@ import React, { memo } from "react";
 import { useFirstRouteEffect } from "^jab-react";
 import { ClientMessage } from "^jatec";
 import { WsStates } from "^use-websocket";
-import { ClientApiSendProv } from "./util";
-
-import { View, ViewProps } from "./View";
+import { ClientApiSendProv, View, ViewProps } from "./internal";
 
 export type ViewActionProps = {
   action: ClientMessage;

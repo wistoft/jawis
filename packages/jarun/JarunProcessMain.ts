@@ -1,3 +1,3 @@
-import { JarunProcessMainImpl } from "./JarunProcessMainImpl";
+import { JarunProcessMainImpl } from "./internal";
 
 new JarunProcessMainImpl();

@@ -1,5 +1,5 @@
 import { FileService } from "^jabc";
-import { compareFiles, handleOpenFileInVsCode } from "./util";
+import { compareFiles, handleOpenFileInVsCode } from "./internal";
 
 export type JaviDefaultDeps = {
   projectRoot: string;

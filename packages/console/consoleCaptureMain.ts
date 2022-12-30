@@ -1,3 +1,3 @@
-import { consoleCapture } from ".";
+import { consoleCapture } from "./internal";
 
 consoleCapture();

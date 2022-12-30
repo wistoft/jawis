@@ -1,7 +1,7 @@
 import { WsPoolProv } from "^jab-express";
 import { ClientMessage, ServerMessage } from "^jatec";
 import { safeAll } from "^yapu";
-import { TestFrameworkProv } from ".";
+import { TestFrameworkProv } from "./internal";
 
 // prov
 

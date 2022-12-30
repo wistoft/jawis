@@ -7,7 +7,7 @@ import { LogEntry } from "^bee-common";
 
 export const multiLineEntryMarginBottom = "10px";
 
-export type Props = {
+type Props = {
   entry: LogEntry;
   wrapperStyle: React.CSSProperties;
   onToggleEntry: () => void;

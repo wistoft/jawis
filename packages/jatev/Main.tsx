@@ -5,7 +5,7 @@ import { useWebSocketProv } from "^use-websocket";
 import { getRandomInteger } from "^jab";
 import { ClientMessage, ServerMessage } from "^jatec";
 
-import { useDirector, DirectorProps } from "./useDirector";
+import { useDirector, DirectorProps } from "./internal";
 
 export type Props = {
   apiPath: string;

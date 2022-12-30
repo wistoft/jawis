@@ -4,10 +4,7 @@ import { Link, useParams } from "@reach/router";
 import { JsLink, UseKeyListener } from "^jab-react";
 import { assertPropString } from "^jab";
 
-import { ViewComponent } from "./ViewComponent";
-
-import { toUrl } from "./util";
-import { ComponentDef } from ".";
+import { ViewComponent, toUrl, ComponentDef } from "./internal";
 
 export type ViewComponentRouteProps = {
   folders: { folder: string; comps: ComponentDef[] }[];

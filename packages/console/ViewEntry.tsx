@@ -4,11 +4,9 @@ import { assertNever } from "^jab";
 import { JsLink } from "^jab-react";
 import { ViewException, ViewExceptionProps } from "^view-exception";
 
-import { ConsoleStateProv } from "./useConsoleState";
-import { ViewLogEntry } from "./ViewLogEntry";
-import { UiEntry } from ".";
+import { ConsoleStateProv, ViewLogEntry, UiEntry } from "./internal";
 
-export type Props = {
+export type ViewEntryProps = {
   entry: UiEntry;
 } & Pick<ConsoleStateProv, "useToggleEntry" | "useRemoveEntry"> &
   Omit<RenderEntryProps, "onToggleEntry">;
@@ -17,7 +15,7 @@ export type Props = {
  *
  * -
  */
-export const ViewEntry: React.FC<Props> = (props) => {
+export const ViewEntry: React.FC<ViewEntryProps> = (props) => {
   const { entry, useToggleEntry, useRemoveEntry, ...extra } = props;
 
   const onToggleEntry = useToggleEntry(entry.id);

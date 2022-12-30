@@ -1,9 +1,7 @@
 import React, { memo } from "react";
 
 import { JsLink } from "^jab-react";
-import { ViewTestLog, ViewTestLogProps } from "./ViewTestLog";
-
-import { TestState } from ".";
+import { ViewTestLog, ViewTestLogProps, TestState } from "./internal";
 
 export type ViewTestProps = {
   currentTest: TestState;

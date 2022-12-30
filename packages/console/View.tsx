@@ -2,10 +2,9 @@ import React from "react";
 
 import { JsLink } from "^jab-react";
 
-import { ConsoleStateProv } from "./useConsoleState";
-import { ViewEntry, Props as ViewEntryProps } from "./ViewEntry";
+import { ConsoleStateProv, ViewEntry, ViewEntryProps } from "./internal";
 
-export type Props = { showClearLink?: boolean } & Pick<
+export type ViewProps = { showClearLink?: boolean } & Pick<
   ConsoleStateProv,
   "logs" | "clearAllLogs"
 > &
@@ -14,7 +13,7 @@ export type Props = { showClearLink?: boolean } & Pick<
 /**
  *
  */
-export const View: React.FC<Props> = ({
+export const View: React.FC<ViewProps> = ({
   showClearLink,
   logs,
   clearAllLogs,

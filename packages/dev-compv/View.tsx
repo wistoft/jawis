@@ -2,9 +2,7 @@ import { Router } from "@reach/router";
 import React, { memo } from "react";
 
 import { NoRoute, ReachRoute, UseKeyListener } from "^jab-react";
-import { ComponentDef } from "./Main";
-import { ViewListFolders } from "./ViewList";
-import { ViewComponentRoute } from "./ViewComponentRoute";
+import { ComponentDef, ViewListFolders, ViewComponentRoute } from "./internal";
 
 export type ViewProps = {
   folders: { folder: string; comps: ComponentDef[] }[];

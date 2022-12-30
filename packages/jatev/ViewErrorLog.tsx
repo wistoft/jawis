@@ -9,7 +9,7 @@ import {
   ViewExceptionProps,
 } from "^view-exception";
 
-import { errLogDiff } from "./util";
+import { errLogDiff } from "./internal";
 
 export type ViewErrorLogProps = {
   testLog: ErrorLog;

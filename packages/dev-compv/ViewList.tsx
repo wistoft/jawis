@@ -3,9 +3,7 @@ import React, { memo } from "react";
 
 import { JsLink } from "^jab-react";
 
-import { ComponentDef } from "./Main";
-
-import { toUrl } from "./util";
+import { ComponentDef, toUrl } from "./internal";
 
 type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];

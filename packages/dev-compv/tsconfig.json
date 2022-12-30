@@ -6,6 +6,7 @@
   },
   "references": [
     { "path": "../jab" },
+    { "path": "../jagoc" },
     { "path": "../jab-react" },
     { "path": "../use-websocket" }
   ]

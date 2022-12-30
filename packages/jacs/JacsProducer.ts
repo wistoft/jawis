@@ -9,10 +9,14 @@ import {
 import { FinallyFunc } from "^finally-provider";
 import { safeCatch } from "^yapu";
 import { BeeDeps } from "^bee-common";
-import { getControlArray, setCompiling, signalConsumerSync } from "./protocol";
-import { SourceFileLoader } from "./SourceFileLoader";
-
-import { ConsumerMessage, WorkerData } from ".";
+import {
+  getControlArray,
+  setCompiling,
+  signalConsumerSync,
+  SourceFileLoader,
+  ConsumerMessage,
+  WorkerData,
+} from "./internal";
 
 export type JacsProducerDeps = {
   consumerTimeout: number;

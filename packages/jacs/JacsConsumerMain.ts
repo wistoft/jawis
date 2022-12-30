@@ -1,5 +1,5 @@
 import { workerData } from "worker_threads";
 
-import { install } from "./JacsConsumerMainImpl";
+import { install } from "./internal";
 
 install(workerData);

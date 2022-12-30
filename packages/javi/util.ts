@@ -1,14 +1,5 @@
 import path from "path";
 
-//javi always import released version, but dev wants to choose:
-
-// import released versions for `devServerMain.ts`
-
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { makeMakeJacsWorkerBee } from "@jawis/jacs";
-
-//import development versions for `devServerMain.ts`
-
 import { assertString, undefinedOr, isInt } from "^jab";
 import {
   execSilent,
@@ -22,13 +13,9 @@ import { BeeRunner } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";
 import { makeApp, Route } from "^jab-express";
-import { MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
-import { DirectorDeps as JatesDeps } from "^jates/director";
-import { DirectorDeps as JagosDeps } from "^jagos/director";
 
-import { JaviClientConf } from "./types";
-import { makeJarunTestRunners } from "./makeJarunTestRunners";
+import { JaviClientConf, makeJarunTestRunners } from "./internal";
 
 export type Deps = {
   name: string;
@@ -36,8 +23,8 @@ export type Deps = {
   serverPort: number;
   staticWebFolder: string;
   clientConf: JaviClientConf;
-  jates: Omit<JatesDeps, | "createTestRunners" | "makeTsProcess" | "makeTsBee" | "onError" | "finally" | "logProv">; // prettier-ignore
-  jagos: Omit<JagosDeps, "makeTsBee" | "onError" | "finally" | "logProv">; // prettier-ignore
+  jates: Omit<Parameters<typeof makeJatesRoute>[0], | "createTestRunners" | "makeTsProcess" | "onError" | "finally" | "logProv">; // prettier-ignore
+  jagos: Omit<Parameters<typeof makeJagosRoute>[0], "onError" | "finally" | "logProv">; // prettier-ignore
   makeRoutes?: Route[];
 };
 
@@ -52,12 +39,6 @@ export type Deps = {
 export const startJaviServer = (deps: Deps) => {
   const { onError, finalProv, logProv } = deps.mainProv;
 
-  //compile service
-
-  const makeJacsBee = makeMakeJacsWorkerBee(
-    deps.mainProv
-  ) as unknown as MakeBee; //bug for development: there is a different between dev/released version.
-
   //jates
 
   const jates: Route = {
@@ -67,7 +48,6 @@ export const startJaviServer = (deps: Deps) => {
       makeJatesRoute({
         createTestRunners: makeJarunTestRunners,
         makeTsProcess: makeTsNodeJabProcess,
-        makeTsBee: makeJacsBee,
         onError,
         finally: finalProv.finally,
         logProv,
@@ -82,7 +62,6 @@ export const startJaviServer = (deps: Deps) => {
     path: "/jago",
     makeHandler: () =>
       makeJagosRoute({
-        makeTsBee: makeJacsBee,
         onError,
         finally: finalProv.finally,
         logProv,

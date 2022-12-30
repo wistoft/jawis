@@ -19,7 +19,7 @@ import {
   ChkInfo,
   TestCurLogs,
   TestExpLogs,
-} from ".";
+} from "./internal";
 
 const testCurLogSystemKeys = ["err", "return", "chk", "user"];
 

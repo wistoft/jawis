@@ -3,12 +3,18 @@ import path from "path";
 import { startJaviServer } from "^javi/util";
 import { makeJaviDeps } from "^javi/makeJaviDeps";
 import { MainProv, mainWrapper } from "^jab-node";
+import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 import conf from "../dev.conf";
+import { MakeBee } from "^bee-common";
 
 const { getPackagePath, projectRoot } = require("../project.conf");
 
 const main = (mainProv: MainProv) => {
+  //typescript worker threads
+
+  const makeTsBee = makeMakeJacsWorkerBee(mainProv) as unknown as MakeBee; //there is a different between dev/released version.
+
   //default things
 
   const defaultThings = makeJaviDeps({ projectRoot });
@@ -31,6 +37,7 @@ const main = (mainProv: MainProv) => {
       absTestFolder: getPackagePath("dev/devServer/testsuite"),
       absTestLogFolder: getPackagePath("dev/devServer/testsuite/_testLogs"),
       tecTimeout: 20000,
+      makeTsBee,
       ...defaultThings.fileService,
     },
 
@@ -46,6 +53,7 @@ const main = (mainProv: MainProv) => {
           autoRestart: true,
         },
       ],
+      makeTsBee,
       ...defaultThings.fileService,
     },
 

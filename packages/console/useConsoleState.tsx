@@ -3,8 +3,7 @@ import { safeAll } from "^yapu";
 
 import { HookSetState, useMemoDep } from "^jab-react";
 
-import { makeAddDataUpdater } from "./updaters";
-import { ConsoleEntry, UiEntry } from ".";
+import { makeAddDataUpdater, ConsoleEntry, UiEntry } from "./internal";
 
 export type State = {
   logs: UiEntry[];

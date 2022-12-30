@@ -14,7 +14,7 @@ import {
 
 import { FinallyFunc } from "^finally-provider";
 import { looping } from "^yapu";
-import { JarunEqAssertation } from "./JarunEqAssertation";
+import { JarunEqAssertation } from "./internal";
 
 export type TestProvision = {
   chk: (val: unknown) => void;

@@ -6,7 +6,7 @@ import {
   OnError,
   unknownToErrorData,
 } from "^jab";
-import { SendBeeLog } from "./types";
+import { SendBeeLog } from "./internal";
 
 /**
  *

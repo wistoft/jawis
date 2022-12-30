@@ -1,6 +1,6 @@
 import React, { MouseEvent, ReactNode } from "react";
 
-import { useMemoDep } from ".";
+import { useMemoDep } from "./internal";
 
 type Props = {
   onClick: (e: MouseEvent<HTMLDivElement>) => void;

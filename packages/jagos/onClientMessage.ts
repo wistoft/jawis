@@ -3,8 +3,7 @@ import { assertNever, HandleOpenFileInEditor } from "^jab";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { WsMessageListener } from "^jab-express";
-import { BehaviorProv } from "./Behavior";
-import { ScriptPoolProv } from "./ScriptPoolController";
+import { BehaviorProv, ScriptPoolProv } from "./internal";
 
 export type Deps = ScriptPoolProv &
   BehaviorProv & {

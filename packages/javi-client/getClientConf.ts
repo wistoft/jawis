@@ -1,5 +1,5 @@
 import { assertPropBoolean, assertPropString } from "^jab";
-import { JaviClientConf } from "./types";
+import { JaviClientConf } from "./internal";
 
 //send by server on /conf.js
 declare const __JAVI_CLIENT_CONF: unknown;

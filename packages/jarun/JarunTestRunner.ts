@@ -14,9 +14,9 @@ import {
   TestFunction,
   awaitPromises,
   TestFileExport,
-} from "./util";
-import { JarunTestProvision } from "./JarunTestProvision";
-import { createJarunPromise } from "./JarunPromise";
+  JarunTestProvision,
+  createJarunPromise,
+} from "./internal";
 
 export type JarunTestRunnerDeps = Readonly<{
   timeoutms: number;

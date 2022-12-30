@@ -1,5 +1,5 @@
 import { def, err } from "^jab";
-import { WsStates } from "./types";
+import { WsStates } from "./internal";
 
 export type Deps<MR> = {
   URL: string;

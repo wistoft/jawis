@@ -7,8 +7,9 @@ import {
   getRestartLink,
   getScriptColor,
   getStopLink,
-} from "./util";
-import { ApiProv, State } from ".";
+  ApiProv,
+  State,
+} from "./internal";
 
 export type ViewProcessOverviewProps = Pick<State, "processStatus"> & ApiProv;
 

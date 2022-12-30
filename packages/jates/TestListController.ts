@@ -1,9 +1,7 @@
 import { err, assertNever } from "^jab";
 import { Waiter } from "^state-waiter";
 
-import { ClientComProv } from "./ClientComController";
-import { TestAnalytics } from "./TestAnalytics";
-import { TestFrameworkProv } from ".";
+import { ClientComProv, TestAnalytics, TestFrameworkProv } from "./internal";
 
 // prov
 

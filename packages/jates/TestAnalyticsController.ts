@@ -1,6 +1,6 @@
 import filewatcher from "filewatcher";
 import { OnRequire } from "^jab-node";
-import { TestAnalytics } from "./TestAnalytics";
+import { TestAnalytics } from "./internal";
 
 type Deps = {
   absTestFolder: string;

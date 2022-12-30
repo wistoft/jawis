@@ -8,7 +8,7 @@ import {
   CapturedValue,
   CapturedNonPrimitiveValue,
   toBytes,
-} from ".";
+} from "./internal";
 
 export type StringKeys =
   | "true"

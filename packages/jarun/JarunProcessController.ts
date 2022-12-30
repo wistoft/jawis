@@ -10,8 +10,9 @@ import { MakeBee } from "^bee-common";
 import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,
-} from "./JarunProcessControllerInner";
-import { JarunProcessControllerMessage, JarunProcessMessage } from ".";
+  JarunProcessControllerMessage,
+  JarunProcessMessage,
+} from "./internal";
 
 export type JarunProcessControllerDeps = {
   customBooter?: string;

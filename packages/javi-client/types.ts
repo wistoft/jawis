@@ -1,9 +1,8 @@
 import { ReactNode } from "react";
 
 import { ComponentMenuProps } from "^jab-react";
-import { Props as JagovProps } from "^jagov";
+import { Props as JagovProps, ConsoleProps as ConsoleProps } from "^jagov";
 import { Props as JatevProps } from "^jatev";
-import { Props as JagoConsoleMainProps } from "^jagov/console/ConsoleMain";
 
 /**
  * - can't be with JaviDirector, because it's '.tsx', while `getClientConf` is '.ts'
@@ -21,4 +20,4 @@ export type JaviDirectorProps = {
  */
 export type JaviClientConf = Omit<JatevProps, "apiPath"> &
   Omit<JagovProps, "apiPath"> &
-  Omit<JagoConsoleMainProps, "apiPath" | "useConsoleStream">;
+  Omit<ConsoleProps, "apiPath" | "useConsoleStream">;

@@ -1,4 +1,4 @@
-import { longestCommonSubstring } from ".";
+import { longestCommonSubstring } from "./internal";
 
 type DiffResult = Array<["ins", string] | string | ["del", string]>;
 

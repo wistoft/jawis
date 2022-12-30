@@ -1,7 +1,7 @@
 import { CreateTestRunners } from "^jates";
 
 import { BeeRunner, JarunProcessController } from "^jarun";
-import { makeProcessRunner, makeTsNodeJabProcess } from "./util";
+import { makeProcessRunner, makeTsNodeJabProcess } from "./internal";
 
 /**
  *

@@ -1,4 +1,9 @@
-import { captureArrayEntries, capturedTos, captureStack, ErrorData } from ".";
+import {
+  captureArrayEntries,
+  capturedTos,
+  captureStack,
+  ErrorData,
+} from "./internal";
 
 /**
  * An replacement for Error, that supports capturing variable with the error message.

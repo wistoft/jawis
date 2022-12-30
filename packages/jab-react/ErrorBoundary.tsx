@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 
-import { JsLink } from ".";
+import { JsLink } from "./internal";
 
 export type EbProps = {
   children: ReactNode;

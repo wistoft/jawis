@@ -2,11 +2,13 @@ import { assertNever, CompareFiles, HandleOpenFileInEditor } from "^jab";
 import { ServerMessage, ClientMessage } from "^jatec";
 import { WsMessageListener } from "^jab-express";
 
-import { BehaviorProv } from "./Behavior";
-import { ClientComProv } from "./ClientComController";
-import { TestLogsProv } from "./TestLogController";
-import { TestExecutionControllerProv } from "./TestExecutionController";
-import { TestListControllerProv } from "./TestListController";
+import {
+  BehaviorProv,
+  ClientComProv,
+  TestLogsProv,
+  TestExecutionControllerProv,
+  TestListControllerProv,
+} from "./internal";
 
 type Deps = {
   absTestFolder: string;

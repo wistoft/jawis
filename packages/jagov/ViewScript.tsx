@@ -3,15 +3,15 @@ import React, { memo } from "react";
 import { basename } from "^jab";
 import { useKeyListener } from "^jab-react";
 import { ScriptStatus } from "^jagoc";
-import { Props as ConsoleProps, View as ConsoleView } from "^console";
+import { ViewProps as ConsoleProps, View as ConsoleView } from "^console";
 
 import {
   getEditLink,
   getRestartLink,
   getScriptColor,
   getStopLink,
-} from "./util";
-import { ApiProv } from ".";
+  ApiProv,
+} from "./internal";
 
 export type ViewScriptProps = {
   singleProcessStatus: ScriptStatus;

@@ -1,8 +1,6 @@
 import React, { memo } from "react";
 
-import { ComponentDef } from "./Main";
-
-import { FunkyComponent } from "./util";
+import { ComponentDef, FunkyComponent } from "./internal";
 
 export type ViewComponentProps = ComponentDef;
 
