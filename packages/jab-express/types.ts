@@ -1,5 +1,4 @@
 import type WebSocket from "ws";
-import type { PathParams } from "express-serve-static-core";
 import type express from "express";
 import type expressWs from "express-ws";
 
@@ -38,7 +37,7 @@ export type WsMessageListener<MS extends SocketData, MR extends SocketData> = (
 
 export type WsRouter = expressWs.Router & {
   wsMessage: <MS extends SocketData, MR extends SocketData>(
-    route: PathParams,
+    route: string | RegExp | Array<string | RegExp>,
     ...middlewares: Array<WsMessageListener<MS, MR>>
   ) => unknown;
 };

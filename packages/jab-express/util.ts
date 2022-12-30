@@ -1,5 +1,4 @@
 import express, { NextFunction, Request, Response } from "express";
-import { PathParams } from "express-serve-static-core";
 import { WebsocketRequestHandler } from "express-ws";
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
@@ -20,7 +19,7 @@ export const makeMakeRouter =
     const router = express.Router() as WsRouter;
 
     router.wsMessage = <MS extends SocketData, MR extends SocketData>(
-      route: PathParams,
+      route: string | RegExp | Array<string | RegExp>,
       onMessage: WsMessageListener<MS, MR>
     ) => {
       router.ws(route, makeUpgradeHandler(deps, onMessage));

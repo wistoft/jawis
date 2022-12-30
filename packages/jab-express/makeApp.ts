@@ -1,4 +1,3 @@
-import { Express } from "express-serve-static-core";
 import express from "express";
 import expressWs from "express-ws";
 import WebSocket from "ws";
@@ -23,7 +22,7 @@ export type Route =
   | {
       type: "express";
       path: string;
-      makeHandler: (deps: RouteDeps) => Express;
+      makeHandler: (deps: RouteDeps) => express.Express;
     };
 
 export type Deps = {
