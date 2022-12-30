@@ -10,6 +10,7 @@
     "@types/react-dom": "^16.9.11",
     "copyfiles": "^2.4.1",
     "express": "^4.17.3",
+    "del": "^6.0.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "ts-node": "^10.8.1",
