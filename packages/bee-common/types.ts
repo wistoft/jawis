@@ -1,5 +1,5 @@
 import { FinallyFunc } from "^finally-provider";
-import { CapturedValue, ErrorData } from "^jabc";
+import { CapturedValue, ErrorData } from "^jab";
 import { Waiter } from "^state-waiter";
 
 export type BeeShutdownMessage = {
