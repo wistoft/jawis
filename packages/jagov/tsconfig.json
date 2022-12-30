@@ -10,6 +10,6 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../console" },
-    { "path": "../use-websocket" }
+    { "path": "../react-use-ws" }
   ]
 }

@@ -3,7 +3,7 @@ import React, { memo, useCallback } from "react";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { ErrorBoundary, useKeyListener } from "^jab-react";
-import { useWebSocketProv } from "^use-websocket";
+import { useWebSocketProv } from "^react-use-ws";
 
 import { View, mapWebpackContext } from "./internal";
 

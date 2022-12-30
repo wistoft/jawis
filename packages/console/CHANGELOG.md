@@ -13,3 +13,5 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Renamed `Props` to `ViewProps`

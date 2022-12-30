@@ -28,11 +28,11 @@
     { "path": "./packages/loop-controller" },
     { "path": "./packages/misc" },
     { "path": "./packages/parse-captured-stack" },
+    { "path": "./packages/react-use-ws" },
     { "path": "./packages/render-hook-plus" },
     { "path": "./packages/state-waiter" },
     { "path": "./packages/tests" },
     { "path": "./packages/ts-config-util" },
-    { "path": "./packages/use-websocket" },
     { "path": "./packages/view-exception" },
     { "path": "./packages/yapu" }
   ]

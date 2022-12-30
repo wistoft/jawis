@@ -3,7 +3,7 @@ import React, { memo } from "react";
 import { ErrorBoundary } from "^jab-react";
 import { ViewProps, View } from "^console";
 import { ClientMessage, ServerMessage } from "^jagoc";
-import { useWebSocketProv } from "^use-websocket";
+import { useWebSocketProv } from "^react-use-ws";
 import { useDirector, DirectorProps } from "^jagov/useDirector";
 
 //props

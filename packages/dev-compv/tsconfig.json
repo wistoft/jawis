@@ -8,6 +8,6 @@
     { "path": "../jab" },
     { "path": "../jagoc" },
     { "path": "../jab-react" },
-    { "path": "../use-websocket" }
+    { "path": "../react-use-ws" }
   ]
 }

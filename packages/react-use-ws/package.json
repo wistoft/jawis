@@ -1,6 +1,6 @@
 {
   "version": "0.0.1",
-  "name": "~use-websocket",
+  "name": "~react-use-ws",
   "description": "React hook to open/close a websocket connection when a component mounts/unmounts",
   "dependencies": {
     "@types/react": "^16.14.4",

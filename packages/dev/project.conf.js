@@ -21,6 +21,7 @@ const unscopedPackages = [
   "lazy-require-ts",
   "loop-controller",
   "parse-captured-stack",
+  "react-use-ws",
   "render-hook-plus",
   "state-waiter",
   "ts-config-util",
@@ -44,7 +45,6 @@ const scopedPackages = [
   "jates",
   "jatev",
   "javi",
-  "use-websocket",
 ];
 
 const privatePackages = ["dev", "javi-client", "misc", "tests"];

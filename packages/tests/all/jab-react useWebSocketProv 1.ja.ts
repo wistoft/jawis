@@ -1,5 +1,5 @@
 import { renderHook } from "^render-hook-plus";
-import { useWebSocketProv } from "^use-websocket";
+import { useWebSocketProv } from "^react-use-ws";
 import { TestProvision } from "^jarun";
 
 //hello

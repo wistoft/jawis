@@ -6,7 +6,7 @@
 
 ## :boom: Breaking changes
 
-- Moved functions and classes to new package `use-websocket`
+- Moved functions and classes to new package `react-use-ws`
   - `BrowserWebSocket`
   - `useWebSocketProv`
   - `makeUseWsEffect`

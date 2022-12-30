@@ -12,7 +12,7 @@ import { renderHook } from "^render-hook-plus";
 import { capture } from "^jab";
 import { TestState, TestStateUpdate } from "^jatev";
 import { asyncCapture } from "^async-capture";
-import { UseWsEffectArgs } from "^use-websocket";
+import { UseWsEffectArgs } from "^react-use-ws";
 import { getHtmlRTR } from "^misc/node";
 
 import { ViewTest } from "^jatev/ViewTest";

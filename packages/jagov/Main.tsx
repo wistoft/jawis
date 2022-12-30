@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 
-import { useWebSocketProv } from "^use-websocket";
+import { useWebSocketProv } from "^react-use-ws";
 import { ClientMessage, ServerMessage } from "^jagoc";
 
 import { View, ViewProps, useDirector, DirectorProps } from "./internal";

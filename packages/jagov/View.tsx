@@ -3,7 +3,7 @@ import { Link, Router } from "@reach/router";
 
 import { JsLink, NoRoute, ReachRoute } from "^jab-react";
 
-import { WsStates } from "^use-websocket";
+import { WsStates } from "^react-use-ws";
 import {
   ViewScriptRoute,
   ViewScriptRouteProps,

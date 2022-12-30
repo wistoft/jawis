@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 import { useKeyListener, ErrorBoundary, ComponentMenu } from "^jab-react";
-import { useWebSocketProv } from "^use-websocket";
+import { useWebSocketProv } from "^react-use-ws";
 import { getRandomInteger } from "^jab";
 import { ClientMessage, ServerMessage } from "^jatec";
 

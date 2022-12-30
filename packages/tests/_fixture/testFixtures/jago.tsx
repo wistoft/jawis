@@ -3,7 +3,7 @@ import React from "react";
 import { TestProvision } from "^jarun";
 import { BeeLogEntry } from "^bee-common";
 import { ServerMessage } from "^jagoc";
-import { UseWsEffectArgs } from "^use-websocket";
+import { UseWsEffectArgs } from "^react-use-ws";
 import { renderHook } from "^render-hook-plus";
 
 import { View } from "^jagov/View";

@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/react-use-ws",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }, { "path": "../jab-react" }]
+}

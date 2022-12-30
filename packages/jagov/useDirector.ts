@@ -12,7 +12,7 @@ import {
 } from "^jab-react";
 
 import { ClientMessage, ServerMessage } from "^jagoc";
-import { WebSocketProv } from "^use-websocket";
+import { WebSocketProv } from "^react-use-ws";
 import {
   makeOnServerMessage,
   setProcessStatusUpdater,

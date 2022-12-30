@@ -6,7 +6,7 @@ mounts/unmounts.
 ## Installation
 
 ```
-npm i use-websocket
+npm i react-use-ws
 ```
 
 ## Usage
@@ -14,6 +14,8 @@ npm i use-websocket
 ## Known issues
 
 ## Related work
+
+- [react-use-websocket](https://www.npmjs.com/package/react-use-websocket)
 
 ## License
 

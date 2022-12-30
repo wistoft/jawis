@@ -9,5 +9,9 @@
     "@types/react": "^16.14.4",
     "react": "^16.14.0"
   },
-  "keywords": []
+  "keywords": [
+    "development",
+    "component",
+    "components"
+  ]
 }

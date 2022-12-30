@@ -17,7 +17,7 @@ import {
 
 import { OpenFile } from "^jab";
 
-import { WebSocketProv } from "^use-websocket";
+import { WebSocketProv } from "^react-use-ws";
 import {
   makeOnServerMessage,
   ViewAction,

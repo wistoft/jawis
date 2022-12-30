@@ -16,3 +16,6 @@
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes
+
+- Renamed `console/ConsoleMain#Props` to `ConsoleProps`
+- Renamed `Props` to `ViewProps`
