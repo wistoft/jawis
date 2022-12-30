@@ -9,8 +9,10 @@
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-node" },
+    { "path": "../jatec" },
     { "path": "../jates" },
     { "path": "../state-waiter" },
+    { "path": "../util-javi" },
     { "path": "../yapu" }
   ]
 }
