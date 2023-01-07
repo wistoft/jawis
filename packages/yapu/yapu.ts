@@ -61,9 +61,7 @@ export const looping = <T>(arr: T[], makePromise: (elm: T) => Promise<void>) =>
     let idx = 0;
     const nextLoop = () => {
       if (idx < arr.length) {
-        makePromise(arr[idx++])
-          .then(nextLoop)
-          .catch(reject);
+        makePromise(arr[idx++]).then(nextLoop).catch(reject);
       } else {
         resolve();
       }

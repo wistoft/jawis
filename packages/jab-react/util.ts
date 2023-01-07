@@ -109,7 +109,7 @@ export const makeSetPartialState =
  * - Components can use the hook to make referentially stable callbacks.
  */
 export const makeUseFunction =
-  <D>(func: (deps: D) => void) =>
+  <D extends {}>(func: (deps: D) => void) =>
   (deps: D) =>
     useMemo(() => () => func(deps), [func, ...Object.values(deps)]);
 

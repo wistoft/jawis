@@ -16,7 +16,7 @@ import ts, {
   isVariableStatement,
   JsxAttributes,
   JsxChild,
-  JsxExpression,
+  JsxAttributeValue,
   JsxTagNameExpression,
   ModuleResolutionHost,
   NodeArray,
@@ -24,7 +24,6 @@ import ts, {
   PropertyName,
   SourceFile,
   Statement,
-  StringLiteral,
   SwitchStatement,
   SyntaxKind,
 } from "typescript";
@@ -1201,9 +1200,7 @@ export const parseJsxAttributes = (node: JsxAttributes): string[] => {
  *
  * handles StringLiteral for convenience in JsxAttributes.
  */
-export const parseJsxExpression = (
-  node: JsxExpression | StringLiteral
-): string[] => {
+export const parseJsxExpression = (node: JsxAttributeValue): string[] => {
   if (ts.isStringLiteral(node)) {
     return [];
   }
@@ -1214,11 +1211,13 @@ export const parseJsxExpression = (
 
   //never
 
-  throw assertNever(
-    node,
-    "unknown node in JsxExpression ",
-    ts.SyntaxKind[(node as any).kind]
-  );
+  throw new Error("not impl");
+
+  // throw assertNever(
+  //   node,
+  //   "unknown node in JsxExpression ",
+  //   ts.SyntaxKind[(node as any).kind]
+  // );
 };
 
 /**

@@ -3,8 +3,11 @@ import { makeSend, nodeRequire, registerOnMessage } from "^jab-node";
 
 import { errorToTestLog, RogueData } from "^jates";
 
-import { JarunTestRunner } from "./internal";
-import { JarunProcessControllerMessage, JarunProcessMessage } from "./internal";
+import {
+  JarunTestRunner,
+  JarunProcessControllerMessage,
+  JarunProcessMessage,
+} from "./internal";
 
 /**
  *

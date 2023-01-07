@@ -26,7 +26,7 @@ export const getServerAndNodeWs = (
 /**
  *
  */
-export const getNodeWs = <MS, MR>(
+export const getNodeWs = <MS extends SocketData, MR extends SocketData>(
   prov: TestProvision,
   logPrefix = "",
   extraDeps?: Partial<NodeWsDeps>
