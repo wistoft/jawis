@@ -90,6 +90,21 @@ export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
   Math.floor(Math.random() * max);
 
 /**
+ *
+ */
+export const getRandomString = (chars: string[], maxlength = 10) => {
+  const length = getRandomInteger(maxlength);
+
+  let res = "";
+
+  for (let i = 0; i < length; i++) {
+    res += chars[getRandomInteger(chars.length)];
+  }
+
+  return res;
+};
+
+/**
  * A random length Uint8Array with random data.
  *
  * note: Can do this in node 15: https://nodejs.org/api/webcrypto.html#cryptogetrandomvaluestypedarray
@@ -223,7 +238,7 @@ export const splitSurroundingWhitespace = (
     startIdx = matchStart[0].length;
     startStr = matchStart[0];
 
-    //if all sting is white space
+    //if everything is white space
     if (matchStart[0].length === value.length) {
       return [startStr, "", ""];
     }
@@ -234,7 +249,7 @@ export const splitSurroundingWhitespace = (
   let endIdx: number;
   let endStr: string;
 
-  const matchEnd = value.match(/( |\n|\t)+$/);
+  const matchEnd = value.match(/(?<! |\n|\t)(?: |\n|\t)+$/);
 
   if (matchEnd === null) {
     endIdx = value.length;
