@@ -17,6 +17,7 @@ declare const window: any;
  */
 interface Console {
   log(...data: any[]): void;
+  error(...data: any[]): void;
 }
 
 declare let console: Console;

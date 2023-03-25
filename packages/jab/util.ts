@@ -1,6 +1,29 @@
 import { assert, err, TypedArray, TypedArrayContructor } from "./internal";
 
 /**
+ * Deprecate a function
+ *
+ * - output a deprecation message only once.
+ * - call the function with the args every time.
+ */
+export const deprecated = <T extends (...args: any[]) => any>(
+  message: string,
+  args: Parameters<T>,
+  func: T
+): ReturnType<T> => {
+  const cache = (global["__jawis_deprecation_warned"] =
+    global["__jawis_deprecation_warned"] ?? {});
+
+  if (!cache[message]) {
+    cache[message] = true;
+
+    console.error(message);
+  }
+
+  return func(...args);
+};
+
+/**
  *
  */
 export const assertNever = (
@@ -137,6 +160,12 @@ export const fixErrorInheritance = (obj: {}, cls: {} | null) => {
     Object.setPrototypeOf(obj, cls);
   }
 };
+
+/**
+ * tobe-deprecated Use fixErrorInheritance instead
+ */
+export const fixErrorInheritence = (...args: any[]) =>
+  (fixErrorInheritance as any)(...args);
 
 /**
  * Omit fields from an object.

@@ -63,8 +63,11 @@
 
 ## :tada: Enhancements
 
+- Added `deprecated` function.
+
 ## :bug: Bug fixes
 
-## :boom: Breaking changes
+- Make new function: `fixErrorInheritance`, which is correct spelling of
+  `fixErrorInheritence`.
 
-- Rename `fixErrorInheritence` to `fixErrorInheritance`
+## :boom: Breaking changes
