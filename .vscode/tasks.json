@@ -20,7 +20,9 @@
         "reveal": "never",
         "showReuseMessage": false
       },
-      "auto": true
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
     },
     {
       "label": "lint",
@@ -53,6 +55,18 @@
       "group": "build",
       "type": "npm",
       "script": "pretty:fix",
+      "options": {
+        "shell": {
+          "executable": "powershell.exe"
+        }
+      },
+      "detail": " "
+    },
+    {
+      "label": "custom fix",
+      "group": "build",
+      "type": "npm",
+      "script": "custom:fix",
       "options": {
         "shell": {
           "executable": "powershell.exe"

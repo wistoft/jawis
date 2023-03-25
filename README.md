@@ -10,7 +10,7 @@ Jawis is a multirepo for several npm packages, for instance:
 ### Clone
 
 ```
-git clone https://github.com/wistoft/jawis.git
+git clone git@github.com:wistoft/jawis.git
 
 cd jawis
 
@@ -41,10 +41,10 @@ serve the dev client.
 - `yarn start`<br/> Serve using published version of javi.
 - `yarn alpha:start`<br/> Serve using local alpha build of javi.
 
-### Type error
+### Type errors
 
-To get type errors during development run the vscode task: `watch`. To
-automatically start this task install the extentions: `AutoLaunch`
+Type errors are shown during development by the vscode task: `watch`. It's
+automatically started.
 
 ### Build
 
@@ -55,15 +55,12 @@ automatically start this task install the extentions: `AutoLaunch`
 ### Publish to npm
 
 - Run all tests
-- Commit working tree to git
 - `yarn lint:fix`
   - Running the vscode tasks makes the errors available in vscode.
-  - Review, because there's a bug, that removes comments after imports
+- `yarn custom:fix`
 - `yarn pretty:fix`
-- Clean up git history.
 - `yarn build`
-- `yarn release`
-  - Publishes to npm
+- Publish to npm manually in the folders below: `build/publish`
 
 ## Packages
 
@@ -89,7 +86,6 @@ automatically start this task install the extentions: `AutoLaunch`
 - vscode tasks are configured to use `powershell.exe`. Hence only work on
   Windows.
 - There is a problem with ambiant types in built `d.ts` files.
-- Minimal `node` version is `12.11.0`.
 
 ## Licence
 
