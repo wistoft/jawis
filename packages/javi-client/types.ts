@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 import { ComponentMenuProps } from "^jab-react";
-import { Props as JagovProps, ConsoleProps as ConsoleProps } from "^jagov";
+import { Props as JagovProps, ConsoleProps } from "^jagov";
 import { Props as JatevProps } from "^jatev";
 
 /**

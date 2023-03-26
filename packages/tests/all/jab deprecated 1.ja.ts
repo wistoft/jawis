@@ -2,6 +2,8 @@ import { basename, deprecated } from "^jab";
 import { TestProvision } from "^jarun";
 
 export default (prov: TestProvision) => {
+  (global as any)["__jawis_deprecation_warned"] = {}; // so test is repeatable
+
   deprecated_test("a");
   deprecated_test("b");
 };

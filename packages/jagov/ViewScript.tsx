@@ -2,10 +2,10 @@ import React, { memo } from "react";
 
 import { basename } from "^jab";
 import { useKeyListener } from "^jab-react";
-import { ScriptStatus } from "^jagoc";
 import { ViewProps as ConsoleProps, View as ConsoleView } from "^console";
 
 import {
+  ScriptStatus,
   getEditLink,
   getRestartLink,
   getScriptColor,

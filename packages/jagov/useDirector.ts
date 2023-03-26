@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { getRandomInteger, OpenFile } from "^jab";
 import { ConsoleEntry, UseConsoleStream, useConsoleState } from "^console";
-
 import {
   useMemoDep,
   makeUseFunction,
@@ -10,10 +9,11 @@ import {
   makeSetStateCallback,
   useAssertStatic,
 } from "^jab-react";
-
-import { ClientMessage, ServerMessage } from "^jagoc";
 import { WebSocketProv } from "^react-use-ws";
+
 import {
+  ClientMessage,
+  ServerMessage,
   makeOnServerMessage,
   setProcessStatusUpdater,
   State,
@@ -25,6 +25,7 @@ export type DirectorProps = {
 
 /**
  *
+ *  - Used by both in jago view and in the standalone Console.
  */
 export const useDirector = ({
   apiSend,

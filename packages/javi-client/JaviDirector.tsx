@@ -24,8 +24,6 @@ export const JaviDirector: React.FC<JaviDirectorProps> = ({
   routes,
   ...extra
 }) => {
-  //props
-
   const jatevProps: JatevProps = useObject({
     ...extra,
     apiPath: getApiPath(serverPort, "jate"),

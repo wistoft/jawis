@@ -1,9 +1,8 @@
 import React from "react";
 
+import { LogEntry } from "^bee-common";
 import { capturedTos } from "^jab";
 import { clonedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
-
-import { LogEntry } from "^bee-common";
 
 export const multiLineEntryMarginBottom = "10px";
 

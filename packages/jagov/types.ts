@@ -1,4 +1,9 @@
-import { ClientMessage, ScriptStatus } from "^jagoc";
+import { ClientMessage, ScriptStatus } from "./internal";
+
+export type ApiProv = {
+  useApiSend: (data: ClientMessage) => () => void;
+  apiSend: (data: ClientMessage) => void;
+};
 
 //
 // state
@@ -14,9 +19,4 @@ export type State = {
 
 export type StateCallbacks = {
   setProcessStatus: (deps: { processStatus: ScriptStatus[] }) => void;
-};
-
-export type ApiProv = {
-  useApiSend: (data: ClientMessage) => () => void;
-  apiSend: (data: ClientMessage) => void;
 };

@@ -7,6 +7,7 @@ import {
   createCallbacks,
   ViewProps,
   State,
+  Console,
 } from "^console";
 import { TestProvision } from "^jarun";
 
@@ -25,6 +26,8 @@ export const jcvProps: ViewProps = {
   useToggleEntry: () => () => {},
   useRemoveEntry: () => () => {},
 };
+
+export const getConsole = () => <Console />;
 
 export const getView = () => (
   <View

@@ -1,3 +1,4 @@
+export * from "./Console";
 export * from "./Main";
 export * from "./onServerMessage";
 export * from "./types";

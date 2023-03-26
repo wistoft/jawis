@@ -12,10 +12,10 @@
 ## :tada: Enhancements
 
 - Trimmed dependencies
+- Export `Console` from index.
 
 ## :bug: Bug fixes
 
-## :boom: Breaking changes
+- Fixed the broken example in README.md
 
-- Renamed `console/ConsoleMain#Props` to `ConsoleProps`
-- Renamed `Props` to `ViewProps`
+## :boom: Breaking changes

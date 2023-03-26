@@ -4,8 +4,6 @@ import path from "path-browserify";
 import { OpenFile, ParsedStack, basename, ParsedStackFrame } from "^jab";
 import { JsLink } from "^jab-react";
 
-//props
-
 export type ViewExceptionCallStackProps = {
   stack?: ParsedStack;
   projectRoot: string;

@@ -11,8 +11,6 @@ import {
   ViewHomeProps,
 } from "./internal";
 
-//props
-
 export type ViewProps = { wsState: WsStates } & ViewHomeProps &
   ViewScriptRouteProps;
 

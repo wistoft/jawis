@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { safeAll } from "^yapu";
 
+import { safeAll } from "^yapu";
 import { HookSetState, useMemoDep } from "^jab-react";
 
 import { makeAddDataUpdater, ConsoleEntry, UiEntry } from "./internal";

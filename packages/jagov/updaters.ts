@@ -1,5 +1,4 @@
-import { ScriptStatus } from "^jagoc";
-import { State } from "./internal";
+import { ScriptStatus, State } from "./internal";
 
 /**
  *

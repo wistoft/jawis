@@ -66,7 +66,7 @@ automatically started.
 
 - `dev` contains code used for development of jawis.
 - `misc` where things, that don't fit anywhere, fit in.
-- `javi` contains the 'mounts' for production/released javi.
+- `javi` contains the 'mounts' for released javi.
 
 ### Naming conventions
 
@@ -76,7 +76,6 @@ automatically started.
   indicate what they are utilities for. E.g. `jab-express` contains utilities
   for [express framework](https://expressjs.com/). Another way to think of it,
   is that the postfix indicate which dependencies the package have.
-- Packages prefixed `util` contain utilities useful specifically for jawis.
 
 ## Known issues
 

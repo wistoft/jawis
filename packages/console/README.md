@@ -2,7 +2,8 @@
 
 Console output from browser shown in the browser
 
-- Use @jagov/Console to get output from node scripts as well.
+- Use [@jawis/jagov](https://www.npmjs.com/package/@jawis/jagov) to get output
+  from node scripts as well.
 
 ## Installation
 
@@ -12,22 +13,24 @@ npm i console
 
 ## Usage
 
-### Captures the console data in the browser, by loading this script file:
+### Capture the console data in the browser, by loading this script file:
 
 ```
 @jawis/console/consoleCaptureMain.js
 ```
 
-### Make a component you kan place wher the console should be presented.
+### Place the console where you like on the page.
 
 ```js
-import { makeUseConsoleStream, View } from "console";
+import React from "react";
+import { Console } from "@jawis/console";
 
-export const MyConsole: React.FC<Props> = () => {
-  const [useConsoleStream] = useState(makeUseConsoleStream);
-
-  return <View useConsoleStream={useConsoleStream} />;
-};
+export const MyComponent: React.FC = () => (
+  <>
+    This is where the console output will appear:
+    <Console />
+  </>
+);
 ```
 
 ## Known issues

@@ -1,11 +1,15 @@
 import React, { memo } from "react";
 
 import { useWebSocketProv } from "^react-use-ws";
-import { ClientMessage, ServerMessage } from "^jagoc";
 
-import { View, ViewProps, useDirector, DirectorProps } from "./internal";
-
-//props
+import {
+  ClientMessage,
+  ServerMessage,
+  View,
+  ViewProps,
+  useDirector,
+  DirectorProps,
+} from "./internal";
 
 export type Props = {
   apiPath: string;

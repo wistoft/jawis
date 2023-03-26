@@ -6,6 +6,7 @@ import { ServerMessage } from "^jagoc";
 import { UseWsEffectArgs } from "^react-use-ws";
 import { renderHook } from "^render-hook-plus";
 
+import { Console } from "^jagov";
 import { View } from "^jagov/View";
 import { useDirector } from "^jagov/useDirector";
 
@@ -20,6 +21,16 @@ export const getJagoView = () => (
     apiSend={() => {}}
     useApiSend={() => () => {}}
     wsState={"closed"}
+  />
+);
+
+export const getJagovConsole = () => (
+  <Console
+    useConsoleStream={() => {
+      console.log("use stream");
+    }}
+    apiPath={"ignored"}
+    projectRoot={""}
   />
 );
 

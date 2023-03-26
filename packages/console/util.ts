@@ -1,4 +1,5 @@
 import { captureArrayEntries } from "^jab";
+
 import { CaptureCache, ConsoleEntry } from "./internal";
 
 /**

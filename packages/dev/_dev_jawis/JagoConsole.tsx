@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { JsLink } from "^jab-react";
 import { consoleCapture, makeUseConsoleStream } from "^console";
-import { ConsoleMain } from "^jagov/console/ConsoleMain";
+import { Console } from "^jagov";
 
 /**
  * note
@@ -48,7 +48,7 @@ export const JagoConsole: React.FC = () => {
       <br />
       <br />
       <br />
-      <ConsoleMain
+      <Console
         useConsoleStream={useConsoleStream}
         apiPath={"localhost:3001/jago"}
         projectRoot={"E:\\work\\repos\\jawis\\"}

@@ -63,6 +63,7 @@
 
 ## :tada: Enhancements
 
+- Added `getRandomString` function.
 - Added `deprecated` function.
 
 ## :bug: Bug fixes

@@ -1,3 +1,4 @@
+export * from "./Console";
 export * from "./consoleCapture";
 export * from "./makeUseConsoleStream";
 export * from "./types";
