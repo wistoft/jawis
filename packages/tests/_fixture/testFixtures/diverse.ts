@@ -4,10 +4,10 @@ import fs from "fs";
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
-import { LogProv, tryProp, ErrorData } from "^jab";
-import { httpRequest } from "^jab-node";
+import { LogProv, tryProp, ErrorData, OnError } from "^jab";
+import { MainProv, httpRequest } from "^jab-node";
 import { WsUrl } from "^jab-express";
-import { FinallyFunc } from "^finally-provider";
+import { FinallyFunc, FinallyProvider } from "^finally-provider";
 
 /**
  *
@@ -15,7 +15,7 @@ import { FinallyFunc } from "^finally-provider";
 export type TestMainProv = {
   log: (logName: string, ...value: unknown[]) => void;
   logStream: (logName: string, value: string) => void;
-  onError: (error: unknown, extraInfo?: Array<unknown>) => void;
+  onError: OnError;
   finally: FinallyFunc;
 };
 
@@ -98,6 +98,23 @@ export const getLogProv = (prov: TestProvision, logPrefix = ""): LogProv => ({
     prov.log(logPrefix + "log", type + " is " + status);
   },
 });
+
+/**
+ *
+ */
+export const getMainProv = (prov: TestProvision, logPrefix = ""): MainProv => {
+  const logProv = getLogProv(prov, logPrefix);
+  const finalProv = new FinallyProvider({ onError: prov.onError });
+
+  return {
+    onError: prov.onError,
+    finalProv,
+    finally: finalProv.finally,
+    logProv,
+    log: logProv.log,
+    logStream: logProv.logStream,
+  };
+};
 
 /**
  *

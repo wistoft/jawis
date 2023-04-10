@@ -1,3 +1,4 @@
+import fs from "fs";
 import path from "path";
 
 import { assertString, undefinedOr, isInt } from "^jab";
@@ -36,7 +37,7 @@ export type Deps = {
  * note
  *  - this caters for both production and dev sites. (to avoid code duplication.)
  */
-export const startJaviServer = (deps: Deps) => {
+export const startJaviServer = async (deps: Deps) => {
   const { onError, finalProv, logProv } = deps.mainProv;
 
   //jates
@@ -69,7 +70,13 @@ export const startJaviServer = (deps: Deps) => {
       }),
   };
 
-  //app
+  // prefetch index.html
+
+  const indexHtml = await fs.promises
+    .readFile(path.join(deps.staticWebFolder, "index.html"))
+    .then((data) => data.toString());
+
+  // app
 
   const app = makeApp({
     staticWebFolder: deps.staticWebFolder,
@@ -79,6 +86,7 @@ export const startJaviServer = (deps: Deps) => {
       variable: "__JAVI_CLIENT_CONF",
       value: deps.clientConf,
     },
+    indexHtml,
   });
 
   // start server

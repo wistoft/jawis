@@ -33,6 +33,7 @@ export type Deps = {
   };
   mainProv: MainProv;
   makeRoutes: Route[]; //routes must be created after we monkey patch. Therefore 'make'.
+  indexHtml: string;
 };
 
 /**
@@ -101,7 +102,11 @@ export const makeApp = (deps: Deps): express.Application => {
   // history api fallback for react router.
 
   app.use("*", (req, res) => {
-    res.sendFile(path.join(deps.staticWebFolder, "index.html"));
+    // send index.html
+
+    res.set("Content-Type", "text/html; charset=UTF-8");
+
+    res.send(deps.indexHtml);
   });
 
   // error handler

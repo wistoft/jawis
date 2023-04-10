@@ -1,0 +1,1 @@
+{"user":{"server.log":["listen callback","socket open","socket closes","socket open","socket closes","socket open","socket closes","server close"],"/hello.js":[{"code":"200","data":"console.log(\"hello\");\n"}],"/conf.js":[{"code":"200","data":"__JAVI_CLIENT_CONF = {\"var1\":\"hello\"}"}],"/doesnotExists":[{"code":"200","data":"index html content"}]}}
