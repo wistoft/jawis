@@ -8,6 +8,8 @@
 
 ## :tada: Enhancements
 
+- Extracted `jarunc` package.
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes

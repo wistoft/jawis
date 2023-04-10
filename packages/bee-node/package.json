@@ -1,0 +1,17 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~bee-node",
+  "description": "Bee implementation for node.",
+  "dependencies": {},
+  "keywords": [
+    "bee",
+    "nodejs",
+    "development",
+    "bee",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

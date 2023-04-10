@@ -11,6 +11,7 @@
     { "path": "../jab" },
     { "path": "../jab-node" },
     { "path": "../jates" },
+    { "path": "../jarunc" },
     { "path": "../state-waiter" },
     { "path": "../yapu" }
   ]

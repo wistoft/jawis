@@ -1,3 +1,4 @@
+export * from "./handlers";
 export * from "./httpRequest";
 export * from "./jago";
 export * from "./jagoMainProv";

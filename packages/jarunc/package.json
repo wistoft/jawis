@@ -1,0 +1,23 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jarunc",
+  "description": "Test runner for JavaScript, and more.",
+  "dependencies": {},
+  "keywords": [
+    "test runner",
+    "unit test",
+    "testing",
+    "test",
+    "bdd",
+    "tdd",
+    "jest",
+    "mocha",
+    "jasmine",
+    "karma",
+    "tape",
+    "ava",
+    "qunit",
+    "alsatian"
+  ]
+}

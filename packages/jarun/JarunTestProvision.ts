@@ -1,6 +1,6 @@
 import deepEqual from "deep-equal";
 
-import { OnRogue, TestCurLogs, errorToTestLog } from "^jates";
+import { OnRogue, TestCurLogs, errorToTestLog } from "^jatec";
 import {
   assert,
   capture,
@@ -10,9 +10,9 @@ import {
   unknownToErrorData,
   OnError,
 } from "^jab";
-
 import { FinallyFunc } from "^finally-provider";
 import { looping } from "^yapu";
+
 import { JarunEqAssertation } from "./internal";
 
 export type TestProvision = {

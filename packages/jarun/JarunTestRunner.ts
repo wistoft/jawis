@@ -5,7 +5,7 @@ import {
   addReturnToTestLogs,
   errMsgAndReturnToTestLog,
   errorToTestLog,
-} from "^jates";
+} from "^jatec";
 
 import { timeRace } from "^yapu";
 import { asyncCapture } from "^async-capture";
@@ -289,13 +289,21 @@ export class JarunTestRunner {
   /**
    *
    */
-  public handleUhException = (error: unknown, type: string) => {
+  public handleUhException = (
+    error: unknown,
+    extraInfo?: unknown[] | string
+  ) => {
+    if (typeof extraInfo === "string") {
+      //backwards compatibility (deprecated-todo)
+      extraInfo = [extraInfo];
+    }
+
     //marked, so we can let test provision handle it.
 
     const errorJtp = tryProp<JarunTestProvision>(error, "_jarunTestProvision");
 
     if (errorJtp) {
-      errorJtp.onError(error, [type]);
+      errorJtp.onError(error, extraInfo);
       return;
     }
 
@@ -303,10 +311,10 @@ export class JarunTestRunner {
 
     const info = this.currentProv
       ? [
-          type,
+          ...(extraInfo || []),
           "Thrown while this test executed: " + this.currentProv.getTestId(),
         ]
-      : [type];
+      : extraInfo;
 
     //bug: this message could reach client before TestResult.
 

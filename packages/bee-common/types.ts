@@ -1,5 +1,5 @@
 import { FinallyFunc } from "^finally-provider";
-import { CapturedValue, ErrorData } from "^jab";
+import { CapturedValue, ErrorData, OnError } from "^jab";
 import { Waiter } from "^state-waiter";
 
 export type BeeShutdownMessage = {
@@ -39,6 +39,15 @@ export type Bee<MS> = {
 export type MakeBee = <MS extends {}, MR extends {}>(
   deps: BeeDeps<MR>
 ) => Bee<MS>;
+
+export type BeeProv<MS = unknown> = {
+  beeSend: (msg: MS) => void;
+  beeExit: () => void;
+  registerErrorHandlers: (onError: OnError) => void;
+  registerOnMessage: (listener: (msg: any) => void) => void;
+  removeOnMessage: (listener: (msg: any) => void) => void;
+  importModule: (filename: string) => Promise<any>;
+};
 
 //
 // messages, logs and output

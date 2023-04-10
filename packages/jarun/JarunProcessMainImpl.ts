@@ -1,5 +1,10 @@
 import { assertNever } from "^jab";
-import { makeSend, nodeRequire, registerOnMessage } from "^jab-node";
+import {
+  makeSend,
+  nodeRequire,
+  registerErrorHandlers,
+  registerOnMessage,
+} from "^jab-node";
 
 import { errorToTestLog, RogueData } from "^jates";
 
@@ -32,7 +37,7 @@ export class JarunProcessMainImpl {
 
     this.send = makeSend();
 
-    this.registerHandlers();
+    registerErrorHandlers(this.jtr.handleUhException);
   }
 
   /**
@@ -82,41 +87,5 @@ export class JarunProcessMainImpl {
       default:
         assertNever(msg);
     }
-  };
-
-  /**
-   *
-   */
-  private registerHandlers = () => {
-    //there can be only one
-
-    if (process.listenerCount("uncaughtException") !== 0) {
-      throw new Error("uncaughtException handler already registered");
-    }
-
-    if (process.listenerCount("unhandledRejection") !== 0) {
-      throw new Error("unhandledRejection handler already registered");
-    }
-
-    //we are the one
-
-    process.on("uncaughtException", this.onUncaughtException);
-    process.on("unhandledRejection", this.onUnhandledPromiseRejection);
-  };
-
-  /**
-   * - maybe promise is of interest.
-   */
-  private onUnhandledPromiseRejection: NodeJS.UnhandledRejectionListener = (
-    error
-  ) => {
-    this.jtr.handleUhException(error, "uh-promise");
-  };
-
-  /**
-   *
-   */
-  private onUncaughtException = (error: Error) => {
-    this.jtr.handleUhException(error, "uh-exception");
   };
 }
