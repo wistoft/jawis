@@ -6,7 +6,7 @@ import {
   registerOnMessage,
 } from "^jab-node";
 
-import { errorToTestLog, RogueData } from "^jates";
+import { errorToTestLog, RogueData } from "^jatec";
 
 import {
   JarunTestRunner,

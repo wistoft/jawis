@@ -9,6 +9,7 @@
 ## :tada: Enhancements
 
 - Extracted `jarunc` package.
+- Reduce dependency from `jates` to `jatec`.
 
 ## :bug: Bug fixes
 

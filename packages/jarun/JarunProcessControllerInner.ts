@@ -1,7 +1,7 @@
 import { def, assert, assertNever, prej, LogProv, capture } from "^jab";
 import { OnRequire, RequireSenderMessage } from "^jab-node";
 
-import { OnRogue, TestResult } from "^jates";
+import { OnRogue, TestResult } from "^jatec";
 import { Waiter } from "^state-waiter";
 import { getPromise, PromiseTriple } from "^yapu";
 

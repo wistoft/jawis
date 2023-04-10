@@ -3,7 +3,7 @@ import { prej } from "^jab";
 
 import { getFileToRequire, ProcessRestarter } from "^jab-node";
 
-import { TestRunner } from "^jates";
+import { TestRunner } from "^jatec";
 import { Waiter } from "^state-waiter";
 
 import { MakeBee } from "^bee-common";

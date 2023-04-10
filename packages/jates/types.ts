@@ -2,16 +2,11 @@ import { MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 import { MakeJabProcess, OnRequire } from "^jab-node";
-import { OnRogue, TestResult } from "^jatec";
+import { OnRogue, TestRunner } from "^jatec";
 
 //
 // test framework
 //
-
-export type TestRunner = {
-  runTest: (id: string, absTestFile: string) => Promise<TestResult>;
-  kill: () => Promise<void>;
-};
 
 export type CreateTestRunners = (deps: {
   onRogueTest: OnRogue;

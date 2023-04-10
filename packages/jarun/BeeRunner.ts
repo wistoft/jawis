@@ -1,5 +1,5 @@
 import { capture, unknownToErrorData } from "^jab";
-import { TestRunner, TestResult, UserTestLogs } from "^jates";
+import { TestRunner, TestResult, UserTestLogs } from "^jatec";
 import { execBee, Bee, MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 
