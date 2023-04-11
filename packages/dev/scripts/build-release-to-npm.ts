@@ -3,6 +3,7 @@ import { execNpmAndGetStdout } from "./util/index";
 
 import { looping } from "^yapu/yapu";
 import { getLiveBuildVersionInfo } from "./build/util3";
+import { publishBuildFolder } from "^dev/project.conf";
 
 /**
  *
@@ -16,14 +17,14 @@ export const doit = async () => {
 
   const otp = "";
 
-  // looping(torelease, async (fullPackageName) => {
-  //   const out = await execNpmAndGetStdout(
-  //     "npm publish -otp=" + otp,
-  //     path.join("E:/work/repos/jawis-master/build/publish", fullPackageName)
-  //   );
+  looping(torelease, async (fullPackageName) => {
+    const out = await execNpmAndGetStdout(
+      "npm publish --access public -otp=" + otp,
+      path.join(publishBuildFolder, fullPackageName)
+    );
 
-  //   console.log(out);
-  // });
+    console.log(out);
+  });
 };
 
 doit();

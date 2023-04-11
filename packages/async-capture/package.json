@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "~async-capture",
   "description": "Capture a javascript value asynchronously, and preserve as much information as possible.",
   "dependencies": {},

@@ -1,15 +1,19 @@
-# 1.0.3
+# upcoming
 
 ## :bug: Bug fixes
 
-- `sideEffects` entry in `packages.json` is corrected.
+## :tada: Enhancements
 
-# upcoming
+## :boom: Breaking changes
+
+# 1.1.0
 
 ## :tada: Enhancements
 
 - Trimmed dependencies
 
+# 1.0.3
+
 ## :bug: Bug fixes
 
-## :boom: Breaking changes
+- `sideEffects` entry in `packages.json` is corrected.

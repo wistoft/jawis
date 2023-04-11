@@ -13,10 +13,15 @@ import {
 import { BeeRunner } from "^jarun";
 import { makeJatesRoute } from "^jates";
 import { makeJagosRoute } from "^jagos";
-import { makeApp, Route } from "^jab-express";
+
 import { FinallyFunc } from "^finally-provider";
 
-import { JaviClientConf, makeJarunTestRunners } from "./internal";
+import {
+  JaviClientConf,
+  makeJarunTestRunners,
+  Route,
+  makeApp,
+} from "./internal";
 
 export type Deps = {
   name: string;
@@ -43,7 +48,6 @@ export const startJaviServer = async (deps: Deps) => {
   //jates
 
   const jates: Route = {
-    type: "serverApp",
     path: "/jate",
     makeHandler: () =>
       makeJatesRoute({
@@ -59,7 +63,6 @@ export const startJaviServer = async (deps: Deps) => {
   //jagos
 
   const jagos: Route = {
-    type: "serverApp",
     path: "/jago",
     makeHandler: () =>
       makeJagosRoute({

@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "2.0.0",
+  "version": "3.0.0",
   "name": "~jagoc",
   "description": "Common for jago view and server",
   "dependencies": {},

@@ -1,4 +1,3 @@
-export * from "./makeApp";
 export * from "./NodeWS";
 export * from "./Server";
 export * from "./ServerCustomWaiter";

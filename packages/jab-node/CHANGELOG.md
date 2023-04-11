@@ -1,12 +1,12 @@
-# 2.0.0
+# upcoming
+
+## :bug: Bug fixes
+
+## :tada: Enhancements
 
 ## :boom: Breaking changes
 
-- 2nd parameter of `InMemoryBee` is constrained to messages of types extending
-  `{}`
-- Moved `OnError` to `@jawis/jabc`
-
-# upcoming
+# 3.0.0
 
 ## :tada: Enhancements
 
@@ -40,3 +40,11 @@
 
 - Moved function to `javi`
   - `makeMakeTsJabProcessConditonally` => `makeMakeTsJabProcessConditionally`
+
+# 2.0.0
+
+## :boom: Breaking changes
+
+- 2nd parameter of `InMemoryBee` is constrained to messages of types extending
+  `{}`
+- Moved `OnError` to `@jawis/jabc`

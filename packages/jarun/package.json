@@ -2,7 +2,7 @@
   "sideEffects": [
     "./JarunProcessMain.ts"
   ],
-  "version": "1.0.4",
+  "version": "2.0.0",
   "name": "~jarun",
   "description": "Test runner for JavaScript, and more.",
   "dependencies": {

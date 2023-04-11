@@ -1,3 +1,23 @@
+# upcoming
+
+## :bug: Bug fixes
+
+## :tada: Enhancements
+
+## :boom: Breaking changes
+
+# 2.1.0
+
+## :bug: Bug fixes
+
+- Make new function: `fixErrorInheritance`, which is correct spelling of
+  `fixErrorInheritence`.
+
+## :tada: Enhancements
+
+- Added `getRandomString` function.
+- Added `deprecated` function.
+
 # 2.0.0
 
 ## :bug: Bug fixes
@@ -58,17 +78,3 @@
   - `refable`
   - `makeTypedArray`
   - `base64ToTypedArray`
-
-# upcoming
-
-## :tada: Enhancements
-
-- Added `getRandomString` function.
-- Added `deprecated` function.
-
-## :bug: Bug fixes
-
-- Make new function: `fixErrorInheritance`, which is correct spelling of
-  `fixErrorInheritence`.
-
-## :boom: Breaking changes

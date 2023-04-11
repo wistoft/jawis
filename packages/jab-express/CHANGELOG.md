@@ -1,16 +1,12 @@
-# 1.0.4
+# upcoming
 
 ## :bug: Bug fixes
-
-- Fix missing dependencies.
-  - Add `yapu`
-  - Remove need for `express-serve-static-core`
-
-# upcoming
 
 ## :tada: Enhancements
 
-## :bug: Bug fixes
+## :boom: Breaking changes
+
+# 2.0.0
 
 ## :boom: Breaking changes
 
@@ -21,3 +17,12 @@
   - `MakeServerApp`
   - `WsMessageListenerOld`
   - `WsRouter`
+  - `makeApp`, `Route`, `RouteDeps` S
+
+# 1.0.4
+
+## :bug: Bug fixes
+
+- Fix missing dependencies.
+  - Add `yapu`
+  - Remove need for `express-serve-static-core`

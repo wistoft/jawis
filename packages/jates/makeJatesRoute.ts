@@ -1,14 +1,14 @@
 import cors from "cors";
 import express from "express";
 
-import { expressErrorsThrow, ServerAppRouter } from "^jab-express";
+import { expressErrorsThrow } from "^jab-express";
 
 import { director, DirectorDeps } from "./internal";
 
 /**
  * jago/jates are nearly identically
  */
-export const makeJatesRoute = (deps: DirectorDeps): ServerAppRouter => {
+export const makeJatesRoute = (deps: DirectorDeps): express.Router => {
   const router = express.Router();
 
   //middleware
@@ -27,7 +27,5 @@ export const makeJatesRoute = (deps: DirectorDeps): ServerAppRouter => {
 
   router.use("*", expressErrorsThrow);
 
-  return {
-    router,
-  };
+  return router;
 };

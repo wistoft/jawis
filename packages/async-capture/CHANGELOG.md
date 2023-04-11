@@ -5,9 +5,3 @@
 ## :tada: Enhancements
 
 ## :boom: Breaking changes
-
-# 0.0.3
-
-## :tada: Enhancements
-
-- Update `README.md`

@@ -1,17 +1,17 @@
-# 1.0.4
+# upcoming
 
 ## :bug: Bug fixes
 
-- Add missing dependencies: `@jawis/util-javi` and `@jawis/jatec`
+## :tada: Enhancements
 
-# upcoming
+## :boom: Breaking changes
+
+# 2.0.0
 
 ## :tada: Enhancements
 
 - Extracted `jarunc` package.
 - Reduce dependency from `jates` to `jatec`.
-
-## :bug: Bug fixes
 
 ## :boom: Breaking changes
 
@@ -19,3 +19,9 @@
   - `makeProcessRunner`
   - `getDefaultRunnersAssignments`
   - `createDefaultTestRunners` => `makeJarunTestRunners`
+
+# 1.0.4
+
+## :bug: Bug fixes
+
+- Add missing dependencies: `@jawis/util-javi` and `@jawis/jatec`

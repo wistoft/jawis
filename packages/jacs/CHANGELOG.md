@@ -1,3 +1,23 @@
+# upcoming
+
+## :bug: Bug fixes
+
+## :tada: Enhancements
+
+## :boom: Breaking changes
+
+# 3.0.0
+
+## :boom: Breaking changes
+
+- new versions of `typescript` and `tsconfig-paths`
+- Moved functions to new package `ts-config-util`
+  - `getAbsConfigFilePath`
+  - `getTsConfigFromAbsConfigFile`
+  - `dianosticToString`
+  - `dianosticChainToString`
+  - `getTsPathsConfig`
+
 # 2.0.0
 
 ## :tada: Enhancements
@@ -20,19 +40,3 @@
 
 - Update `README.md`.
 - Minor refactoring.
-
-# upcoming
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes
-
-- new versions of `typescript` and `tsconfig-paths`
-- Moved functions to new package `ts-config-util`
-  - `getAbsConfigFilePath`
-  - `getTsConfigFromAbsConfigFile`
-  - `dianosticToString`
-  - `dianosticChainToString`
-  - `getTsPathsConfig`

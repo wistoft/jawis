@@ -1,13 +1,9 @@
-import { WsPoolProv, SocketData, NodeWS, makeApp } from "^jab-express";
+import { WsPoolProv, SocketData, NodeWS } from "^jab-express";
 
 import { TestProvision } from "^jarun";
+import { makeApp } from "^javi/makeApp";
 import { getServer, getServerDeps } from "./jab Server";
-import {
-  TestMainProv,
-  getFixturePath,
-  getMainProv,
-  getScriptPath,
-} from "./diverse";
+import { getMainProv, getScriptPath } from "./diverse";
 
 export type Deps<MS extends SocketData> = {
   log: TestProvision["log"];

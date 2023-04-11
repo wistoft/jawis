@@ -1,23 +1,23 @@
-# 1.0.1
+# upcoming
+
+## :bug: Bug fixes
 
 ## :tada: Enhancements
 
-- `onError` is now optional, default is `console.log`.
+## :boom: Breaking changes
+
+# 1.0.1
 
 ## :bug: Bug fixes
 
 - Fix error in example code in README.
+
+## :tada: Enhancements
+
+- `onError` is now optional, default is `console.log`.
 
 # 1.0.0
 
 ## :tada: Enhancements
 
 - Initial release.
-
-# upcoming
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes

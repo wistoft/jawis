@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "name": "~state-waiter",
   "description": "Handle async states conveniently.",
   "dependencies": {},

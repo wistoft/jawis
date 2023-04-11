@@ -1,6 +1,12 @@
 # upcoming
 
+## :bug: Bug fixes
+
 ## :tada: Enhancements
+
+## :boom: Breaking changes
+
+# 2.0.0
 
 ## :bug: Bug fixes
 

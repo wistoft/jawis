@@ -1,18 +1,24 @@
-# 1.0.3
+# upcoming
 
 ## :bug: Bug fixes
 
-- `sideEffects` entry in `packages.json` is corrected.
+## :tada: Enhancements
 
-# upcoming
+## :boom: Breaking changes
+
+# 1.1.0
+
+## :bug: Bug fixes
+
+- Fixed the broken example in README.md
 
 ## :tada: Enhancements
 
 - Trimmed dependencies
 - Add `Console` component.
 
+# 1.0.3
+
 ## :bug: Bug fixes
 
-- Fixed the broken example in README.md
-
-## :boom: Breaking changes
+- `sideEffects` entry in `packages.json` is corrected.

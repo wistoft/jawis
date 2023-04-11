@@ -1,3 +1,11 @@
+# upcoming
+
+## :bug: Bug fixes
+
+## :tada: Enhancements
+
+## :boom: Breaking changes
+
 # 2.0.0
 
 ## :boom: Breaking changes
@@ -11,11 +19,3 @@
 - `CustomClone` type to `CustomCapture`
 - `ClonedValueNonPrimitive` type to `CapturedValueNonPrimitive`
 - `ClonedPromisePending` type to `CapturedPromisePending`
-
-# upcoming
-
-## :tada: Enhancements
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes

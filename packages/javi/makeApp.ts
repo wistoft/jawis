@@ -1,31 +1,16 @@
-import path from "path";
 import express from "express";
 import expressWs from "express-ws";
-import WebSocket from "ws";
 
-import { assertNever, err, Jsonable } from "^jab";
+import { Jsonable } from "^jab";
 import { MainProv } from "^jab-node";
+import { expressErrorsThrow } from "^jab-express";
 
-import { expressErrorsThrow, ServerAppRouter } from "./internal";
-
-export type RouteDeps = {
-  mainProv: MainProv;
-  wsServer: WebSocket.Server;
+export type Route = {
+  path: string;
+  makeHandler: () => express.Router;
 };
 
-export type Route =
-  | {
-      type: "serverApp";
-      path: string;
-      makeHandler: (deps: RouteDeps) => ServerAppRouter;
-    }
-  | {
-      type: "express";
-      path: string;
-      makeHandler: (deps: RouteDeps) => express.Express;
-    };
-
-export type Deps = {
+type Deps = {
   staticWebFolder: string;
   clientConf?: {
     variable: string;
@@ -45,15 +30,13 @@ export type Deps = {
  *
  */
 export const makeApp = (deps: Deps): express.Application => {
-  const showdownHandlers: (() => Promise<void>)[] = [];
-
   //create
 
   const app = express();
 
   // activate websocket
 
-  const wsServer = expressWs(app).getWss(); //do the monkey patching.
+  expressWs(app).getWss(); //do the monkey patching.
 
   // static files
 
@@ -75,28 +58,7 @@ export const makeApp = (deps: Deps): express.Application => {
   //routes
 
   for (const def of deps.makeRoutes) {
-    switch (def.type) {
-      case "serverApp": {
-        const handler = def.makeHandler({ mainProv: deps.mainProv, wsServer });
-
-        app.use(def.path, handler.router);
-
-        if (handler.onShutdown) {
-          showdownHandlers.push(handler.onShutdown);
-        }
-        continue;
-      }
-
-      case "express":
-        app.use(
-          def.path,
-          def.makeHandler({ mainProv: deps.mainProv, wsServer })
-        );
-        continue;
-
-      default:
-        throw assertNever(def);
-    }
+    app.use(def.path, def.makeHandler());
   }
 
   // history api fallback for react router.
@@ -112,12 +74,6 @@ export const makeApp = (deps: Deps): express.Application => {
   // error handler
 
   app.use(expressErrorsThrow);
-
-  // compose onShutdown
-
-  if (showdownHandlers.length !== 0) {
-    err("not used anymore, showdown handlers: ", showdownHandlers.length);
-  }
 
   return app;
 };

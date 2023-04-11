@@ -1,3 +1,21 @@
+# upcoming
+
+## :bug: Bug fixes
+
+## :tada: Enhancements
+
+## :boom: Breaking changes
+
+# 3.0.0
+
+## :boom: Breaking changes
+
+- Removed dtp.
+
+## :tada: Enhancements
+
+- Trimmed dependencies
+
 # 2.0.0
 
 ## :boom: Breaking changes
@@ -9,15 +27,3 @@
 - `ViewTest.ts/Props` is renamed to `ViewTestProps`.
 - `ViewTestLog.ts/Props` is renamed to `ViewTestLogProps`.
 - `ViewTestLogContent.ts/Props` is renamed to `ViewTestLogContentProps`.
-
-# upcoming
-
-## :tada: Enhancements
-
-- Trimmed dependencies
-
-## :bug: Bug fixes
-
-## :boom: Breaking changes
-
-- Removed dtp.

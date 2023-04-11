@@ -1,15 +1,19 @@
-# 0.0.2
+# upcoming
 
 ## :bug: Bug fixes
 
-- Fix missing dependency `@jawis/jabc`
+## :tada: Enhancements
 
-# upcoming
+## :boom: Breaking changes
+
+# 0.1.0
 
 ## :tada: Enhancements
 
 - Added `BeeProv` as abstraction for runtime specific features.
 
+# 0.0.2
+
 ## :bug: Bug fixes
 
-## :boom: Breaking changes
+- Fix missing dependency `@jawis/jabc`

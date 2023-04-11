@@ -7,7 +7,6 @@
   "references": [
     { "path": "../finally-provider" },
     { "path": "../jab" },
-    { "path": "../jab-node" },
     { "path": "../state-waiter" },
     { "path": "../yapu" }
   ]

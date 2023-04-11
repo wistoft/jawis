@@ -1,14 +1,12 @@
-# 2.0.0
-
-## :tada: Enhancements
-
-- Major bump, just to keep up with `server` and `view`.
-
 # upcoming
 
+## :bug: Bug fixes
+
 ## :tada: Enhancements
 
-## :bug: Bug fixes
+## :boom: Breaking changes
+
+# 3.0.0
 
 ## :boom: Breaking changes
 
@@ -18,3 +16,9 @@
   - `StreamEntry`
   - `HtmlEntry`
   - `ErrorEntry`
+
+# 2.0.0
+
+## :tada: Enhancements
+
+- Major bump, just to keep up with `server` and `view`.
