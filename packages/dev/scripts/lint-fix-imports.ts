@@ -5,9 +5,10 @@ import path, { basename } from "path";
 import { err } from "^jab/error";
 import { assertNever } from "^jab/util";
 
-import { setDifference, tryGetCommonPackage } from "./util/util";
+import { setDifference } from "./util/util";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
 import { makeLiveJawisBuildManager } from "./build/util2";
+import { tryGetCommonPackage } from "./build/util3";
 
 /**
  *

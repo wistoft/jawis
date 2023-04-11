@@ -10,6 +10,11 @@
 
 ## :tada: Enhancements
 
+- Added options to `exec`. It takes the same options as `child_process.spawn`.
+- Added `registerErrorHandlers` and `postMessage`, which are agnostic to running
+  in worker or process.
+- Made `httpRequest` support https.
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes

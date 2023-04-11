@@ -4,7 +4,7 @@ const fastGlob = require("fast-glob");
 const fse = require("fs-extra");
 const del = require("del");
 
-const { copyingFiles, sortObject } = require("./util");
+const { copyingFiles, sortObject, emitVsCodeError } = require("./util");
 
 const tscBuildFolderName = "build-tsc";
 
@@ -172,12 +172,6 @@ const makeJawisBuildManager = (
 
       const fullName = getFullPackageName(packageName);
 
-      if (json.verison === "0.0.0") {
-        throw new Error(
-          "Package has wrong version: " + packageName + " " + json.version
-        );
-      }
-
       versions[fullName] = "^" + json.version;
     }
 
@@ -289,7 +283,11 @@ const makeJawisBuildManager = (
         path.join(projectFolder, "./packages/" + packageName + "/README.md")
       ))
     ) {
-      throw new Error("Package is missing README.md: " + packageName);
+      emitVsCodeError({
+        file: path.join(packageFolder, packageName, "README.md"),
+        message: "Missing README.md: " + packageName,
+        severity: "warning",
+      });
     }
   };
 
@@ -323,11 +321,19 @@ const makeJawisBuildManager = (
 
     if (privatePackages.includes(packageName)) {
       if (json.private !== true) {
-        throw new Error("Package listed as private have other value in package.json: " + packageName); // prettier-ignore
+        emitVsCodeError({
+          file: path.join(packageFolder, packageName, "package.json"),
+          message: "Package listed as private has other value in package.json: " + packageName, // prettier-ignore
+          severity: "error",
+        });
       }
 
       if (json.version && json.version !== "0.0.0") {
-        throw new Error("Version should be 0.0.0 for private package: " + packageName); // prettier-ignore
+        emitVsCodeError({
+          file: path.join(packageFolder, packageName, "package.json"),
+          message: "Version should be 0.0.0 for private package: " + packageName, // prettier-ignore
+          severity: "error",
+        });
       }
 
       //private packages are not checked further.
@@ -338,25 +344,45 @@ const makeJawisBuildManager = (
     // only public packages
 
     if (json.private) {
-      throw new Error("Package listed as public have other value in package.json: " + packageName); // prettier-ignore
+      emitVsCodeError({
+        file: path.join(packageFolder, packageName, "package.json"),
+        message: "Package listed as public has other value in package.json: " + packageName, // prettier-ignore
+        severity: "error",
+      });
     }
 
     if (json.version === undefined) {
-      throw new Error("Version should be set for public package: " + packageName); // prettier-ignore
+      emitVsCodeError({
+        file: path.join(packageFolder, packageName, "package.json"),
+        message: "Version should be set for public package: " + packageName, // prettier-ignore
+        severity: "error",
+      });
     }
 
     if (json.private && json.private !== true) {
       if (json.version === undefined) {
-        throw new Error("Missing version in package.json for: " + packageName);
+        emitVsCodeError({
+          file: path.join(packageFolder, packageName, "package.json"),
+          message: "Missing version in package.json for: " + packageName, // prettier-ignore
+          severity: "error",
+        });
       }
     }
 
     if (json.description === undefined || json.description === "") {
-      console.log("Missing description in package.json for: " + packageName);
+      emitVsCodeError({
+        file: path.join(packageFolder, packageName, "package.json"),
+        message: "Missing description in package.json for: " + packageName,
+        severity: "warning",
+      });
     }
 
     if (json.keywords === undefined || json.keywords.length === 0) {
-      console.log("Missing keywords in package.json for: " + packageName);
+      emitVsCodeError({
+        file: path.join(packageFolder, packageName, "package.json"),
+        message: "Missing keywords in package.json for: " + packageName,
+        severity: "warning",
+      });
     }
   };
 
@@ -391,12 +417,6 @@ const makeJawisBuildManager = (
     siblingDeps,
     checkSideEffects = true
   ) => {
-    if (json.version === "0.0.0") {
-      throw new Error(
-        "Package has wrong version: " + packageName + " " + json.version
-      );
-    }
-
     json.name = getFullPackageName(packageName);
 
     json.main = "./index.js";

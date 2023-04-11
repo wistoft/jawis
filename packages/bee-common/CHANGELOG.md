@@ -8,6 +8,8 @@
 
 ## :tada: Enhancements
 
+- Added `BeeProv` as abstraction for runtime specific features.
+
 ## :bug: Bug fixes
 
 ## :boom: Breaking changes

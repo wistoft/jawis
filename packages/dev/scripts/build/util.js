@@ -35,6 +35,17 @@ const sortObject = (obj) => {
   return res;
 };
 
+/**
+ *S
+ */
+const emitVsCodeError = (deps) => {
+  const line = deps.line ?? 1;
+  const column = deps.column ?? 1;
+  const severity = deps.severity ?? "error";
+
+  console.log( deps.message + " - " + severity + " - " + deps.file + ":" + line + ":" + column ); // prettier-ignore
+};
+
 //
 // exports
 //
@@ -42,4 +53,5 @@ const sortObject = (obj) => {
 module.exports = {
   copyingFiles,
   sortObject,
+  emitVsCodeError,
 };

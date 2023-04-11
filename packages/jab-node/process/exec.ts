@@ -1,4 +1,4 @@
-import cp, { SpawnSyncReturns } from "child_process";
+import cp, { SpawnSyncReturns, SpawnOptionsWithoutStdio } from "child_process";
 
 import { err, indent } from "^jab";
 
@@ -70,9 +70,13 @@ export const execSilent = (command: string, args?: string[]) =>
  *
  * Make this into a wrapper around childProcess object.
  */
-export const exec = (command: string, args?: string[]) =>
+export const exec = (
+  command: string,
+  args?: string[],
+  options?: SpawnOptionsWithoutStdio
+) =>
   new Promise<SpawnResult>((resolve, reject) => {
-    const proc = cp.spawn(command, args);
+    const proc = cp.spawn(command, args, options);
 
     // state
 

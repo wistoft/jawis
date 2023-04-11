@@ -1,4 +1,5 @@
 import http, { RequestOptions } from "http";
+import https from "https";
 
 /**
  *
@@ -10,7 +11,9 @@ export const httpRequest = (deps: RequestOptions) =>
       ...deps,
     };
 
-    const req = http.request(options, (res) => {
+    const module = deps.protocol === "https:" ? https : http;
+
+    const req = module.request(options, (res) => {
       let data = "";
       const code = "" + res.statusCode;
 

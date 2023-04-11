@@ -4,7 +4,7 @@ import path from "path";
 
 import { sortObject } from "./build/util";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
-import { tryGetCommonPackage } from "./util";
+import { tryGetCommonPackage } from "./build/util3";
 
 /**
  *
