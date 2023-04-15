@@ -7,10 +7,9 @@ import {
   errorToTestLog,
 } from "^jatec";
 
-import { timeRace } from "^yapu";
+import { makeCatchingSetTimeout, timeRace } from "^yapu";
 import { asyncCapture } from "^async-capture";
 import {
-  createJarunSetTimeout,
   TestFunction,
   awaitPromises,
   TestFileExport,
@@ -97,7 +96,10 @@ export class JarunTestRunner {
     work: () => Promise<T>
   ) => {
     const jarunPromise = createJarunPromise(prov);
-    const jarunSetTimeout = createJarunSetTimeout(prov, global.setTimeout);
+    const jarunSetTimeout = makeCatchingSetTimeout(
+      prov.onError,
+      global.setTimeout
+    );
 
     if (global.Promise !== this.orgPromise) {
       global.Promise = this.orgPromise; //reset

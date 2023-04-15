@@ -7,12 +7,6 @@ export type TestFunction = (prov: TestProvision) => unknown;
 
 export type TestFileExport = TestFunction | { default: TestFunction };
 
-export type SetTimeoutFunction = (
-  callback: (...args: any[]) => void,
-  ms: number,
-  ...args: any[]
-) => NodeJS.Timeout;
-
 /**
  *
  */
@@ -38,28 +32,6 @@ export type JarunProcessControllerMessage =
   | {
       type: "shutdown";
     };
-
-/**
- * - catch errors and report them to test provision, instead of just writing to console.
- */
-export const createJarunSetTimeout =
-  (
-    prov: JarunTestProvision,
-    orgSetTimeout: SetTimeoutFunction
-  ): SetTimeoutFunction =>
-  (callback: (...args: any[]) => void, ms: number, ...args: any[]) =>
-    orgSetTimeout(
-      (...innerArgs) => {
-        try {
-          callback(...innerArgs);
-        } catch (a) {
-          const error = a as unknown;
-          prov.onError(error, ["uh-exception in setTimeout"]);
-        }
-      },
-      ms,
-      ...args
-    );
 
 /**
  * Recursively await the promises in the test provition.

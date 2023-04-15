@@ -1,4 +1,4 @@
-import { err, makeJabError } from "^jab";
+import { OnError, err, makeJabError } from "^jab";
 
 export type PromiseTriple<T> = {
   promise: Promise<T>;
@@ -369,3 +369,28 @@ export const assertUnsettled = (
       }
     });
 };
+
+export type SetTimeoutFunction = (
+  callback: (...args: any[]) => void,
+  ms: number,
+  ...args: any[]
+) => NodeJS.Timeout;
+
+/**
+ * - catch errors and report them to test provision, instead of just writing to console.
+ */
+export const makeCatchingSetTimeout =
+  (onError: OnError, orgSetTimeout: SetTimeoutFunction): SetTimeoutFunction =>
+  (callback: (...args: any[]) => void, ms: number, ...args: any[]) =>
+    orgSetTimeout(
+      (...innerArgs) => {
+        try {
+          callback(...innerArgs);
+        } catch (a) {
+          const error = a as unknown;
+          onError(error, ["uh-exception in setTimeout"]);
+        }
+      },
+      ms,
+      ...args
+    );
