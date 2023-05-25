@@ -1,0 +1,14 @@
+{
+  "version": "0.0.0",
+  "name": "~jabro",
+  "description": "Bee implementation for browsers.",
+  "dependencies": {},
+  "keywords": [
+    "browser",
+    "bee",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

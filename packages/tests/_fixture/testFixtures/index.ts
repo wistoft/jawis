@@ -32,4 +32,5 @@ export * from "./jatev";
 export * from "./javi";
 export * from "./ts compiler host";
 export * from "./ts";
+export * from "./ts-reload";
 export * from "./webpack";

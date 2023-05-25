@@ -98,3 +98,11 @@ export type BeeResult<MR> = {
   messages: MR[];
   errors: unknown[];
 };
+
+export type BeePreloaderProv<MR extends {}, MS extends {}> = {
+  useBee: (deps: BeeDeps<MR>) => Promise<Bee<MS>>;
+  shutdown: () => Promise<void>;
+  kill: () => Promise<void>;
+  noisyKill: () => Promise<void>;
+  cancel: (msg?: string) => void;
+};

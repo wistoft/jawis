@@ -1,0 +1,14 @@
+{
+  "version": "0.0.0",
+  "name": "~jabroc",
+  "description": "Common for jabro view and server.",
+  "dependencies": {},
+  "keywords": [
+    "browser",
+    "bee",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

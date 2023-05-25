@@ -6,6 +6,7 @@
     { "path": "./packages/async-capture" },
     { "path": "./packages/bee-common" },
     { "path": "./packages/bee-node" },
+    { "path": "./packages/bee-web-worker" },
     { "path": "./packages/console" },
     { "path": "./packages/dev" },
     { "path": "./packages/dev-compv" },
@@ -15,6 +16,9 @@
     { "path": "./packages/jab-node" },
     { "path": "./packages/jab-react" },
     { "path": "./packages/jabc" },
+    { "path": "./packages/jabro" },
+    { "path": "./packages/jabroc" },
+    { "path": "./packages/jabrov" },
     { "path": "./packages/jacs" },
     { "path": "./packages/jagoc" },
     { "path": "./packages/jagos" },
@@ -35,6 +39,7 @@
     { "path": "./packages/state-waiter" },
     { "path": "./packages/tests" },
     { "path": "./packages/ts-config-util" },
+    { "path": "./packages/ts-reload" },
     { "path": "./packages/view-exception" },
     { "path": "./packages/yapu" }
   ]

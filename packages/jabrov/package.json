@@ -1,0 +1,18 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jabrov",
+  "description": "Jabro view.",
+  "dependencies": {
+    "@types/js-string-escape": "^1.0.1",
+    "js-string-escape": "^1.0.1"
+  },
+  "keywords": [
+    "browser",
+    "bee",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

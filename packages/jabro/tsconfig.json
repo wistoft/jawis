@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jabro",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../jab-express" },
+    { "path": "../jabroc" },
+    { "path": "../state-waiter" }
+  ]
+}

@@ -4,7 +4,7 @@ import fs from "fs";
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
-import { LogProv, tryProp, ErrorData, OnError } from "^jab";
+import { LogProv, tryProp, ErrorData, OnError, assert } from "^jab";
 import { MainProv, httpRequest } from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
@@ -50,6 +50,12 @@ export const getTsProjectPath = (file: string) =>
  */
 export const getFixturePath = (file?: string) =>
   path.join(__dirname, "..", file || "");
+
+/**
+ *
+ */
+export const getProjectPath = (file = "") =>
+  path.join(__dirname, "../../../../", file);
 
 /**
  *
@@ -165,6 +171,15 @@ export const emptyScratchFolder = () => {
   fse.emptyDirSync(folder);
 
   return folder;
+};
+
+/**
+ *
+ */
+export const filterAbsoluteFilepath = (file: string) => {
+  assert(path.isAbsolute(file), "File must be absolute", file);
+
+  return "abs:" + path.relative(getProjectPath(), file).replace(/\\/g, "/");
 };
 
 /**

@@ -2,7 +2,7 @@ import { Serializable } from "child_process";
 import filewatcher from "filewatcher";
 
 import { def } from "^jab";
-import { BeeListeners } from "^bee-common";
+import { BeeListeners, BeePreloaderProv } from "^bee-common";
 
 import {
   RequireSenderMessage,
@@ -25,7 +25,8 @@ export type WatchableProcessPreloaderDeps = ProcessPreloaderDeps & {
 export class WatchableProcessPreloader<
   MR extends Serializable,
   MS extends Serializable
-> {
+> implements BeePreloaderProv<MR, MS>
+{
   private preload: ProcessPreloader<MS>;
   private fileChanged = false;
   private watcher: any;
@@ -70,6 +71,11 @@ export class WatchableProcessPreloader<
 
   /**
    *
+   */
+  public useBee = (listeners: BeeListeners<MR>) => this.useProcess(listeners);
+
+  /**
+   * tobe-deprecated: Use `useBee` instead.
    */
   public useProcess = (listeners: BeeListeners<MR>) => {
     //so it can be called in this.onMessage.

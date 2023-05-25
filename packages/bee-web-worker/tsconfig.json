@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/bee-web-worker",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../jab" },
+    { "path": "../yapu" }
+  ]
+}

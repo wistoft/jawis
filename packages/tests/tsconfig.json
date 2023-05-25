@@ -26,6 +26,7 @@
     { "path": "../jatev" },
     { "path": "../javi" },
     { "path": "../misc" },
+    { "path": "../ts-reload" },
     { "path": "../render-hook-plus" },
     { "path": "../state-waiter" },
     { "path": "../yapu" }

@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jabroc",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../jagoc" },
+    { "path": "../jabc" }
+  ]
+}

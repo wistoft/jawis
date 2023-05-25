@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jabrov",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../bee-web-worker" },
+    { "path": "../jabroc" },
+    { "path": "../jab-react" },
+    { "path": "../jab" },
+    { "path": "../yapu" },
+    { "path": "../react-use-ws" }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/ts-reload",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab-node" },
+    { "path": "../jacs" },
+    { "path": "../jab" },
+    { "path": "../bee-common" },
+    { "path": "../jagos" },
+    { "path": "../jagoc" },
+    { "path": "../parse-captured-stack" }
+  ]
+}

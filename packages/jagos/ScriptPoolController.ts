@@ -1,5 +1,11 @@
 import crypto from "crypto";
-import { Bee, BeeListeners, MakeBee } from "^bee-common";
+import {
+  Bee,
+  BeeDeps,
+  BeePreloaderProv,
+  MakeBee,
+  NoopBeePreloader,
+} from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 
 import { def, LogProv, unknownToErrorData, err } from "^jab";
@@ -35,6 +41,7 @@ export type ScriptPoolControllerDeps = {
   scriptFolders?: string[];
   scripts?: ScriptDefinition[];
   makeTsBee: MakeBee;
+  experimentalMakeBrowserBee?: MakeBee; //feature flag
   alwaysTypeScript?: boolean; //default false.
 
   onError: (error: unknown) => void;
@@ -52,7 +59,7 @@ export type ScriptPoolControllerDeps = {
 type ScriptState = {
   script: string;
   autoRestart?: boolean;
-  preload?: WatchableProcessPreloader<any, any>;
+  preload?: BeePreloaderProv<any, any>;
   process?: Bee<any>;
   dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
 };
@@ -353,7 +360,19 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  private makePreloader = ({ script, autoRestart }: ScriptDefinition) => {
+  private makePreloader = ({
+    script,
+    autoRestart,
+  }: ScriptDefinition): BeePreloaderProv<any, any> => {
+    //experimental browser bee
+
+    if (this.deps.experimentalMakeBrowserBee && script.endsWith(".ww.js")) {
+      return new NoopBeePreloader({
+        makeBee: this.deps.experimentalMakeBrowserBee,
+        finally: this.deps.finally,
+      });
+    }
+
     // depends on script, not preloader, so default `makeTsProcessConditonally` can't be used.
 
     const makeTsBeeConditonally =
@@ -413,7 +432,8 @@ export class ScriptPoolController implements ScriptPoolProv {
   private getStartedProcess = (state: ScriptState): Promise<ScriptState> => {
     const { script } = state;
 
-    const procConf: BeeListeners<any> = {
+    const beeConf: BeeDeps<any> = {
+      filename: script,
       onMessage: (msg: unknown) => {
         //the view will handle, if the message wasn't a jago log entry.
         this.deps.onScriptOutput(script, { type: "message", data: msg as any });
@@ -444,6 +464,7 @@ export class ScriptPoolController implements ScriptPoolProv {
         this.checkIfStopped();
         this.onStatusChange(script, "stopped");
       },
+      finally: this.deps.finally,
     };
 
     if (!state.preload) {
@@ -452,7 +473,7 @@ export class ScriptPoolController implements ScriptPoolProv {
 
     this.onStatusChange(script, "preloading");
 
-    return state.preload.useProcess(procConf).then((process) => {
+    return state.preload.useBee(beeConf).then((process) => {
       this.onStatusChange(script, "running");
 
       return {

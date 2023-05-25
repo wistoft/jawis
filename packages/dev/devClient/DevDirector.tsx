@@ -9,6 +9,7 @@ import { JaviDirector, JaviDirectorProps } from "^javi-client";
 import { Main as DevComponentPanel } from "^dev-compv";
 import { devComponents } from "./devComponents";
 import { getApiPath } from "^javi-client/util";
+import { useJabroHive } from "^jabrov";
 
 type Props = {
   serverPort: number; //mandatory in development, because server is on a different port than client.
@@ -23,6 +24,8 @@ export const DevDirector: React.FC<Props> = ({
   jagoConsolePortForDev,
   ...extra
 }) => {
+  useJabroHive(getApiPath(serverPort, "jabro"));
+
   const [useConsoleStream] = useState(makeUseConsoleStream);
 
   const postNav = (
