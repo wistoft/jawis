@@ -1,10 +1,16 @@
 {
+  "sideEffects": false,
   "version": "1.0.2",
   "name": "~yapu",
   "description": "Utilities for working with promises",
   "dependencies": {},
   "keywords": [
+    "async",
+    "promise",
     "promise-util",
-    "promises-utils"
+    "promises-utils",
+    "util",
+    "utilities",
+    "stdlib"
   ]
 }

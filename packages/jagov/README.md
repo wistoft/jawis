@@ -31,7 +31,7 @@ export const MyConsole: React.FC = () => {
       //use the data captured in the browser.
       useConsoleStream={useConsoleStream}
       //get console output on the server.
-      apiPath={"http://localhost/jago"}
+      apiPath={"localhost/jago"}
       projectRoot={""}
     />
   );

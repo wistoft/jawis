@@ -15,6 +15,10 @@ npm i @jawis/jab-react
   'exponential' increasing timeouts.
 - ScrollbarTail is broken in React 17.
 
+## Related work
+
+- [react-use](https://www.npmjs.com/package/react-use)
+
 ## License
 
 MIT

@@ -1,6 +1,6 @@
 # Jagos
 
-The server part of jago.
+Show output from both node and browser in the browser
 
 ## Installation
 

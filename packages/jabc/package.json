@@ -1,4 +1,5 @@
 {
+  "sideEffects": false,
   "version": "2.0.1",
   "name": "~jabc",
   "description": "Common for jab packages.",

@@ -1,4 +1,5 @@
 {
+  "sideEffects": false,
   "version": "0.1.0",
   "name": "~assorted-algorithms",
   "description": "Some useful algorithms",

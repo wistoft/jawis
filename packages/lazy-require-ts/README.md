@@ -24,17 +24,17 @@ const source = "...";
 const sourceWithLazyLoad = prefix + source;
 ```
 
+TypeScript must be configured to emit `commonjs` modules.
+
 ## Known issues
 
 - There is no viable way to support ES modules.
-- They are loaded async, so it's not simple to load them, when functions are
-  called and needs to be loaded.
-- Possible workarounds:
-  1. A solution could be `deasync`, but it can't be called in all contexts.
-  2. Transpile ES modules and load them as CommonJS modules. But that is likely
-     to give unexpected results.
-  3. Simply locate all ES modules at first execution. Cache which modules have
-     no ES modules below them. They are the ones we can lazy load.
+  - There's no way to construct ES modules synchronously, when fx functions are
+    called.
+  - There's no API hook, that allows modification of module exports. To avoid
+    exporting unreachable code.
+  - Possible workaround: Transpile ES modules and load them as CommonJS modules.
+    But that's beyond the scope of this package.
 
 ## Related work
 

@@ -1,4 +1,5 @@
 {
+  "sideEffects": false,
   "version": "0.0.2",
   "name": "~parse-captured-stack",
   "description": "Wrappers around established stack-parsing libraries",

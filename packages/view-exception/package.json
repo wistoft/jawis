@@ -1,4 +1,5 @@
 {
+  "sideEffects": false,
   "version": "0.0.2",
   "name": "~view-exception",
   "description": "React component for presenting exceptions in the browser",
@@ -17,6 +18,9 @@
     "error",
     "exception",
     "debug",
-    "development"
+    "development",
+    "component",
+    "components",
+    "react"
   ]
 }
