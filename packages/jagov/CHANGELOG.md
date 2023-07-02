@@ -6,6 +6,12 @@
 
 ## :boom: Breaking changes
 
+# 3.0.1
+
+## :bug: Bug fixes
+
+- Fixed bug in `README` example.
+
 # 3.0.0
 
 ## :bug: Bug fixes

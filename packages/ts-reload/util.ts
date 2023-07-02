@@ -10,7 +10,8 @@ import {
   capturedArrayEntriesTos,
 } from "^jab";
 
-import { MainProv, mainWrapper } from "^jab-node";
+import { MainProv } from "^jab-node";
+import { mainWrapper } from "^main-wrapper";
 import { MakeMakeJacsBeeDeps, makeMakeJacsWorkerBee } from "^jacs";
 import { parseNodeTrace } from "^parse-captured-stack";
 import { MakeBee } from "^bee-common";

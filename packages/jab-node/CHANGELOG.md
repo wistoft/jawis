@@ -6,6 +6,17 @@
 
 ## :boom: Breaking changes
 
+# 4.0.0
+
+## :boom: Breaking changes
+
+- Moved to new package: `main-wrapper`
+  - `UserMessage`
+  - `mainProvToConsole`
+  - `makeOnErrorToConsole` => `onError`
+  - `makeLogServiceToConsole`
+  - `mainWrapper`
+
 # 3.0.0
 
 ## :tada: Enhancements

@@ -4,8 +4,14 @@ import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
 import { def, ErrorWithParsedNodeStack } from "^jab";
-import { CompileFunction, FullNativeModule, nodeRequire } from "^jab-node";
+import {
+  CompileFunction,
+  FullNativeModule,
+  interceptResolve,
+  nodeRequire,
+} from "^jab-node";
 
+import { makeMakeCachedResolve } from "^cached-resolve";
 import {
   JacsConsumer,
   extractStackTraceInfo,
@@ -19,6 +25,7 @@ const Module = nativeModule as unknown as FullNativeModule & {
 };
 
 export type UninstallInfo = {
+  resolveCache?: () => void;
   stackTraceLimit: number;
   prepareStackTrace: typeof Error.prepareStackTrace;
   _compile: CompileFunction; //to revert 'hookRequire' in source-map-support
@@ -61,6 +68,15 @@ export const install = (shared: WorkerData) => {
     }
 
     uninstallInfo.tsConfigPaths = tsConfigPaths.register(shared.tsPaths);
+  }
+
+  //Resolve cache
+  // Must come after ts-paths, its work can be cached as well.
+
+  if (shared.experimentalResolveCache) {
+    uninstallInfo.resolveCache = interceptResolve(
+      makeMakeCachedResolve(shared.experimentalResolveCache)
+    );
   }
 
   //install source map
@@ -141,6 +157,10 @@ const makeUninstall = (uninstallInfo: UninstallInfo) => () => {
   def(uninstallInfo.consumer).unregister();
 
   unRegisterSourceMapSupport(uninstallInfo);
+
+  if (uninstallInfo.resolveCache) {
+    uninstallInfo.resolveCache();
+  }
 
   if (uninstallInfo.tsConfigPaths) {
     uninstallInfo.tsConfigPaths();

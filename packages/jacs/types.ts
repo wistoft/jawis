@@ -1,3 +1,4 @@
+import { makeSharedResolveMap } from "^cached-resolve";
 import { TsPathsConfig } from "^ts-config-util";
 
 export type WorkerData = {
@@ -8,6 +9,7 @@ export type WorkerData = {
   beeFilename?: string;
   stackTraceLimit?: number;
   tsPaths?: TsPathsConfig;
+  experimentalResolveCache?: ReturnType<typeof makeSharedResolveMap>;
 
   //for development
   unregister: boolean;

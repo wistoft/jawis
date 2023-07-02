@@ -2,7 +2,7 @@ import { assertNever } from "^jab";
 import {
   makeSend,
   nodeRequire,
-  registerErrorHandlers,
+  registerRejectionHandlers,
   registerOnMessage,
 } from "^jab-node";
 
@@ -37,7 +37,7 @@ export class JarunProcessMainImpl {
 
     this.send = makeSend();
 
-    registerErrorHandlers(this.jtr.handleUhException);
+    registerRejectionHandlers(this.jtr.handleUhException);
   }
 
   /**

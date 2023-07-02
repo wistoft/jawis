@@ -82,11 +82,18 @@ export const plugIntoModuleLoad = (
  * Can be used to
  *  - Intercept resolve.
  *  - Cached by relativeResolveCache. So only called once for each parent/request combination
+ *      Except for native modules, they will be called always.
  */
 export const interceptResolve = (
   makeResolve: (original: ResolveFilename) => ResolveFilename
 ) => {
+  const original = Module._resolveFilename;
+
   Module._resolveFilename = makeResolve(Module._resolveFilename);
+
+  return () => {
+    Module._resolveFilename = original;
+  };
 };
 
 /**
@@ -197,7 +204,7 @@ export const clearResolveCache = () => {
 };
 
 /**
- *
+ * @tobe-deprecated Use the new npm module: cached-resolve
  */
 export const makeCachedResolve = (
   original: ResolveFilename
@@ -227,6 +234,6 @@ export const makeCachedResolve = (
 };
 
 /**
- * Cache node's resolve function
+ * @tobe-deprecated Use the new npm module: cached-resolve
  */
 export const cacheResolve = () => interceptResolve(makeCachedResolve);

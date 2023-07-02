@@ -1,5 +1,5 @@
 import { sleeping } from "^yapu";
-import { makeLogServiceToConsole } from "^jab-node";
+import { makeLogServiceToConsole } from "^main-wrapper";
 import { TestProvision } from "^jarun";
 
 //indent is according to largest log-type. (even if is comes after.)

@@ -3,7 +3,7 @@ import path from "path";
 import { ComposedTestFramework } from "^jates";
 import { TestLogController } from "^jates/TestLogController";
 import { projectRoot } from "^dev/project.conf";
-import { difference } from "./util";
+import { difference } from "^jab";
 
 /**
  *

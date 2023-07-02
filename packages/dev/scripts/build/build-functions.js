@@ -306,6 +306,8 @@ const makeJawisBuildManager = (
    *
    */
   const checkPackageJson = async (json, packageName) => {
+    const file = path.join(packageFolder, packageName, "package.json");
+
     //package name
 
     if (json.name !== "~" + packageName) {
@@ -322,17 +324,15 @@ const makeJawisBuildManager = (
     if (privatePackages.includes(packageName)) {
       if (json.private !== true) {
         emitVsCodeError({
-          file: path.join(packageFolder, packageName, "package.json"),
+          file,
           message: "Package listed as private has other value in package.json: " + packageName, // prettier-ignore
-          severity: "error",
         });
       }
 
       if (json.version && json.version !== "0.0.0") {
         emitVsCodeError({
-          file: path.join(packageFolder, packageName, "package.json"),
+          file,
           message: "Version should be 0.0.0 for private package: " + packageName, // prettier-ignore
-          severity: "error",
         });
       }
 
@@ -345,33 +345,37 @@ const makeJawisBuildManager = (
 
     if (json.private) {
       emitVsCodeError({
-        file: path.join(packageFolder, packageName, "package.json"),
+        file,
         message: "Package listed as public has other value in package.json: " + packageName, // prettier-ignore
-        severity: "error",
       });
     }
 
     if (json.version === undefined) {
       emitVsCodeError({
-        file: path.join(packageFolder, packageName, "package.json"),
+        file,
         message: "Version should be set for public package: " + packageName, // prettier-ignore
-        severity: "error",
       });
     }
 
     if (json.private && json.private !== true) {
       if (json.version === undefined) {
         emitVsCodeError({
-          file: path.join(packageFolder, packageName, "package.json"),
+          file,
           message: "Missing version in package.json for: " + packageName, // prettier-ignore
-          severity: "error",
         });
       }
     }
 
+    if (json.sideEffects === undefined && !json.private) {
+      emitVsCodeError({
+        file,
+        message: "SideEffects must be set",
+      });
+    }
+
     if (json.description === undefined || json.description === "") {
       emitVsCodeError({
-        file: path.join(packageFolder, packageName, "package.json"),
+        file,
         message: "Missing description in package.json for: " + packageName,
         severity: "warning",
       });
@@ -379,7 +383,7 @@ const makeJawisBuildManager = (
 
     if (json.keywords === undefined || json.keywords.length === 0) {
       emitVsCodeError({
-        file: path.join(packageFolder, packageName, "package.json"),
+        file,
         message: "Missing keywords in package.json for: " + packageName,
         severity: "warning",
       });
@@ -622,6 +626,7 @@ const makeJawisBuildManager = (
   };
 
   return {
+    projectFolder,
     getFullPackageName,
     getSiblingPackages,
     getAllPackageDeps,

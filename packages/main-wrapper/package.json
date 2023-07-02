@@ -1,0 +1,13 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~main-wrapper",
+  "description": "Convenience wrapper for scripts and applications.",
+  "dependencies": {},
+  "keywords": [
+    "script",
+    "app",
+    "main",
+    "wrapper"
+  ]
+}

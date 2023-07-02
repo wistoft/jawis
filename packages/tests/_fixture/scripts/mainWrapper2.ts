@@ -1,4 +1,4 @@
-import { mainWrapper } from "^jab-node";
+import { mainWrapper } from "^main-wrapper";
 
 //registers on shutdown
 

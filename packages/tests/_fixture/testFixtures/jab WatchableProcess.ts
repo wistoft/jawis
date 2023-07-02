@@ -9,7 +9,7 @@ import {
   getJabProcessDeps,
   getLogProv,
   getScriptPath,
-  makeJacsWorker,
+  getLiveMakeJacsWorker,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
 } from ".";
@@ -105,7 +105,7 @@ export const getJabWatchbleProcessPreloaderDeps = (
 
     ...procDeps,
 
-    makeBee: makeJacsWorker,
+    makeBee: getLiveMakeJacsWorker(),
     logProv: getLogProv(prov, logPrefix),
   };
 };

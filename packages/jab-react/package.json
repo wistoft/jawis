@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "2.0.0",
+  "version": "2.0.1",
   "name": "~jab-react",
   "description": "Collection of utilities for react.",
   "dependencies": {

@@ -1,4 +1,4 @@
-import { mainWrapper } from "^jab-node";
+import { mainWrapper } from "^main-wrapper";
 import { getErrorForPrint } from "^tests/_fixture";
 
 Error.stackTraceLimit = 1; //to avoid noisy in test log

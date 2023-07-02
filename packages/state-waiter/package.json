@@ -1,11 +1,14 @@
 {
   "sideEffects": false,
-  "version": "1.0.2",
+  "version": "1.0.3",
   "name": "~state-waiter",
   "description": "Handle async states conveniently.",
   "dependencies": {},
   "keywords": [
     "state",
+    "fsm",
+    "state machine",
+    "finite state machine",
     "shutdown",
     "cleanup",
     "async",

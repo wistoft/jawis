@@ -6,6 +6,15 @@
 
 ## :boom: Breaking changes
 
+# 0.2.0
+
+## :tada: Enhancements
+
+- Added
+  - `tryHandleBeeLogChannel`
+  - `BeePreloaderProv`
+  - `NoopBeePreloader`
+
 # 0.1.0
 
 ## :tada: Enhancements

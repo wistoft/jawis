@@ -6,6 +6,12 @@
 
 ## :boom: Breaking changes
 
+# 3.1.0
+
+## :tada: Enhancements
+
+- Made `ScriptPoolControler` part of public API.
+
 # 3.0.0
 
 ## :tada: Enhancements

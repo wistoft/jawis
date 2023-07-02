@@ -1,3 +1,4 @@
+const assert = require("assert");
 const copyfiles = require("copyfiles");
 
 /**
@@ -36,9 +37,23 @@ const sortObject = (obj) => {
 };
 
 /**
- *S
+ *
+ *  {
+      file: string;
+      message: string;
+      line?: number | string;
+      column?: string;
+      severity?: "error" | "warning";
+    }
  */
 const emitVsCodeError = (deps) => {
+  assert(!deps.file.includes("\n"));
+
+  assert(!deps.message.includes("\n"));
+  assert(deps.line !== "string" || !deps.line.includes("\n"));
+  assert(deps.column !== "string" || !deps.column.includes("\n"));
+  assert(deps.severity !== "string" || !deps.severity.includes("\n"));
+
   const line = deps.line ?? 1;
   const column = deps.column ?? 1;
   const severity = deps.severity ?? "error";

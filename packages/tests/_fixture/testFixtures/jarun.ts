@@ -15,7 +15,7 @@ import { assert, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
 import { filterTestResult, filterTestLogs } from "./jates";
-import { makeJacsWorker } from ".";
+import { getLiveMakeJacsWorker } from ".";
 
 /**
  *
@@ -143,7 +143,7 @@ export const newJarunPromise = <T>(
 export const getBeeRunner = (prov: TestProvision) =>
   new BeeRunner({
     finally: prov.finally,
-    makeBee: makeJacsWorker,
+    makeBee: getLiveMakeJacsWorker(),
   });
 
 /**

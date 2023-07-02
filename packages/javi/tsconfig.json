@@ -10,6 +10,7 @@
     { "path": "../jab-express" },
     { "path": "../jab-node" },
     { "path": "../jacs" },
+    { "path": "../main-wrapper" },
     { "path": "../jarun" },
     { "path": "../jagos" },
     { "path": "../jates" }

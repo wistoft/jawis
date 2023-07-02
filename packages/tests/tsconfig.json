@@ -29,6 +29,7 @@
     { "path": "../ts-reload" },
     { "path": "../render-hook-plus" },
     { "path": "../state-waiter" },
+    { "path": "../main-wrapper" },
     { "path": "../yapu" }
   ],
   "exclude": ["_fixture/testsuite", "_fixture/tsProject"]

@@ -2,7 +2,9 @@ import path from "path";
 
 import { startJaviServer } from "^javi/util";
 import { makeJaviDeps } from "^javi/makeJaviDeps";
-import { MainProv, mainWrapper } from "^jab-node";
+import { MainProv } from "^jab-node";
+import { mainWrapper } from "^main-wrapper";
+
 import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 import conf from "../dev.conf";

@@ -72,7 +72,19 @@
           "executable": "powershell.exe"
         }
       },
-      "detail": " "
+      "detail": " ",
+      "problemMatcher": {
+        "owner": "jawis",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^\\s*(.*) - (warning|error) - (.*):(\\d+):(\\d+)\\s*$",
+          "message": 1,
+          "severity": 2,
+          "file": 3,
+          "line": 4,
+          "column": 5
+        }
+      }
     }
   ]
 }

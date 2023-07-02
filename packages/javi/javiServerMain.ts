@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import path from "path";
 
-import { MainProv, mainWrapper } from "^jab-node";
+import { mainWrapper } from "^main-wrapper";
+import { MainProv } from "^jab-node";
 import { makeMakeJacsWorkerBee } from "^jacs";
 
 import { startJaviServer, getJaviConf, makeJaviDeps } from "./internal";

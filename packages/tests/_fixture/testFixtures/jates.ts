@@ -22,7 +22,7 @@ import {
   absTestFolder,
   absTestLogFolder,
   TestFrameworkMock,
-  makeJacsWorker,
+  getLiveMakeJacsWorker,
   getScratchPath,
 } from ".";
 
@@ -196,7 +196,7 @@ export const getComposedTestFramework = (
 
   const jpc = new JarunProcessController({
     ...deps,
-    makeTsBee: makeJacsWorker,
+    makeTsBee: getLiveMakeJacsWorker(),
     onRogueTest: (data) => prov.log("Jate", ["onRogueTest: ", data]),
     onRequire: () => {},
   });
@@ -208,7 +208,7 @@ export const getComposedTestFramework = (
 
   const wo = new BeeRunner({
     ...deps,
-    makeBee: makeJacsWorker,
+    makeBee: getLiveMakeJacsWorker(),
   });
 
   return new ComposedTestFramework({

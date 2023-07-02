@@ -9,6 +9,8 @@ import {
 import { FinallyFunc } from "^finally-provider";
 import { safeCatch } from "^yapu";
 import { BeeDeps } from "^bee-common";
+import { makeSharedResolveMap } from "^cached-resolve";
+
 import {
   getControlArray,
   setCompiling,
@@ -24,6 +26,7 @@ export type JacsProducerDeps = {
   maxSourceFileSize: number;
   customBooter?: string;
   sfl: Pick<SourceFileLoader, "load" | "getTsConfigPaths">;
+  experimentalCacheNodeResolve?: boolean;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
 
@@ -38,7 +41,13 @@ export type JacsProducerDeps = {
  *
  */
 export class JacsProducer {
-  constructor(private deps: JacsProducerDeps) {}
+  private resolveCache?: ReturnType<typeof makeSharedResolveMap>;
+
+  constructor(private deps: JacsProducerDeps) {
+    if (deps.experimentalCacheNodeResolve) {
+      this.resolveCache = makeSharedResolveMap();
+    }
+  }
 
   /**
    * - returned promise is just for tests.
@@ -100,6 +109,7 @@ export class JacsProducer {
       softTimeout: this.deps.consumerSoftTimeout,
       beeFilename: beeDeps.filename,
       tsPaths: this.deps.sfl.getTsConfigPaths(beeDeps.filename),
+      experimentalResolveCache: this.resolveCache,
 
       //for developement
       unregister: this.deps?.unregisterTsInWorker || false,

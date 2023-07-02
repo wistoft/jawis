@@ -10,6 +10,7 @@ import {
   TranspileOptions,
 } from "typescript";
 
+import { makePrefixCode } from "^lazy-require-ts";
 import { basename, CompileService, err, prej, tos } from "^jab";
 
 import {
@@ -18,7 +19,8 @@ import {
   getTsConfigFromAbsConfigFile,
 } from "^ts-config-util";
 
-type Deps = {
+export type SourceFileLoaderDeps = {
+  experimentalLazyRequire?: boolean;
   onError: (error: unknown) => void;
 };
 
@@ -40,16 +42,18 @@ export class SourceFileLoader implements CompileService {
   private cache: Map<string, string> = new Map();
 
   //contains the conf file path for a specific directory.
-  // null means the directory has no conf file under it.
+  // null means no conf file in the directory, or its parents.
   private confLookupCache: Map<string, string | null> = new Map();
 
-  //contains the looded configuration file.
+  //contains the loaded configuration files.
   private confCache: Map<string, CompilerOptions> = new Map();
+
+  private static prefix = makePrefixCode();
 
   /**
    *
    */
-  constructor(private deps: Deps) {
+  constructor(private deps: SourceFileLoaderDeps) {
     //watcher
 
     this.watcher = filewatcher();
@@ -69,21 +73,21 @@ export class SourceFileLoader implements CompileService {
    * - Output commonjs modules (silently overwrite config from tsconfig.json)
    * - Include inline source map. (silently overwrite config from tsconfig.json)
    */
-  public load = (absScriptPath: string) => {
-    if (!path.isAbsolute(absScriptPath)) {
+  public load = (absFile: string) => {
+    if (!path.isAbsolute(absFile)) {
       return prej("absScriptPath must be absolute");
     }
 
-    const cachedData = this.cache.get(absScriptPath);
+    const cachedData = this.cache.get(absFile);
 
     if (cachedData) {
       return Promise.resolve(cachedData);
     }
 
-    return fs.promises.readFile(absScriptPath).then((indata) => {
-      this.watcher.add(absScriptPath);
+    return fs.promises.readFile(absFile).then((indata) => {
+      this.watcher.add(absFile);
 
-      const raw = this.getCompilerOptions(absScriptPath);
+      const raw = this.getCompilerOptions(absFile);
 
       //something fucks up for .ts files, when jsx is set.
 
@@ -93,21 +97,27 @@ export class SourceFileLoader implements CompileService {
         inlineSourceMap: true,
       };
 
-      if (absScriptPath.endsWith(".ts")) {
+      if (absFile.endsWith(".ts")) {
         delete compilerOptions.jsx;
       }
+
+      //add lazy loading
+
+      const source = this.deps.experimentalLazyRequire
+        ? SourceFileLoader.prefix + indata.toString()
+        : indata.toString();
 
       // transpile
 
       //shouldn't compile .js files?
-      const compiledSource = this.transpile(indata.toString(), {
-        fileName: basename(absScriptPath),
+      const compiledSource = this.transpile(source, {
+        fileName: basename(absFile),
         compilerOptions,
       });
 
       // cache
 
-      this.cache.set(absScriptPath, compiledSource);
+      this.cache.set(absFile, compiledSource);
 
       return compiledSource;
     });
@@ -120,7 +130,7 @@ export class SourceFileLoader implements CompileService {
     const result = transpileModule(data, options);
 
     if (result.diagnostics && result.diagnostics.length > 0) {
-      err(
+      throw err(
         "Could not transpile: " + dianosticToString(result.diagnostics),
         tos(result.diagnostics)
       );
@@ -132,8 +142,8 @@ export class SourceFileLoader implements CompileService {
   /**
    *
    */
-  public getCompilerOptions = (absScriptPath: string) => {
-    const file = this.getConfFile(absScriptPath);
+  public getCompilerOptions = (absFile: string) => {
+    const file = this.getConfFile(absFile);
 
     if (file === null) {
       return {};
@@ -160,8 +170,8 @@ export class SourceFileLoader implements CompileService {
    * todo
    *  maybe better normalize to ensure consistent cache key.
    */
-  public getConfFile = (absScriptPath: string) => {
-    const dir = path.normalize(path.dirname(absScriptPath));
+  public getConfFile = (absFile: string) => {
+    const dir = path.normalize(path.dirname(absFile));
 
     const cachedConfPath = this.confLookupCache.get(dir);
 
@@ -192,14 +202,14 @@ export class SourceFileLoader implements CompileService {
   /**
    *
    */
-  public getTsConfigPaths = (absScriptPath: string) => {
-    const file = this.getConfFile(absScriptPath);
+  public getTsConfigPaths = (absFile: string) => {
+    const file = this.getConfFile(absFile);
 
     if (file === null) {
-      return undefined;
+      return;
     }
 
-    const options = this.getCompilerOptions(absScriptPath);
+    const options = this.getCompilerOptions(absFile);
 
     return getTsPathsConfig(options, file);
   };

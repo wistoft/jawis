@@ -6,6 +6,12 @@
 
 ## :boom: Breaking changes
 
+# 3.1.0
+
+## :tada: Enhancements
+
+- Added options: `experimentalResolveCache` and `experimentalLazyRequire`
+
 # 3.0.0
 
 ## :boom: Breaking changes

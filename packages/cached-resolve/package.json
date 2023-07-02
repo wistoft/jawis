@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~cached-resolve",
+  "description": "Caches resolved paths when nodejs loads modules.",
+  "dependencies": {
+    "is-builtin-module": "^3.1.0",
+    "sharedmap": "^1.2.0"
+  },
+  "keywords": [
+    "performance",
+    "startup",
+    "resolve",
+    "nodejs"
+  ]
+}

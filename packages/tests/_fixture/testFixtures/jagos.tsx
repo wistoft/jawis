@@ -5,7 +5,12 @@ import { NodeWS } from "^jab-express";
 import { assertNever, FileService } from "^jab";
 import { director, DirectorDeps } from "^jagos/director";
 
-import { getLogProv, getScriptPath, makeJacsWorker, WsPoolMock } from ".";
+import {
+  getLogProv,
+  getScriptPath,
+  getLiveMakeJacsWorker,
+  WsPoolMock,
+} from ".";
 
 const projectConf = require("../../../../packages/dev/project.conf");
 
@@ -24,7 +29,7 @@ export const getJagosDirector = (
 
   const d = director({
     alwaysTypeScript: true, //development needs typescript for the preloader.
-    makeTsBee: makeJacsWorker,
+    makeTsBee: getLiveMakeJacsWorker(),
     onError: prov.onError,
     finally: prov.finally,
     logProv: getLogProv(prov),

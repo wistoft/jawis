@@ -10,7 +10,8 @@ import {
   isBoolean,
   assert,
 } from "^jab";
-import { nodeRequire, UserMessage } from "^jab-node";
+import { nodeRequire } from "^jab-node";
+import { UserMessage } from "^main-wrapper";
 import { ScriptDefinition } from "^jagos";
 
 import { FullJaviConf } from "./internal";

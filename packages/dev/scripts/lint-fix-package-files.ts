@@ -2,7 +2,7 @@ import fs from "fs";
 import fse from "fs-extra";
 import path from "path";
 
-import { sortObject } from "./build/util";
+import { emitVsCodeError, sortObject } from "./build/util";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
 import { tryGetCommonPackage } from "./build/util3";
 
@@ -81,7 +81,10 @@ const makeFixPackageJson = () => {
         const stored = versions.get(dep);
         if (stored !== undefined && stored !== "error-seen") {
           if (version !== stored) {
-            console.log("Version is not consistent across all packages: " + dep); // prettier-ignore
+            emitVsCodeError({
+              file,
+              message: "Version is not consistent across all packages: " + dep,
+            });
             versions.set(dep, "error-seen");
           }
         } else {

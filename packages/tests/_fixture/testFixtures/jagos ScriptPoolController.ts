@@ -6,7 +6,7 @@ import {
   ScriptPoolControllerDeps,
 } from "^jagos/ScriptPoolController";
 
-import { getLogProv, getScriptPath, makeJacsWorker } from ".";
+import { getLogProv, getScriptPath, getLiveMakeJacsWorker } from ".";
 
 /**
  *
@@ -75,7 +75,7 @@ export const getJabScriptPoolControllerDeps = (
 
     alwaysTypeScript: true, //development needs typescript for the preloader.
 
-    makeTsBee: makeJacsWorker,
+    makeTsBee: getLiveMakeJacsWorker(),
 
     onError: prov.onError,
     finally: prov.finally,

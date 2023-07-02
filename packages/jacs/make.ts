@@ -1,11 +1,17 @@
 import { MakeBee } from "^bee-common";
 
-import { JacsProducer, JacsProducerDeps, SourceFileLoader } from "./internal";
+import {
+  JacsProducer,
+  JacsProducerDeps,
+  SourceFileLoader,
+  SourceFileLoaderDeps,
+} from "./internal";
 
 export type MakeMakeJacsBeeDeps = Partial<
   Omit<JacsProducerDeps, "getTranspiledSource">
 > &
-  Pick<JacsProducerDeps, "onError" | "finally">;
+  Pick<JacsProducerDeps, "onError" | "finally"> &
+  SourceFileLoaderDeps;
 
 /**
  * Init jacs producer, and return a function for creating workers.

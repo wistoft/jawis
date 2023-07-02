@@ -6,6 +6,14 @@
 
 ## :boom: Breaking changes
 
+# 2.2.0
+
+## :tada: Enhancements
+
+- `unknownToErrorData` returns the long stack from `long-traces`, if available.
+- Added `captureLongStack` that extends `captureStack` by returning stacks set
+  by `long-traces`.
+
 # 2.1.0
 
 ## :bug: Bug fixes

@@ -3,22 +3,27 @@ import fs from "fs";
 import path, { basename } from "path";
 
 import { err } from "^jab/error";
-import { assertNever } from "^jab/util";
+import { assertNever, setDifference } from "^jab/util";
 
-import { setDifference } from "./util/util";
-import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
 import { makeLiveJawisBuildManager } from "./build/util2";
+import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
+import { emitVsCodeError } from "./build/util";
+import { getPackageDependencies } from "./build/util3";
 import { tryGetCommonPackage } from "./build/util3";
 
 /**
  *
  */
 export const doit = async () => {
+  const doFix = true;
+
+  const packageFolder = path.join(projectRoot, "packages");
   const buildManeger = makeLiveJawisBuildManager();
+  const packages = allPackagesIncludingPrivate;
 
   //packages
 
-  for (const packageName of allPackagesIncludingPrivate) {
+  for (const packageName of packages) {
     if (packageName === "lazy-require-ts") {
       //regexp has false positive in this package
       continue;
@@ -29,18 +34,12 @@ export const doit = async () => {
       continue;
     }
 
-    try {
-      await checkRelativeImportsInPackage(
-        path.join(projectRoot, "packages", packageName),
-        packageName,
-        buildManeger
-      );
-    } catch (error) {
-      console.log(packageName);
-      console.log(error);
-    }
-
-    // break;
+    await checkRelativeImportsInPackage(
+      path.join(packageFolder, packageName),
+      packageName,
+      doFix,
+      buildManeger
+    );
   }
 };
 
@@ -50,7 +49,8 @@ export const doit = async () => {
 const checkRelativeImportsInPackage = async (
   folder: string,
   packageName: string,
-  buildManager: ReturnType<typeof makeLiveJawisBuildManager>
+  doFix: boolean,
+  buildManager?: ReturnType<typeof makeLiveJawisBuildManager>
 ) => {
   const files = await fs.promises.readdir(folder);
   const seenNpmImports = new Set<string>();
@@ -61,20 +61,26 @@ const checkRelativeImportsInPackage = async (
     "source-map-loader",
   ]);
 
-  const filteredAndSorted = files
-    .filter((file) => file.endsWith(".ts") || file.endsWith(".tsx"))
-    .filter((file) => file !== "index.ts" && file !== "internal.ts");
+  const filtered = files
+    .filter(
+      (file) =>
+        file.endsWith(".js") || file.endsWith(".ts") || file.endsWith(".tsx")
+    )
+    .filter(
+      (file) =>
+        file !== "index.js" && file !== "index.ts" && file !== "internal.ts"
+    );
 
-  for (const file of filteredAndSorted) {
+  for (const file of filtered) {
     await fixImportsInFile(
       path.join(folder, file),
       seenNpmImports,
-      seenSiblingImports
+      seenSiblingImports,
+      doFix
     );
-    // break;
   }
 
-  // maybe just ignore private packages
+  // ignore missing/unused dependencies in private packages (or auto fix)
 
   if (
     packageName === "dev" ||
@@ -98,11 +104,25 @@ const checkRelativeImportsInPackage = async (
   const unused = setDifference(deps, seenNpmImports, useUndectable);
   const missing = setDifference(seenNpmImports, deps);
 
-  if (unused.size > 0 || missing.size > 0) {
-    console.log({ folder, unused, missing });
+  if (missing.size > 0) {
+    emitVsCodeError({
+      file: path.join(folder, "package.json"),
+      message: "Missing dependencies: " + Array.from(missing).join(", "),
+    });
+  }
+
+  if (unused.size > 0) {
+    emitVsCodeError({
+      file: path.join(folder, "package.json"),
+      message: "Unused dependencies: " + Array.from(unused).join(", "),
+    });
   }
 
   //check sibling dependencies
+
+  if (!buildManager) {
+    return;
+  }
 
   const commonPackage = await tryGetCommonPackage(packageName);
   const commonPackageSet = new Set(commonPackage && ["^" + commonPackage]); //no need to report this is unused.
@@ -116,8 +136,19 @@ const checkRelativeImportsInPackage = async (
   const unused2 = setDifference(siblings, seenSiblingImports, commonPackageSet);
   const missing2 = setDifference(seenSiblingImports, siblings);
 
-  if (unused2.size > 0 || missing2.size > 0) {
-    console.log({ folder, unused: unused2, missing: missing2 });
+  if (missing2.size > 0) {
+    emitVsCodeError({
+      file: path.join(folder, "tsconfig.json"),
+      message:
+        "Missing sibling dependencies: " + Array.from(missing2).join(", "),
+    });
+  }
+
+  if (unused2.size > 0) {
+    emitVsCodeError({
+      file: path.join(folder, "tsconfig.json"),
+      message: "Unused sibling dependencies: " + Array.from(unused2).join(", "),
+    });
   }
 };
 
@@ -127,7 +158,8 @@ const checkRelativeImportsInPackage = async (
 const fixImportsInFile = async (
   file: string,
   seenNpmImports: Set<string>,
-  seenSiblingImports: Set<string>
+  seenSiblingImports: Set<string>,
+  doFix: boolean
 ) => {
   const code = (await fs.promises.readFile(file)).toString();
 
@@ -140,7 +172,9 @@ const fixImportsInFile = async (
     return;
   }
 
-  await fs.promises.writeFile(file, newCode);
+  if (doFix) {
+    await fs.promises.writeFile(file, newCode);
+  }
 };
 
 /**
@@ -176,6 +210,9 @@ const transformImport = (
 
     case "relative":
       return "./internal"; //just ignore what ever was there before
+
+    case "relative-external":
+      return specifier; //allowed in private packages.
 
     case "absolute":
       throw new Error("absolute import isn't allows");
@@ -222,6 +259,10 @@ export const categorizeImportSpecifier = (specifier: string) => {
     return "sibling";
   }
 
+  if (/^\.\./.test(specifier)) {
+    return "relative-external";
+  }
+
   if (/^\./.test(specifier)) {
     return "relative";
   }
@@ -245,29 +286,6 @@ export const categorizeImportSpecifier = (specifier: string) => {
   }
 
   throw err("categorizeImportSpecifier: unknown import: " + specifier);
-};
-
-/**
- *
- */
-export const getPackageDependencies = async (folder: string) => {
-  const jsonStr = (
-    await fs.promises.readFile(path.join(folder, "package.json"))
-  ).toString();
-
-  const json = JSON.parse(jsonStr);
-
-  let deps: string[] = [];
-
-  if (json.dependencies) {
-    deps = deps.concat(Object.keys(json.dependencies));
-  }
-
-  if (json.peerDependencies) {
-    deps = deps.concat(Object.keys(json.peerDependencies));
-  }
-
-  return deps;
 };
 
 doit();

@@ -2,7 +2,7 @@
   "sideEffects": [
     "./JacsConsumerMain.ts"
   ],
-  "version": "3.0.0",
+  "version": "3.1.0",
   "name": "~jacs",
   "description": "JavaScript compile service for Node.js worker threads",
   "engines": {

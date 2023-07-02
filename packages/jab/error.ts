@@ -59,6 +59,44 @@ export const assertEq = (
 /**
  *
  */
+export const captureLongStack = (error: {
+  stack?: string;
+  __jawisNodeStack?: ParsedStackFrame[];
+  getAncestorStackFrames?: () => CapturedStack;
+}): CapturedStack => {
+  const own = captureStack(error);
+
+  // get ancestor frames
+
+  if (own.type !== "parsed") {
+    //can't be combine with ancestor frames, if not parsed.
+    return own;
+  }
+
+  let ancestorFrames: ParsedStackFrame[] = [];
+
+  if (error.getAncestorStackFrames) {
+    const stack = error.getAncestorStackFrames();
+
+    //node-parsed for for backwards compat
+    if (stack.type !== "parsed" && (stack as any).type !== "node-parsed") {
+      throw new Error("only implemented for jacs.");
+    }
+
+    ancestorFrames = stack.stack as ParsedStackFrame[];
+  }
+
+  //combine
+
+  return {
+    type: "parsed",
+    stack: [...own.stack, ...ancestorFrames],
+  };
+};
+
+/**
+ *
+ */
 export const captureStack = (error: {
   stack?: string;
   __jawisNodeStack?: ParsedStackFrame[];
@@ -101,7 +139,7 @@ export const unknownToErrorData = (
     return {
       msg: error.toString(),
       info: captureArrayEntries(extraInfo),
-      stack: captureStack(error),
+      stack: captureLongStack(error),
     };
   } else {
     const wrapper = makeJabError("Unknown Error object: ", error);

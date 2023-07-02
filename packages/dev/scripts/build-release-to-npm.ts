@@ -4,6 +4,7 @@ import { execNpmAndGetStdout } from "./util/index";
 import { looping } from "^yapu/yapu";
 import { getLiveBuildVersionInfo } from "./build/util3";
 import { publishBuildFolder } from "^dev/project.conf";
+import { tos } from "^jab";
 
 /**
  *
@@ -11,7 +12,7 @@ import { publishBuildFolder } from "^dev/project.conf";
 export const doit = async () => {
   const { torelease, toignore } = await getLiveBuildVersionInfo();
 
-  console.log({ torelease, toignore });
+  console.log(tos({ torelease, toignore }));
 
   //release
 

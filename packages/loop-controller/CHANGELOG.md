@@ -6,6 +6,12 @@
 
 ## :boom: Breaking changes
 
+# 1.1.0
+
+## :tada: Enhancements
+
+- Add `sideEffects` to `package.json`
+
 # 1.0.1
 
 ## :bug: Bug fixes

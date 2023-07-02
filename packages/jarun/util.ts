@@ -1,37 +1,5 @@
-import { RogueData, TestResult } from "^jatec";
-
 import { safeAllWait } from "^yapu";
-import { JarunTestProvision, TestProvision } from "./internal";
-
-export type TestFunction = (prov: TestProvision) => unknown;
-
-export type TestFileExport = TestFunction | { default: TestFunction };
-
-/**
- *
- */
-export type JarunProcessMessage =
-  | {
-      type: "testDone";
-      value: TestResult;
-    }
-  | {
-      type: "rogue";
-      value: RogueData;
-    };
-
-/**
- *
- */
-export type JarunProcessControllerMessage =
-  | {
-      type: "run";
-      id: string;
-      file: string;
-    }
-  | {
-      type: "shutdown";
-    };
+import { JarunTestProvision } from "./internal";
 
 /**
  * Recursively await the promises in the test provition.

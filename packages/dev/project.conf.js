@@ -5,11 +5,6 @@ const packageFolder = path.resolve(projectRoot, "packages");
 const publishBuildFolder = path.resolve(projectRoot, "build/publish");
 const alphaBuildFolder = path.resolve(projectRoot, "build-alpha");
 
-/**
- * Get an absolute path, from a path relative to package folder.
- */
-const getPackagePath = (file) => path.join(packageFolder, file || "");
-
 const npmScope = "@jawis";
 
 const unscopedPackages = [
@@ -18,10 +13,13 @@ const unscopedPackages = [
   "bee-common",
   "bee-node",
   "bee-web-worker",
+  "cached-resolve",
   "dev-compv",
   "finally-provider",
   "lazy-require-ts",
+  "long-traces",
   "loop-controller",
+  "main-wrapper",
   "parse-captured-stack",
   "react-use-ws",
   "render-hook-plus",
@@ -72,6 +70,11 @@ const packagesPatternIncludingPrivate =
   "{" +
   [...scopedPackages, ...unscopedPackages, ...privatePackages].join(",") +
   "}";
+
+/**
+ * Get an absolute path, from a path relative to package folder.
+ */
+const getPackagePath = (file) => path.join(packageFolder, file || "");
 
 //
 // export

@@ -4,5 +4,9 @@
     "outDir": "../../build-tsc/jarunc",
     "rootDir": "."
   },
-  "references": [{ "path": "../jab" }]
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jatec" },
+    { "path": "../finally-provider" }
+  ]
 }

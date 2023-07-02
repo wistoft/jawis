@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/main-wrapper",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../finally-provider" },
+    { "path": "../long-traces" }
+  ]
+}

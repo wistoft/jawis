@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/long-traces",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }]
+}

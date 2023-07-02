@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "name": "~jabroc",
   "description": "Common for jabro view and server.",
   "dependencies": {},

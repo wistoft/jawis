@@ -1,4 +1,4 @@
-import { mainWrapper, UserMessage } from "^jab-node";
+import { mainWrapper, UserMessage } from "^main-wrapper";
 
 //only user message is shown
 

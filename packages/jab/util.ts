@@ -127,6 +127,16 @@ export const getRandomString = (chars: string[], maxlength = 10) => {
   return res;
 };
 
+export const getRandomArray = (length: number) => {
+  const array: number[] = [];
+
+  for (let i = 0; i < length; i++) {
+    array.push(Math.floor(Math.random() * length));
+  }
+
+  return array;
+};
+
 /**
  * A random length Uint8Array with random data.
  *
@@ -480,3 +490,43 @@ export const base64ToTypedArray = <T extends TypedArray>(
     buffer.byteLength / TypedArray.BYTES_PER_ELEMENT
   );
 };
+
+/**
+ *
+ */
+export const difference = <T>(a: T[], b: T[]) => {
+  const set = new Set(b);
+  return a.filter((x) => !set.has(x));
+};
+
+/**
+ *
+ */
+export const setDifference = <T>(a: Set<T>, ...bs: Set<T>[]) => {
+  const res = new Set<T>();
+
+  a.forEach((elm) => {
+    for (const b of bs) {
+      if (b.has(elm)) {
+        return;
+      }
+    }
+
+    res.add(elm);
+  });
+
+  return res;
+};
+
+/**
+ *
+ */
+export function replaceGlobalClass(key: string, _new: any) {
+  const original = global[key];
+
+  global[key] = _new;
+
+  return () => {
+    global[key] = original;
+  };
+}

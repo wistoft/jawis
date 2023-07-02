@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "name": "~ts-config-util",
   "description": "Utillities for working with TypeScript configuration.",
   "peerDependencies": {

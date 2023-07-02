@@ -15,7 +15,7 @@ type Deps<States> = {
  * Handle async states conveniently.
  *
  * - One can wait for state changes or events.
- * - Implements convention for async kill and shutdown. For async kill and shutdown there is a 'stopping state'.
+ * - Implements convention for async shutdown and kill. For async shutdown and kill there is a 'stopping state'.
  *
  * notes
  * - Waiting is meant for development testing. It's possible to test specific async execution paths, when
@@ -114,7 +114,7 @@ export class Waiter<States, Events = never> {
   };
 
   /**
-   * To allow internal use of waiter in kill and shutdown.
+   * To allow internal use of waiter in shutdown and kill.
    */
   private rawAwait = (type: States | Events, timeout = 300) => {
     this.waitError = new Error("Cancelled while waiting.");
@@ -418,7 +418,7 @@ export class Waiter<States, Events = never> {
    * - If something is waiting, it's considered an error. It will be cancelled, finalize will proceed.
    *
    * impl
-   *  - this will call finalizer again always. Kill and shutdown will have to make that logic themselfes.
+   *  - this will call finalizer again always. shutdown and kill will have to make that logic themselfes.
    *  - what state should we go into, if finalizer throws?
    */
   private finalizer = ({

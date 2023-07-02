@@ -27,6 +27,8 @@ export const registerErrorHandlers = (onError: OnError) => {
   });
 };
 
+export { registerErrorHandlers as registerRejectionHandlers };
+
 /**
  *
  */
