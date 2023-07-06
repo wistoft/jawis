@@ -66,38 +66,3 @@ export const getRight = (str: string, amount: number) => {
 
   return str.substring(str.length - amount, str.length);
 };
-
-/**
- *
- */
-export const setDeep = (
-  obj: {} | unknown[],
-  value: unknown,
-  ...props: unknown[]
-) => {
-  let current: any = obj;
-
-  props.forEach((prop, index) => {
-    if (typeof prop === "string") {
-      assert(typeof current === "object");
-
-      if (index + 1 === props.length) {
-        current[prop] = value;
-      } else {
-        current = current[prop];
-      }
-    } else if (typeof prop === "number") {
-      assert(Array.isArray(current));
-      assert(prop < current.length);
-      assert(prop >= 0);
-
-      if (index + 1 === props.length) {
-        current[prop] = value;
-      } else {
-        current = current[prop];
-      }
-    } else {
-      err("Property didn't match for this index: ", prop);
-    }
-  });
-};
