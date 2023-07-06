@@ -2,12 +2,12 @@ import React from "react";
 
 import { TestProvision } from "^jarun";
 import { ComponentMenu } from "^jab-react";
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 
 import { getComponentMenu } from "../_fixture";
 
 export default ({ log }: TestProvision) => {
-  log("no components", getHtmlEnzyme(getComponentMenu({}, "/")));
+  log("no components", getHtmlRTR(getComponentMenu({}, "/")));
 
   //
   //one route
@@ -15,7 +15,7 @@ export default ({ log }: TestProvision) => {
 
   log(
     "home route",
-    getHtmlEnzyme(
+    getHtmlRTR(
       getComponentMenu(
         {
           routes: [{ name: "first", elm: <>first route</> }],
@@ -36,8 +36,8 @@ export default ({ log }: TestProvision) => {
     ],
   };
 
-  log("two routes - home route", getHtmlEnzyme(getComponentMenu(def2, "/")));
-  log("two routes - 2nd route", getHtmlEnzyme(getComponentMenu(def2, "/second"))); // prettier-ignore
+  log("two routes - home route", getHtmlRTR(getComponentMenu(def2, "/")));
+  log("two routes - 2nd route", getHtmlRTR(getComponentMenu(def2, "/second"))); // prettier-ignore
 
   //
   //nested panel
@@ -50,10 +50,7 @@ export default ({ log }: TestProvision) => {
     ],
   };
 
-  log(
-    "nested - home route",
-    getHtmlEnzyme(getComponentMenu(parent, "/parent2"))
-  );
+  log("nested - home route", getHtmlRTR(getComponentMenu(parent, "/parent2")));
 
   //
   // space in routes
@@ -66,5 +63,5 @@ export default ({ log }: TestProvision) => {
     ],
   };
 
-  log("space in routes", getHtmlEnzyme(getComponentMenu(def3, "/my route")));
+  log("space in routes", getHtmlRTR(getComponentMenu(def3, "/my route")));
 };

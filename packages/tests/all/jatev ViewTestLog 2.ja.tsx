@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 import { getViewTestLog } from "../_fixture";
 
 //rogue logs
@@ -9,7 +9,7 @@ import { getViewTestLog } from "../_fixture";
 
 export default (prov: TestProvision) => {
   prov.imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewTestLog({
         testLog: { type: "user", name: "rogue.mylog", exp: [2], cur: [1] },
       })

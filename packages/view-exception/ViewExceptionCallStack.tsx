@@ -72,7 +72,6 @@ const mapFrame =
     setShowSystemFrames: any,
     normalizedProjectRoot: string,
     normalizedRemovePathPrefix: string
-    // eslint-disable-next-line react/display-name
   ) =>
   (frame: ParsedStackFrame, index: number) => {
     const isSystemFrame = getIsSystemFrame(frame);

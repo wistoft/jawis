@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { parseTrace } from "^parse-captured-stack";
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 
 import { getViewExceptionCallStack } from "../_fixture";
 
@@ -8,7 +8,7 @@ import { getViewExceptionCallStack } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
   imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewExceptionCallStack({
         projectRoot: "C:\\",
         stack: parseTrace({

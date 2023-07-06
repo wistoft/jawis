@@ -1,1 +1,1 @@
-{"user":{"node error":["Array [\n  <a\n    class=\"jab-js-link\"\n    href=\"#\"\n    style=\"color:var(--text-color-faded)\"\n    title=\"\"\n  >\n    .\n  </a>,\n  <div />,\n]"]}}
+{"user":{"node error":["Array [\n  <a\n    className=\"jab-js-link\"\n    href=\"#\"\n    onClick={[Function]}\n    style={\n      Object {\n        \"color\": \"var(--text-color-faded)\",\n      }\n    }\n    title=\"\"\n  >\n    .\n  </a>,\n  <div />,\n]"]}}

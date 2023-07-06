@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { parseTrace } from "^parse-captured-stack";
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 
 import { getViewExceptionCallStack } from "../_fixture";
 
@@ -11,7 +11,7 @@ export default ({ log }: TestProvision) => {
 
   log(
     "node error",
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewExceptionCallStack({
         initialShowSystemFrames: true,
         stack: parseTrace({

@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 import { TestState } from "^jatev/types";
 import { getViewTest } from "../_fixture";
 
@@ -24,5 +24,5 @@ export default (prov: TestProvision) => {
     ],
   };
 
-  prov.imp(getHtmlEnzyme(getViewTest(test)));
+  prov.imp(getHtmlRTR(getViewTest(test)));
 };

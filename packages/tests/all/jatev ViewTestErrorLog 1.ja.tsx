@@ -1,13 +1,13 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 import { errorData1, errorData2, getViewTestLog } from "../_fixture";
 
 export default ({ imp, log }: TestProvision) => {
   //only expected
 
   imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewTestLog({
         testLog: { type: "err", name: "err", exp: ["hej", "dav"], cur: [] },
       })
@@ -17,7 +17,7 @@ export default ({ imp, log }: TestProvision) => {
   //different
 
   imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewTestLog({
         testLog: {
           type: "err",
@@ -33,7 +33,7 @@ export default ({ imp, log }: TestProvision) => {
 
   log(
     "only current",
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewTestLog({
         testLog: { type: "err", name: "err", exp: [], cur: [errorData2] },
       })

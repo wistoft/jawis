@@ -5,11 +5,12 @@ module.exports = {
     node: true,
   },
 
-  plugins: ["react", "@typescript-eslint", "unused-imports", "import"],
+  //Removed eslint-plugin-react until security issue is fixed
+  plugins: ["@typescript-eslint", "unused-imports", "import"],
 
   extends: [
     "eslint:recommended",
-    "plugin:react/recommended",
+    // "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
   ],
 

@@ -1,16 +1,16 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 import { getDevComponentPanel } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
-  imp(getHtmlEnzyme(getDevComponentPanel()));
+  imp(getHtmlRTR(getDevComponentPanel()));
 
   const DummyComp = () => <></>;
 
   imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getDevComponentPanel({
         folders: [
           {

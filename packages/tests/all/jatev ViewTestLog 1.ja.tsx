@@ -1,13 +1,13 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlEnzyme } from "^misc/node";
+import { getHtmlRTR } from "^misc/node";
 import { getViewTestLog } from "../_fixture";
 
 //different
 
 export default (prov: TestProvision) => {
   prov.imp(
-    getHtmlEnzyme(
+    getHtmlRTR(
       getViewTestLog({
         testLog: { type: "user", name: "myLog", exp: [2], cur: [1] },
       })

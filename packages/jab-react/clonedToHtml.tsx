@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import React from "react";
 
 import { capturedTosGeneral, CapturedValue, StringKeys, Strings } from "^jab";
