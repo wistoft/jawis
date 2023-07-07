@@ -1016,7 +1016,7 @@ export const parseExpression = (node?: ts.Expression): string[] => {
     ts.isAsExpression(node) ||
     ts.isDeleteExpression(node) ||
     ts.isTypeOfExpression(node) ||
-    ts.isTypeAssertion(node) ||
+    ts.isTypeAssertionExpression(node) ||
     ts.isParenthesizedExpression(node)
   ) {
     return parseExpression(node.expression);
