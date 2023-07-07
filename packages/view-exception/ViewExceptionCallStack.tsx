@@ -215,10 +215,10 @@ export const getFunc = (frame: ParsedStackFrame) => {
   }
 
   return frame.func
-    .replace(/.*__webpack_exports__\./, "")
+    .replace(/^.*__webpack_exports__\./, "")
     .replace(/^Object\.exports\./, "")
     .replace(/^Object\.<anonymous>$/, "ano")
-    .replace(/^.* \[as (.*)\]$/, "$1");
+    .replace(/^.* \[as ([^\]]*)/, "$1"); // patterns like `^.* [as ... ]$` but ending $ is not enforceable, due to backtracking.
 };
 
 /**
