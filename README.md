@@ -2,8 +2,8 @@
 
 Jawis is a multirepo for several npm packages, for instance:
 
-- [Javi](https://github.com/wistoft/jawis/tree/master/packages/javi#readme). A
-  GUI for running tests and scripts, with out of the box support for TypeScript.
+- [Javi](https://github.com/wistoft/jawis/tree/main/packages/javi#readme). A GUI
+  for running tests and scripts, with out of the box support for TypeScript.
 
 ## Development
 

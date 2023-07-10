@@ -36,6 +36,7 @@
     { "path": "./packages/loop-controller" },
     { "path": "./packages/main-wrapper" },
     { "path": "./packages/misc" },
+    { "path": "./packages/pack-util" },
     { "path": "./packages/parse-captured-stack" },
     { "path": "./packages/react-use-ws" },
     { "path": "./packages/render-hook-plus" },

@@ -1,4 +1,4 @@
-import { assert, err } from "^jab";
+import { assert } from "^jab";
 
 export const busyWait = (ms: number) => {
   const start = Date.now();

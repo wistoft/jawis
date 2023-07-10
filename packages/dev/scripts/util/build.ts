@@ -1,5 +1,5 @@
 import path from "path";
-import { webpackCompile, getNodeWebpackConf } from "^misc/node";
+import { webpackCompile, getNodeWebpackConf } from "^pack-util";
 
 const projectConf = eval("require")("../../project.conf");
 

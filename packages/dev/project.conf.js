@@ -20,6 +20,7 @@ const unscopedPackages = [
   "long-traces",
   "loop-controller",
   "main-wrapper",
+  "pack-util",
   "parse-captured-stack",
   "react-use-ws",
   "render-hook-plus",

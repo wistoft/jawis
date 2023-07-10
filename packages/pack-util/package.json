@@ -1,0 +1,20 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~pack-util",
+  "description": "Collection of utilities for webpack",
+  "dependencies": {
+    "source-map-loader": "^2.0.1",
+    "terser-webpack-plugin": "^5.1.1",
+    "ts-loader": "^9.3.1",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
+    "webpack": "^5.24.3"
+  },
+  "keywords": [
+    "util",
+    "utilities",
+    "stdlib",
+    "webpack",
+    "development"
+  ]
+}

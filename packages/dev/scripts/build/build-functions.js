@@ -426,7 +426,7 @@ const makeJawisBuildManager = (
     json.main = "./index.js";
     json.types = "./index.d.ts";
     json.homepage =
-      "https://github.com/wistoft/jawis/tree/master/packages/" +
+      "https://github.com/wistoft/jawis/tree/main/packages/" +
       packageName +
       "#readme";
 

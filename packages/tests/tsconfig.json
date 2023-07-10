@@ -30,7 +30,8 @@
     { "path": "../render-hook-plus" },
     { "path": "../state-waiter" },
     { "path": "../main-wrapper" },
-    { "path": "../yapu" }
+    { "path": "../yapu" },
+    { "path": "../pack-util" }
   ],
   "exclude": ["_fixture/testsuite", "_fixture/tsProject"]
 }
