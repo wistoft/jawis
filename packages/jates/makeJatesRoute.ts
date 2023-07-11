@@ -7,6 +7,8 @@ import { director, DirectorDeps } from "./internal";
 
 /**
  * jago/jates are nearly identically
+ *
+ * @tobe-deprecated Use the director which has been made independent of express.
  */
 export const makeJatesRoute = (deps: DirectorDeps): express.Router => {
   const router = express.Router();

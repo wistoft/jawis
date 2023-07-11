@@ -2,6 +2,8 @@
 
 ## :bug: Bug fixes
 
+- Director waits for its work before shutdown resolves.
+
 ## :tada: Enhancements
 
 ## :boom: Breaking changes

@@ -14,13 +14,13 @@ export const ensureMkdirSync = (path: PathLike) => {
  *
  * - Exits after 300ms if streams doesn't end within.
  */
-export const flushAndExit = () => {
+export const flushAndExit = (code?: number) => {
   let out = false;
   let err = false;
 
   const tryExit = () => {
     if (out && err) {
-      process.exit();
+      process.exit(code);
     }
   };
 

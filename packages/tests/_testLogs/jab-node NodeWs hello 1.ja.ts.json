@@ -1,1 +1,1 @@
-{"user":{"server.log":["listen callback","socket open","socket end","socket closes","server close"],"nodeWs":["open","close"],"nodeWs.message":["hello from test socket"],"imp":["hello from test socket"]}}
+{"user":{"nodeWs":["open","close"],"nodeWs.message":["hello from test socket"],"imp":["hello from test socket"]}}

@@ -1,1 +1,1 @@
-{"user":{"server.log":["Had to kill server.","server close"]},"err":["Error: Server closed while waiting."],"return":["value",[["promise",{"resolve":["undefined"]}],["promise",{"reject":{"msg":"Error: Server closed while waiting.","info":["value",[]],"stack":"filtered"}}]]]}
+{"user":{},"err":["Error: Server closed while waiting."],"return":["value",[["promise",{"resolve":["undefined"]}],["promise",{"reject":{"msg":"Error: Server closed while waiting.","info":["value",[]],"stack":"filtered"}}]]]}

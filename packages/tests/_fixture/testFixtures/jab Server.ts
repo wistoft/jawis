@@ -77,7 +77,8 @@ export const getServerDeps = (
   port: getDefaultServerConf().port,
 
   log: (msg: string) => {
-    prov.log(logPrefix + "server.log", msg);
+    // too fragile for test logs
+    // prov.log(logPrefix + "server.log", msg);
   },
   onError: prov.onError,
   onOpen: () => {

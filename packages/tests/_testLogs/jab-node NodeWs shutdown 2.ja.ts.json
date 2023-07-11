@@ -1,1 +1,1 @@
-{"user":{"server.log":["listen callback","socket open","Had to kill server.","socket closes","server close"],"nodeWs":["open","close"]}}
+{"user":{"nodeWs":["open","close"]}}

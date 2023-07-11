@@ -8,5 +8,8 @@ module.exports = {
       autoStart: true,
       autoRestart: true,
     },
+    {
+      script: "packages/dev/devServer/devJaviTestMain.ts",
+    },
   ],
 };

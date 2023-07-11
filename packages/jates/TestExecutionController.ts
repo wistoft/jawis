@@ -153,6 +153,7 @@ export class TestExecutionController implements TestExecutionControllerProv {
    *      e.g. user error to do 'loop infinity', or sync execute beyond timeout. The framework can't do anything about it.
    *        It can't interrupt. Which is also the reason for the timeout here.
    *      e.g. internal error if the framework forget to send `testDone`. And a million other things.
+   * - Doesn't wait for onTestResult to finish, but starts next test right away. onTestResult does async work.
    */
   private runNextTest = (id: string) => {
     this.deps.onTestStarts(id);

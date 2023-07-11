@@ -92,8 +92,8 @@ export const director = (deps: DirectorDeps) => {
     subFolderIgnore: [], //extract to conf
   });
 
-  const onTestResult: OnTestResult = (id: string, result: TestResult) =>
-    testLogController.getExpLogs(id).then((exp) => {
+  const onTestResult: OnTestResult = (id: string, result: TestResult) => {
+    const prom = testLogController.getExpLogs(id).then((exp) => {
       const report = getJatesTestReport(id, exp, result);
 
       tac.ta.setTestExecTime(report.id, report.result.execTime);
@@ -106,6 +106,9 @@ export const director = (deps: DirectorDeps) => {
 
       clientCom.onTestReport(report);
     });
+
+    behavior.setWorking(prom);
+  };
 
   const tec = new TestExecutionController({
     ...clientCom,
@@ -132,20 +135,21 @@ export const director = (deps: DirectorDeps) => {
     testFramework,
   });
 
-  const onWsUpgrade = wsPool.makeUpgradeHandler(
-    makeOnClientMessage({
-      ...deps,
-      ...clientCom,
-      ...testLogController,
-      ...tec,
-      ...testListController,
-      ...behavior,
-      absTestFolder: deps.absTestFolder,
-      onError: deps.onError,
-    })
-  );
+  const onClientMessage = makeOnClientMessage({
+    ...deps,
+    ...clientCom,
+    ...testLogController,
+    ...tec,
+    ...testListController,
+    ...behavior,
+    absTestFolder: deps.absTestFolder,
+    onError: deps.onError,
+  });
+
+  const onWsUpgrade = wsPool.makeUpgradeHandler(onClientMessage);
 
   return {
     onWsUpgrade,
+    onClientMessage,
   };
 };

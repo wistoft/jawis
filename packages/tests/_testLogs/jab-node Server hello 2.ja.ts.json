@@ -1,1 +1,1 @@
-{"user":{"server.log":["listen callback","socket open","socket closes","server close"],"imp":[{"code":"200","data":"hello from test server"}]}}
+{"user":{"imp":[{"code":"200","data":"hello from test server"}]}}

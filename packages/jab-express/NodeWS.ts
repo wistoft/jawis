@@ -25,10 +25,9 @@ export type States = "opening" | "running" | "stopping" | "stopped";
 
 export type Events = "data";
 
-//object is also supported by json encoding.
+//object is supported by json encoding.
 // Nothing else supported for now.
 export type SocketData = {};
-// export type SocketData = WebSocket.Data | {};
 
 /**
  *  All callbacks mandatory, so they wont be forgot.
@@ -89,6 +88,8 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
 
   /**
    * Send a message, and wait for the first returned message.
+   *
+   * @tobe-deprecated Too fragile
    */
   public simpleRequest = (data: MS, timeout?: number): Promise<MR> =>
     this.send(data).then(() => this.waiter.await("data", timeout) as any);
