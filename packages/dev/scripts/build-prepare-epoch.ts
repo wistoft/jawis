@@ -10,7 +10,7 @@ import {
 import { looping } from "^yapu/yapu";
 import { getLiveBuildVersionInfo } from "./build/util3";
 import { allPackagesIncludingPrivate, projectRoot } from "^dev/project.conf";
-import { objMap, tos } from "^jab";
+import { objMap, toInt, tos } from "^jab";
 
 type Epoch = {
   id: number;
@@ -66,8 +66,14 @@ const epochs: Epoch[] = [
  *
  */
 export const doit = async () => {
+  // const epochId: number = 0;
+  const epochId: number = toInt(process.argv[2]);
+  const skipCleanRepoCheck: boolean = process.argv.some(
+    (arg) => arg === "--skip-clean-repo-check"
+  );
+
   //config
-  const epochId: number = 0;
+
   const earliest = false;
 
   //state
@@ -93,7 +99,11 @@ export const doit = async () => {
       break;
   }
 
-  await assertGitClean(projectRoot);
+  if (skipCleanRepoCheck) {
+    console.log("Skipping clean repo check");
+  } else {
+    await assertGitClean(projectRoot);
+  }
 
   await fs.promises.copyFile(
     path.join(projectRoot, "yarn.epoch." + epoch.id + postfix + ".lock"),

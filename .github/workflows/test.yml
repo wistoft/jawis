@@ -9,6 +9,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        epoch: [0, 1]
+
     steps:
       - uses: actions/checkout@v3
 
@@ -16,6 +20,8 @@ jobs:
         with:
           node-version: "18.x"
 
-      - run: yarn -s install
+      - run: |
+          chmod +x ./install-epoch.sh
+          ./install-epoch.sh ${{ matrix.epoch }}
 
       - run: yarn -s test
