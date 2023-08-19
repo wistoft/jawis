@@ -1,8 +1,14 @@
 import fs from "fs";
 import path from "path";
-import ts, { Diagnostic, DiagnosticMessageChain, MapLike } from "typescript";
 
 import { err, tos } from "^jab";
+
+import {
+  Diagnostic,
+  DiagnosticMessageChain,
+  MapLike,
+  TypeScript,
+} from "./internal";
 
 export type TsPathsConfig = {
   baseUrl: string;
@@ -12,7 +18,10 @@ export type TsPathsConfig = {
 /**
  * Returns the config file matching the directory.
  */
-export function getAbsConfigFilePath(mainScriptDirname: string) {
+export function getAbsConfigFilePath<T extends TypeScript>(
+  ts: T,
+  mainScriptDirname: string
+) {
   const absConfigFilePath = ts.findConfigFile(
     mainScriptDirname,
     ts.sys.fileExists
@@ -28,7 +37,10 @@ export function getAbsConfigFilePath(mainScriptDirname: string) {
 /**
  * Reads the given config file.
  */
-export function getTsConfigFromAbsConfigFile(absConfigFilePath: string) {
+export function getTsConfigFromAbsConfigFile<T extends TypeScript>(
+  ts: T,
+  absConfigFilePath: string
+) {
   const projectRoot = path.dirname(absConfigFilePath);
 
   const confResult = ts.readConfigFile(absConfigFilePath, ts.sys.readFile);
@@ -100,7 +112,7 @@ export function dianosticChainToString(diag: DiagnosticMessageChain): string {
  * - Make some checks the configuration.
  */
 export const getTsPathsConfig = (
-  compilerOptions: ts.CompilerOptions,
+  compilerOptions: any,
   absConfigFilePath: string
 ): TsPathsConfig | undefined => {
   if (!fs.existsSync(absConfigFilePath)) {

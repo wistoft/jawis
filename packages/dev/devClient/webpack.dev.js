@@ -36,7 +36,7 @@ module.exports = {
   mode: "development",
 
   entry: {
-    consoleCaptureMain: "@jawis/console/consoleCaptureMain.js",
+    // consoleCaptureMain: "@jawis/console/consoleCaptureMain.js",
     app: path.join(__dirname, "clientEntry.tsx"),
     //quick fix
     ymer: getPackagePath("jabrov/ymer.ts"),

@@ -1,8 +1,7 @@
 import cors from "cors";
 import express from "express";
-import { WebsocketRequestHandler } from "express-ws";
 
-import { expressErrorsThrow } from "./internal";
+import { WebsocketRequestHandler, expressErrorsThrow } from "./internal";
 
 export type RouteDef = {
   onWsUpgrade: WebsocketRequestHandler;
@@ -10,8 +9,10 @@ export type RouteDef = {
 
 /**
  * Fairly general way to make a web socket route.
+ *
+ * note: Explicit return type is fix for: https://github.com/microsoft/TypeScript/issues/47663
  */
-export const makeGeneralRouter = (def: RouteDef) => {
+export const makeGeneralRouter = (def: RouteDef): express.Router => {
   const router = express.Router();
 
   // middleware
@@ -24,7 +25,7 @@ export const makeGeneralRouter = (def: RouteDef) => {
 
   // web socket
 
-  onWsUpgrade && router.ws("/ws", onWsUpgrade);
+  onWsUpgrade && (router as any).ws("/ws", onWsUpgrade as any);
 
   // error handler
 

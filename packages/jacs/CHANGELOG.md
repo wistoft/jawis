@@ -4,6 +4,8 @@
 
 ## :tada: Enhancements
 
+- Increase support of `typescript` from `^4.6.2` to `^4.2.3`
+
 ## :boom: Breaking changes
 
 # 3.1.0

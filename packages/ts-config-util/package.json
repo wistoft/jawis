@@ -3,9 +3,6 @@
   "version": "0.0.3",
   "name": "~ts-config-util",
   "description": "Utillities for working with TypeScript configuration.",
-  "peerDependencies": {
-    "typescript": "^4.6.2"
-  },
   "keywords": [
     "typescript",
     "config",

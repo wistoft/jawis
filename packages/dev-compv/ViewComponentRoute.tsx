@@ -1,10 +1,9 @@
 import React, { memo } from "react";
-import { Link, useParams } from "@reach/router";
 
-import { JsLink, UseKeyListener } from "^jab-react";
-import { assertPropString } from "^jab";
+import { JsLink, UseKeyListener, Link, useParams } from "^jab-react";
+import { tryProp } from "^jab";
 
-import { ViewComponent, toUrl, ComponentDef } from "./internal";
+import { ViewComponent, ComponentDef } from "./internal";
 
 export type ViewComponentRouteProps = {
   folders: { folder: string; comps: ComponentDef[] }[];
@@ -21,7 +20,7 @@ export const ViewComponentRoute: React.FC<ViewComponentRouteProps> = memo(
 
     const params = useParams();
 
-    const id = assertPropString(params, "component");
+    const id = tryProp(params, "component");
 
     //lookup "props"
 
@@ -30,7 +29,7 @@ export const ViewComponentRoute: React.FC<ViewComponentRouteProps> = memo(
       []
     );
 
-    const component = flat.find((comp) => toUrl(comp.path) === id);
+    const component = flat.find((comp) => comp.urlSafePath === id);
 
     //key listener
 

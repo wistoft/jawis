@@ -12,6 +12,7 @@
     { "path": "../jacs" },
     { "path": "../main-wrapper" },
     { "path": "../jarun" },
+    { "path": "../bee-common" },
     { "path": "../jagos" },
     { "path": "../jates" }
   ]

@@ -29,7 +29,7 @@ export const doit = async () => {
       continue;
     }
 
-    if (packageName === "jab-node" || packageName === "jab-react") {
+    if (packageName === "jab-node") {
       //has a sub folder
       continue;
     }

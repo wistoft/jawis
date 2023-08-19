@@ -1,4 +1,4 @@
-import React, { ErrorInfo, useEffect } from "react";
+import React, { ErrorInfo, ReactNode, useEffect } from "react";
 
 import { JsLink } from "^jab-react";
 
@@ -59,7 +59,7 @@ export const ThrowInEffect: React.FC = () => {
  *
  */
 export class TestErrorBoundary extends React.Component<
-  {},
+  { children: ReactNode },
   {
     hasError: boolean;
   }

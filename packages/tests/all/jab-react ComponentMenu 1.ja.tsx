@@ -6,15 +6,16 @@ import { getHtmlRTR } from "^misc/node";
 
 import { getComponentMenu } from "../_fixture";
 
-export default ({ log }: TestProvision) => {
-  log("no components", getHtmlRTR(getComponentMenu({}, "/")));
+export default ({ chk }: TestProvision) => {
+  //no components
+
+  chk(getHtmlRTR(getComponentMenu({}, "/")).includes("No Route for: "));
 
   //
   //one route
   //
 
-  log(
-    "home route",
+  chk(
     getHtmlRTR(
       getComponentMenu(
         {
@@ -22,7 +23,7 @@ export default ({ log }: TestProvision) => {
         },
         "/"
       )
-    )
+    ).includes("first route")
   );
 
   //
@@ -36,8 +37,8 @@ export default ({ log }: TestProvision) => {
     ],
   };
 
-  log("two routes - home route", getHtmlRTR(getComponentMenu(def2, "/")));
-  log("two routes - 2nd route", getHtmlRTR(getComponentMenu(def2, "/second"))); // prettier-ignore
+  chk(getHtmlRTR(getComponentMenu(def2, "/")).includes("first route"));
+  chk(getHtmlRTR(getComponentMenu(def2, "/second")).includes("second route"));
 
   //
   //nested panel
@@ -50,7 +51,8 @@ export default ({ log }: TestProvision) => {
     ],
   };
 
-  log("nested - home route", getHtmlRTR(getComponentMenu(parent, "/parent2")));
+  chk(getHtmlRTR(getComponentMenu(parent, "/parent1")).includes("1st parent route")); // prettier-ignore
+  chk(getHtmlRTR(getComponentMenu(parent, "/parent2")).includes("first route")); // prettier-ignore
 
   //
   // space in routes
@@ -59,9 +61,9 @@ export default ({ log }: TestProvision) => {
   const def3 = {
     routes: [
       { name: "first", elm: <>first route</> },
-      { name: "my route", elm: <>my route</> },
+      { name: "my route", elm: <>my content</> },
     ],
   };
 
-  log("space in routes", getHtmlRTR(getComponentMenu(def3, "/my route")));
+  chk(getHtmlRTR(getComponentMenu(def3, "/my route")).includes("my content")); // prettier-ignore
 };

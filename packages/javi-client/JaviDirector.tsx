@@ -1,6 +1,7 @@
 import "./style.css";
 
 import React from "react";
+import { BrowserRouter } from "react-router-dom";
 
 import { ErrorBoundary, useObject, ComponentMenu } from "^jab-react";
 import { Main as JatevMain, Props as JatevProps } from "^jatev";
@@ -38,15 +39,17 @@ export const JaviDirector: React.FC<JaviDirectorProps> = ({
     <ErrorBoundary renderOnError={"Javi failed"}>
       <DevTemplate
         mainPanel={
-          <ComponentMenu
-            provideFirstRouteEffect={true}
-            postNav={postNav}
-            routes={[
-              { name: "Tests", elm: <JatevMain {...jatevProps} /> },
-              { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
-              ...(routes || []),
-            ]}
-          />
+          <BrowserRouter>
+            <ComponentMenu
+              provideFirstRouteEffect={true}
+              postNav={postNav}
+              routes={[
+                { name: "Tests", elm: <JatevMain {...jatevProps} /> },
+                { name: "Scripts", elm: <JagovMain {...jagovProps} /> },
+                ...(routes || []),
+              ]}
+            />
+          </BrowserRouter>
         }
         consolePanel={consolePanel}
       />

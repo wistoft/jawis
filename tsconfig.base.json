@@ -11,7 +11,7 @@
     "moduleResolution": "node16",
     "outDir": "dummyBuildFolder",
     "paths": {
-      "^*": ["./packages/*"],
+      "^*": ["./packages/*"]
     },
     "skipLibCheck": true,
     "resolveJsonModule": true,

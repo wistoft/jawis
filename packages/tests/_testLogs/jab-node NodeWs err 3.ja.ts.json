@@ -1,1 +1,0 @@
-{"user":{"server.log":["listen callback","socket open","Had to kill server.","socket closes","server close"],"nodeWs":["open","close"]},"err":["Error: Timeout waiting for: stopped","Error: Had to kill NodeWs (state:running)"]}

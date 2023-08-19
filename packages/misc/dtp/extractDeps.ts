@@ -16,7 +16,6 @@ import ts, {
   isVariableStatement,
   JsxAttributes,
   JsxChild,
-  JsxAttributeValue,
   JsxTagNameExpression,
   ModuleResolutionHost,
   NodeArray,
@@ -1200,7 +1199,7 @@ export const parseJsxAttributes = (node: JsxAttributes): string[] => {
  *
  * handles StringLiteral for convenience in JsxAttributes.
  */
-export const parseJsxExpression = (node: JsxAttributeValue): string[] => {
+export const parseJsxExpression = (node: any): string[] => {
   if (ts.isStringLiteral(node)) {
     return [];
   }

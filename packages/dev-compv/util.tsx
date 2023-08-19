@@ -6,8 +6,7 @@ import { ComponentDef } from "./internal";
  * - encode, so it doesn't interfere with the url.
  * - replace 'dots', because history fallback will not server 'index.html', when url has a '.ts' ending.
  */
-export const toUrl = (path: string) =>
-  encodeURIComponent(path.replace(/\./g, "_"));
+export const toUrl = (path: string) => path.replace(/[./]/g, "_");
 
 /**
  * Execute a plain function at mount.
@@ -41,12 +40,7 @@ export const mapWebpackContext = (
 
     const maybePath = components.resolve(compName); // in production, webpack returns a number here.
 
-    // console.log(maybePath);
-
-    const path =
-      typeof maybePath === "string"
-        ? maybePath ///.replace(/^\.\/packages\//, "")
-        : "unknown path";
+    const path = typeof maybePath === "string" ? maybePath : "unknown path";
 
     //picks the first export.
 
@@ -54,6 +48,7 @@ export const mapWebpackContext = (
       return {
         name: compName.replace(/^.*\/(.*)\.tsx?$/, "$1"),
         path,
+        urlSafePath: toUrl(path),
         comp: exports[key] as React.ComponentType<unknown>,
       };
     }
@@ -65,6 +60,7 @@ export const mapWebpackContext = (
         compName.replace(/^.*\/(.*)\.tsx?$/, "$1") +
         " - Error: nothing exported.",
       path,
+      urlSafePath: toUrl(path),
       comp: () => {
         console.log("Nothing exported from: " + path);
       },

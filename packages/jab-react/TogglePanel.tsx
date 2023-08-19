@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 
 import { JsLink } from "./internal";
 
@@ -6,6 +6,7 @@ type Props = {
   linkName: string;
   linkTitle?: string;
   initial: boolean;
+  children: ReactNode;
 };
 
 /**

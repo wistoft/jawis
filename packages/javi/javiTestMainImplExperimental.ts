@@ -1,11 +1,10 @@
-import WebSocket from "ws";
-
 import { MainProv, flushAndExit } from "^jab-node";
 import { MakeBee } from "^bee-common";
 import { assertNever, tos } from "^jab";
-import { ServerMessage } from "^jatec";
-
-import { director as jatesDirector } from "^jates/director";
+import {
+  ServerMessage,
+  experimentalDirector as experimentalJatesDirector,
+} from "^jates";
 
 import {
   getJaviConf,
@@ -29,7 +28,7 @@ export const startJaviTest = (deps: Deps) => {
 
   //make director
 
-  const director = jatesDirector({
+  const director = experimentalJatesDirector({
     createTestRunners: makeJarunTestRunners,
     makeTsProcess: makeTsNodeJabProcess,
     absTestFolder: conf.absTestFolder,
@@ -47,8 +46,8 @@ export const startJaviTest = (deps: Deps) => {
 
   let count = 0;
   let failCount = 0;
-  let failedNames: string[] = [];
-  let failReports: any[] = [];
+  const failedNames: string[] = [];
+  const failReports: any[] = [];
 
   const socket = new DummyWebSocket((json: any) => {
     const msg = JSON.parse(json) as ServerMessage;
@@ -120,11 +119,15 @@ export const startJaviTest = (deps: Deps) => {
   // director.onClientMessage({ type: "runCurrentSelection" }, undefined as any);
 };
 
+//quick fix
+const WebSocket_OPEN = 1;
+const WebSocket_CLOSED = 3;
+
 /**
  *
  */
 class DummyWebSocket {
-  public readyState: any = WebSocket.OPEN;
+  public readyState: any = WebSocket_OPEN;
   public listeners: any = { open: [], message: [], close: [], error: [] };
   public closed = false;
 
@@ -143,7 +146,7 @@ class DummyWebSocket {
       return;
     }
     this.closed = true;
-    this.readyState = WebSocket.CLOSED;
+    this.readyState = WebSocket_CLOSED;
     this.listeners.close.forEach((listener: any) => listener());
   };
 

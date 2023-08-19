@@ -26,7 +26,7 @@ export const DevDirector: React.FC<Props> = ({
 }) => {
   useJabroHive(getApiPath(serverPort, "jabro"));
 
-  const [useConsoleStream] = useState(makeUseConsoleStream);
+  // const [useConsoleStream] = useState(makeUseConsoleStream);
 
   const postNav = (
     <span style={{ color: "var(--link-color)" }}>
@@ -46,20 +46,20 @@ export const DevDirector: React.FC<Props> = ({
     },
   ];
 
-  const consolePanel = (
-    <ConsoleMain
-      {...extra}
-      useConsoleStream={useConsoleStream}
-      apiPath={getApiPath(jagoConsolePortForDev, "jago")}
-    />
-  );
+  // const consolePanel = (
+  //   <ConsoleMain
+  //     {...extra}
+  //     useConsoleStream={useConsoleStream}
+  //     apiPath={getApiPath(jagoConsolePortForDev, "jago")}
+  //   />
+  // );
 
   return (
     <JaviDirector
       {...extra}
       serverPort={serverPort}
       postNav={postNav}
-      consolePanel={consolePanel}
+      consolePanel={<>console must support react 17</>}
       routes={extraRoutes}
     />
   );

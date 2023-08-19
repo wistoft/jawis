@@ -4,7 +4,7 @@ import { mainWrapper } from "^main-wrapper";
 import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 
 import { MakeBee } from "^bee-common";
-import { startJaviTest } from "^javi/startJaviTest";
+import { startJaviTest } from "^javi/internal";
 
 const main = (mainProv: MainProv) => {
   //typescript worker threads

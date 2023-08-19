@@ -4,6 +4,8 @@
 
 ## :tada: Enhancements
 
+- Increase support of `@types/react` from `^16.14.4` to `^16.8.0`
+
 ## :boom: Breaking changes
 
 # 3.0.0

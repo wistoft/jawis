@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 
 import { TestProvision } from "^jarun";
 import { BeeLogEntry } from "^bee-common";
@@ -13,15 +14,17 @@ import { useDirector } from "^jagov/useDirector";
 import { jcvProps } from ".";
 
 export const getJagoView = () => (
-  <View
-    processStatus={[
-      { id: "scriptId", script: "path/to/script.js", status: "stopped" },
-    ]}
-    jcvProps={jcvProps}
-    apiSend={() => {}}
-    useApiSend={() => () => {}}
-    wsState={"closed"}
-  />
+  <MemoryRouter initialEntries={["/"]}>
+    <View
+      processStatus={[
+        { id: "scriptId", script: "path/to/script.js", status: "stopped" },
+      ]}
+      jcvProps={jcvProps}
+      apiSend={() => {}}
+      useApiSend={() => () => {}}
+      wsState={"closed"}
+    />
+  </MemoryRouter>
 );
 
 export const getJagovConsole = () => (

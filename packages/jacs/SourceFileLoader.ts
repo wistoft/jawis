@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import filewatcher from "filewatcher";
-import {
+import ts, {
   CompilerOptions,
   findConfigFile,
   ModuleKind,
@@ -155,7 +155,7 @@ export class SourceFileLoader implements CompileService {
       return cachedConf;
     }
 
-    const conf = getTsConfigFromAbsConfigFile(file);
+    const conf = getTsConfigFromAbsConfigFile(ts, file) as ts.CompilerOptions;
 
     this.confCache.set(file, conf);
 

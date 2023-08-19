@@ -7,9 +7,9 @@
   "description": "Show output from both node and browser in the browser",
   "dependencies": {
     "@types/cors": "^2.8.6",
-    "@types/express": "^4.17.11",
+    "@types/express": "^4.0.35",
     "cors": "^2.8.5",
-    "express": "^4.17.3"
+    "express": "^4.8.0"
   },
   "keywords": [
     "development",

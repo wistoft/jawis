@@ -1,7 +1,6 @@
-import React, { memo, useContext } from "react";
-import { useParams } from "@reach/router";
+import React, { memo } from "react";
 
-import { UseFirstRouteEffectContext } from "^jab-react";
+import { useFirstRouteEffect, useParams } from "^jab-react";
 import { assertPropString } from "^jab";
 
 import { ScriptStatus } from "^jagoc";
@@ -35,8 +34,6 @@ export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo(
     const script = processStatus.find((x) => x.id === id);
 
     // restart script "onload"
-
-    const useFirstRouteEffect = useContext(UseFirstRouteEffectContext);
 
     useFirstRouteEffect(() => {
       if (script) {

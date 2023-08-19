@@ -3,10 +3,16 @@ import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
 import { sleeping } from "^yapu";
 
-import { getScratchPath, removeCarriageReturn } from "../_fixture";
+import {
+  getScratchPath,
+  removeCarriageReturn,
+  writeSimpleConfigFile,
+} from "../_fixture";
 
 export default (prov: TestProvision) => {
   const sfl = new SourceFileLoader({ onError: prov.onError });
+
+  writeSimpleConfigFile(getScratchPath("tsconfig.json"));
 
   const file = getScratchPath("hello.js");
 

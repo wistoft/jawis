@@ -200,6 +200,7 @@ export const objOmit = (obj: {} | null, ...props: string[]): unknown => {
  * Map a the values of an object.
  *
  * - Only for own enumerable keys. Protype chain not preserved.
+ * - Map parameter must return a new value. Keys cannot be changed by this.
  * - The map-function must handle `string | number` keys, because the object can be a any subtype.
  * - @alternatives https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
  */

@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  createMemorySource,
-  createHistory,
-  LocationProvider,
-} from "@reach/router";
+import { MemoryRouter } from "react-router-dom";
 
 import { ComponentMenu, ComponentMenuProps } from "^jab-react";
 import {
@@ -24,14 +20,14 @@ export const getDevComponentPanel = (
   props?: Partial<DevComponentPanelProps>,
   location = "/"
 ) => (
-  <LocationProvider history={createHistory(createMemorySource(location))}>
+  <MemoryRouter initialEntries={[location]}>
     <View
       folders={[]}
       {...props}
       openComponnent={() => {}}
       useKeyListener={() => {}}
     />
-  </LocationProvider>
+  </MemoryRouter>
 );
 
 /**
@@ -41,9 +37,9 @@ export const getComponentMenu = (
   props?: Partial<ComponentMenuProps>,
   location = "/"
 ) => (
-  <LocationProvider history={createHistory(createMemorySource(location))}>
+  <MemoryRouter initialEntries={[location]}>
     <ComponentMenu routes={[]} {...props} />
-  </LocationProvider>
+  </MemoryRouter>
 );
 
 /**

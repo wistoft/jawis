@@ -1,9 +1,8 @@
-import { Link } from "@reach/router";
 import React, { memo } from "react";
 
-import { JsLink } from "^jab-react";
+import { JsLink, Link } from "^jab-react";
 
-import { ComponentDef, toUrl } from "./internal";
+import { ComponentDef } from "./internal";
 
 type Props = {
   folders: { folder: string; comps: ComponentDef[] }[];
@@ -53,7 +52,7 @@ export const ViewListComponents: React.FC<{
           }}
         />
         {" - "}
-        <Link to={toUrl(def.path)}>{def.name}</Link>
+        <Link to={def.urlSafePath}>{def.name}</Link>
         <br />
       </React.Fragment>
     ))}

@@ -6,6 +6,9 @@
 
 ## :tada: Enhancements
 
+- Increase support of `express` from `^4.17.3` to `^4.8.0`
+- Increase support of `@types/express` from `^4.17.11` to `^4.0.35`
+
 ## :boom: Breaking changes
 
 # 3.0.0

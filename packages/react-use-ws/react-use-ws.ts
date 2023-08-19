@@ -31,7 +31,7 @@ export const useWebSocketProv = <MS, MR>(deps: Deps): WebSocketProv<MS, MR> => {
   const onStateChange = useUnmountSafeFunction(setWsState); // needed because we can't remove `onStateChange` from BWS.
 
   const [objects] = useState(() =>
-    createObjectState<MS, MR>({ ...deps, onStateChange })
+    createStructure<MS, MR>({ ...deps, onStateChange })
   );
 
   return { ...objects, wsState };
@@ -40,7 +40,7 @@ export const useWebSocketProv = <MS, MR>(deps: Deps): WebSocketProv<MS, MR> => {
 /**
  *
  */
-const createObjectState = <MS, MR>(
+const createStructure = <MS, MR>(
   deps: Deps & Pick<BwsDeps<MR>, "onStateChange">
 ) => {
   const eventStream = new EventController<MR>();

@@ -1,8 +1,8 @@
-import { WindowLocation } from "@reach/router";
 import { useEffect, useState } from "react";
-import { useMemoDep } from "^jab-react";
 
 import { err } from "^jab";
+
+import { useMemoDep } from "./internal";
 
 type State = {
   firstRoute: string;
@@ -10,6 +10,7 @@ type State = {
 };
 
 /**
+ *
  * Provide a `useEffect`, that only fires on the first route.
  *
  * - Takes a location from React Router.
@@ -17,14 +18,13 @@ type State = {
  *    in order to recieve all route locations.
  * - This is pretty much only useful via a context, like implemented in UseFirstRouteEffectProvider.
  *
+ *
  * impl
  *  - setState is not used. To avoid getting unneeded rerenders.
  */
-export const useUseFirstRouteEffect = (
-  location: WindowLocation | undefined
-) => {
+export const useUseFirstRouteEffect = (location: any) => {
   if (!location || !location.key) {
-    throw err("Reach router returned no location.key", location);
+    throw err("Expected the property location.key", location);
   }
 
   const [state] = useState<State>({

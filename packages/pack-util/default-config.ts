@@ -1,6 +1,7 @@
 import path from "path";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
+import ts from "typescript";
 
 import { getAbsConfigFilePath } from "^ts-config-util";
 
@@ -40,7 +41,7 @@ export const getNodeWebpackConf = ({
   mangle = false,
 }: WebpackConf): webpack.Configuration => {
   if (!tsConfigFile) {
-    tsConfigFile = getAbsConfigFilePath(path.dirname(file));
+    tsConfigFile = getAbsConfigFilePath(ts, path.dirname(file));
   }
 
   return {

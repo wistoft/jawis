@@ -7,12 +7,6 @@ import { useWebSocketProv } from "^react-use-ws";
 
 import { View, mapWebpackContext } from "./internal";
 
-export type ComponentDef = {
-  name: string;
-  path: string;
-  comp: React.ComponentType<unknown> | (() => void);
-};
-
 type Props = {
   apiPath: string;
   contexts: {

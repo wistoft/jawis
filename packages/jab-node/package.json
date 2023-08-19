@@ -7,7 +7,6 @@
   "name": "~jab-node",
   "description": "Collection of utilities for node environment.",
   "dependencies": {
-    "dateformat": "^4.5.1",
     "filewatcher": "^3.0.1"
   },
   "keywords": [

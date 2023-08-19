@@ -23,7 +23,7 @@ export const makeJatesRoute = (deps: DirectorDeps): express.Router => {
 
   // ws
 
-  router.ws("/ws", onWsUpgrade);
+  (router as any).ws("/ws", onWsUpgrade as any);
 
   // error handler
 

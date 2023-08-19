@@ -4,6 +4,12 @@
 
 ## :tada: Enhancements
 
+- Increase support of `ws` from `^8.5.0` to `^8.0.0`
+- Increase support of `express` from `^4.17.3` to `^4.8.0`
+- Increase support of `@types/ws` from `^8.5.2` to `^8.5.0`
+- Increase support of `@types/express` from `^4.17.11` to `^4.0.35`
+- Remove dependency on `@types/express-ws`.
+
 ## :boom: Breaking changes
 
 # 2.1.0
@@ -23,7 +29,7 @@
   - `MakeServerApp`
   - `WsMessageListenerOld`
   - `WsRouter`
-  - `makeApp`, `Route`, `RouteDeps` S
+  - `makeApp`, `Route`, `RouteDeps`
 
 # 1.0.4
 

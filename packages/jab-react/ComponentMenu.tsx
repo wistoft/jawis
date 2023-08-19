@@ -1,16 +1,21 @@
-import React, { memo, ReactElement } from "react";
-import { Link, Router } from "@reach/router";
+import React, { memo, ReactNode } from "react";
 
-import { NoRoute, ReachRoute, UseFirstRouteEffectProvider } from ".";
+import {
+  Route,
+  UseFirstRouteEffectProvider,
+  Link,
+  NoRouteElement,
+  Routes,
+} from "./internal";
 
 export type RouteDef = {
   name: string;
-  elm: ReactElement<unknown>;
+  elm: ReactNode;
 };
 
 export type ComponentMenuProps = {
   routes: RouteDef[];
-  postNav?: ReactElement<unknown>;
+  postNav?: ReactNode;
   provideFirstRouteEffect?: boolean; //default false.
 };
 
@@ -21,15 +26,17 @@ export const ComponentMenu: React.FC<ComponentMenuProps> = memo((props) => {
   const { menu, routes } = getStuff(props.routes);
 
   const helper = props.provideFirstRouteEffect ? (
-    <UseFirstRouteEffectProvider path="/">
-      {routes}
-      <NoRoute path="*" />
+    <UseFirstRouteEffectProvider>
+      <Routes>
+        {routes}
+        {NoRouteElement}
+      </Routes>
     </UseFirstRouteEffectProvider>
   ) : (
-    <>
+    <Routes>
       {routes}
-      <NoRoute path="*" />
-    </>
+      {NoRouteElement}
+    </Routes>
   );
 
   return (
@@ -38,7 +45,7 @@ export const ComponentMenu: React.FC<ComponentMenuProps> = memo((props) => {
         <span style={{ color: "var(--link-color)" }}>{menu}</span>
         {props.postNav}
       </nav>
-      <Router>{helper}</Router>
+      {helper}
     </>
   );
 });
@@ -68,15 +75,13 @@ const getStuff = (routeDefs: RouteDef[]) => {
       linkPath = "./";
       routePath = "/*";
     } else {
-      linkPath = encodeURIComponent(def.name);
-      routePath = "/" + encodeURIComponent(def.name) + "/*";
+      linkPath = def.name;
+      routePath = "/" + def.name + "/*";
     }
 
     //route
 
-    routes.push(
-      <ReachRoute key={def.name} path={routePath} element={def.elm} />
-    );
+    routes.push(<Route key={def.name} path={routePath} element={def.elm} />);
 
     //separeater for menu entries
 

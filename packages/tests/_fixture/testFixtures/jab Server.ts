@@ -76,7 +76,7 @@ export const getServerDeps = (
 ): ServerDeps => ({
   port: getDefaultServerConf().port,
 
-  log: (msg: string) => {
+  log: () => {
     // too fragile for test logs
     // prov.log(logPrefix + "server.log", msg);
   },
@@ -121,5 +121,5 @@ export const getTestApp = (prov: TestProvision) => {
     res.end("error");
   });
 
-  return realApp;
+  return realApp as Application;
 };

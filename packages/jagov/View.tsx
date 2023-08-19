@@ -1,7 +1,6 @@
 import React, { memo } from "react";
-import { Link, Router } from "@reach/router";
 
-import { JsLink, NoRoute, ReachRoute } from "^jab-react";
+import { JsLink, Route, Link, NoRouteElement, Routes } from "^jab-react";
 
 import { WsStates } from "^react-use-ws";
 import {
@@ -31,14 +30,14 @@ export const View: React.FC<ViewProps> = memo(({ wsState, ...extra }) => {
         </span>
         {wsState === "reconnecting" && " " + wsState}
       </nav>
-      <Router>
-        <ReachRoute path="/" element={<ViewHome {...extra} />} />
-        <ReachRoute
+      <Routes>
+        <Route path="/" element={<ViewHome {...extra} />} />
+        <Route
           path="/script/:scriptId"
           element={<ViewScriptRoute {...extra} />}
         />
-        <NoRoute path="*" />
-      </Router>
+        {NoRouteElement}
+      </Routes>
     </>
   );
 });

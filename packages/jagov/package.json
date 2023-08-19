@@ -4,9 +4,7 @@
   "name": "~jagov",
   "description": "Show output from both node and browser in the browser",
   "dependencies": {
-    "@reach/router": "^1.3.4",
-    "@types/reach__router": "^1.3.7",
-    "@types/react": "^16.14.4",
+    "@types/react": "^16.8.0",
     "react": "^16.14.0"
   },
   "keywords": [

@@ -2,6 +2,8 @@
 
 ## :bug: Bug fixes
 
+- Removed unused dependency: `dateformat`
+
 ## :tada: Enhancements
 
 ## :boom: Breaking changes

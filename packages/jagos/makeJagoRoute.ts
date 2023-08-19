@@ -21,7 +21,7 @@ export const makeJagosRoute = (deps: DirectorDeps): express.Router => {
 
   // web socket
 
-  router.ws("/ws", onWsUpgrade);
+  (router as any).ws("/ws", onWsUpgrade as any);
 
   // error handler
 

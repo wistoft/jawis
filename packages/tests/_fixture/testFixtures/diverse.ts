@@ -93,6 +93,41 @@ export const filterUhPromise = (prov: TestProvision) => {
 /**
  *
  */
+export const filterNodeDeprecation = (prov: TestProvision, errno: string) => {
+  prov.filter("console.error", (...val: unknown[]) => {
+    if (
+      val[0] ===
+        "(Use `node --trace-deprecation ...` to show where the warning was created)" ||
+      (typeof val[0] === "string" &&
+        val[0].includes(`[${errno}] DeprecationWarning`))
+    ) {
+      return [];
+    } else {
+      return val;
+    }
+  });
+};
+
+/**
+ *
+ */
+export const filterReact = (prov: TestProvision) => {
+  prov.filter("console.error", (...val: unknown[]) => {
+    if (
+      val.length > 0 &&
+      typeof val[0] === "string" &&
+      val[0].startsWith("The above error occurred in the")
+    ) {
+      return [];
+    } else {
+      return val;
+    }
+  });
+};
+
+/**
+ *
+ */
 export const getLogProv = (prov: TestProvision, logPrefix = ""): LogProv => ({
   log: (...args) => {
     prov.log(logPrefix + "log", args);

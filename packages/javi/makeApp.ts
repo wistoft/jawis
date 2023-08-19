@@ -40,7 +40,7 @@ export const makeApp = (deps: Deps): express.Application => {
 
   // static files
 
-  app.use("/", express.static(deps.staticWebFolder));
+  app.use("/", (express as any).static(deps.staticWebFolder));
 
   //dynamic configuration
 

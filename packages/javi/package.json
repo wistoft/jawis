@@ -1,19 +1,19 @@
 {
   "sideEffects": [
-    "./javiTestMain.ts",
+    "./javiTestMainExperimental.ts",
     "./javiServerMain.ts"
   ],
   "version": "1.1.1",
   "name": "~javi",
   "bin": {
     "javi": "./javiServerMain.js",
-    "javi-test": "./javiTestMain.js"
+    "javi-test-experimental": "./javiTestMainExperimental.js"
   },
   "description": "JavaScript View is tool for running test cases and scripts. Everything is presented in the browser",
   "dependencies": {
-    "@types/express": "^4.17.11",
+    "@types/express": "^4.0.35",
     "@types/express-ws": "^3.0.0",
-    "express": "^4.17.3",
+    "express": "^4.8.0",
     "express-ws": "^5.0.2"
   },
   "keywords": [

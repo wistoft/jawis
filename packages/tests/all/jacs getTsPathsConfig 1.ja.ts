@@ -1,3 +1,5 @@
+import ts from "typescript";
+
 import { getAbsConfigFilePath, getTsPathsConfig } from "^ts-config-util";
 import { TestProvision } from "^jarun";
 import { filterTsPathConfig } from "^tests/_fixture";
@@ -10,7 +12,7 @@ export default async (prov: TestProvision) => {
           baseUrl: "_fixture",
           paths: { "^*": ["./packages/*"] },
         },
-        getAbsConfigFilePath(__dirname)
+        getAbsConfigFilePath(ts, __dirname)
       )
     )
   );

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqualObjects } from "shallow-equal";
+
 import { err } from "^jab";
 
 //
@@ -60,7 +61,7 @@ export const useMemoDep = <Deps extends {}, T>(
 /**
  * Memoize an object. With explicit "dependencies"
  *
- * - Ensures the object is "recreated", if any properties changes value.
+ * - Ensures the object is "recreated", if any properties change value.
  *
  * note
  *  special case of useMemoDep
@@ -103,7 +104,7 @@ export const makeSetPartialState =
   };
 
 /**
- * Make a function into a hook.
+ * Make a function into a hook, that can be used by sub components, to create callbacks.
  *
  * - The hook takes deps at render, and returns a callback, that takes no arguments. A perfect callback function.
  * - Components can use the hook to make referentially stable callbacks.
@@ -167,7 +168,7 @@ export const useAssertStatic = (value: {}) => {
  *
  */
 export const useScrollIntoView = () => {
-  const scrollTarget = useRef<any>();
+  const scrollTarget = useRef<any>(null);
 
   useEffect(() => {
     //guard in case it's not attached.

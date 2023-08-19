@@ -1,6 +1,7 @@
 import React, { memo } from "react";
-import { Link } from "@reach/router";
+
 import { basename } from "^jab";
+import { Link } from "^jab-react";
 
 import {
   getEditLink,

@@ -1,7 +1,6 @@
-import { Router } from "@reach/router";
 import React, { memo } from "react";
 
-import { NoRoute, ReachRoute, UseKeyListener } from "^jab-react";
+import { NoRouteElement, Route, Routes, UseKeyListener } from "^jab-react";
 import { ComponentDef, ViewListFolders, ViewComponentRoute } from "./internal";
 
 export type ViewProps = {
@@ -15,15 +14,15 @@ export type ViewProps = {
  */
 export const View: React.FC<ViewProps> = memo(
   ({ folders, openComponnent, useKeyListener }) => (
-    <Router>
-      <ReachRoute
+    <Routes>
+      <Route
         path="/"
         element={
           <ViewListFolders folders={folders} openComponnent={openComponnent} />
         }
       />
-      <ReachRoute
-        path="/:component"
+      <Route
+        path="/:component/*"
         element={
           <ViewComponentRoute
             folders={folders}
@@ -32,7 +31,7 @@ export const View: React.FC<ViewProps> = memo(
           />
         }
       />
-      <NoRoute path="*" />
-    </Router>
+      {NoRouteElement}
+    </Routes>
   )
 );

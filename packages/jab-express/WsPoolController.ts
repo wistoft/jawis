@@ -1,4 +1,3 @@
-import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
@@ -9,6 +8,7 @@ import {
   SocketData,
   makeUpgradeHandler,
   WsMessageListener,
+  WebsocketRequestHandler,
 } from "./internal";
 
 export type WsPoolProv<

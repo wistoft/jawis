@@ -4,7 +4,7 @@
   "name": "~render-hook-plus",
   "description": "Improved version of `renderHook` from the library @testing-library/react-hooks",
   "peerDependencies": {
-    "@testing-library/react-hooks": "*"
+    "@testing-library/react-hooks": "^5.1.0"
   },
   "keywords": [
     "test",

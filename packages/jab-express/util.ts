@@ -1,9 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { WebsocketRequestHandler } from "express-ws";
+
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 
-import { NodeWS, SocketData, WsMessageListener } from "./internal";
+import {
+  NodeWS,
+  SocketData,
+  WebsocketRequestHandler,
+  WsMessageListener,
+} from "./internal";
 
 export type MakeUpgradeHandlerDeps = {
   onError: (error: unknown) => void;
@@ -24,7 +29,7 @@ export const makeUpgradeHandler =
     onOpen = (_nws: NodeWS<MS, MR>) => {},
     onClose = () => {}
   ): WebsocketRequestHandler =>
-  (ws, _req, _next) => {
+  (ws) => {
     const nws = new NodeWS<MS, MR>({
       ...deps,
       ws,

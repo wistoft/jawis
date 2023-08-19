@@ -1,7 +1,13 @@
 import { TestProvision } from "^jarun";
-import { makeApp_no_routes, testHttpRequest } from "../_fixture";
+import {
+  filterNodeDeprecation,
+  makeApp_no_routes,
+  testHttpRequest,
+} from "../_fixture";
 
 export default async (prov: TestProvision) => {
+  filterNodeDeprecation(prov, "DEP0066");
+
   const server = await makeApp_no_routes(prov);
 
   prov.log("/doesnotExists", await testHttpRequest({ path: "/doesnotExists" }));

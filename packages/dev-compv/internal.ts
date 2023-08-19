@@ -1,4 +1,5 @@
 export * from "./Main";
+export * from "./types";
 export * from "./util";
 export * from "./View";
 export * from "./ViewComponent";

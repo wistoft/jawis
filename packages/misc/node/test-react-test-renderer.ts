@@ -26,12 +26,13 @@ export const shallowRendererTos = (renderer: ShallowRenderer) =>
 /**
  *
  */
-export const getHtmlRTR = (elm: ReactElement) => rendererTos(RTR.create(elm));
+export const getHtmlRTR = (elm: ReactElement<any>) =>
+  rendererTos(RTR.create(elm));
 
 /**
  *
  */
-export const getShallowHtmlRTR = (elm: ReactElement) => {
+export const getShallowHtmlRTR = (elm: ReactElement<any>) => {
   const renderer = createRenderer();
   renderer.render(elm);
   return shallowRendererTos(renderer);

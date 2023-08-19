@@ -3,7 +3,7 @@ import { mainWrapper } from "^main-wrapper";
 import { MainProv } from "^jab-node";
 import { makeMakeJacsWorkerBee } from "^jacs";
 
-import { startJaviTest } from "./startJaviTest";
+import { startJaviTest } from "./internal";
 
 const main = (mainProv: MainProv) => {
   //typescript worker threads

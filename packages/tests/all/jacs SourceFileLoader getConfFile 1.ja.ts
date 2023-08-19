@@ -1,11 +1,13 @@
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
-import { getScratchPath } from "^tests/_fixture";
+import { emptyScratchFolder, getScratchPath } from "^tests/_fixture";
 
 const { getPackagePath } = require("../../../packages/dev/project.conf");
 
 export default (prov: TestProvision) => {
   const { eq } = prov;
+
+  emptyScratchFolder();
 
   const sfl = new SourceFileLoader({ onError: prov.onError });
 
