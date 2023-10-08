@@ -21,7 +21,7 @@ jobs:
           node-version: "18.x"
 
       - run: |
-          chmod +x ./install-epoch.sh
-          ./install-epoch.sh ${{ matrix.epoch }}
+          chmod +x ./epoch-install.sh
+          ./epoch-install.sh ${{ matrix.epoch }}
 
       - run: yarn -s test

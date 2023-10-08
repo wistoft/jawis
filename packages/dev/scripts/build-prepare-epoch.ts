@@ -21,8 +21,21 @@ type Epoch = {
 
 const epochs: Epoch[] = [
   {
-    id: 0,
+    id: 99,
     modeEpoch: "relative",
+    modeRest: "relative",
+    versions: {
+      react: "16.14.0",
+      "@types/react": "16.8.0",
+      "react-dom": "16.14.0",
+      "@types/react-dom": "16.8.0",
+      "react-test-renderer": "16.14.0",
+      "@types/react-test-renderer": "16.9.5",
+    },
+  },
+  {
+    id: 0,
+    modeEpoch: "exact",
     modeRest: "relative",
     versions: {
       react: "16.14.0",
@@ -72,31 +85,17 @@ export const doit = async () => {
     (arg) => arg === "--skip-clean-repo-check"
   );
 
-  //config
+  //validate
 
-  const earliest = false;
+  validateEpochs(epochs);
 
   //state
-  let epoch: Epoch;
+  const epoch = epochs.find((epoch) => epoch.id === epochId);
   let postfix = "";
   let updateRoot = true;
 
-  switch (epochId) {
-    case 0:
-      epoch = epochs[0];
-      if (earliest) {
-        //yarn test possible
-        //yarn javi not possible without : `"resolutions": { "express": "4.8.0" }`
-        postfix = ".earliest";
-        updateRoot = false;
-        epoch.modeEpoch = "exact";
-        epoch.modeRest = "exact";
-      }
-      break;
-
-    default:
-      epoch = epochs[epochId];
-      break;
+  if (epoch === undefined) {
+    throw new Error("Did not find epoch: " + epochId + ". Available: " + (epochs.map(elm => (elm.id)))); // prettier-ignore
   }
 
   if (skipCleanRepoCheck) {
@@ -105,12 +104,12 @@ export const doit = async () => {
     await assertGitClean(projectRoot);
   }
 
-  await fs.promises.copyFile(
-    path.join(projectRoot, "yarn.epoch." + epoch.id + postfix + ".lock"),
-    path.join(projectRoot, "yarn.lock")
-  );
-
-  //remove ^ from all package dependencies
+  if (epoch.id !== 99) {
+    await fs.promises.copyFile(
+      path.join(projectRoot, "yarn.epoch." + epoch.id + postfix + ".lock"),
+      path.join(projectRoot, "yarn.lock")
+    );
+  }
 
   updatePackageJson({ map: packageJsonMapper(epoch), updateRoot });
 };
@@ -138,5 +137,25 @@ export const packageJsonMapper = (epoch: Epoch) =>
         throw new Error("Unknown mode: " + epoch.modeRest);
     }
   });
+
+export const validateEpochs = (epochs: Epoch[]) => {
+  let errors = false;
+
+  for (const epoch of epochs) {
+    for (const [packageName, version] of Object.entries(epoch.versions)) {
+      if (!version.match(/^\d+\.\d+\.\d+$/)) {
+        console.log(
+          "Version in in valid for package: " + packageName + ":" + version
+        );
+
+        errors = true;
+      }
+    }
+  }
+
+  if (errors) {
+    throw new Error("Epochs wasn't valid");
+  }
+};
 
 doit();
