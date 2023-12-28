@@ -17,6 +17,8 @@ if (module.parent?.parent === null) {
   enable(async_hooks);
 
   setTimeout(() => {
-    console.log(filterStackTrace(unknownToErrorData(new Error())));
+    console.log(
+      JSON.stringify(filterStackTrace(unknownToErrorData(new Error())))
+    );
   }, 0);
 }
