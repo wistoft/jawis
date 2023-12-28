@@ -27,8 +27,11 @@ export const getJabProcessPreloader_new = (prov: TestProvision) => {
 /**
  *
  */
-export const getJabProcessPreloader = (prov: TestProvision) => {
-  const [pp] = getJabProcessPreloaderAndDeps(prov);
+export const getJabProcessPreloader = (
+  prov: TestProvision,
+  extraDeps?: Partial<ProcessPreloaderDeps>
+) => {
+  const [pp] = getJabProcessPreloaderAndDeps(prov, extraDeps);
 
   return pp;
 };
@@ -66,8 +69,8 @@ export const getJabProcessPreloaderDeps = (
   );
 
   return {
-    ...procDeps,
     makeBee: getLiveMakeJacsWorker(),
     logProv: getLogProv(prov, ""),
+    ...procDeps,
   };
 };

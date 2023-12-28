@@ -1,6 +1,6 @@
 import path from "path";
 
-import { err, LogProv } from "^jab";
+import { assertNever, err, LogProv } from "^jab";
 
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
@@ -38,7 +38,7 @@ type States = "starting" | "ready" | "stopping" | "done";
  *
  * Note
  *  - listeners are switched from own listeners to user's listeners, when the process is used.
- *  - shutdown can and do use kill. Because there's no state in the process to think of.
+ *  - shutdown can use kill. Because there's no state in the process to think of.
  *
  * todo:
  *  The transitions are not tight enough. wrt shutdown and kill.
@@ -79,8 +79,6 @@ export class ProcessPreloader<MS extends {}> {
     if (this.deps.timeout) {
       this.timeout = this.deps.timeout;
     }
-
-    // console.log("preload");
 
     this.listeners = this.getOwnListeners();
 
@@ -167,7 +165,26 @@ export class ProcessPreloader<MS extends {}> {
       if (msg.type !== "ready") {
         throw err("Expected only to receive ready signal: ", msg);
       }
-      this.waiter.set("ready");
+
+      const state = this.waiter.getState();
+
+      switch (state) {
+        case "starting":
+          this.waiter.set("ready");
+          return;
+
+        case "stopping":
+          //can just be ignored
+          return;
+
+        case "ready":
+        case "done":
+          this.deps.onError(new Error("Impossible: " + state));
+          return;
+
+        default:
+          return assertNever(state);
+      }
     },
 
     onStdout: (data) => {
