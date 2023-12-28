@@ -22,7 +22,7 @@ jobs:
         id: get-node-version
         shell: bash
         run: |
-          VERSIONS=(16 18);
+          VERSIONS=(16 18 20);
           INDEX=$((${{ matrix.epoch}} % ${#VERSIONS[@]}))
           echo "node-version=${VERSIONS[$INDEX]}" >> "$GITHUB_OUTPUT"
 
