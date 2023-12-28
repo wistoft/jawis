@@ -123,14 +123,13 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
         msg = JSON.stringify(data);
       } else {
         throw new Error("non objects not supported.");
-        msg = data;
       }
 
       this.ws.send(msg, (error) => {
-        if (error === undefined) {
-          resolve();
-        } else {
+        if (error) {
           reject(error);
+        } else {
+          resolve();
         }
       });
     });

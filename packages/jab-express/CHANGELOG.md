@@ -9,6 +9,7 @@
 - Increase support of `@types/ws` from `^8.5.2` to `^8.5.0`
 - Increase support of `@types/express` from `^4.17.11` to `^4.0.35`
 - Remove dependency on `@types/express-ws`.
+- Make `NodeWs` compatible with node 20
 
 ## :boom: Breaking changes
 
