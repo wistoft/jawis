@@ -1,5 +1,5 @@
 import fs from "fs";
-import { sleeping } from "^yapu";
+import { poll, sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import {
@@ -26,7 +26,9 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartScript(script)
-    .then(() => sleeping(100))
+    .then(() =>
+      poll(() => pool.getScriptStatus()[0].status === "listening", 100)
+    )
     .then(() => {
       fs.unlinkSync(script);
 
