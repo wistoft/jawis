@@ -4,11 +4,15 @@ import { getPromise, sleepingValue, safeRace } from "^yapu";
 const TIMEOUT_ERROR_CODE = "JAB_WAITER_TIMEOUT";
 const CANCEL_ERROR_CODE = "JAB_WAITER_CANCEL";
 
+const HARD_TIMEOUT = 300;
+
 type Deps<States> = {
   startState: States;
   stoppingState?: States;
   endState?: States;
   onError: (error: unknown) => void;
+
+  hardTimeout?: number;
 };
 
 /**
@@ -51,8 +55,17 @@ export class Waiter<States, Events = never> {
 
   private killProm?: Promise<void>;
 
+  private hardTimeout: number;
+
+  /**
+   *
+   */
   constructor(private deps: Deps<States>) {
     this.state = deps.startState;
+
+    //use default timeout if given.
+
+    this.hardTimeout = this.deps.hardTimeout ?? HARD_TIMEOUT;
   }
 
   public getState = () => this.state;
@@ -84,7 +97,7 @@ export class Waiter<States, Events = never> {
    *
    * - Timeout after 300ms, if state or event didn't happen.
    */
-  public await = (type: States | Events, timeout = 300) => {
+  public await = (type: States | Events, hardTimeout = this.hardTimeout) => {
     if (this.state === this.deps.endState) {
       return Promise.reject(new Error("Can't await, when terminated."));
     }
@@ -93,7 +106,7 @@ export class Waiter<States, Events = never> {
       return Promise.reject(new Error("Can't await, when stopping."));
     }
 
-    return this.rawAwait(type, timeout);
+    return this.rawAwait(type, hardTimeout);
   };
 
   /**
@@ -116,7 +129,10 @@ export class Waiter<States, Events = never> {
   /**
    * To allow internal use of waiter in shutdown and kill.
    */
-  private rawAwait = (type: States | Events, timeout = 300) => {
+  private rawAwait = (
+    type: States | Events,
+    hardTimeout = this.hardTimeout
+  ) => {
     this.waitError = new Error("Cancelled while waiting.");
 
     const signalPromise = new Promise<void>((resolve, reject) => {
@@ -136,7 +152,7 @@ export class Waiter<States, Events = never> {
 
     // no timeout
 
-    if (timeout <= 0) {
+    if (hardTimeout <= 0) {
       return signalPromise;
     }
 
@@ -152,7 +168,7 @@ export class Waiter<States, Events = never> {
 
     const symbol = Symbol("timeout");
 
-    const timeoutPromise = sleepingValue(timeout, symbol);
+    const timeoutPromise = sleepingValue(hardTimeout, symbol);
 
     return safeRace([signalPromise, timeoutPromise], this.deps.onError).then(
       (val) => {
