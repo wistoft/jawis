@@ -115,7 +115,7 @@ export class ProcessPreloader<MS extends {}> {
     // wait for ready signal
 
     return this.waiter.await("ready", this.timeout).then(() => {
-      //this shouldn't be able to happen. The waiter
+      //this shouldn't be able to happen.
 
       if (this.waiter.is("done")) {
         err("Impossible");
@@ -187,14 +187,17 @@ export class ProcessPreloader<MS extends {}> {
     onError: this.deps.onError,
 
     onExit: (exitCode: number | null) => {
-      if (!this.waiter.is("stopping")) {
+      const state = this.waiter.getState();
+
+      if (state !== "stopping") {
         if (this.waiter.hasWaiter()) {
           this.waiter.cancel(
-            "Unexpected exit: ProcessPreloaderMain. Has waiter."
+            "Unexpected exit: ProcessPreloaderMain. Has waiter. State: " + state
           );
         } else {
           this.deps.logProv.log(
-            "Unexpected exit: ProcessPreloaderMain. Has no waiter."
+            "Unexpected exit: ProcessPreloaderMain. Has no waiter. State: " +
+              state
           );
         }
       }
