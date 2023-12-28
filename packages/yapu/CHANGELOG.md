@@ -4,6 +4,8 @@
 
 ## :tada: Enhancements
 
+- Add `poll` function.
+
 ## :boom: Breaking changes
 
 # 1.1.0
