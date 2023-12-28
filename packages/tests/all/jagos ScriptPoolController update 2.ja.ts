@@ -1,5 +1,5 @@
 import fs from "fs";
-import { poll, sleeping } from "^yapu";
+import { poll } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import {

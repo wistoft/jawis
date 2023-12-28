@@ -1,6 +1,5 @@
 import fs from "fs";
 import { TestProvision } from "^jarun";
-import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
 
 import {
   emptyScratchFolder,

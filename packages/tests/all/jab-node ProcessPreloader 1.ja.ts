@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getJabProcessPreloaderAndDeps } from "../_fixture";
 import { getPromise } from "^yapu";
+import { getJabProcessPreloaderAndDeps } from "../_fixture";
 
 //simple use of process
 
