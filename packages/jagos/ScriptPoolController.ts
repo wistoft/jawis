@@ -218,6 +218,21 @@ export class ScriptPoolController implements ScriptPoolProv {
     }));
 
   /**
+   * only used in tests
+   *
+   * @internal
+   */
+  public getSingleScriptStatus = (script: string) => {
+    for (const state of this.status) {
+      if (state.script === script) {
+        return state.status;
+      }
+    }
+
+    throw new Error("Script not found: " + script);
+  };
+
+  /**
    *
    */
   public onStatusChange = (script: string, status: ScriptStatusTypes) => {

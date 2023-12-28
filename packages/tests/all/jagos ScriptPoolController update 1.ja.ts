@@ -23,7 +23,7 @@ export default (prov: TestProvision) => {
 
   pool.updateScripts();
 
-  prov.imp(filterScriptStatuses(pool.getScriptStatus()));
+  prov.eq("stopped", pool.getSingleScriptStatus(getScratchPath("myScript.ts")));
 
   //remove file again
 

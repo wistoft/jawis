@@ -1,6 +1,7 @@
 import path from "path";
 import { RequestOptions } from "http";
 import fs from "fs";
+import os from "os";
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
@@ -29,7 +30,7 @@ export const getDefaultServerConf = (): WsUrl => ({
 });
 
 /**
- * So please dont' use this port number for anything.
+ * So please don't use this port number for anything.
  */
 export const getUnusedPort = () => 6666;
 
@@ -190,12 +191,12 @@ export const removeCarriageReturn = (data: string) => data.replace(/\r/g, "");
 /**
  * - ensure it exists, because it might get deleted.
  */
-export const getScratchPath = (script?: string) => {
-  const folder = path.join(__dirname, "../scratchFolder");
+export const getScratchPath = (script = "") => {
+  const folder = path.join(os.tmpdir(), "jawis-tests-scratchFolder");
 
-  fse.ensureDir(folder);
+  fse.ensureDirSync(folder);
 
-  return path.join(folder, script || "");
+  return path.join(folder, script);
 };
 
 /**
