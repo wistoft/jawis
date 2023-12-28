@@ -52,7 +52,7 @@ export class ProcessPreloader<MS extends {}> {
   //We start TypeScript, so we need a large timeout :-)
   private timeout = TS_TIMEOUT;
 
-  //extra state, corresponsing to starting-use, ready-use.
+  //extra state, corresponding to starting-use, ready-use.
   private inUse = false;
 
   /**
