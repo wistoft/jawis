@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 import { Waiter } from "^state-waiter";
 
-import { getJabWatchableProcess } from "../_fixture";
+import { getJabWatchableProcess, shutdownQuickFix } from "../_fixture";
 
 export default (prov: TestProvision) => {
   const { imp } = prov;
@@ -11,7 +11,7 @@ export default (prov: TestProvision) => {
 
     imp("process state: " + waiter.getState());
 
-    return wp.shutdown().then(() => {
+    return shutdownQuickFix(wp).then(() => {
       imp("process state: " + waiter.getState());
     });
   });

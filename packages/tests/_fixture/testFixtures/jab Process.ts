@@ -31,7 +31,7 @@ export const getJabProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message").then(() => proc);
+  return proc.waiter.await("message", TS_TIMEOUT).then(() => proc);
 };
 
 /**

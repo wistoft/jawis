@@ -1,6 +1,7 @@
 import { TestProvision } from "^jarun";
 import { basename } from "^jab";
 import { ScriptDefinition } from "^jagos";
+import { poll } from "^yapu";
 import {
   ScriptPoolController,
   ScriptPoolControllerDeps,
@@ -93,4 +94,16 @@ export const mapScriptFilesToDefault = (scripts: string[]) =>
     (script): ScriptDefinition => ({
       script,
     })
+  );
+
+/**
+ *
+ */
+export const waitForAllStoppedOrListening = (pool: ScriptPoolController) =>
+  poll(
+    () =>
+      pool
+        .getScriptStatus()
+        .every(({ status }) => status === "stopped" || status === "listening"),
+    100
   );

@@ -12,7 +12,10 @@ export default async (prov: TestProvision) => {
 
   prov.log("/doesnotExists", await testHttpRequest({ path: "/doesnotExists" }));
   prov.log("/conf.js", await testHttpRequest({ path: "/conf.js" }));
-  prov.log("/hello.js", await testHttpRequest({ path: "/hello.js" }));
+
+  const res = await testHttpRequest({ path: "/hello.js" });
+
+  prov.log("/hello.js", { ...res, data: res.data.replace(/\r/g, "") });
 
   return server.shutdown();
 };

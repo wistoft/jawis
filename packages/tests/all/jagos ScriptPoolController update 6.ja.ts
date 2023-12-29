@@ -7,6 +7,7 @@ import {
   getJabScriptPoolController,
   getScratchPath,
   getScriptPath,
+  shutdownQuickFix,
 } from "../_fixture";
 
 //a script found in update can be executed.
@@ -25,5 +26,5 @@ export default (prov: TestProvision) => {
   return pool
     .restartScript(script)
     .then(() => sleeping(100))
-    .then(pool.shutdown);
+    .then(() => shutdownQuickFix(pool));
 };

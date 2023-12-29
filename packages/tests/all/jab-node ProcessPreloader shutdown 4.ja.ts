@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJabProcessPreloaderAndDeps } from "../_fixture";
+import { getJabProcessPreloaderAndDeps, shutdownQuickFix } from "../_fixture";
 
 //shutdown preloader after use but before shutdown process
 
@@ -15,5 +15,5 @@ export default async (prov: TestProvision) => {
 
   prov.eq("running", process.waiter.getState()); //shutdown of preloader did not shutdown process
 
-  return await process.shutdown();
+  await shutdownQuickFix(process);
 };

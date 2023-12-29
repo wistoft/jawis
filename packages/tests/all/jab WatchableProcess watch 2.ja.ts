@@ -3,6 +3,7 @@ import { sleeping, getPromise } from "^yapu";
 
 import {
   getJabWatchableProcess_ipc_changeable,
+  shutdownQuickFix,
   writeScriptFileThatChanges,
 } from "../_fixture";
 
@@ -28,6 +29,6 @@ export default (prov: TestProvision) => {
         writeScriptFileThatChanges(2000);
         return sleeping(200);
       })
-      .then(wp.shutdown);
+      .then(() => shutdownQuickFix(wp));
   });
 };

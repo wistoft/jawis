@@ -9,9 +9,9 @@ import {
 // change after script ended itself. That should have no effect.
 
 export default async (prov: TestProvision) => {
-  await getJabWatchableProcess_nonIpc_changeable(prov);
+  const { waiter } = await getJabWatchableProcess_nonIpc_changeable(prov);
 
-  await sleeping(200);
+  await waiter.await("stopped");
 
   writeScriptFileThatChanges(1000);
 

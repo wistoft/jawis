@@ -3,6 +3,7 @@ import {
   ProcessDeps,
   WatchableProcessPreloaderDeps,
   WatchableProcessPreloader,
+  TS_TIMEOUT,
 } from "^jab-node";
 
 import {
@@ -13,6 +14,23 @@ import {
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
 } from ".";
+
+/**
+ * This is a quick fix, because shutdown has to low timeout.
+ */
+export const shutdownQuickFix = async (process: {
+  shutdown: () => Promise<any>;
+}) => {
+  try {
+    await process.shutdown();
+  } catch (error: any) {
+    if (error.message.includes("Timeout waiting for: stopped")) {
+      await (process as any).waiter.rawAwait("stopped", TS_TIMEOUT);
+    } else {
+      throw error;
+    }
+  }
+};
 
 /**
  *

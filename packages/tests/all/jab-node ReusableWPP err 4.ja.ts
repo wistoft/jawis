@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getReusableWPPAndDeps } from "../_fixture";
+import { getReusableWPPAndDeps, shutdownQuickFix } from "../_fixture";
 
 //shutdown, before process has returned.
 
@@ -11,6 +11,6 @@ export default (prov: TestProvision) => {
 
   return angel
     .shutdown()
-    .finally(() => p1.then((process) => process.shutdown()))
+    .finally(() => p1.then((process) => shutdownQuickFix(process)))
     .finally(() => angel.shutdown()); //successful shutdown of angel
 };

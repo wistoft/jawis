@@ -1,6 +1,9 @@
 import { TestProvision } from "^jarun";
 
-import { getJabWatchableProcessPreloaderAndDeps } from "../_fixture";
+import {
+  getJabWatchableProcessPreloaderAndDeps,
+  shutdownQuickFix,
+} from "../_fixture";
 
 // kill in the middle of use process.
 
@@ -12,5 +15,5 @@ export default (prov: TestProvision) => {
   //this is ignored, because it's already in use.
   wpp.shutdown();
 
-  return p.then((proc) => proc.shutdown());
+  return p.then((proc) => shutdownQuickFix(proc));
 };
