@@ -2,8 +2,11 @@ import { MainProv, flushAndExit } from "^jab-node";
 import { MakeBee } from "^bee-common";
 import { assertNever, tos } from "^jab";
 import {
+  ClientTestReport,
   ServerMessage,
+  ZippedTestLog,
   experimentalDirector as experimentalJatesDirector,
+  testLogsEqual,
 } from "^jates";
 
 import {
@@ -46,8 +49,7 @@ export const startJaviTest = (deps: Deps) => {
 
   let count = 0;
   let failCount = 0;
-  const failedNames: string[] = [];
-  const failReports: any[] = [];
+  const failReports: ClientTestReport[] = [];
 
   const socket = new DummyWebSocket((json: any) => {
     const msg = JSON.parse(json) as ServerMessage;
@@ -60,9 +62,31 @@ export const startJaviTest = (deps: Deps) => {
             console.log("");
 
             if (failCount) {
-              failedNames.forEach((test) => console.log(test));
-              console.log(failCount + " tests failed");
-              failReports.forEach((report) => console.log(tos(report)));
+              // list of tests
+
+              failReports.forEach((report) => {
+                console.log(report.id);
+                for (const logName of failedLogNames(report)) {
+                  console.log("\t" + logName);
+                }
+              });
+
+              //pretty logs
+
+              console.log("\n" + failCount + " tests failed");
+
+              failReports.forEach((report) =>
+                console.log(tos(mapTestReport(report)))
+              );
+
+              //raw logs
+
+              console.log("\nJson encoded test reports\n");
+
+              failReports.forEach((report) => {
+                console.log(report.id);
+                console.log(JSON.stringify(report), "\n");
+              });
             } else {
               console.log("All tests pass");
             }
@@ -84,7 +108,6 @@ export const startJaviTest = (deps: Deps) => {
         count++;
         if (msg.data.status !== ".") {
           failCount++;
-          failedNames.push(msg.data.id);
           failReports.push(msg.data);
         }
 
@@ -154,3 +177,23 @@ class DummyWebSocket {
     this.close();
   };
 }
+
+/**
+ *
+ */
+export const mapTestReport = (report: ClientTestReport): ClientTestReport => ({
+  ...report,
+  testLogs: report.testLogs.map((log): ZippedTestLog => {
+    if (testLogsEqual(log)) {
+      return { ...log, cur: "identical" as any };
+    } else {
+      return log;
+    }
+  }),
+});
+
+/**
+ *
+ */
+export const failedLogNames = (report: ClientTestReport) =>
+  report.testLogs.filter((log) => !testLogsEqual(log)).map((log) => log.name);
