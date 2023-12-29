@@ -78,6 +78,10 @@ export class WatchableProcessPreloader<
    * tobe-deprecated: Use `useBee` instead.
    */
   public useProcess = (listeners: BeeListeners<MR>) => {
+    if (this.depListeners) {
+      return Promise.reject(new Error("The bee is already used."));
+    }
+
     //so it can be called in this.onMessage.
 
     this.depListeners = listeners;

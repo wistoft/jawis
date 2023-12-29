@@ -74,6 +74,26 @@ export const getStdinBlockProcess = (prov: TestMainProv) =>
 /**
  *
  */
+export const getProcessDepsThatMustNotBeUsed = (): ProcessDeps<any> => {
+  const complain = () => {
+    throw new Error("Must not be called");
+  };
+
+  return {
+    filename: getScriptPath("thisFileMustNotBeUsed.js"),
+    onMessage: complain,
+    onStdout: complain,
+    onStderr: complain,
+    onError: complain,
+    onExit: complain,
+    onClose: complain,
+    finally: complain,
+  };
+};
+
+/**
+ *
+ */
 export const getJabProcessDeps = (
   prov: TestMainProv,
   extraDeps?: Partial<ProcessDeps<any>>,
