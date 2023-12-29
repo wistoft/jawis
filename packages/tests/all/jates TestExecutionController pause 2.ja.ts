@@ -7,7 +7,7 @@ import { getTestExecutionController } from "../_fixture";
 export default (prov: TestProvision) => {
   const tec = getTestExecutionController(prov);
 
-  tec.pause();
+  prov.await(tec.pause());
 
   //not really anything to check
 };
