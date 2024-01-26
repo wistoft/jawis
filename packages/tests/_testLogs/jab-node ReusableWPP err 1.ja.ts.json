@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: ReusableWPP is not ready (using)."],"return":["value",[{"status":"fulfilled","value":["undefined"]},{"status":"fulfilled","value":["undefined"]}]]}
+{"user":{"onMessage":[{"type":"msg","value":"hello"}]},"err":["Error: ReusableWPP is not ready (using)."],"return":["value",[{"status":"fulfilled","value":["undefined"]},{"status":"fulfilled","value":["undefined"]}]]}

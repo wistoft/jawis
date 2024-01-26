@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: The bee is already used."]}
+{"user":{"onMessage":[{"type":"msg","value":"hello"}]},"err":["Error: The bee is already used."]}

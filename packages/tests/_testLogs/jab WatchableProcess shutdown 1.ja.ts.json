@@ -1,1 +1,1 @@
-{"user":{"imp":["process state: running","process state: stopped"]}}
+{"user":{"imp":["process state: running","process state: stopped"],"onMessage":[{"type":"msg","value":"hello"}]}}

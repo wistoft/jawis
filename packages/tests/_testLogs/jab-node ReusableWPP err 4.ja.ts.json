@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: Can't shutdown, when use is in progress"]}
+{"user":{"onMessage":[{"type":"msg","value":"hello"}]},"err":["Error: Can't shutdown, when use is in progress"]}
