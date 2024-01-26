@@ -14,9 +14,6 @@ import {
   MakeNodeWorker,
 } from ".";
 
-//We start TypeScript, so we need a large timeout :-)
-export const TS_TIMEOUT = 4000;
-
 /**
  *  identity implementation.
  */

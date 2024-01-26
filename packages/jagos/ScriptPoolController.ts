@@ -10,7 +10,6 @@ import { FinallyFunc } from "^finally-provider";
 
 import { def, LogProv, unknownToErrorData, err } from "^jab";
 import {
-  TS_TIMEOUT,
   WatchableProcessPreloader,
   makePlainWorkerBee,
   getFileToRequire,
@@ -218,6 +217,21 @@ export class ScriptPoolController implements ScriptPoolProv {
     }));
 
   /**
+   * only used in tests
+   *
+   * @internal
+   */
+  public getSingleScriptStatus = (script: string) => {
+    for (const state of this.status) {
+      if (state.script === script) {
+        return state.status;
+      }
+    }
+
+    throw new Error("Script not found: " + script);
+  };
+
+  /**
    *
    */
   public onStatusChange = (script: string, status: ScriptStatusTypes) => {
@@ -398,7 +412,7 @@ export class ScriptPoolController implements ScriptPoolProv {
         this.onStatusChange(script, "listening");
       },
 
-      timeout: 2 * TS_TIMEOUT, //for jacs compiler.
+      timeout: 10000, //for jacs compiler.
 
       makeBee: makeTsBeeConditonally,
 

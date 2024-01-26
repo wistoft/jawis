@@ -5,6 +5,7 @@ import {
   WatchableProcessPreloader,
 } from "^jab-node";
 
+import { getPromise } from "^yapu";
 import {
   getJabProcessDeps,
   getLogProv,
@@ -13,6 +14,23 @@ import {
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
 } from ".";
+
+/**
+ * This is a quick fix, because shutdown has to low timeout.
+ */
+export const shutdownQuickFix = async (process: {
+  shutdown: () => Promise<any>;
+}) => {
+  try {
+    await process.shutdown();
+  } catch (error: any) {
+    if (error.message.includes("Timeout waiting for: stopped")) {
+      await (process as any).waiter.rawAwait("stopped", 10000);
+    } else {
+      throw error;
+    }
+  }
+};
 
 /**
  *
@@ -65,14 +83,36 @@ export const getJabWatchableProcess_nonIpc_changeable = (
  * - Doesn't exit by it self
  * - A script, that loads the library files
  */
-export const getJabWatchableProcess_ipc_changeable = (
+export const getJabWatchableProcess_ipc_changeable = async (
   prov: TestProvision,
   extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
-) =>
-  getJabWatchableProcess_nonIpc_changeable(prov, {
+) => {
+  const booterIsReady = getPromise<void>();
+  const hasRestarted = getPromise<void>();
+
+  const wp = await getJabWatchableProcess_nonIpc_changeable(prov, {
     filename: getScriptPath("WPP_wait.js"),
     ...extraDeps,
+
+    onMessage: (msg: any) => {
+      if (msg.type === "msg" && msg.value === "hello") {
+        booterIsReady.resolve();
+      }
+      prov.log("onMessage", msg);
+      extraDeps?.onMessage?.(msg);
+    },
+
+    onRestartNeeded: () => {
+      hasRestarted.resolve();
+      prov.imp("onRestartNeeded.");
+      extraDeps?.onRestartNeeded?.();
+    },
   });
+
+  await booterIsReady.promise;
+
+  return { wp, hasRestarted: hasRestarted.promise };
+};
 
 /**
  *
@@ -86,8 +126,8 @@ export const getJabWatchbleProcessPreloaderDeps = (
     prov,
     {
       filename: getScriptPath("beeSendAndWait.js"),
-      onMessage: () => {
-        //hidden, because all those require messages are anoying
+      onMessage: (msg) => {
+        prov.log("onMessage", msg);
       },
       ...extraDeps,
     },

@@ -1,7 +1,11 @@
 import { TestProvision } from "^jarun";
 import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
 
-import { getJabScriptPoolController, getScriptPath } from "../_fixture";
+import {
+  getJabScriptPoolController,
+  getScriptPath,
+  shutdownQuickFix,
+} from "../_fixture";
 
 //running scripts will be preserved at update
 
@@ -31,5 +35,5 @@ export default (prov: TestProvision) => {
         )
       );
     })
-    .then(pool.shutdown);
+    .then(() => shutdownQuickFix(pool));
 };

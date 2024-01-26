@@ -4,7 +4,12 @@
 
 ## :tada: Enhancements
 
+- Add `onTerminate` callback to `InMemoryBee`
+
 ## :boom: Breaking changes
+
+- Termination of `InMemoryBee` is changed, so `exit` event isn't emitted
+  synchronously in calls to the methods `shutdown`, `kill` and `noisyKill`
 
 # 0.2.0
 

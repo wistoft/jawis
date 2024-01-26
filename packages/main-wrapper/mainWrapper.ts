@@ -129,7 +129,8 @@ export const onError: OnError = (error: any, extraInfo) => {
   console.log(error.stack);
 
   if (Object.keys(clone).length !== 0) {
-    console.log(clone);
+    //to avoid ANSI escape codes, that nodejs 20 starts to emit.
+    console.log(JSON.stringify(clone));
   }
 };
 

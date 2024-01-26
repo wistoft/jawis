@@ -4,12 +4,12 @@ import { getPromise } from "^yapu";
 import { getJabProcessPreloaderAndDeps, getScriptPath } from "../_fixture";
 
 export default (prov: TestProvision) => {
-  const pro = getPromise(); //to avoid registering waiter
+  const prom = getPromise(); //to avoid registering waiter
 
   const [pp] = getJabProcessPreloaderAndDeps(prov, {
     customBooter: getScriptPath("stderrWithExit0.js"),
-    onExit: pro.resolve,
+    onExit: prom.resolve,
   });
 
-  return pro.promise.then(pp.kill);
+  return prom.promise.then(pp.kill);
 };

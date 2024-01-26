@@ -1,6 +1,5 @@
 import fs from "fs";
 import { TestProvision } from "^jarun";
-import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
 
 import {
   emptyScratchFolder,
@@ -23,7 +22,7 @@ export default (prov: TestProvision) => {
 
   pool.updateScripts();
 
-  prov.imp(filterScriptStatuses(pool.getScriptStatus()));
+  prov.eq("stopped", pool.getSingleScriptStatus(getScratchPath("myScript.ts")));
 
   //remove file again
 

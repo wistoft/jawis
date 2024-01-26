@@ -1,1 +1,1 @@
-{"user":{"child.stdout":["library value: 144\nlibrary2 value: 355\n"]}}
+{"user":{"onMessage":["library value: 144","library2 value: 355",{"type":"msg","value":"hello"}]}}

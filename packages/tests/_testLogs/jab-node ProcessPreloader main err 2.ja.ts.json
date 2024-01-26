@@ -1,1 +1,1 @@
-{"user":{"ProcessPreloader.stdout":["hello\n"]},"err":["Error: Unexpected exit: ProcessPreloaderMain. Has waiter."]}
+{"user":{"ProcessPreloader.stdout":["hello\n"]},"err":["Error: Unexpected exit: ProcessPreloaderMain. Has waiter. State: starting"]}

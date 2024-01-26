@@ -1,11 +1,10 @@
 import path from "path";
 
-import { err, LogProv } from "^jab";
+import { assertNever, err, LogProv } from "^jab";
 
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 import { Bee, BeeListeners, MakeBee } from "^bee-common";
-import { TS_TIMEOUT } from ".";
 
 //can't be in main, couldn't be required there.
 export type BooterMessage = {
@@ -38,7 +37,7 @@ type States = "starting" | "ready" | "stopping" | "done";
  *
  * Note
  *  - listeners are switched from own listeners to user's listeners, when the process is used.
- *  - shutdown can and do use kill. Because there's no state in the process to think of.
+ *  - shutdown can use kill. Because there's no state in the process to think of.
  *
  * todo:
  *  The transitions are not tight enough. wrt shutdown and kill.
@@ -49,10 +48,9 @@ export class ProcessPreloader<MS extends {}> {
   private listeners: BeeListeners<BooterMessage>;
   private proc: Bee<PreloaderMessage>;
 
-  //We start TypeScript, so we need a large timeout :-)
-  private timeout = TS_TIMEOUT;
+  private timeout = 10000;
 
-  //extra state, corresponsing to starting-use, ready-use.
+  //extra state, corresponding to starting-use, ready-use.
   private inUse = false;
 
   /**
@@ -79,8 +77,6 @@ export class ProcessPreloader<MS extends {}> {
     if (this.deps.timeout) {
       this.timeout = this.deps.timeout;
     }
-
-    // console.log("preload");
 
     this.listeners = this.getOwnListeners();
 
@@ -115,7 +111,7 @@ export class ProcessPreloader<MS extends {}> {
     // wait for ready signal
 
     return this.waiter.await("ready", this.timeout).then(() => {
-      //this shouldn't be able to happen. The waiter
+      //this shouldn't be able to happen.
 
       if (this.waiter.is("done")) {
         err("Impossible");
@@ -167,7 +163,26 @@ export class ProcessPreloader<MS extends {}> {
       if (msg.type !== "ready") {
         throw err("Expected only to receive ready signal: ", msg);
       }
-      this.waiter.set("ready");
+
+      const state = this.waiter.getState();
+
+      switch (state) {
+        case "starting":
+          this.waiter.set("ready");
+          return;
+
+        case "stopping":
+          //can just be ignored
+          return;
+
+        case "ready":
+        case "done":
+          this.deps.onError(new Error("Impossible: " + state));
+          return;
+
+        default:
+          return assertNever(state);
+      }
     },
 
     onStdout: (data) => {
@@ -187,14 +202,17 @@ export class ProcessPreloader<MS extends {}> {
     onError: this.deps.onError,
 
     onExit: (exitCode: number | null) => {
-      if (!this.waiter.is("stopping")) {
+      const state = this.waiter.getState();
+
+      if (state !== "stopping") {
         if (this.waiter.hasWaiter()) {
           this.waiter.cancel(
-            "Unexpected exit: ProcessPreloaderMain. Has waiter."
+            "Unexpected exit: ProcessPreloaderMain. Has waiter. State: " + state
           );
         } else {
           this.deps.logProv.log(
-            "Unexpected exit: ProcessPreloaderMain. Has no waiter."
+            "Unexpected exit: ProcessPreloaderMain. Has no waiter. State: " +
+              state
           );
         }
       }

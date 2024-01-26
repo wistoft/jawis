@@ -1,7 +1,10 @@
 import { TestProvision } from "^jarun";
 
-import { sleeping } from "^yapu";
-import { getJabScriptPoolController_one, getScriptPath } from "../_fixture";
+import {
+  getJabScriptPoolController_one,
+  getScriptPath,
+  waitForAllStoppedOrListening,
+} from "../_fixture";
 
 //start single script
 
@@ -10,6 +13,6 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartScript(getScriptPath("hello.js"))
-    .then(() => sleeping(100)) //to allow the script to run.
+    .then(() => waitForAllStoppedOrListening(pool))
     .then(pool.shutdown);
 };

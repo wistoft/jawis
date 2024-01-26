@@ -12,6 +12,7 @@ type Beehavior<MS extends {}, MR extends {}> = {
     data: BeeShutdownMessage | MS,
     bee: InMemoryBee<MS, MR>
   ) => Promise<void>;
+  onTerminate?: (bee: InMemoryBee<MS, MR>) => void;
 };
 
 /**
@@ -76,11 +77,14 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
    *
    */
   public terminate = () => {
-    this.terminated = true;
-
-    Promise.resolve().then(() => {
-      this.deps.onExit(0);
-    });
+    Promise.resolve()
+      .then(
+        () => this.beehavior.onTerminate && this.beehavior.onTerminate(this)
+      )
+      .then(() => {
+        this.terminated = true;
+        this.deps.onExit(0);
+      });
   };
 
   /**

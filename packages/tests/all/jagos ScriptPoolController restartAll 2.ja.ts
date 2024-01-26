@@ -1,10 +1,11 @@
 import { TestProvision } from "^jarun";
 
-import { sleeping } from "^yapu";
 import {
   getJabScriptPoolController_one,
   getScriptPath,
+  shutdownQuickFix,
   mapScriptFilesToDefault,
+  waitForAllStoppedOrListening,
 } from "../_fixture";
 
 //shutdown, when script is ipc.
@@ -16,6 +17,6 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartAllScripts()
-    .then(() => sleeping(100)) //to allow the script to run.
-    .then(pool.shutdown);
+    .then(() => waitForAllStoppedOrListening(pool))
+    .then(() => shutdownQuickFix(pool));
 };

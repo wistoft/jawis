@@ -6,7 +6,7 @@
     "start": "concurrently --kill-others \"yarn -s javi\" \"yarn -s start:client\"",
     "start:client": "webpack serve -c packages/dev/devClient/webpack.dev.js",
     "": "",
-    "test": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/devServer/devJaviTestMain.ts",
+    "dev-test": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/devServer/devJaviTestMain.ts",
     ".": "",
     "lint": "eslint packages",
     "lint:fix": "eslint --fix packages",

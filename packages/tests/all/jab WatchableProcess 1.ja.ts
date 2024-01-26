@@ -1,10 +1,17 @@
 import { TestProvision } from "^jarun";
 
-import { getJabWatchableProcess } from "../_fixture";
+import { getJabWatchableProcess, shutdownQuickFix } from "../_fixture";
 
-export default (prov: TestProvision) =>
-  getJabWatchableProcess(prov, {
+//run simple script
+
+export default async (prov: TestProvision) => {
+  const wp = await getJabWatchableProcess(prov, {
     onMessage: (m: any) => {
       console.log(m);
     },
-  }).then((wp) => wp.waiter.await("message").then(() => wp.shutdown()));
+  });
+
+  await wp.waiter.await("message");
+
+  await shutdownQuickFix(wp);
+};

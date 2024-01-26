@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJabProcess, getScriptPath } from "../_fixture";
+import { getJabProcess, getScriptPath, shutdownQuickFix } from "../_fixture";
 
 // shutdown an ipc script, before its ready
 
@@ -9,5 +9,5 @@ export default (prov: TestProvision) => {
     filename: getScriptPath("ipcSendAndWait.js"),
   });
 
-  return proc.shutdown();
+  return shutdownQuickFix(proc);
 };

@@ -1,1 +1,1 @@
-{"user":{"console.log":["Error message and stack filtered",{"info":["value",["here it is"]]}]}}
+{"user":{"console.log":["Error message and stack filtered","{\"info\":[\"here it is\"]}"]}}

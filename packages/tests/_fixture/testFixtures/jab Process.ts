@@ -1,6 +1,6 @@
 import path from "path";
 
-import { ProcessDeps, Process, TS_TIMEOUT } from "^jab-node";
+import { ProcessDeps, Process } from "^jab-node";
 import { makeTsNodeJabProcess } from "^javi/util";
 
 import { getScriptPath, TestMainProv } from ".";
@@ -31,7 +31,7 @@ export const getJabProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message").then(() => proc);
+  return proc.waiter.await("message", 10000).then(() => proc);
 };
 
 /**
@@ -60,7 +60,7 @@ export const getJabTsProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message", TS_TIMEOUT).then(() => proc);
+  return proc.waiter.await("message", 10000).then(() => proc);
 };
 
 /**
@@ -70,6 +70,26 @@ export const getStdinBlockProcess = (prov: TestMainProv) =>
   getJabProcess(prov, {
     filename: getScriptPath("helloBlock.js"),
   });
+
+/**
+ *
+ */
+export const getProcessDepsThatMustNotBeUsed = (): ProcessDeps<any> => {
+  const complain = () => {
+    throw new Error("Must not be called");
+  };
+
+  return {
+    filename: getScriptPath("thisFileMustNotBeUsed.js"),
+    onMessage: complain,
+    onStdout: complain,
+    onStderr: complain,
+    onError: complain,
+    onExit: complain,
+    onClose: complain,
+    finally: complain,
+  };
+};
 
 /**
  *

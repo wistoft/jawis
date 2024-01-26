@@ -1,5 +1,4 @@
 import fs from "fs";
-import { sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
 import {
@@ -7,6 +6,7 @@ import {
   getJabScriptPoolController,
   getScratchPath,
   getScriptPath,
+  waitForAllStoppedOrListening,
 } from "../_fixture";
 
 //delete script while running. It will still be in the list.
@@ -26,7 +26,7 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartScript(script)
-    .then(() => sleeping(100))
+    .then(() => waitForAllStoppedOrListening(pool))
     .then(() => {
       fs.unlinkSync(script);
 

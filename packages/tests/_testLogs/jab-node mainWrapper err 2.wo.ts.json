@@ -1,1 +1,1 @@
-{"user":{"stdout":["sync done\nError message and stack filtered\n{ info: [ 'uh-promise' ] }\nfinally done\n"]}}
+{"user":{"stdout":["sync done\nError message and stack filtered\n{\"info\":[\"uh-promise\"]}\nfinally done\n"]}}

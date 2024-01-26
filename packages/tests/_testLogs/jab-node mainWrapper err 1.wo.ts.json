@@ -1,1 +1,1 @@
-{"user":{"stdout":["Error message and stack filtered\n{ info: [ 'uh-exception' ] }\nfinally done\n"]}}
+{"user":{"stdout":["Error message and stack filtered\n{\"info\":[\"uh-exception\"]}\nfinally done\n"]}}

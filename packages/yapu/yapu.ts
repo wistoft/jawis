@@ -49,6 +49,25 @@ export const whiling = (makePromise: () => Promise<boolean>) =>
   });
 
 /**
+ * Poll until true.
+ */
+export const poll = (func: () => boolean, interval: number) => {
+  const prom = getPromise<void>();
+
+  const pollFunction = () => {
+    if (func()) {
+      prom.resolve();
+    } else {
+      setTimeout(pollFunction, interval);
+    }
+  };
+
+  pollFunction();
+
+  return prom.promise;
+};
+
+/**
  * Sequential execute promises over elements of an array.
  * Break/reject on first rejection.
  *

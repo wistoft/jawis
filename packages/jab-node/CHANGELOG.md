@@ -3,8 +3,14 @@
 ## :bug: Bug fixes
 
 - Removed unused dependency: `dateformat`
+- ProcessPreloader gave wrong error message. It happened if a message was
+  received from ProcessPreloaderMain _between_ `kill` and `onExit`.
+- WatchableProcessPreloader didn't protect properly against double use. It mixed
+  the deps for the first and second call to `useProcess`.
 
 ## :tada: Enhancements
+
+- Increase timeout in `ProcessPreloader` waiting for ready event to 10 sec.
 
 ## :boom: Breaking changes
 

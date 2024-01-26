@@ -1,4 +1,3 @@
-import { TS_TIMEOUT } from "^jab-node";
 import { TestProvision } from "^jarun";
 
 import { getJabProcessPreloaderAndDeps } from "../_fixture";
@@ -10,5 +9,5 @@ export default (prov: TestProvision) => {
 
   pp.cancel();
 
-  return pp.waiter.await("ready", TS_TIMEOUT).then(() => pp.kill());
+  return pp.waiter.await("ready", 10000).then(() => pp.kill());
 };

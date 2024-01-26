@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { ProcessRestarter, ProcessRestarterDeps, TS_TIMEOUT } from "^jab-node";
+import { ProcessRestarter, ProcessRestarterDeps } from "^jab-node";
 
 import { getLogProv, getScriptPath, makeInMemoryWppMain } from ".";
 
@@ -28,7 +28,7 @@ export const getProcessRestarter_running = (
 
   jpr.firstInitProcess();
 
-  return jpr.waiter.await("running", TS_TIMEOUT).then(() => jpr);
+  return jpr.waiter.await("running", 10000).then(() => jpr);
 };
 
 /**

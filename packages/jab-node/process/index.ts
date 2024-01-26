@@ -1,3 +1,4 @@
+export * from "./deprecated";
 export * from "./exec";
 export * from "./execBee";
 export * from "./JabWorker";

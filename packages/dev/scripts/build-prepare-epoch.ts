@@ -21,21 +21,8 @@ type Epoch = {
 
 const epochs: Epoch[] = [
   {
-    id: 99,
-    modeEpoch: "relative",
-    modeRest: "relative",
-    versions: {
-      react: "16.14.0",
-      "@types/react": "16.8.0",
-      "react-dom": "16.14.0",
-      "@types/react-dom": "16.8.0",
-      "react-test-renderer": "16.14.0",
-      "@types/react-test-renderer": "16.9.5",
-    },
-  },
-  {
     id: 0,
-    modeEpoch: "exact",
+    modeEpoch: "relative",
     modeRest: "relative",
     versions: {
       react: "16.14.0",
@@ -51,6 +38,19 @@ const epochs: Epoch[] = [
     modeEpoch: "exact",
     modeRest: "relative",
     versions: {
+      react: "16.14.0",
+      "@types/react": "16.8.0",
+      "react-dom": "16.14.0",
+      "@types/react-dom": "16.8.0",
+      "react-test-renderer": "16.14.0",
+      "@types/react-test-renderer": "16.9.5",
+    },
+  },
+  {
+    id: 2,
+    modeEpoch: "exact",
+    modeRest: "relative",
+    versions: {
       react: "17.0.0",
       "@types/react": "17.0.0",
       "react-dom": "17.0.0",
@@ -61,7 +61,7 @@ const epochs: Epoch[] = [
   },
   {
     //some problem with jsx rendering, but types and stuff works.
-    id: 2,
+    id: 3,
     modeEpoch: "exact",
     modeRest: "relative",
     versions: {
@@ -104,7 +104,7 @@ export const doit = async () => {
     await assertGitClean(projectRoot);
   }
 
-  if (epoch.id !== 99) {
+  if (epoch.id !== 0) {
     await fs.promises.copyFile(
       path.join(projectRoot, "yarn.epoch." + epoch.id + postfix + ".lock"),
       path.join(projectRoot, "yarn.lock")
@@ -143,9 +143,9 @@ export const validateEpochs = (epochs: Epoch[]) => {
 
   for (const epoch of epochs) {
     for (const [packageName, version] of Object.entries(epoch.versions)) {
-      if (!version.match(/^\d+\.\d+\.\d+$/)) {
+      if (!version.match(/^\d+\.\d+\.\d+(-dev\.\d+)?$/)) {
         console.log(
-          "Version in in valid for package: " + packageName + ":" + version
+          "Version is invalid for package: " + packageName + ":" + version
         );
 
         errors = true;

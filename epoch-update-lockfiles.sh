@@ -1,7 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-for ((i=0; i<2; i++)) do 
+# epochs
+
+for ((i=0; i<3; i++)) do 
    
   yarn ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-prepare-epoch.ts "$i"
 
@@ -11,22 +13,38 @@ for ((i=0; i<2; i++)) do
 
   # reset epoch
 
-  yarn ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-prepare-epoch.ts 99 --skip-clean-repo-check
+  yarn ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-prepare-epoch.ts 0 --skip-clean-repo-check
 
   # commit new lock file
 
-  epochLockFile=yarn.epoch.$i.lock
+  if [[ $i == "0" ]]; then
 
-  if ! cmp -s yarn.lock $epochLockFile; then
-  
-    cp yarn.lock $epochLockFile
+    # commit dev lock file, if it has changed.
 
-    git add $epochLockFile && git commit -m "Epoch $i updated  --  automated"
+    if ! git diff --exit-code --name-only yarn.lock; then
+
+      git add yarn.lock && git commit -m "yarn.lock updated  --  automated"
+
+    fi
+
+  else
+
+    # epoch lock file is updated, if it has changed
+
+    epochLockFile=yarn.epoch.$i.lock
+      
+    if ! cmp -s yarn.lock $epochLockFile; then
     
+      cp yarn.lock $epochLockFile
+
+      git add $epochLockFile && git commit -m "Epoch $i updated  --  automated"
+      
+    fi
+
+    # reset yarn.lock
+
+    git checkout yarn.lock
   fi
 
-  # reset yarn.lock
-
-  git checkout yarn.lock
 
 done

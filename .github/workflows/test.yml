@@ -1,27 +1,44 @@
 name: "Test"
 
-on: "push"
+on: "pull_request"
 
 permissions:
   contents: read
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        epoch: [0, 1]
+        epoch: [0, 1, 2]
+        # epoch: [0, 1, 2, 3]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      # Hacky, too avoid using `actions/setup-node` another way.
+      - name: Get node version
+        id: get-node-version
+        shell: bash
+        run: |
+          VERSIONS=(16 18 20);
+          INDEX=$((${{ matrix.epoch}} % ${#VERSIONS[@]}))
+          echo "node-version=${VERSIONS[$INDEX]}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-node@v3
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install node
+        uses: actions/setup-node@v3
         with:
-          node-version: "18.x"
+          node-version: ${{ steps.get-node-version.outputs.node-version }}
 
-      - run: |
+      - name: Install epoch ${{ matrix.epoch }}
+        shell: bash
+        run: |
           chmod +x ./epoch-install.sh
           ./epoch-install.sh ${{ matrix.epoch }}
 
-      - run: yarn -s test
+      - name: Run tests
+        run: yarn -s dev-test

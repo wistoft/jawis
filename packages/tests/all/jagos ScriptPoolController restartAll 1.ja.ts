@@ -1,7 +1,9 @@
 import { TestProvision } from "^jarun";
 
-import { sleeping } from "^yapu";
-import { getJabScriptPoolController_one } from "../_fixture";
+import {
+  getJabScriptPoolController_one,
+  waitForAllStoppedOrListening,
+} from "../_fixture";
 
 //shutdown, when script (probably) have stopped itself.
 
@@ -10,6 +12,6 @@ export default (prov: TestProvision) => {
 
   return pool
     .restartAllScripts()
-    .then(() => sleeping(100)) //to allow the script to run.
+    .then(() => waitForAllStoppedOrListening(pool))
     .then(pool.shutdown);
 };

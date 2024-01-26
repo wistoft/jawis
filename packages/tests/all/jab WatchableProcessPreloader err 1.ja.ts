@@ -1,6 +1,10 @@
 import { TestProvision } from "^jarun";
 
-import { getJabWatchableProcessPreloaderAndDeps } from "../_fixture";
+import {
+  getJabWatchableProcessPreloaderAndDeps,
+  getProcessDepsThatMustNotBeUsed,
+  shutdownQuickFix,
+} from "../_fixture";
 
 //double use.
 
@@ -10,7 +14,7 @@ export default (prov: TestProvision) => {
   return wpp.useProcess(deps).then(
     (process) =>
       wpp
-        .useProcess(deps) // use again
-        .finally(() => process.shutdown()) //just to clean up
+        .useProcess(getProcessDepsThatMustNotBeUsed()) // use again
+        .finally(() => shutdownQuickFix(process)) //just to clean up
   );
 };

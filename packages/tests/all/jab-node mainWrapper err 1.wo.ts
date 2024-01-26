@@ -1,7 +1,7 @@
 import { mainWrapper } from "^main-wrapper";
 import { getErrorForPrint } from "^tests/_fixture";
 
-Error.stackTraceLimit = 1; //to avoid noisy in test log
+Error.stackTraceLimit = 1; //to avoid noise in test log
 
 //throws in main
 
