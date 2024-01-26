@@ -10,6 +10,8 @@
 
 ## :tada: Enhancements
 
+- Increase timeout in `ProcessPreloader` waiting for ready event to 10 sec.
+
 ## :boom: Breaking changes
 
 # 4.0.0

@@ -5,7 +5,6 @@ import { assertNever, err, LogProv } from "^jab";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 import { Bee, BeeListeners, MakeBee } from "^bee-common";
-import { TS_TIMEOUT } from ".";
 
 //can't be in main, couldn't be required there.
 export type BooterMessage = {
@@ -49,8 +48,7 @@ export class ProcessPreloader<MS extends {}> {
   private listeners: BeeListeners<BooterMessage>;
   private proc: Bee<PreloaderMessage>;
 
-  //We start TypeScript, so we need a large timeout :-)
-  private timeout = TS_TIMEOUT;
+  private timeout = 10000;
 
   //extra state, corresponding to starting-use, ready-use.
   private inUse = false;

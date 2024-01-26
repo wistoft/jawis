@@ -10,7 +10,6 @@ import { FinallyFunc } from "^finally-provider";
 
 import { def, LogProv, unknownToErrorData, err } from "^jab";
 import {
-  TS_TIMEOUT,
   WatchableProcessPreloader,
   makePlainWorkerBee,
   getFileToRequire,
@@ -413,7 +412,7 @@ export class ScriptPoolController implements ScriptPoolProv {
         this.onStatusChange(script, "listening");
       },
 
-      timeout: 2 * TS_TIMEOUT, //for jacs compiler.
+      timeout: 10000, //for jacs compiler.
 
       makeBee: makeTsBeeConditonally,
 

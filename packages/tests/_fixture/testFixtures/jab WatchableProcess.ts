@@ -3,7 +3,6 @@ import {
   ProcessDeps,
   WatchableProcessPreloaderDeps,
   WatchableProcessPreloader,
-  TS_TIMEOUT,
 } from "^jab-node";
 
 import { getPromise } from "^yapu";
@@ -26,7 +25,7 @@ export const shutdownQuickFix = async (process: {
     await process.shutdown();
   } catch (error: any) {
     if (error.message.includes("Timeout waiting for: stopped")) {
-      await (process as any).waiter.rawAwait("stopped", TS_TIMEOUT);
+      await (process as any).waiter.rawAwait("stopped", 10000);
     } else {
       throw error;
     }

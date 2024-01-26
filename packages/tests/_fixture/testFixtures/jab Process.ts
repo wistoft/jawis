@@ -1,6 +1,6 @@
 import path from "path";
 
-import { ProcessDeps, Process, TS_TIMEOUT } from "^jab-node";
+import { ProcessDeps, Process } from "^jab-node";
 import { makeTsNodeJabProcess } from "^javi/util";
 
 import { getScriptPath, TestMainProv } from ".";
@@ -31,7 +31,7 @@ export const getJabProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message", TS_TIMEOUT).then(() => proc);
+  return proc.waiter.await("message", 10000).then(() => proc);
 };
 
 /**
@@ -60,7 +60,7 @@ export const getJabTsProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message", TS_TIMEOUT).then(() => proc);
+  return proc.waiter.await("message", 10000).then(() => proc);
 };
 
 /**

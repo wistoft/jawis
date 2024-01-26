@@ -1,4 +1,3 @@
-import { TS_TIMEOUT } from "^jab-node";
 import { TestProvision } from "^jarun";
 import { getJabWorker } from "../_fixture";
 
@@ -7,5 +6,5 @@ import { getJabWorker } from "../_fixture";
 export default (prov: TestProvision) => {
   const worker = getJabWorker(prov);
 
-  return worker.waiter.await("stopped", TS_TIMEOUT);
+  return worker.waiter.await("stopped", 10000);
 };
