@@ -9,5 +9,7 @@
   - Timeout can be disabled by setting `hardTimeout` to 0.
   - Timeout will reject the `await` promise.
   - Previously it was only possible to change timeout in calls to `await`.
+- Add the timeout amount to timeout-error-messages.
+- export `WaiterDeps`
 
 ## :boom: Breaking changes
