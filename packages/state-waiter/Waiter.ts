@@ -1,10 +1,16 @@
-import { tryProp, prej, def } from "^jab";
+import { tryProp, prej, def, assert, isInt } from "^jab";
 import { getPromise, sleepingValue, safeRace } from "^yapu";
 
 const TIMEOUT_ERROR_CODE = "JAB_WAITER_TIMEOUT";
 const CANCEL_ERROR_CODE = "JAB_WAITER_CANCEL";
 
 const HARD_TIMEOUT = 300;
+
+declare const globalThis:
+  | undefined
+  | {
+      __jawis_state_waiter_hardTimeout: number;
+    };
 
 export type WaiterDeps<States> = {
   startState: States;
@@ -13,6 +19,20 @@ export type WaiterDeps<States> = {
   onError: (error: unknown) => void;
 
   hardTimeout?: number;
+};
+
+export const setGlobalHardTimeout_experimental = (timeout: number) => {
+  assert(
+    isInt(timeout) && timeout >= 0,
+    "Timeout must be non-negative",
+    timeout
+  );
+
+  if (!globalThis) {
+    throw new Error("globalThis was not defined.");
+  }
+
+  globalThis.__jawis_state_waiter_hardTimeout = timeout;
 };
 
 /**
@@ -66,7 +86,10 @@ export class Waiter<States, Events = never> {
 
     //use default timeout if given.
 
-    this.hardTimeout = this.deps.hardTimeout ?? HARD_TIMEOUT;
+    this.hardTimeout =
+      this.deps.hardTimeout ??
+      globalThis?.__jawis_state_waiter_hardTimeout ??
+      HARD_TIMEOUT;
   }
 
   /**
