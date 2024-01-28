@@ -1,4 +1,4 @@
-import { tryProp, prej, def } from "^jab";
+import { tryProp, prej, def, assert, isInt } from "^jab";
 import { getPromise, sleepingValue, safeRace } from "^yapu";
 
 const TIMEOUT_ERROR_CODE = "JAB_WAITER_TIMEOUT";
@@ -6,13 +6,33 @@ const CANCEL_ERROR_CODE = "JAB_WAITER_CANCEL";
 
 const HARD_TIMEOUT = 300;
 
-type Deps<States> = {
+declare const globalThis:
+  | undefined
+  | {
+      __jawis_state_waiter_hardTimeout: number;
+    };
+
+export type WaiterDeps<States> = {
   startState: States;
   stoppingState?: States;
   endState?: States;
   onError: (error: unknown) => void;
 
   hardTimeout?: number;
+};
+
+export const setGlobalHardTimeout_experimental = (timeout: number) => {
+  assert(
+    isInt(timeout) && timeout >= 0,
+    "Timeout must be non-negative",
+    timeout
+  );
+
+  if (!globalThis) {
+    throw new Error("globalThis was not defined.");
+  }
+
+  globalThis.__jawis_state_waiter_hardTimeout = timeout;
 };
 
 /**
@@ -22,11 +42,12 @@ type Deps<States> = {
  * - Implements convention for async shutdown and kill. For async shutdown and kill there is a 'stopping state'.
  *
  * notes
- * - Waiting is meant for development testing. It's possible to test specific async execution paths, when
+ * - Waiting is meant for testing. It's possible to test specific async execution paths, when
  *    a test case can 'inject' actions at specific state changes or events of the object under test.
  * - Only one thing can wait at a time. This is to reduce complexity. If more things wait there's no
  *    way to know what will execute first. The result is likely flaky test cases.
- * - this.eventTrace is useful the see what has happened with this waiter.
+ * - this.eventTrace is useful the see what has happened with the waiter.
+ *
  *
  */
 export class Waiter<States, Events = never> {
@@ -60,14 +81,20 @@ export class Waiter<States, Events = never> {
   /**
    *
    */
-  constructor(private deps: Deps<States>) {
+  constructor(private deps: WaiterDeps<States>) {
     this.state = deps.startState;
 
     //use default timeout if given.
 
-    this.hardTimeout = this.deps.hardTimeout ?? HARD_TIMEOUT;
+    this.hardTimeout =
+      this.deps.hardTimeout ??
+      globalThis?.__jawis_state_waiter_hardTimeout ??
+      HARD_TIMEOUT;
   }
 
+  /**
+   *
+   */
   public getState = () => this.state;
 
   /**
@@ -158,7 +185,7 @@ export class Waiter<States, Events = never> {
 
     //somewhat hacky, but the stack trace in the lambda below gives no relevant information. So why not?
 
-    const betterError = new Error("Timeout waiting for: " + type);
+    const betterError = new Error("Timeout waiting for: " + type + " (" + hardTimeout + "ms)"); // prettier-ignore
 
     //mark the error, so users can known it's a timeout error.
 
@@ -314,9 +341,9 @@ export class Waiter<States, Events = never> {
   };
 
   /**
-   * Use this a close-callback in the object under state control.
+   * Use this as a close-callback in the object under state control.
    *
-   * - If there is someone waiting anything other than close, it will be rejected.
+   * - If there is someone waiting for anything other than close, it will be rejected.
    */
   public onClose = () => {
     this.eventTrace.push("close");

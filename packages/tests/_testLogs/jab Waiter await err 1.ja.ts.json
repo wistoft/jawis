@@ -1,1 +1,1 @@
-{"user":{},"err":["Error: Timeout waiting for: done"]}
+{"user":{},"err":["Error: Signal already registered.","Error: Timeout waiting for: done (1ms)"]}
