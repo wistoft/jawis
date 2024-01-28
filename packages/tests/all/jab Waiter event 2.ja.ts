@@ -2,13 +2,14 @@ import { TestProvision } from "^jarun";
 
 import { getWaiter } from "../_fixture";
 
-// await twice.
+// event when awaiting for other event
 
 export default (prov: TestProvision) => {
   const waiter = getWaiter(prov);
 
-  prov.await(waiter.await("done", 1));
-  prov.await(waiter.await("done", 1));
+  const prom = waiter.await("first", 1);
 
-  waiter.set("done");
+  waiter.event("second"); //has no effect
+
+  return prom; //should timeout
 };
