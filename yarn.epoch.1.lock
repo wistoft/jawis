@@ -139,10 +139,22 @@
   dependencies:
     "@jawis/jabc" "^2.0.0"
 
+"@jawis/jab@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@jawis/jab/-/jab-2.2.0.tgz#0bc8ba94677983f17d6a5a2f67500ff7b4fb20d0"
+  integrity sha512-zeLYgungY7yuG0aPXDPGvFzoz3yt4riEPD5/nRoXz97B83S+a0NVX2F8MO188pV+X8Zia+1T7vdYHPL8e6b7jw==
+  dependencies:
+    "@jawis/jabc" "^2.1.0"
+
 "@jawis/jabc@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@jawis/jabc/-/jabc-2.0.0.tgz#f51f2b1204401d4509f2c4e048a452da23673a17"
   integrity sha512-8aRYJnlKCqWFpeXZRgg3KADvuyDlDrhjPmm4nUh8bEWEivx7cWU5HDrGD8CE4Wnl5uDkCmFoWyYPAX44wjRTIQ==
+
+"@jawis/jabc@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@jawis/jabc/-/jabc-2.1.0.tgz#9297a84e8633ad243d05ea095c014c73e0ff1e26"
+  integrity sha512-NxPIUmtL1Z65Snsu4ucktruoiyg85iTvyzlBgdQrcjANr26eo4SpEfXSaSgpNvhACGmVcv8WyDJkiRElR+vLEw==
 
 "@jawis/jacs@^2.0.0":
   version "2.0.0"
@@ -4202,12 +4214,12 @@ stacktrace-js@^2.0.2:
     stacktrace-gps "^3.0.4"
 
 state-waiter@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/state-waiter/-/state-waiter-1.0.1.tgz#545313689970e8bd509d14651bc3caed4dff294f"
-  integrity sha512-AejzaVP26tS3UH5QgV49irjIPYB1UwCDvRZNQxXaBaF6j/cpjfS2YB/fHmGQdFODuwTO+J+NQVR3XbW+XtUvew==
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/state-waiter/-/state-waiter-1.1.0.tgz#161d96305649493be039d624fbef6048f4300095"
+  integrity sha512-f1h/TJ7w9BTnX6xAWH2nJrx3R/Z6vlft51jNBhs4E0J//RvKezzQSV0F/QjEv0xhln5LxccUdJafxXT3x7B2OQ==
   dependencies:
-    "@jawis/jab" "^2.0.0"
-    yapu "^1.0.1"
+    "@jawis/jab" "^2.2.0"
+    yapu "^1.1.0"
 
 statuses@2.0.1:
   version "2.0.1"
@@ -4813,6 +4825,13 @@ yapu@^1.0.1:
   integrity sha512-KnMPivnLeyWH63VnjIX/cbr4iqYgRQmaXTpVBuqbMKU1xcakH3zxwI9Wnc8NnZIIyIN1TCDjUwchG8HV0lTt6A==
   dependencies:
     "@jawis/jab" "^2.0.0"
+
+yapu@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/yapu/-/yapu-1.1.0.tgz#ec4b4d2d373ea50cf3d7cc7a63424f15ba0e664c"
+  integrity sha512-McPrOjvdw+jbEcqSJxHov4Y6mPIRt+zO0txr89l+pyGHGOvzspJK6ZtSfvdVGyywN0Ws/eoT2J2T1CN6r7IyIQ==
+  dependencies:
+    "@jawis/jab" "^2.2.0"
 
 yargs-parser@^20.2.2:
   version "20.2.9"
