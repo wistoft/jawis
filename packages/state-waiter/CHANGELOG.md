@@ -4,6 +4,12 @@
 
 ## :tada: Enhancements
 
+## :boom: Breaking changes
+
+# 1.1.0
+
+## :tada: Enhancements
+
 - hardTimeout is configurable in `Waiter` constructor.
   - Its default is 300.
   - Timeout can be disabled by setting `hardTimeout` to 0.
@@ -14,5 +20,3 @@
 - Add setGlobalHardTimeout_experimental. It can set the default timeout in
   `Waiter`, which is otherwise impossible when `Waiter` is composed by other
   objects.
-
-## :boom: Breaking changes

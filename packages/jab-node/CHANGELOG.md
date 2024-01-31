@@ -11,6 +11,7 @@
 ## :tada: Enhancements
 
 - Increase timeout in `ProcessPreloader` waiting for ready event to 10 sec.
+- Add `flushAndExit` takes param `code`, which is used for `process.exit`.
 
 ## :boom: Breaking changes
 
