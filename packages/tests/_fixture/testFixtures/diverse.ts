@@ -9,6 +9,10 @@ import { LogProv, tryProp, ErrorData, OnError, assert } from "^jab";
 import { MainProv, httpRequest } from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
+import { setGlobalHardTimeout_experimental } from "^state-waiter";
+
+//quick fix: because waiter timeout is set too low by default.
+setGlobalHardTimeout_experimental(10000);
 
 /**
  *
