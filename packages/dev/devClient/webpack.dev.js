@@ -53,7 +53,8 @@ module.exports = {
     hot: false,
     liveReload: false,
     client: {
-      logging: "error",
+      logging: "none",
+      overlay: false,
       reconnect: false,
     },
   },
