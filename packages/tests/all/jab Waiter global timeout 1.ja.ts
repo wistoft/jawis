@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
-import { getWaiter } from "../_fixture";
 import { setGlobalHardTimeout_experimental } from "^state-waiter";
+import { getWaiter } from "../_fixture";
 
 // custom global default timeout is applied at each Waiter construct
 

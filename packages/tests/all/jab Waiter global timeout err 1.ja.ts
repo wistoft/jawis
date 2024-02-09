@@ -1,6 +1,5 @@
 import { TestProvision } from "^jarun";
 
-import { getWaiter } from "../_fixture";
 import { setGlobalHardTimeout_experimental } from "^state-waiter";
 
 // wrong timeout
