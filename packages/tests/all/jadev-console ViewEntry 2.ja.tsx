@@ -1,7 +1,7 @@
 import { TestProvision } from "^jarun";
 
 import { UiEntry } from "^console";
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 import { getViewEntry } from "../_fixture";
 
 export default ({ log }: TestProvision) => {
@@ -18,7 +18,7 @@ export default ({ log }: TestProvision) => {
 
   log(
     "error log without parsed stack",
-    getHtmlRTR(
+    getPrettyHtml(
       getViewEntry({
         entry: a,
       })

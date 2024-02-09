@@ -1,6 +1,6 @@
 import { objMap } from "^jab";
 import { TestProvision } from "^jarun";
-import { getHtmlRTR } from "^misc/node";
+import { getHtml } from "^misc/node";
 import { defaultConf } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
@@ -11,7 +11,7 @@ export default ({ imp }: TestProvision) => {
       if (typeof value === "string") {
         return value;
       } else {
-        return getHtmlRTR(value);
+        return getHtml(value);
       }
     })
   );

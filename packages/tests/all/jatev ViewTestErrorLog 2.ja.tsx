@@ -1,13 +1,13 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 import { errorData1, getViewTestLog } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
   // as expected
 
   imp(
-    getHtmlRTR(
+    getPrettyHtml(
       getViewTestLog({
         testLog: {
           type: "err",
@@ -22,7 +22,7 @@ export default ({ imp }: TestProvision) => {
   // one as expected, and one missing
 
   imp(
-    getHtmlRTR(
+    getPrettyHtml(
       getViewTestLog({
         testLog: {
           type: "err",

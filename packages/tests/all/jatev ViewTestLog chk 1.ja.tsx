@@ -1,12 +1,12 @@
 import { TestProvision } from "^jarun";
 
 import { capture } from "^jab";
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 import { errorData1, getViewTestLog } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
   imp(
-    getHtmlRTR(
+    getPrettyHtml(
       getViewTestLog({
         testLog: {
           type: "chk",

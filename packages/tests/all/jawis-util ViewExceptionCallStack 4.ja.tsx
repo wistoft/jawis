@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { parseTrace } from "^parse-captured-stack";
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 
 import { getViewExceptionCallStack } from "../_fixture";
 
@@ -8,7 +8,7 @@ import { getViewExceptionCallStack } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
   imp(
-    getHtmlRTR(
+    getPrettyHtml(
       getViewExceptionCallStack({
         projectRoot: "C:\\",
         stack: parseTrace({

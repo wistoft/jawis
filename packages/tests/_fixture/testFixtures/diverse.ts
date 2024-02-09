@@ -118,10 +118,13 @@ export const filterNodeDeprecation = (prov: TestProvision, errno: string) => {
  */
 export const filterReact = (prov: TestProvision) => {
   prov.filter("console.error", (...val: unknown[]) => {
+    if (val.length === 0 || typeof val[0] !== "string") {
+      return val;
+    }
+
     if (
-      val.length > 0 &&
-      typeof val[0] === "string" &&
-      val[0].startsWith("The above error occurred in the")
+      val[0].startsWith("The above error occurred in the") ||
+      val[0].includes("useLayoutEffect does nothing on the server")
     ) {
       return [];
     } else {

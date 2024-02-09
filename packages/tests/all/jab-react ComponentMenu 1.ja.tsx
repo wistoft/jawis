@@ -2,21 +2,23 @@ import React from "react";
 
 import { TestProvision } from "^jarun";
 import { ComponentMenu } from "^jab-react";
-import { getHtmlRTR } from "^misc/node";
+import { getHtml } from "^misc/node";
 
-import { getComponentMenu } from "../_fixture";
+import { filterReact, getComponentMenu } from "../_fixture";
 
-export default ({ chk }: TestProvision) => {
+export default (prov: TestProvision) => {
+  filterReact(prov);
+
   //no components
 
-  chk(getHtmlRTR(getComponentMenu({}, "/")).includes("No Route for: "));
+  prov.chk(getHtml(getComponentMenu({}, "/")).includes("No Route for: "));
 
   //
   //one route
   //
 
-  chk(
-    getHtmlRTR(
+  prov.chk(
+    getHtml(
       getComponentMenu(
         {
           routes: [{ name: "first", elm: <>first route</> }],
@@ -37,8 +39,8 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(def2, "/")).includes("first route"));
-  chk(getHtmlRTR(getComponentMenu(def2, "/second")).includes("second route"));
+  prov.chk(getHtml(getComponentMenu(def2, "/")).includes("first route"));
+  prov.chk(getHtml(getComponentMenu(def2, "/second")).includes("second route"));
 
   //
   //nested panel
@@ -51,8 +53,8 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(parent, "/parent1")).includes("1st parent route")); // prettier-ignore
-  chk(getHtmlRTR(getComponentMenu(parent, "/parent2")).includes("first route")); // prettier-ignore
+  prov.chk(getHtml(getComponentMenu(parent, "/parent1")).includes("1st parent route")); // prettier-ignore
+  prov.chk(getHtml(getComponentMenu(parent, "/parent2")).includes("first route")); // prettier-ignore
 
   //
   // space in routes
@@ -65,5 +67,5 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(def3, "/my route")).includes("my content")); // prettier-ignore
+  prov.chk(getHtml(getComponentMenu(def3, "/my route")).includes("my content")); // prettier-ignore
 };

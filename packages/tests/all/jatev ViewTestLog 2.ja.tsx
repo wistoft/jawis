@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 import { getViewTestLog } from "../_fixture";
 
 //rogue logs
@@ -9,7 +9,7 @@ import { getViewTestLog } from "../_fixture";
 
 export default (prov: TestProvision) => {
   prov.imp(
-    getHtmlRTR(
+    getPrettyHtml(
       getViewTestLog({
         testLog: { type: "user", name: "rogue.mylog", exp: [2], cur: [1] },
       })

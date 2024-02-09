@@ -13,7 +13,7 @@ import { capture } from "^jab";
 import { TestState, TestStateUpdate } from "^jatev";
 import { asyncCapture } from "^async-capture";
 import { UseWsEffectArgs } from "^react-use-ws";
-import { getHtmlRTR } from "^misc/node";
+import { getHtml } from "^misc/node";
 
 import { ViewTest } from "^jatev/ViewTest";
 import {
@@ -55,7 +55,7 @@ export const replaceAtoms_test = makeReplaceAtoms(
  *
  */
 export const toHtml_test = (val: unknown) =>
-  getHtmlRTR(<>{replaceAtoms_test(toAtomizedString_test(capture(val)))}</>);
+  getHtml(<>{replaceAtoms_test(toAtomizedString_test(capture(val)))}</>);
 
 /**
  *

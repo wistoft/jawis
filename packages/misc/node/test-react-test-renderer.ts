@@ -3,8 +3,6 @@ import RTR, { ReactTestRenderer } from "react-test-renderer";
 import { createRenderer, ShallowRenderer } from "react-test-renderer/shallow";
 import { format as prettyFormat, plugins } from "pretty-format";
 
-//in own folder, because 'react-test-renderer' is not possible to tree shake in webpack build.
-
 /**
  *
  */
@@ -24,6 +22,11 @@ export const shallowRendererTos = (renderer: ShallowRenderer) =>
   });
 
 /**
+ * problems
+ *  - Removes `&nbsp;` entirely
+ *  - Makes a newline between all children. The right thing is to just juxtapose children.
+ *  - Return array, when element is React.Fragment
+ *
  *
  */
 export const getHtmlRTR = (elm: ReactElement<any>) =>

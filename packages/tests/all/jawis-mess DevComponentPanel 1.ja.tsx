@@ -1,17 +1,19 @@
 import React from "react";
 
 import { TestProvision } from "^jarun";
-import { getHtmlRTR } from "^misc/node";
+import { getHtml } from "^misc/node";
 import { toUrl } from "^dev-compv/util";
-import { getDevComponentPanel } from "../_fixture";
+import { filterReact, getDevComponentPanel } from "../_fixture";
 
-export default ({ chk }: TestProvision) => {
+export default (prov: TestProvision) => {
+  filterReact(prov);
+
   //
   // no component
   //
 
-  chk(getHtmlRTR(getDevComponentPanel({}, "/")).includes("Home"));
-  chk(getHtmlRTR(getDevComponentPanel({}, "/blabla")).includes("Component not found")); // prettier-ignore
+  prov.chk(getHtml(getDevComponentPanel({}, "/")).includes("Home"));
+  prov.chk(getHtml(getDevComponentPanel({}, "/blabla")).includes("Component not found")); // prettier-ignore
 
   const DummyComp: React.FC = () => <>DummyComp</>;
 
@@ -34,11 +36,11 @@ export default ({ chk }: TestProvision) => {
   ];
 
   // list of components
-  chk(getHtmlRTR(getDevComponentPanel({ folders: oneComponent }, "/")).includes('href="/path_to_hej_tsx"')); // prettier-ignore
+  prov.chk(getHtml(getDevComponentPanel({ folders: oneComponent }, "/")).includes('href="/path_to_hej_tsx"')); // prettier-ignore
 
   // show component
-  chk(
-    getHtmlRTR(
+  prov.chk(
+    getHtml(
       getDevComponentPanel(
         { folders: oneComponent },
         "/" + toUrl("path/to/hej.tsx")

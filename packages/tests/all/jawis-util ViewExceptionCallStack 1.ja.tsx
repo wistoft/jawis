@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 import { parseTrace } from "^parse-captured-stack";
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 
 import { errorData1, errorData2, getViewExceptionCallStack } from "../_fixture";
 
@@ -9,7 +9,7 @@ export default ({ log }: TestProvision) => {
 
   log(
     "node error",
-    getHtmlRTR(
+    getPrettyHtml(
       getViewExceptionCallStack({ stack: parseTrace(errorData1.stack) })
     )
   );
@@ -18,7 +18,7 @@ export default ({ log }: TestProvision) => {
 
   log(
     "firefox",
-    getHtmlRTR(
+    getPrettyHtml(
       getViewExceptionCallStack({
         stack: parseTrace(errorData2.stack),
       })

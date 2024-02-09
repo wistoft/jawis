@@ -1,8 +1,8 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "^misc/node";
 import { getViewLogEntry } from "../_fixture";
 
 export default ({ imp }: TestProvision) => {
-  imp(getHtmlRTR(getViewLogEntry()));
+  imp(getPrettyHtml(getViewLogEntry()));
 };
