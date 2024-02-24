@@ -13,6 +13,10 @@ npm i react-use-ws
 
 ## Known issues
 
+- BrowserWebSocket is superfluously implemented
+- BrowserWebSocket reconnects too much, and causes the browser to make
+  'exponential' increasing timeouts.
+
 ## Related work
 
 - [react-use-websocket](https://www.npmjs.com/package/react-use-websocket)
