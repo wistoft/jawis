@@ -1,13 +1,14 @@
 import React from "react";
-import ReactDOM from "react-dom";
+
+import { mountReact } from "^jab-react";
 
 import { JaviDirector, getClientConf } from "./internal";
 
 const conf = getClientConf();
 
-ReactDOM.render(
+mountReact(
   <React.StrictMode>
     <JaviDirector {...conf} />
   </React.StrictMode>,
-  document.getElementById("root")
+  "root"
 );

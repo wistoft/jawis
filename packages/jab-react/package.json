@@ -5,7 +5,9 @@
   "description": "Collection of utilities for react.",
   "dependencies": {
     "@types/react": "^16.8.0",
+    "@types/react-dom": "^16.8.0",
     "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-router-dom": "^6.3.0",
     "shallow-equal": "^1.2.1"
   },

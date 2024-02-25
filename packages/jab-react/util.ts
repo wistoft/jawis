@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { shallowEqualObjects } from "shallow-equal";
 
 import { err } from "^jab";
+
+declare let require: any;
 
 //
 // component set state
@@ -178,4 +181,37 @@ export const useScrollIntoView = () => {
   }, []);
 
   return scrollTarget;
+};
+
+/**
+ *
+ */
+export const mountReact = (jsx: JSX.Element, rootId: string) => {
+  //
+  // detect if React 18
+  //
+
+  let reactClient = undefined;
+
+  try {
+    reactClient = require("react-dom/client");
+  } catch (error) {
+    // eslint-disable no-empty
+  }
+
+  //
+  // mount
+  //
+
+  if (reactClient) {
+    // mount as React 18
+
+    const root = reactClient.createRoot(document.getElementById(rootId)!);
+
+    root.render(jsx);
+  } else {
+    // mount as pre React 18
+
+    ReactDOM.render(jsx, document.getElementById(rootId));
+  }
 };

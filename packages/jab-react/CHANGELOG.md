@@ -9,6 +9,7 @@
 - Increase support of `@types/react` from `^16.14.4` to `^16.8.0`
 - Widen `ReactElement` to `ReactNode` in `RouteDef` and `ComponentMenuProps`
   types.
+- Add `mountReact` to be agnostic to pre/post react 18.
 
 ## :boom: Breaking changes
 

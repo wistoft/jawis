@@ -1,7 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 import { getClientConf } from "^javi-client";
+import { mountReact } from "^jab-react";
 
 import { DevDirector } from "./DevDirector";
 import { getDevClientConf } from "./getDevClientConf";
@@ -9,9 +9,9 @@ import { getDevClientConf } from "./getDevClientConf";
 const conf = getDevClientConf();
 const javiConf = getClientConf();
 
-ReactDOM.render(
+mountReact(
   <React.StrictMode>
     <DevDirector {...javiConf} {...conf} />
   </React.StrictMode>,
-  document.getElementById("root")
+  "root"
 );
