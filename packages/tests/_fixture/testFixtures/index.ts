@@ -30,6 +30,8 @@ export * from "./jates";
 export * from "./jatev mock data";
 export * from "./jatev";
 export * from "./javi";
+export * from "./react-use-ws";
+export * from "./react-use-ws WebSocketMock";
 export * from "./ts compiler host";
 export * from "./ts";
 export * from "./ts-reload";

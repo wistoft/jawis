@@ -14,6 +14,9 @@ import {
 type Deps = {
   URL: string;
   reconnect: boolean;
+
+  //for testing
+  makeWebSocket?: () => WebSocket;
 };
 
 /**
@@ -53,6 +56,7 @@ const createStructure = <MS, MR>(
     onError: (event) => {
       console.log("ws failed", event);
     },
+    makeWebSocket: deps.makeWebSocket,
   });
 
   const useWsEffect = makeUseWsEffect(bws, eventStream);

@@ -7,6 +7,9 @@ export type Deps<MR> = {
   onServerMesssage: (data: MR) => void;
   onStateChange?: (state: WsStates) => void;
   onError: (error: Event) => void;
+
+  //for testing
+  makeWebSocket?: () => WebSocket;
 };
 
 const MAX_RETRIES = 5;
@@ -64,7 +67,11 @@ export class BrowserWebSocket<MS, MR> {
   private rawOpenWebSocket = () =>
     new Promise<void>((resolve, reject) => {
       this.shouldBeConnected = true;
-      this.ws = new WebSocket(this.deps.URL);
+      if (this.deps.makeWebSocket) {
+        this.ws = this.deps.makeWebSocket();
+      } else {
+        this.ws = new WebSocket(this.deps.URL);
+      }
 
       let hasSettled = false; //state for the promise
 
