@@ -1,4 +1,5 @@
 import { renderHook as originalRenderHook } from "@testing-library/react-hooks";
+import { ensureMonkeyPatchUseEffect_e1 } from "./internal";
 
 /**
  * Improved version of renderHook.
@@ -49,4 +50,16 @@ export function renderHook<H extends (...a: any[]) => any>(
     hook: hook as H,
     rerender,
   };
+}
+
+/**
+ *
+ */
+export function renderHook_e1<H extends (...a: any[]) => any>(
+  originalHook: H,
+  ...args: Parameters<H>
+) {
+  ensureMonkeyPatchUseEffect_e1();
+
+  return renderHook(originalHook, ...args);
 }
