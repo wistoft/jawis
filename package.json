@@ -16,7 +16,7 @@
     "..": "",
     "compile": "yarn -s tsc -b",
     "recompile": "rimraf build-tsc && yarn -s tsc -b",
-    "clean": "rimraf build-tsc",
+    "clean": "rimraf build-tsc && find . -type d -empty -delete",
     "...": "",
     "build": "yarn recompile && yarn build:fast",
     "build:fast": "yarn build:source && yarn build:extra && yarn build:client",
