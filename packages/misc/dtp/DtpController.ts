@@ -35,11 +35,11 @@ export class DtpController {
    */
   public getTests = (
     // eslint-disable-next-line unused-imports/no-unused-vars
-    cachedDtp: string[][],
+    _cachedDtp: string[][],
     // eslint-disable-next-line unused-imports/no-unused-vars
-    changedFiles: string[],
+    _changedFiles: string[],
     // eslint-disable-next-line unused-imports/no-unused-vars
-    tests: Map<string, number>
+    _tests: Map<string, number>
   ) => {};
 
   /**

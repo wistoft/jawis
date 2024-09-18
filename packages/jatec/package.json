@@ -3,10 +3,7 @@
   "version": "3.0.1",
   "name": "~jatec",
   "description": "Common for jate view and server.",
-  "dependencies": {
-    "@types/deep-equal": "^1.0.1",
-    "deep-equal": "^2.0.5"
-  },
+  "dependencies": {},
   "keywords": [
     "test runner",
     "unit test",

@@ -16,7 +16,7 @@ export class MyClass {
    * my constructor
    *
    */
-  public constructor(myVar = "") {}
+  public constructor(_myVar = "") {}
 
   /**
    * my method

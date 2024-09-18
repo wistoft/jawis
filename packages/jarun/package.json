@@ -5,10 +5,7 @@
   "version": "2.0.1",
   "name": "~jarun",
   "description": "Test runner for JavaScript, and more.",
-  "dependencies": {
-    "@types/deep-equal": "^1.0.1",
-    "deep-equal": "^2.0.5"
-  },
+  "dependencies": {},
   "keywords": [
     "test runner",
     "unit test",

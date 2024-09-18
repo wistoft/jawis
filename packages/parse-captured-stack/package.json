@@ -3,13 +3,7 @@
   "version": "0.0.3",
   "name": "~parse-captured-stack",
   "description": "Wrappers around established stack-parsing libraries",
-  "dependencies": {
-    "@types/stack-trace": "^0.0.30",
-    "error-stack-parser": "^2.0.6",
-    "stack-trace": "^0.0.10",
-    "stacktrace-gps": "^3.0.4",
-    "stacktrace-js": "^2.0.2"
-  },
+  "dependencies": {},
   "keywords": [
     "stack",
     "stack",

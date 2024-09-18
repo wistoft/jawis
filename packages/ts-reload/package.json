@@ -8,10 +8,7 @@
     "ts-reload": "./bin.js"
   },
   "description": "Compile, watch and reload TypeScript projects during development.",
-  "dependencies": {
-    "@types/yargs": "^17.0.7",
-    "yargs": "^17.3.0"
-  },
+  "dependencies": {},
   "keywords": [
     "development",
     "watch",

@@ -8,7 +8,7 @@ import { useMemoDep } from "^jab-react";
 export default (prov: TestProvision) => {
   let i = 0;
   // eslint-disable-next-line unused-imports/no-unused-vars
-  const func = (deps: { i?: string; j?: string }) => ++i;
+  const func = (_deps: { i?: string; j?: string }) => ++i;
 
   const { result, hook } = renderHook(useMemoDep, { i: "hej" }, func);
 

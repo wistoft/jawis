@@ -317,7 +317,7 @@ const arrayEncodedTos = (
     }
 
     default: {
-      const n: never = value[0]; // eslint-disable-line unused-imports/no-unused-vars
+      const _: never = value[0]; // eslint-disable-line unused-imports/no-unused-vars
 
       return "Unknown encode pivot: " + tos(value[0]);
     }

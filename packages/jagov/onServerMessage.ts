@@ -84,7 +84,7 @@ export const handleScriptMessage = (
 
     default: {
       // eslint-disable-next-line unused-imports/no-unused-vars
-      const nev: never = msg; // we want exhaustive check, but not to throw.
+      const _: never = msg; // we want exhaustive check, but not to throw.
 
       deps.addConsoleData([
         {

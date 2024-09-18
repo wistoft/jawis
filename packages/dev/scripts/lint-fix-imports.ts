@@ -50,7 +50,7 @@ const checkRelativeImportsInPackage = async (
   folder: string,
   packageName: string,
   doFix: boolean,
-  buildManager?: ReturnType<typeof makeLiveJawisBuildManager>
+  buildManager: ReturnType<typeof makeLiveJawisBuildManager>
 ) => {
   const files = await fs.promises.readdir(folder);
   const seenNpmImports = new Set<string>();
@@ -94,14 +94,14 @@ const checkRelativeImportsInPackage = async (
   //check npm dependencies
 
   const deps = new Set(
-    (await getPackageDependencies(folder)).filter(
+    (await getPackageDependencies(buildManager.projectFolder)).filter(
       (dep) =>
         !dep.startsWith("@types/") && //types must be checked another way
         !useUndectable.has(dep)
     )
   );
 
-  const unused = setDifference(deps, seenNpmImports, useUndectable);
+  // const unused = setDifference(deps, seenNpmImports, useUndectable);
   const missing = setDifference(seenNpmImports, deps);
 
   if (missing.size > 0) {
@@ -111,12 +111,12 @@ const checkRelativeImportsInPackage = async (
     });
   }
 
-  if (unused.size > 0) {
-    emitVsCodeError({
-      file: path.join(folder, "package.json"),
-      message: "Unused dependencies: " + Array.from(unused).join(", "),
-    });
-  }
+  // if (unused.size > 0) {
+  //   emitVsCodeError({
+  //     file: path.join(folder, "package.json"),
+  //     message: "Unused dependencies: " + Array.from(unused).join(", "),
+  //   });
+  // }
 
   //check sibling dependencies
 

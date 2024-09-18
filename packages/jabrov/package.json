@@ -3,10 +3,7 @@
   "version": "0.0.1",
   "name": "~jabrov",
   "description": "Jabro view.",
-  "dependencies": {
-    "@types/js-string-escape": "^1.0.1",
-    "js-string-escape": "^1.0.1"
-  },
+  "dependencies": {},
   "keywords": [
     "browser",
     "bee",

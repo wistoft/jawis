@@ -3,11 +3,7 @@
   "version": "0.0.3",
   "name": "~view-exception",
   "description": "React component for presenting exceptions in the browser",
-  "dependencies": {
-    "@types/react": "^16.8.0",
-    "path-browserify": "^1.0.1",
-    "react": "^16.14.0"
-  },
+  "dependencies": {},
   "keywords": [
     "stack",
     "trace",

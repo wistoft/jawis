@@ -38,9 +38,7 @@ module.exports = {
   ignorePatterns: [".vscode/tasks.json", "vendor"],
 
   rules: {
-    "@typescript-eslint/no-unused-vars": "off", //replaced by unused-imports
-    "unused-imports/no-unused-imports": "warn",
-    "unused-imports/no-unused-vars": [
+    "@typescript-eslint/no-unused-vars": [
       "warn",
       {
         varsIgnorePattern: "^_",
@@ -55,7 +53,6 @@ module.exports = {
     "@typescript-eslint/no-var-requires": "off",
     "react/prop-types": "off",
     "react/display-name": "off",
-    "import/no-extraneous-dependencies": ["error"],
     "import/no-duplicates": ["error"],
     "import/no-self-import": ["error"],
     "import/export": ["error"],

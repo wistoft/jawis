@@ -3,9 +3,6 @@
   "version": "0.0.3",
   "name": "~render-hook-plus",
   "description": "Improved version of `renderHook` from the library @testing-library/react-hooks",
-  "peerDependencies": {
-    "@testing-library/react-hooks": "^5.1.0"
-  },
   "keywords": [
     "test",
     "render",

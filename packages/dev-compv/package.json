@@ -3,10 +3,7 @@
   "version": "0.0.3",
   "name": "~dev-compv",
   "description": "Dev commponent panel view",
-  "dependencies": {
-    "@types/react": "^16.8.0",
-    "react": "^16.14.0"
-  },
+  "dependencies": {},
   "keywords": [
     "development",
     "component",
