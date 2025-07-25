@@ -1,0 +1,1 @@
+{"user":{"print":["Hello World!","line two","\u0000"],"action":["down-beginning",1,"up",1,"up",2,"down",1,"down",2,"right",1,"right",2,"left",1,"left",2,"down-beginning",1,"down-beginning",2,"up-beginning",1,"up-beginning",2],"position":[{"x":1,"y":["undefined"]},{"x":2,"y":["undefined"]},{"x":1,"y":1},{"x":2,"y":1},{"x":2,"y":1},{"x":1,"y":3},{"x":2,"y":3}]}}

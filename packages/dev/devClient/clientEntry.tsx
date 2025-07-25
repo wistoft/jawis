@@ -1,17 +1,27 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 import { getClientConf } from "^javi-client";
+import { JaviClientConf } from "^javic";
+import { mountReact } from "^jab-react";
 
-import { DevDirector } from "./DevDirector";
-import { getDevClientConf } from "./getDevClientConf";
+import { DevClientConf, DevDirector } from "./DevDirector";
 
-const conf = getDevClientConf();
-const javiConf = getClientConf();
+let jsx: any;
 
-ReactDOM.render(
-  <React.StrictMode>
-    <DevDirector {...javiConf} {...conf} />
-  </React.StrictMode>,
+try {
+  const javiConf = getClientConf() as JaviClientConf & DevClientConf;
+
+  jsx = <DevDirector {...javiConf} />;
+} catch (error) {
+  jsx = (
+    <>
+      Could not load client conf from development server.
+      <br /> {"" + error}
+    </>
+  );
+}
+
+mountReact(
+  <React.StrictMode>{jsx}</React.StrictMode>,
   document.getElementById("root")
 );

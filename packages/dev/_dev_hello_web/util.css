@@ -5,10 +5,8 @@
  */
 .scrollbox {
   background:
-    /* Shadow covers */ linear-gradient(
-      rgba(30, 30, 30) 30%,
-      rgba(30, 30, 30, 0)
-    ),
+    /* Shadow covers */
+    linear-gradient(rgba(30, 30, 30) 30%, rgba(30, 30, 30, 0)),
     linear-gradient(rgba(30, 30, 30, 0), rgba(30, 30, 30) 70%) 0 100%,
     /* Shadows */
       radial-gradient(
@@ -25,10 +23,8 @@
       )
       0 100%;
   background:
-    /* Shadow covers */ linear-gradient(
-      rgba(30, 30, 30) 30%,
-      rgba(30, 30, 30, 0)
-    ),
+    /* Shadow covers */
+    linear-gradient(rgba(30, 30, 30) 30%, rgba(30, 30, 30, 0)),
     linear-gradient(rgba(30, 30, 30, 0), rgba(30, 30, 30) 70%) 0 100%,
     /* Shadows */
       radial-gradient(
@@ -44,7 +40,11 @@
       0 100%;
   background-repeat: no-repeat;
   background-color: rgba(30, 30, 30);
-  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-size:
+    100% 40px,
+    100% 40px,
+    100% 14px,
+    100% 14px;
 
   /* Opera doesn't support this in the shorthand */
   background-attachment: local, local, scroll, scroll;
@@ -56,10 +56,8 @@
  */
 .scrollbox_white_background_unused {
   background:
-    /* Shadow covers */ linear-gradient(
-      white 30%,
-      rgba(255, 255, 255, 0)
-    ),
+    /* Shadow covers */
+    linear-gradient(white 30%, rgba(255, 255, 255, 0)),
     linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
     /* Shadows */
       radial-gradient(
@@ -76,10 +74,8 @@
       )
       0 100%;
   background:
-    /* Shadow covers */ linear-gradient(
-      white 30%,
-      rgba(255, 255, 255, 0)
-    ),
+    /* Shadow covers */
+    linear-gradient(white 30%, rgba(255, 255, 255, 0)),
     linear-gradient(rgba(255, 255, 255, 0), white 70%) 0 100%,
     /* Shadows */
       radial-gradient(
@@ -95,7 +91,11 @@
       0 100%;
   background-repeat: no-repeat;
   background-color: white;
-  background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+  background-size:
+    100% 40px,
+    100% 40px,
+    100% 14px,
+    100% 14px;
 
   /* Opera doesn't support this in the shorthand */
   background-attachment: local, local, scroll, scroll;

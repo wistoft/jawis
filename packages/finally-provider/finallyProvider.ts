@@ -1,23 +1,14 @@
-import { assert, err } from "^jab";
-import { looping } from "^yapu";
+import { FinallyProv, FinallyFunc, assert, err } from "^jab";
+import { looping, timeRace2 } from "^yapu";
 
-/**
- *
- */
-export type FinallyProv = {
-  finally: FinallyFunc;
-  runFinally: () => Promise<void>;
-};
-
-export type FinallyFunc = (
-  func: () => void | undefined | Promise<void>
-) => void;
+export type { FinallyProv, FinallyFunc };
 
 /**
  *
  */
 export type FinallyProviderDeps = {
   onError: (error: unknown, extraInfo?: Array<unknown>) => void;
+  timeout?: number;
 };
 
 /**
@@ -53,12 +44,17 @@ export class FinallyProvider implements FinallyProv {
 
     this.active = false;
 
-    return looping(this.finallyFuncs, (finalTasks) =>
-      Promise.resolve() //
-        .then(() => finalTasks())
-        .catch((error: unknown) => {
-          this.deps.onError(error, ["Finally threw."]);
-        })
+    return looping(this.finallyFuncs, (finalFunc) =>
+      timeRace2(
+        Promise.resolve()
+          .then(finalFunc)
+          .catch((error: unknown) => {
+            this.deps.onError(error, ["Finally threw."]);
+          }),
+        this.deps.onError,
+        this.deps.timeout,
+        "Finally function"
+      )
     );
   };
 }

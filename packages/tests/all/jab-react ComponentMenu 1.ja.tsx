@@ -2,26 +2,31 @@ import React from "react";
 
 import { TestProvision } from "^jarun";
 import { ComponentMenu } from "^jab-react";
-import { getHtmlRTR } from "^misc/node";
 
-import { getComponentMenu } from "../_fixture";
+import { filterReact, getComponentMenu, getPrettyHtml } from "../_fixture";
 
-export default ({ chk }: TestProvision) => {
+export default async (prov: TestProvision) => {
+  filterReact(prov);
+
   //no components
 
-  chk(getHtmlRTR(getComponentMenu({}, "/")).includes("No Route for: "));
+  prov.chk(
+    (await getPrettyHtml(getComponentMenu({}, "/"))).includes("No Route for:")
+  );
 
   //
   //one route
   //
 
-  chk(
-    getHtmlRTR(
-      getComponentMenu(
-        {
-          routes: [{ name: "first", elm: <>first route</> }],
-        },
-        "/"
+  prov.chk(
+    (
+      await getPrettyHtml(
+        getComponentMenu(
+          {
+            routes: [{ name: "first", elm: <>first route</> }],
+          },
+          "/"
+        )
       )
     ).includes("first route")
   );
@@ -37,8 +42,14 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(def2, "/")).includes("first route"));
-  chk(getHtmlRTR(getComponentMenu(def2, "/second")).includes("second route"));
+  prov.chk(
+    (await getPrettyHtml(getComponentMenu(def2, "/"))).includes("first route")
+  );
+  prov.chk(
+    (await getPrettyHtml(getComponentMenu(def2, "/second"))).includes(
+      "second route"
+    )
+  );
 
   //
   //nested panel
@@ -51,8 +62,8 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(parent, "/parent1")).includes("1st parent route")); // prettier-ignore
-  chk(getHtmlRTR(getComponentMenu(parent, "/parent2")).includes("first route")); // prettier-ignore
+  prov.chk((await getPrettyHtml(getComponentMenu(parent, "/parent1"))).includes("1st parent route")); // prettier-ignore
+  prov.chk((await getPrettyHtml(getComponentMenu(parent, "/parent2"))).includes("first route")); // prettier-ignore
 
   //
   // space in routes
@@ -65,5 +76,5 @@ export default ({ chk }: TestProvision) => {
     ],
   };
 
-  chk(getHtmlRTR(getComponentMenu(def3, "/my route")).includes("my content")); // prettier-ignore
+  prov.chk((await getPrettyHtml(getComponentMenu(def3, "/my route"))).includes("my content")); // prettier-ignore
 };

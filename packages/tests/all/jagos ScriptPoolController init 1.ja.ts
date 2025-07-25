@@ -1,5 +1,5 @@
 import { TestProvision } from "^jarun";
-import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
+import { filterScriptStatuses } from "^tests/_fixture";
 
 import { getFixturePath, getJabScriptPoolController_one } from "../_fixture";
 

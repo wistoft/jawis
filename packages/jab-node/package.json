@@ -1,8 +1,5 @@
 {
-  "sideEffects": [
-    "./process/ProcessPreloaderMain.ts",
-    "./process/WatchableProcessMain.ts"
-  ],
+  "sideEffects": false,
   "version": "4.0.0",
   "name": "~jab-node",
   "description": "Collection of utilities for node environment.",

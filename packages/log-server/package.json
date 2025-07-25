@@ -1,0 +1,15 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~log-server",
+  "description": "Collect logs in development",
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "dev",
+    "debug",
+    "logs",
+    "logging",
+    "console"
+  ]
+}

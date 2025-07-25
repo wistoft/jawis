@@ -1,8 +1,31 @@
-import { webpackCompileHelper } from "./util/build";
+import { makeJawisBuildManager, compileJawisFiles } from "./build";
+import {
+  projectRoot,
+  alphaBuildFolder,
+  npmScope,
+  scopedPackages,
+  unscopedPackages,
+  privatePackages,
+  phpPackages,
+  relativeWebBuildFolder,
+} from "../project.conf";
 
-const { alphaBuildFolder } = eval("require")("../project.conf");
-
-webpackCompileHelper("jacs", "JacsConsumerMain", alphaBuildFolder); // prettier-ignore
-webpackCompileHelper("jarun", "JarunProcessMain", alphaBuildFolder);
-webpackCompileHelper("jab-node/process", "WatchableProcessMain", alphaBuildFolder); // prettier-ignore
-webpackCompileHelper("jagos", "ScriptWrapperMain", alphaBuildFolder);
+makeJawisBuildManager(
+  projectRoot,
+  alphaBuildFolder,
+  npmScope,
+  scopedPackages,
+  unscopedPackages,
+  privatePackages,
+  /* replacePathForRelease */ false,
+  phpPackages
+)
+  .build()
+  .then(() =>
+    compileJawisFiles({
+      buildFolder: alphaBuildFolder,
+      keepSubFoldersInNodeBeesAndPlainFiles: true,
+      relativeWebBuildFolder,
+    })
+  )
+  .catch(console.log);

@@ -1,4 +1,3 @@
-export * from "./DependencyGraph";
+export * from "./CodePieceGraph";
 export * from "./DtpController";
-export * from "./extractDeps";
 export * from "./dtpImpact";

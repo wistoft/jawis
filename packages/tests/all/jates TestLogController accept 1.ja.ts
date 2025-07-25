@@ -9,19 +9,21 @@ export default async (prov: TestProvision) => {
 
   const tlc = getTestLogController_scratch(prov);
 
+  const id = "1";
+
   //add
 
-  tlc.setCurLogs("1", { user: { hej: ["dav"] } });
+  tlc.setCurLogs(id, { user: { hej: ["dav"] } });
 
-  prov.imp(await tlc.acceptTestLog("1", "hej"));
+  prov.imp(await tlc.acceptTestLog(id, "hej"));
 
-  prov.eq({ user: { hej: ["dav"] } }, await tlc.getExpLogs("1"));
+  prov.eq({ user: { hej: ["dav"] } }, await tlc.getExpLogs(id));
 
   //remove
 
-  tlc.setCurLogs("1", { user: {} });
+  tlc.setCurLogs(id, { user: {} });
 
-  prov.imp(await tlc.acceptTestLog("1", "hej"));
+  prov.imp(await tlc.acceptTestLog(id, "hej"));
 
-  prov.eq({ user: {} }, await tlc.getExpLogs("1"));
+  prov.eq({ user: {} }, await tlc.getExpLogs(id));
 };

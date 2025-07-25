@@ -1,9 +1,8 @@
-import path from "path";
-import { Worker } from "worker_threads";
-import { MakeBee } from "^bee-common";
+import path from "node:path";
+import { Worker } from "node:worker_threads";
 
 import { assert } from "^jab";
-import { MakeNodeWorker, JabWorker, JabWorkerDeps } from "^jab-node";
+import { MakeNodeWorker } from "^process-util";
 
 /**
  * Load a .ts file, even though that extension isn't allowed.
@@ -12,7 +11,7 @@ import { MakeNodeWorker, JabWorker, JabWorkerDeps } from "^jab-node";
  * - execArgv not supported.
  *
  * note
- *  process.execArgv arves, så hvis ts-node er registreret, så bliver det automatisk for worker.
+ *  process.execArgv is inherited, therefore if ts_node is registered, it will also be registered for worker.
  *  Double ts-node registrering giver en fejl med noget: --isolated-modules.
  *
  * @source: https://github.com/TypeStrong/ts-node/issues/711
@@ -21,7 +20,7 @@ import { MakeNodeWorker, JabWorker, JabWorkerDeps } from "^jab-node";
 export const makeTsNodeWorker: MakeNodeWorker = (filename, options = {}) => {
   assert(path.isAbsolute(filename));
   assert(!(options && "eval" in options), "eval not supported");
-  assert(!(options && "execArgv" in options), "execArgv not supported");
+
   if (options.workerData) {
     assert(
       !("runThisFileInTheWorker" in options.workerData),
@@ -41,13 +40,7 @@ export const makeTsNodeWorker: MakeNodeWorker = (filename, options = {}) => {
       "ts-node/register/transpile-only",
       "-r",
       "tsconfig-paths/register",
+      ...(options.execArgv || []),
     ],
   });
 };
-
-/**
- *
- */
-export const makeTsNodeWorkerBee: MakeBee = <MR, WD>(
-  deps: Omit<JabWorkerDeps<MR, WD>, "makeWorker">
-) => new JabWorker({ ...deps, makeWorker: makeTsNodeWorker });

@@ -1,4 +1,10 @@
-import { BeeProv, makeBeeOnError } from "^bee-common";
+import {
+  BeeDef,
+  BeeProv,
+  makeBeeOnError,
+  makeSendTunneledLog,
+  runBee,
+} from "^bee-common";
 import { assert, getSyntheticError, OnError } from "^jab";
 import { then } from "^yapu";
 
@@ -9,20 +15,22 @@ export const getBeeProv = (
   jabroRequire: (filename: string) => unknown,
   channelToken: string | number
 ): BeeProv => {
-  const onError = makeBeeOnError(beeSend);
+  const sendLog = makeSendTunneledLog(beeSend, channelToken);
+  const { onError } = makeBeeOnError(sendLog);
   const importModule = (filename: string) => then(() => jabroRequire(filename));
 
   const beeProv: BeeProv = {
     beeSend,
+    sendLog,
     beeExit: () => beeExit(channelToken),
-    registerErrorHandlers: (usersOnError = onError) => {
-      registerErrorHandlers(usersOnError);
-    },
+    onError,
+    registerErrorHandlers,
     registerOnMessage: (listener) => {
       registerOnMessage(listener, onError);
     },
     removeOnMessage,
     importModule,
+    runBee: (beeDef: BeeDef, setGlobal) => runBee(beeProv, beeDef, setGlobal),
   };
 
   return beeProv;
@@ -47,7 +55,7 @@ export const beeExit = (channelToken: string | number) => {
 };
 
 /**
- * Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
+ * - Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
  */
 export const registerOnMessage = (
   listener: (msg: any) => void,
@@ -80,7 +88,7 @@ export const registerErrorHandlers = (onError: OnError) => {
 };
 
 /**
- * Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
+ * - Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
  */
 export const registerOnUnhandleRejection = (onError: OnError) => {
   addEventListener("unhandledrejection", (event: PromiseRejectionEvent) => {
@@ -95,7 +103,7 @@ export const registerOnUnhandleRejection = (onError: OnError) => {
 };
 
 /**
- * Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
+ * - Try catch is needed to catch all errors, because a web worker turns some errors into "Script error.", which is useless.
  */
 export const registerOnUncaughtException = (onError: OnError) => {
   addEventListener("error", (event: ErrorEvent) => {

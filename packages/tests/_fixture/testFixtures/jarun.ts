@@ -1,21 +1,19 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import {
   JarunTestProvision,
   TestProvision,
   JarunTestRunner,
-  createJarunPromise,
   JarunTestRunnerDeps,
-  JarunEqAssertation,
   BeeRunner,
   TestFileExport,
 } from "^jarun";
-import { assert, err } from "^jab";
+import { AbsoluteFile, err } from "^jab";
 import { TestCurLogs } from "^jatec";
 
-import { filterTestResult, filterTestLogs } from "./jates";
-import { getLiveMakeJacsWorker } from ".";
+import { MakeBee } from "^bee-common";
+import { filterTestResult, filterTestLogs, getLiveMakeJacsWorker } from ".";
 
 /**
  *
@@ -43,22 +41,27 @@ export const getJarunTestRunner = (
 ) =>
   new JarunTestRunner({
     timeoutms: 50,
+    finallyFuncTimeout: 20,
+    addUhExceptionsToCurrentTest: false,
     onRogueTest: getOnRogueTest(prov, logPrefix),
     ...extraDeps,
   });
 
 /**
  *
+ * - makeTest usually don't get any params, like it does here. But testing unhandled errors is easier this way.
  */
 export const jtrRunTest = (
   prov: TestProvision,
-  makeTest: () => TestFileExport,
+  makeTest: (jtr: JarunTestRunner) => TestFileExport,
   extraDeps?: Partial<JarunTestRunnerDeps>,
   logPrefix = ""
 ) => {
   const jtr = getJarunTestRunner(prov, extraDeps, logPrefix);
 
-  return jtr.runTest("testId", makeTest).then(filterTestResult);
+  return jtr
+    .runTest("testId", () => Promise.resolve(makeTest(jtr)))
+    .then(filterTestResult);
 };
 
 /**
@@ -67,6 +70,7 @@ export const jtrRunTest = (
 export const getJarunTestProvision = (prov: TestProvision, logPrefix = "") =>
   new JarunTestProvision({
     testId: "myTestId",
+    finallyFuncTimeout: 20,
     onRogueTest: getOnRogueTest(prov, logPrefix),
   });
 
@@ -105,9 +109,7 @@ export const catchChkLog = (func: () => void) =>
       err("exception expected");
     })
     .catch((e) => {
-      assert(e.name === "JarunEqAssertation");
-
-      const data = (e as JarunEqAssertation).getSomething();
+      const data = e.getJarunEqAssertationData();
 
       //stack is ignored
       return {
@@ -119,38 +121,21 @@ export const catchChkLog = (func: () => void) =>
 /**
  *
  */
-export const getJarunPromiseClass = (prov: TestProvision) =>
-  createJarunPromise(getJarunTestProvision(prov));
-
-/**
- *
- */
-export const newJarunPromise = <T>(
-  prov: TestProvision,
-  executor: (
-    resolve: (value?: T | PromiseLike<T>) => void,
-    reject: (reason?: any) => void
-  ) => void
-) => {
-  const JarunPromise = getJarunPromiseClass(prov);
-
-  return new JarunPromise(executor);
-};
-
-/**
- *
- */
-export const getBeeRunner = (prov: TestProvision) =>
+export const getBeeRunner = (prov: TestProvision, makeBee?: MakeBee) =>
   new BeeRunner({
     finally: prov.finally,
-    makeBee: getLiveMakeJacsWorker(),
+    makeBee: makeBee ?? getLiveMakeJacsWorker(),
   });
 
 /**
  *
  */
-export const brRunTest = (prov: TestProvision, absTestFile: string) => {
-  const br = getBeeRunner(prov);
+export const brRunTest = (
+  prov: TestProvision,
+  absTestFile: AbsoluteFile,
+  makeBee?: MakeBee
+) => {
+  const br = getBeeRunner(prov, makeBee);
 
   return {
     br,

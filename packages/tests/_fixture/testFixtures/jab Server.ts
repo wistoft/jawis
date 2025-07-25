@@ -26,13 +26,7 @@ export const getServer_chatty = (
   extraDeps: Partial<ServerDeps> & {
     app: Application;
   }
-) => {
-  const server = new ServerWaiter(getServerDeps(prov, logPrefix, extraDeps));
-
-  prov.finally(server.killIfRunning);
-
-  return server.waitForListening().then(() => server);
-};
+) => getServer(prov, getServerDeps(prov, logPrefix, extraDeps));
 
 /**
  *
@@ -41,15 +35,11 @@ export const getServer_test_app = (
   prov: TestProvision,
   logPrefix = "",
   extraDeps?: Partial<ServerDeps>
-) => {
-  const server = new ServerWaiter(
+) =>
+  getServer(
+    prov,
     getServerDeps(prov, logPrefix, { ...extraDeps, app: getTestApp(prov) })
   );
-
-  prov.finally(server.killIfRunning);
-
-  return server.waitForListening().then(() => server);
-};
 
 /**
  *
@@ -93,10 +83,10 @@ export const getServerDeps = (
 /**
  *
  */
-export const getTestApp = (prov: TestProvision) => {
+export const getTestApp = (prov: TestProvision): Application => {
   const realApp = express();
 
-  const wsInstance = expressWs(realApp);
+  const wsInstance = expressWs(realApp as any);
   const app = wsInstance.app;
 
   // front page
@@ -121,5 +111,5 @@ export const getTestApp = (prov: TestProvision) => {
     res.end("error");
   });
 
-  return realApp as Application;
+  return realApp;
 };

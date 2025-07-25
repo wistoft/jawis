@@ -1,0 +1,1 @@
+{"user":{"Allow extra params after the component name":["<nav style=\"color: var(--link-color)\">\n  <a href=\"/\">Home</a>,\n  <a href=\"#\" title=\"\" class=\"jab-js-link\">path/to/hej.tsx</a>\n</nav>\n<br />DummyComp\n"]}}

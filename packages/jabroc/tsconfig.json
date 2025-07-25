@@ -4,9 +4,5 @@
     "outDir": "../../build-tsc/jabroc",
     "rootDir": "."
   },
-  "references": [
-    { "path": "../bee-common" },
-    { "path": "../jagoc" },
-    { "path": "../jabc" }
-  ]
+  "references": [{ "path": "../jabc" }, { "path": "../bee-common" }]
 }

@@ -6,12 +6,15 @@
   },
   "references": [
     { "path": "../bee-common" },
-    { "path": "../finally-provider" },
     { "path": "../jagoc" },
     { "path": "../jab" },
+    { "path": "../finally-provider" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
-    { "path": "../state-waiter" },
-    { "path": "../yapu" }
+    { "path": "../long-traces" },
+    { "path": "../process-util" },
+    { "path": "../yapu" },
+    { "path": "../javic" },
+    { "path": "../state-waiter" }
   ]
 }

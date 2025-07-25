@@ -1,7 +1,6 @@
 import React, { memo } from "react";
 
 import { assertNever } from "^jab";
-import { ErrorLog } from "^jatec";
 import { parseErrorData } from "^parse-captured-stack";
 import {
   filterErrorMessage,
@@ -9,7 +8,7 @@ import {
   ViewExceptionProps,
 } from "^view-exception";
 
-import { errLogDiff } from "./internal";
+import { ErrorLog, errLogDiff } from "./internal";
 
 export type ViewErrorLogProps = {
   testLog: ErrorLog;

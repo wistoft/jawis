@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~stdio-protocol",
+  "description": "Use stdio to make a hidden ipc channel.",
+  "dependencies": {},
+  "keywords": [
+    "process",
+    "thread",
+    "worker",
+    "exec",
+    "communication",
+    "messaging",
+    "ipc"
+  ]
+}

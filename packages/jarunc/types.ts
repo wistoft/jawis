@@ -1,5 +1,6 @@
-import { OnError } from "^jab";
+import { OnError, AbsoluteFile, OnErrorData } from "^jab";
 import { RogueData, TestResult } from "^jatec";
+import { BeeShutdownMessage } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
 
 export type TestProvision = {
@@ -9,8 +10,9 @@ export type TestProvision = {
   imp: (...val: unknown[]) => void;
   div: (...val: unknown[]) => void;
   log: (logName: string, ...value: unknown[]) => void;
-  logStream: (logName: string, value: string) => void;
+  logStream: (logName: string, value: string | Buffer) => void;
   onError: OnError;
+  onErrorData: OnErrorData;
   catch: <T>(func: () => T) => T | undefined;
   filter: (logName: string, func: (...val: unknown[]) => unknown[]) => void;
   finally: FinallyFunc;
@@ -22,6 +24,11 @@ export type TestProvision = {
 export type TestFunction = (prov: TestProvision) => unknown;
 
 export type TestFileExport = TestFunction | { default: TestFunction };
+
+export type JarunTestRunnerProv = {
+  runTest: (globalId: string, absTestFile: AbsoluteFile) => Promise<TestResult>;
+  kill: () => Promise<void>;
+};
 
 /**
  *
@@ -45,6 +52,4 @@ export type JarunProcessControllerMessage =
       id: string;
       file: string;
     }
-  | {
-      type: "shutdown";
-    };
+  | BeeShutdownMessage;

@@ -1,3 +1,3 @@
 export * from "./createWebpackBaseConf";
-export * from "./test-react-test-renderer";
+export * from "./MochaAdapter";
 export * from "./ts-node-util";

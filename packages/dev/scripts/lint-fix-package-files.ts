@@ -1,26 +1,35 @@
-import fs from "fs";
+import fs from "node:fs";
 import fse from "fs-extra";
-import path from "path";
-
-import { emitVsCodeError, sortObject } from "./build/util";
-import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
-import { tryGetCommonPackage } from "./build/util3";
+import path from "node:path";
+import { AbsoluteFile, emitVsCodeError } from "^jab";
+import { BeeMain } from "^bee-common/types";
+import {
+  allPackagesIncludingPrivate,
+  packagesPatternIncludingPrivate,
+  projectRoot,
+} from "../project.conf";
+import { sortObject } from "./build";
+import { getSideEffectsDeclaration, tryGetCommonPackage } from "./build";
+import { makeAbsolute } from "^jab-node";
 
 /**
  *
  */
-export const doit = async () => {
+export const main: BeeMain = async () => {
   const fixPackageJson = makeFixPackageJson();
 
   //root package.json
 
-  await fixPackageJson(path.join(projectRoot, "package.json"));
+  await fixPackageJson(makeAbsolute(projectRoot, "package.json"));
 
   //packages
 
   for (const packageName of allPackagesIncludingPrivate) {
     await fixPackageJson(
-      path.join(projectRoot, "packages", packageName, "package.json")
+      makeAbsolute(
+        projectRoot,
+        path.join("packages", packageName, "package.json")
+      )
     );
 
     await fixIndexFile(path.join(projectRoot, "packages", packageName));
@@ -61,7 +70,7 @@ const fixIndexFile = async (folder: string) => {
 const makeFixPackageJson = () => {
   const versions = new Map<string, string>();
 
-  return async (file: string) => {
+  return async (file: AbsoluteFile) => {
     const jsonStr = (await fs.promises.readFile(file)).toString();
 
     const json = JSON.parse(jsonStr);
@@ -96,27 +105,12 @@ const makeFixPackageJson = () => {
 };
 
 /**
- * todo: avoid writing unchanged files.
- */
-export const getSideEffectsDeclaration = async (folder: string) => {
-  const jsonStr = (
-    await fs.promises.readFile(path.join(folder, "package.json"))
-  ).toString();
-
-  const json = JSON.parse(jsonStr);
-
-  if (json.sideEffects === false) {
-    return;
-  }
-
-  return json.sideEffects as string[] | undefined;
-};
-
-/**
- * todo: avoid writing unchanged files.
+ *
  */
 export const fixInternalFile = async (folder: string, packageName: string) => {
-  let sideEffects = await getSideEffectsDeclaration(folder);
+  const packageJson = JSON.parse((await fs.promises.readFile(path.join(folder, "package.json"))).toString()); // prettier-ignore
+
+  let sideEffects = await getSideEffectsDeclaration(packageJson);
 
   sideEffects = sideEffects?.map((file) => file.replace(/^\.\//, ""));
 
@@ -129,6 +123,7 @@ export const fixInternalFile = async (folder: string, packageName: string) => {
         file !== "index.ts" &&
         file !== "internal.ts" &&
         !file.endsWith(".d.ts") &&
+        !file.endsWith("Main.ts") && //quick fix - because only one of these can be included in index files.
         !sideEffects?.includes(file)
     )
     .map((file) => file.replace(/\.tsx?$/, ""))
@@ -154,7 +149,13 @@ export const fixInternalFile = async (folder: string, packageName: string) => {
 
   //write
 
-  await fs.promises.writeFile(path.join(folder, "internal.ts"), internalFile);
-};
+  const targetFile = path.join(folder, "internal.ts");
 
-doit();
+  if (await fse.pathExists(targetFile)) {
+    if (internalFile === (await fs.promises.readFile(targetFile)).toString()) {
+      return;
+    }
+  }
+
+  await fs.promises.writeFile(targetFile, internalFile);
+};

@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/log-server",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jagov" },
+    { "path": "../jab-react" },
+    { "path": "../console" }
+  ]
+}

@@ -1,1 +1,1 @@
-{"user":{"imp":["<i>\n  true\n</i>","Array [\n  <i>\n    [\n  </i>,\n  \"\n.\t\t\",\n  <i>\n    true\n  </i>,\n  \"\n.\t\t\",\n  <i>\n    false\n  </i>,\n  \"\n\",\n  <i>\n    ]\n  </i>,\n]","Array [\n  \"JarunPromise : Promise : Object \",\n  <i>\n    {\n  </i>,\n  <i>\n    }\n  </i>,\n]"]}}
+{"user":{"true":["<i>true</i>\n"],"true & false":["<i>[</i> . <i>true</i> . <i>false</i> <i>]</i>\n"],"promise":["Promise : Object <i>{</i><i>}</i>\n"],"resouce":["<i>Resource: </i>stream\n"]}}

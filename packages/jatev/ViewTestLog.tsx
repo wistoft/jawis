@@ -2,11 +2,12 @@ import React, { memo, useState } from "react";
 
 import { assertNever } from "^jab";
 import { JsLink } from "^jab-react";
-import { TestLogMatchType, ZippedTestLog } from "^jatec";
 
 import {
-  ClientApiSendProv,
-  getDefaultShowTestState,
+  TestLogMatchType,
+  ZippedTestLog,
+  ApiProv,
+  getDefaultShowTestLog,
   getTestLogMatchType,
   ViewTestLogContent,
   ViewTestLogContentProps,
@@ -16,8 +17,8 @@ export type ViewTestLogProps = {
   testId: string;
   testLog: ZippedTestLog;
   rogue: boolean;
-  apiSend: ClientApiSendProv["apiSend"];
-} & Omit<ViewTestLogContentProps, "showTestLogType" | "testLog">;
+} & Omit<ViewTestLogContentProps, "showTestLogType" | "testLog"> &
+  Pick<ApiProv, "apiSend">;
 
 /**
  *
@@ -25,7 +26,7 @@ export type ViewTestLogProps = {
 export const ViewTestLog: React.FC<ViewTestLogProps> = memo(
   ({ testId, testLog, rogue, apiSend, ...extra }) => {
     const [showTestLog, setShowTestLog] = useState(() =>
-      getDefaultShowTestState(testLog)
+      getDefaultShowTestLog(testLog)
     );
 
     const [showTestLogType, setShowTestLogType] = useState<
@@ -103,7 +104,7 @@ export const getControlLinks = (
   logType: TestLogMatchType,
   testLog: ZippedTestLog,
   testId: string,
-  apiSend: ClientApiSendProv["apiSend"]
+  apiSend: ApiProv["apiSend"]
 ) => {
   if (testLog.type === "chk") {
     return null;
@@ -166,7 +167,7 @@ const getTestLogLinks = (
   logType: TestLogMatchType,
   testLog: ZippedTestLog,
   testId: string,
-  apiSend: ClientApiSendProv["apiSend"],
+  apiSend: ApiProv["apiSend"],
   setShowTestLogType: React.Dispatch<
     React.SetStateAction<"cmp" | "exp" | "cur">
   >

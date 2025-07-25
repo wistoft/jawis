@@ -1,21 +1,18 @@
-/**
- *
- */
-export type LogProv = {
-  /**
-   * for logging javascript variables.
-   */
-  log: (...args: Array<unknown>) => void;
+import { AbsoluteFile } from "./internal";
 
-  /**
-   * for logging things like stdout.
-   */
-  logStream: (logName: string, value: string | Uint8Array) => void;
+export type WaitFunc = (
+  typedArray: Int32Array,
+  index: number,
+  value: number,
+  timeout?: number
+) => "ok" | "not-equal" | "timed-out";
 
-  /**
-   * for reporting status.
-   */
-  status: (type: string, status: string) => void;
+export type Diagnostic = {
+  file: AbsoluteFile;
+  message: string;
+  line?: number | string;
+  column?: number;
+  severity?: "error" | "warning";
 };
 
 //

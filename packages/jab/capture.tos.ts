@@ -26,6 +26,7 @@ export type StringKeys =
   | "set-prefix"
   | "map-prefix"
   | "function-prefix"
+  | "resource-prefix"
   | "array-buffer-prefix"
   | "shared-array-buffer-prefix"
   | "data-view-prefix"
@@ -37,7 +38,8 @@ export type StringKeys =
   | "brace-start"
   | "brace-end"
   | "bracket-start"
-  | "bracket-end";
+  | "bracket-end"
+  | "partial-prefix";
 
 export type Strings = { [K in StringKeys]: string };
 
@@ -76,6 +78,7 @@ export const capturedTos = (value: CapturedValue) =>
     "set-prefix": "Set: ",
     "map-prefix": "Map: ",
     "function-prefix": "Function: ",
+    "resource-prefix": "Resource: ",
 
     "array-buffer-prefix": "ArrayBuffer: ",
     "shared-array-buffer-prefix": "SharedArrayBuffer: ",
@@ -91,6 +94,8 @@ export const capturedTos = (value: CapturedValue) =>
     "brace-end": "}",
     "bracket-start": "[",
     "bracket-end": "]",
+
+    "partial-prefix": "Partial: ",
   });
 
 /**
@@ -170,9 +175,9 @@ const stringTosHelper = (value: string, strings: Strings): string => {
 };
 
 /**
- * - plain objects, for now.
+ * - plain objects
  */
-const objectTos = (obj: object, strings: Strings, name = ""): string => {
+const objectTos = (obj: object, strings: Strings): string => {
   const content = Object.entries(obj).reduce(
     (acc, [key, property]) =>
       acc +
@@ -185,11 +190,9 @@ const objectTos = (obj: object, strings: Strings, name = ""): string => {
   );
 
   if (content === "") {
-    return name + strings["brace-start"] + strings["brace-end"];
+    return strings["brace-start"] + strings["brace-end"];
   } else {
-    return (
-      name + strings["brace-start"] + "\n" + content + strings["brace-end"]
-    );
+    return strings["brace-start"] + "\n" + content + strings["brace-end"];
   }
 };
 
@@ -251,6 +254,9 @@ const arrayEncodedTos = (
     case "function":
       return strings["function-prefix"] + value[1];
 
+    case "resource":
+      return strings["resource-prefix"] + value[1];
+
     case "value":
       return arrayTos(value[1], strings);
 
@@ -290,15 +296,17 @@ const arrayEncodedTos = (
     }
 
     case "object": {
-      const name = value[1].protoChain.join(" : ") + " ";
+      let res = value[1].protoChain.join(" : ") + " ";
 
-      const a = objectTos(value[1].fields, strings, name);
+      if (value[1].fields) {
+        res += objectTos(value[1].fields, strings);
+      }
 
       if (value[1].toStringValue) {
-        return a + "\n" + "toStringValue: " + value[1].toStringValue;
-      } else {
-        return a;
+        res += "\n" + "toStringValue: " + value[1].toStringValue;
       }
+
+      return res;
     }
 
     case "promise": {
@@ -314,6 +322,10 @@ const arrayEncodedTos = (
         res += "Reject: " + capturedTosGeneral(value[1].reject, strings) + "\n";
       }
       return res;
+    }
+
+    case "partial": {
+      return strings["partial-prefix"] + capturedTosGeneral(value[1], strings);
     }
 
     default: {

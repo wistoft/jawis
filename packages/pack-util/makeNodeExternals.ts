@@ -1,6 +1,8 @@
+import isBuiltin from "is-builtin-module";
+
 import { err } from "^jab";
 
-import { WebpackExternalsFunc } from "./internal";
+import { OnExternals, WebpackExternalsFunc } from "./internal";
 
 /**
  * Statically determines if a import is a node_modules import.
@@ -11,7 +13,7 @@ import { WebpackExternalsFunc } from "./internal";
  *
  */
 export const makeNodeExternals =
-  (): WebpackExternalsFunc =>
+  (onExternal?: OnExternals): WebpackExternalsFunc =>
   ({ request, context }, callback) => {
     if (request === undefined) {
       return callback();
@@ -27,6 +29,13 @@ export const makeNodeExternals =
       return callback();
     }
 
+    if (isBuiltin(request)) {
+      // Externalize to a commonjs module using the request path
+      return callback(undefined, "commonjs " + request);
+    }
+
+    onExternal && onExternal({ request, context });
+
     //unscoped npm package
     if (/^[a-z0-9\-_]/i.test(request)) {
       // Externalize to a commonjs module using the request path
@@ -41,3 +50,50 @@ export const makeNodeExternals =
 
     err("makeNodeExternals: unknown import", { context, request });
   };
+
+/**
+ *
+ */
+export const categorizeImportSpecifier = (specifier: string) => {
+  //todo: get the import mapping specific to the repo.
+  if (specifier.startsWith("^")) {
+    return "sibling";
+  }
+
+  if (/^\.\./.test(specifier)) {
+    return "relative-external";
+  }
+
+  if (/^\./.test(specifier)) {
+    return "relative";
+  }
+
+  if (/^(\/|\w:)/.test(specifier)) {
+    return "absolute";
+  }
+
+  if (isBuiltin(specifier)) {
+    return "node-built-in";
+  }
+
+  //protocol
+  if (/^([a-z]+):/.test(specifier)) {
+    if (specifier.startsWith("file:///")) {
+      return "absolute";
+    } else {
+      throw err("categorizeImportSpecifier: unknown protocol: " + specifier);
+    }
+  }
+
+  //unscoped npm package
+  if (/^[a-z0-9\-_]/i.test(specifier)) {
+    return "npm";
+  }
+
+  //scoped npm package
+  if (specifier.startsWith("@")) {
+    return "npm";
+  }
+
+  throw err("categorizeImportSpecifier: unknown import: " + specifier);
+};

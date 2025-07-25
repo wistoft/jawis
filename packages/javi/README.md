@@ -117,7 +117,7 @@ module.exports = {
 ## Future work
 
 - Make it possible to use other testing frameworks.
-- Make posible to run script and tests in the browser.
+- Make possible to run script and tests in the browser.
 
 ## Related work
 

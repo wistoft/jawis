@@ -6,5 +6,5 @@ import { getJabWorker } from "../_fixture";
 export default (prov: TestProvision) => {
   const worker = getJabWorker(prov);
 
-  return worker.waiter.await("stopped", 10000);
+  return worker.waiter.await("stopped");
 };

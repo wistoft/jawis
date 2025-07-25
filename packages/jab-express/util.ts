@@ -1,14 +1,10 @@
 import { NextFunction, Request, Response } from "express";
+import { WebsocketRequestHandler } from "express-ws";
 
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 
-import {
-  NodeWS,
-  SocketData,
-  WebsocketRequestHandler,
-  WsMessageListener,
-} from "./internal";
+import { NodeWS, SocketData, WsMessageListener } from "./internal";
 
 export type MakeUpgradeHandlerDeps = {
   onError: (error: unknown) => void;
@@ -50,6 +46,10 @@ export const makeUpgradeHandler =
   };
 
 /**
+ *
+ * - Always output error on server.
+ * - Try to send the error to browser.
+ *
  * hacky
  *  - when and where to call end()
  *  - can't send error object in end() in node 14.
@@ -60,29 +60,35 @@ export const expressErrorsThrow = (
   res: Response,
   _next: NextFunction
 ) => {
-  //wouldn't it be better to take onError?
+  //show message on server
+
   setTimeout(() => {
+    //todo: wouldn't it be better to take onError?
     throw err;
   }, 0);
 
-  //message to developer via GUI
+  // can't send anything to browser, when it's a web socket upgrade request
 
   if (req.headers.upgrade) {
-    // quick fix for error in web socket handler.
-    console.log("WSError: ");
-    console.log(err);
+    return;
+  }
+
+  //message to the browser
+
+  if (res.headersSent) {
+    //we can't sent to client reliably here.
+    //must we end the connection, so the client don't hangs.
+    res.end();
   } else {
-    if (res.headersSent) {
-      //we can't sent to client reliably here.
-      //must we can end the connection, so the client don't hangs.
-      res.end();
+    if (req.method === "GET") {
+      res.type("txt");
+      res.send(err.stack);
     } else {
       res.json({
         status: "err",
         message: err.message,
+        strack: err.stack,
       });
     }
   }
-
-  res.end(err);
 };

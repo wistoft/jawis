@@ -1,0 +1,1 @@
+{"user":{"stdout":["[\"value\",[[\"value\",[[\"circular\"]]]]]\n[\"object\",{\"protoChain\":[\"stdClass\"],\"fields\":{\"a\":[\"circular\"]}}]\n[\"value\",[[\"object\",{\"protoChain\":[\"stdClass\"],\"fields\":{\"a\":[\"value\",[[\"circular\"]]]}}]]]\n"]}}

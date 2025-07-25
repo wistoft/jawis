@@ -1,12 +1,13 @@
-import { TestFrameworkProv } from "^jates";
-import { prej } from "^jab";
-import { TestResult } from "^jatec";
+import { AbsoluteFile, prej } from "^jab";
+import { NoopTestLogController, TestFrameworkProv, TestResult } from "^jatec";
 import { nightmare, sleepingValue } from "^yapu";
 
 /**
  *
  */
 export class TestFrameworkMock implements TestFrameworkProv {
+  public testLogController = new NoopTestLogController();
+
   private listedTests = [
     "first.test",
     "second.test",
@@ -31,9 +32,19 @@ export class TestFrameworkMock implements TestFrameworkProv {
     "rejects.test": "more2 result",
   };
 
-  public getTestIds = () => Promise.resolve(this.listedTests);
+  public getTestInfo = () =>
+    Promise.resolve(
+      this.listedTests.map((file) => ({
+        id: file,
+        name: file,
+        file: file as AbsoluteFile,
+      }))
+    );
 
-  public getCurrentSelectionTestIds = () => Promise.resolve(this.listedTests);
+  public getCurrentSelectionTestInfo = () =>
+    this.getTestInfo().then((data) =>
+      data.filter((x) => x.file === "first.test")
+    );
 
   /**
    *

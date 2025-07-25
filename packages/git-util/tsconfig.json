@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/git-util",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }, { "path": "../jab-node" }]
+}

@@ -1,6 +1,6 @@
 import { Waiter, WaiterDeps } from "^state-waiter";
 
-import { TestMainProv } from ".";
+import { makeGetIntegerSequence, TestMainProv } from ".";
 
 type States = "starting" | "ready" | "stopping" | "done";
 type Events = "first" | "second";
@@ -17,7 +17,9 @@ export const getWaiter = (
     startState: "starting",
     stoppingState: "stopping",
     endState: "done",
+    softTimeout: 0,
     hardTimeout: 1,
+    DateNow: makeGetIntegerSequence(),
     ...extra,
   });
 
@@ -29,6 +31,7 @@ export const getWaiter_non_stopping = (prov: TestMainProv) =>
     onError: prov.onError,
     startState: "starting",
     endState: "done",
+    softTimeout: 0,
     hardTimeout: 1,
   });
 

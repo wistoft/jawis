@@ -1,12 +1,11 @@
 import { TestProvision } from "^jarun";
 
 import { capture } from "^jab";
-import { getHtmlRTR } from "^misc/node";
-import { errorData1, getViewTestLog } from "../_fixture";
+import { getPrettyHtml, errorData1, getViewTestLog } from "../_fixture";
 
-export default ({ imp }: TestProvision) => {
+export default async ({ imp }: TestProvision) => {
   imp(
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewTestLog({
         testLog: {
           type: "chk",

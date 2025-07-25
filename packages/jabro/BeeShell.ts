@@ -12,7 +12,7 @@ import { BeeFrostServerMessage } from "./internal";
 type Deps<MR extends {}> = {
   bid: number;
   beeDeps: BeeDeps<MR>;
-  send: (msg: BeeFrostServerMessage) => Promise<void>;
+  send: (msg: BeeFrostServerMessage) => void;
 };
 
 /**
@@ -47,10 +47,10 @@ export class BeeShell<MR extends {}, MS extends {}> implements Bee<MS> {
   /**
    *
    */
-  public onExit = (status: number | null) => {
+  public onExit = () => {
     this.waiter.set("stopped");
 
-    this.deps.beeDeps.onExit(status);
+    this.deps.beeDeps.onExit();
   };
 
   /**

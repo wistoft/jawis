@@ -1,37 +1,33 @@
 import React from "react";
 
-import { EventController } from "^jab";
+import { EventController, assert } from "^jab";
+
 import {
   CaptureCache,
   ConsoleEntry,
-  createCallbacks,
   ViewProps,
-  State,
-  Console,
-} from "^console";
-import { TestProvision } from "^jarun";
+  ViewLogEntry,
+  makeConsoleChangeCallback,
+  View,
+  ViewEntry,
+  ViewEntryProps,
+  makeAddDataUpdater,
+} from "^console/internal";
 
-import { View } from "^console/View";
-import { ViewEntry, ViewEntryProps } from "^console/ViewEntry";
-import { ViewLogEntry } from "^console/ViewLogEntry";
-import { makeConsoleChangeCallback } from "^console/makeUseConsoleStream";
+import { defaultConsoleState, makeGetIntegerSequence, getUiEntries } from ".";
 
-import { defaultConsoleState, makeGetRandomInteger, uiEntries } from ".";
-
-export const jcvProps: ViewProps = {
-  logs: uiEntries,
+export const jcvProps = (): ViewProps => ({
+  logs: getUiEntries(),
   projectRoot: "C:\\",
   clearAllLogs: () => {},
   openFile: () => {},
   useToggleEntry: () => () => {},
   useRemoveEntry: () => () => {},
-};
-
-export const getConsole = () => <Console />;
+});
 
 export const getView = () => (
   <View
-    logs={uiEntries}
+    logs={getUiEntries()}
     projectRoot={"C:\\"}
     clearAllLogs={() => {}}
     openFile={() => {}}
@@ -70,7 +66,7 @@ export const getViewLogEntry = () => (
 );
 
 /**
- * facade/setup for testing.
+ *
  */
 export const getConsoleFire = (onData?: (entries: ConsoleEntry[]) => void) => {
   const captureCache: CaptureCache = {
@@ -98,34 +94,15 @@ export const getConsoleFire = (onData?: (entries: ConsoleEntry[]) => void) => {
 /**
  *
  */
-export const addDataUpdate_empty = (
-  prov: TestProvision,
-  entries: ConsoleEntry[],
-  doSourceMap = false
-) => {
-  //for collecting state updates
+export const getAddDataUpdate_empty = (entries: ConsoleEntry[]) => {
+  const doSourceMap = false;
+  const { sync, asyncs } = makeAddDataUpdater(
+    entries,
+    makeGetIntegerSequence(),
+    doSourceMap
+  );
 
-  let currentState = defaultConsoleState;
-  const states: State[] = [];
+  assert(asyncs.length === 0, "Can't test async this way.");
 
-  const setState = (updater: State | ((old: State) => State)) => {
-    if (typeof updater === "function") {
-      currentState = updater(currentState);
-    } else {
-      currentState = updater;
-    }
-
-    states.push(currentState);
-  };
-
-  // setup
-
-  const callbacks = createCallbacks({
-    setState,
-    makeReactKey: makeGetRandomInteger(),
-  });
-
-  // do it
-
-  return callbacks.addData(entries, doSourceMap).then(() => states);
+  return sync(defaultConsoleState);
 };

@@ -1,8 +1,6 @@
 import ts, { CompilerOptions } from "typescript";
 
-import { DependencyGraph } from "./DependencyGraph";
-import { extractDeps } from "./extractDeps";
-import { dtp } from ".";
+import { dtp, CodePieceGraph, extractDeps } from "./internal";
 
 type Deps = {
   compilerHost: ts.CompilerHost;
@@ -14,12 +12,12 @@ type Deps = {
  *
  */
 export class DtpController {
-  private dtpGraph: DependencyGraph;
+  private codePieceGraph: CodePieceGraph;
 
   private cachedDtp: string[][] = [];
 
   constructor(private deps: Deps) {
-    this.dtpGraph = new DependencyGraph();
+    this.codePieceGraph = new CodePieceGraph();
   }
 
   /**
@@ -35,11 +33,11 @@ export class DtpController {
    */
   public getTests = (
     // eslint-disable-next-line unused-imports/no-unused-vars
-    _cachedDtp: string[][],
+    cachedDtp: string[][],
     // eslint-disable-next-line unused-imports/no-unused-vars
-    _changedFiles: string[],
+    changedFiles: string[],
     // eslint-disable-next-line unused-imports/no-unused-vars
-    _tests: Map<string, number>
+    tests: Map<string, number>
   ) => {};
 
   /**
@@ -76,7 +74,7 @@ export class DtpController {
 
       // update graph
 
-      this.dtpGraph.addInfo(info, file);
+      this.codePieceGraph.addInfo(info, file);
     });
 
     //prioritize

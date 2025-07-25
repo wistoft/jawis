@@ -1,0 +1,20 @@
+{
+  "sideEffects": [
+    "./RemoteNodeProcessBooter1.js",
+    "./RemoteNodeProcessBooter2.ts"
+  ],
+  "version": "0.0.0",
+  "name": "~bee-remote-node",
+  "description": "Bee implementation for remote node.",
+  "dependencies": {},
+  "keywords": [
+    "bee",
+    "remote",
+    "nodejs",
+    "development",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

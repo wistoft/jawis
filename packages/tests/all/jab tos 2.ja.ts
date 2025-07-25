@@ -28,6 +28,4 @@ export default ({ imp }: TestProvision) => {
       ])
     )
   );
-
-  imp(tos([[1, 2, 3], 2, 3]));
 };

@@ -1,8 +1,10 @@
+import { WsStates } from "^react-use-ws";
+
 import { ClientMessage, ScriptStatus } from "./internal";
 
 export type ApiProv = {
-  useApiSend: (data: ClientMessage) => () => void;
   apiSend: (data: ClientMessage) => void;
+  wsState: WsStates;
 };
 
 //

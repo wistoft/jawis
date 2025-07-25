@@ -1,0 +1,53 @@
+{
+  "private": true,
+  "name": "ts-project",
+  "sideEffects": false,
+  "imports": {
+    "#*": "./*.js",
+    "#$*": "./*"
+  },
+  "scripts": {
+    "test": "yarn build && yarn start",
+    "test:tsc": "yarn build:tsc && yarn start:tsc",
+    "test:webpack": "yarn build:webpack && yarn start:webpack",
+    ".": "",
+    "build": "yarn build:tsc && yarn build:webpack",
+    "build:tsc": "rm -rf build-tsc && yarn tsc && cp package.prod.json build-tsc/package.json",
+    "build:webpack": "rm -rf build-webpack && webpack -c webpack.dev.js",
+    "..": "",
+    "start": "yarn start:tsc && yarn start:webpack && yarn start:ts-node",
+    "start:tsc": "yarn tsc:1 && yarn tsc:2 && yarn tsc:3 && yarn tsc:4 && yarn tsc:5 && yarn tsc:6 && yarn tsc:7",
+    "start:webpack": "yarn webpack:1 && yarn webpack:2 && yarn webpack:3 && yarn webpack:5 && yarn webpack:6",
+    "start:ts-node": "yarn ts-node:1 && yarn ts-node:2 && yarn ts-node:3 && yarn ts-node:5 && yarn ts-node:6 && yarn ts-node:7",
+    "...": "",
+    "tsc:1": "node build-tsc/dynamicCjsFile.js",
+    "tsc:2": "node build-tsc/dynamicJsFile.js",
+    "tsc:3": "node build-tsc/dynamicMjsFile.js",
+    "tsc:4": "node build-tsc/dynamicTsFile.js",
+    "tsc:5": "node build-tsc/importCjsFile.js",
+    "tsc:6": "node build-tsc/importJsFile.js",
+    "tsc:7": "node build-tsc/importTsFile.js",
+    "....": "",
+    "webpack:1": "node build-webpack/dynamicCjsFile.js",
+    "webpack:2": "node build-webpack/dynamicJsFile.js",
+    "webpack:3": "node build-webpack/dynamicMjsFile.js",
+    "webpack:4_not_impl": "node build-webpack/dynamicTsFile.js",
+    "webpack:5": "node build-webpack/importCjsFile.js",
+    "webpack:6": "node build-webpack/importJsFile.js",
+    "webpack:7_not_impl": "node build-webpack/importTsFile.js",
+    ".....": "",
+    "ts-node:1": "ts-node --transpile-only -r tsconfig-paths/register dynamicCjsFile.js",
+    "ts-node:2": "ts-node --transpile-only -r tsconfig-paths/register dynamicJsFile.js",
+    "ts-node:3": "ts-node --transpile-only -r tsconfig-paths/register dynamicMjsFile.js",
+    "ts-node:4_breaks": "ts-node --transpile-only -r tsconfig-paths/register dynamicTsFile.js",
+    "ts-node:5": "ts-node --transpile-only -r tsconfig-paths/register importCjsFile.js",
+    "ts-node:6": "ts-node --transpile-only -r tsconfig-paths/register importJsFile.js",
+    "ts-node:7": "ts-node --transpile-only -r tsconfig-paths/register importTsFile.js"
+  },
+  "dependencies": {
+    "ts-node": "^10.8.0",
+    "tsconfig-paths": "^4.0.0",
+    "typescript": "^4.6.0",
+    "webpack": "^5.24.0"
+  }
+}

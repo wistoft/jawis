@@ -42,4 +42,6 @@ export default ({ eq, imp }: TestProvision) => {
 
   imp(cloneTosGeneral_test(capture(Object.create(null))));
   imp(cloneTosGeneral_test(capture(/regex/)));
+
+  imp(cloneTosGeneral_test(["partial", null]));
 };

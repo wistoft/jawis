@@ -1,5 +1,5 @@
 import { BeeDeps, MakeBee } from "^bee-common";
-import { assertNever, basename, err } from "^jab";
+import { assertNever, err, OnErrorData } from "^jab";
 
 import {
   BeeShell,
@@ -8,13 +8,14 @@ import {
 } from "./internal";
 
 type Deps = {
-  send: (msg: BeeFrostServerMessage) => Promise<void>;
+  send: (msg: BeeFrostServerMessage) => void;
+  onErrorData: OnErrorData;
 };
 
 /**
- * Controls the abstact bee hive by sending/receiving messages.
+ * Controls the abstract bee hive by sending/receiving messages.
  *
- * - The channel (beefrost) is abstract.
+ * - The channel is abstract.
  * - Bees can be created and killed remotely, as expected.
  * - The bee in-/output is multiplexed over the channel.
  * - Ensures the messages from the remote bees are relayed correctly. I.e. to the right BeeShell.
@@ -30,12 +31,12 @@ export class BuzzController {
   constructor(private deps: Deps) {}
 
   /**
-   *
+   * todo: should also send kill messages to the bee hive. Maybe have a kill-hive message.
    */
   public kill = () => {
     this.shells.forEach((shell) => {
       //maybe a better error message.
-      shell.onExit(1);
+      shell.onExit();
     });
   };
 
@@ -45,13 +46,26 @@ export class BuzzController {
   public makeBee: MakeBee = <MS extends {}, MR extends {}>(
     beeDeps: BeeDeps<MR>
   ) => {
+    if (beeDeps.def.data) {
+      if (
+        typeof beeDeps.def.data !== "object" ||
+        Object.keys(beeDeps.def.data).length !== 0
+      ) {
+        console.log("BuzzController: data not impl", beeDeps.def.data);
+      }
+    }
+
+    if (beeDeps.def.next) {
+      console.log("BuzzController: next not impl", beeDeps.def);
+    }
+
     const bid = this.nextBeeId++; //increments for next bee.
 
     //intercept stuff
 
-    const onExit = (status: number | null) => {
+    const onExit = () => {
       this.shells.delete(bid);
-      beeDeps.onExit(status);
+      beeDeps.onExit();
     };
 
     //start
@@ -65,7 +79,7 @@ export class BuzzController {
     this.deps.send({
       type: "makeBee",
       bid,
-      fileUrl: basename(beeDeps.filename), //todo: send full path.
+      filename: beeDeps.def.filename,
     });
 
     //store
@@ -82,8 +96,7 @@ export class BuzzController {
    */
   public onMessage = (msg: BeeFrostClientMessage) => {
     if (msg.type === "error") {
-      //quick fix
-      console.log(msg.data);
+      this.deps.onErrorData(msg.data);
       return;
     }
 
@@ -98,6 +111,10 @@ export class BuzzController {
         shell.deps.beeDeps.onMessage(msg.data);
         break;
 
+      case "log":
+        shell.deps.beeDeps.onLog(msg.data);
+        break;
+
       case "stdout":
         //todo: bee listener must also take string
         shell.deps.beeDeps.onStdout(Buffer.from(msg.data));
@@ -110,7 +127,7 @@ export class BuzzController {
 
       case "exit":
         //call onExit on the shell, it's setup so other relevant places are called.
-        shell.onExit(msg.data);
+        shell.onExit();
         break;
 
       default:

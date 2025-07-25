@@ -1,9 +1,11 @@
-import { assertNever, tos, tryPropString } from "^jab";
+import { assertNever } from "^jab";
 import { ConsoleEntry } from "^console";
-import { ServerMessage } from "^jagoc";
-import { BeeLogEntry } from "^bee-common";
 
-import { StateCallbacks } from "./internal";
+import {
+  ServerMessage,
+  StateCallbacks,
+  jsonToUrlQueryString,
+} from "./internal";
 
 type Deps = Pick<StateCallbacks, "setProcessStatus"> & {
   addConsoleData: (event: ConsoleEntry[]) => void;
@@ -18,84 +20,30 @@ export const makeOnServerMessage = (deps: Deps) => (msg: ServerMessage) => {
       deps.setProcessStatus({ processStatus: msg.data });
       break;
 
-    case "stdout":
-    case "stderr":
-      deps.addConsoleData([
-        {
-          type: "stream",
-          context: msg.script,
-          logName: msg.type,
-          data: msg.data,
-        },
-      ]);
+    case "gotoUrl":
+      (window as any).location = msg.url;
       break;
 
-    case "control":
-      deps.addConsoleData([
-        {
-          type: "log",
-          context: msg.script,
-          logName: "control",
-          data: [msg.data],
-        },
-      ]);
+    case "pushUrlState": {
+      const qs = jsonToUrlQueryString(msg.urlState);
+      (history as any).replaceState(msg, "", "?" + qs);
       break;
+    }
 
-    case "message":
-      //an encapsulated message from the script.
-      handleScriptMessage(msg.script, msg.data, deps);
+    case "replaceUrlState": {
+      const qs = jsonToUrlQueryString(msg.urlState);
+      (history as any).replaceState(msg, "", "?" + qs);
+      break;
+    }
+    case "log":
+    case "stream":
+    case "status":
+    case "html":
+    case "error":
+      deps.addConsoleData([{ context: msg.script, ...msg }]);
       break;
 
     default:
       assertNever(msg, "Unknown server message.");
-  }
-};
-
-//
-// util
-//
-
-export const handleScriptMessage = (
-  script: string,
-  umsg: unknown,
-  deps: Deps
-) => {
-  if (!tryPropString(umsg, "type")) {
-    deps.addConsoleData([
-      {
-        type: "log",
-        context: script,
-        logName: "control",
-        data: ["unknown message:", tos(umsg)],
-      },
-    ]);
-    return;
-  }
-
-  const msg = umsg as BeeLogEntry;
-
-  switch (msg.type) {
-    case "log":
-    case "stream":
-    case "html":
-    case "error":
-      deps.addConsoleData([{ context: script, ...msg }]);
-      break;
-
-    default: {
-      // eslint-disable-next-line unused-imports/no-unused-vars
-      const _: never = msg; // we want exhaustive check, but not to throw.
-
-      deps.addConsoleData([
-        {
-          type: "log",
-          context: script,
-          logName: "control",
-          data: ["unknown message type", tos(umsg)],
-        },
-      ]);
-
-      break;
-    }
   }
 };

@@ -5,5 +5,10 @@ import { getFixturePath } from "^tests/_fixture";
 //script doesn't exist
 
 export default (prov: TestProvision) => {
-  getFullConf({ scripts: [{ script: "dontExist" }] }, getFixturePath(), true);
+  getFullConf(
+    { scripts: [{ script: "dontExist" }] },
+    getFixturePath(),
+    "windows",
+    true
+  );
 };

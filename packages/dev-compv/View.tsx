@@ -1,37 +1,28 @@
 import React, { memo } from "react";
+import { Route, Routes } from "react-router-dom";
 
-import { NoRouteElement, Route, Routes, UseKeyListener } from "^jab-react";
-import { ComponentDef, ViewListFolders, ViewComponentRoute } from "./internal";
+import { NoRouteElement } from "^jab-react";
 
-export type ViewProps = {
-  folders: { folder: string; comps: ComponentDef[] }[];
-  openComponnent: (path: string) => void;
-  useKeyListener: UseKeyListener;
-};
+import {
+  ViewComponentRoute,
+  ViewListFolders,
+  ViewComponentRouteProps,
+} from "./internal";
+
+/**
+ * The `folders.folder` is just for displaying the heading.
+ */
+export type ViewProps = ViewComponentRouteProps;
 
 /**
  *
  */
-export const View: React.FC<ViewProps> = memo(
-  ({ folders, openComponnent, useKeyListener }) => (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <ViewListFolders folders={folders} openComponnent={openComponnent} />
-        }
-      />
-      <Route
-        path="/:component/*"
-        element={
-          <ViewComponentRoute
-            folders={folders}
-            openComponnent={openComponnent}
-            useKeyListener={useKeyListener}
-          />
-        }
-      />
-      {NoRouteElement}
-    </Routes>
-  )
-);
+export const View: React.FC<ViewProps> = memo((props) => (
+  <Routes>
+    <Route path="/" element={<ViewListFolders {...props} />} />
+    <Route path="/:component/*" element={<ViewComponentRoute {...props} />} />
+    {NoRouteElement}
+  </Routes>
+));
+
+View.displayName = "View";

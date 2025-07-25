@@ -44,12 +44,12 @@ export const mapWebpackContext = (
 
     //picks the first export.
 
-    for (const key in exports) {
+    if ("Component" in exports) {
       return {
         name: compName.replace(/^.*\/(.*)\.tsx?$/, "$1"),
         path,
         urlSafePath: toUrl(path),
-        comp: exports[key] as React.ComponentType<unknown>,
+        comp: exports["Component"] as React.ComponentType<unknown>,
       };
     }
 
@@ -58,11 +58,11 @@ export const mapWebpackContext = (
     return {
       name:
         compName.replace(/^.*\/(.*)\.tsx?$/, "$1") +
-        " - Error: nothing exported.",
+        " - Should export a variable named Component.",
       path,
       urlSafePath: toUrl(path),
       comp: () => {
-        console.log("Nothing exported from: " + path);
+        return <>Should export a variable named Component</>;
       },
     };
   });

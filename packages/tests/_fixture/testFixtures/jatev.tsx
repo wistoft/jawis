@@ -1,72 +1,71 @@
 import React from "react";
 
+import { TestProvision } from "^jarun";
+import { getConf, makeToAtomizedString, makeReplaceAtoms } from "^jab-react";
+import { renderHook } from "^render-hook-plus";
+import { CapturedValue, capture } from "^jab";
+import { asyncCapture } from "^async-capture";
+import { UseWsEffectArgs } from "^react-use-ws";
+
 import {
+  ViewTest,
+  makeRogueUpdater,
+  makeTestCaseUpdater,
+  getShowTestOnTestChangeUpdate,
+  ViewExecutionLevel,
+  ViewExecutionLevelProps,
+  ViewTestLog,
+  ViewTestLogProps,
+  TestState,
+  useDirector,
+  ViewTestLogContent,
+  ViewTestLogContentProps,
   ClientTestReport,
   getClientTestReport,
   RogueData,
   ServerMessage,
-} from "^jatec";
-import { TestProvision } from "^jarun";
-import { getConf, makeToAtomizedString, makeReplaceAtoms } from "^jab-react";
-import { renderHook } from "^render-hook-plus";
-import { capture } from "^jab";
-import { TestState, TestStateUpdate } from "^jatev";
-import { asyncCapture } from "^async-capture";
-import { UseWsEffectArgs } from "^react-use-ws";
-import { getHtmlRTR } from "^misc/node";
-
-import { ViewTest } from "^jatev/ViewTest";
-import {
-  makeRogueUpdater,
-  makeTestCaseUpdater,
-  getShowTestOnTestChangeUpdate,
-} from "^jatev/updaters";
-import {
-  ViewExecutionLevel,
-  ViewExecutionLevelProps,
-} from "^jatev/ViewExecutionLevel";
-import { ViewTestLog, ViewTestLogProps } from "^jatev/ViewTestLog";
-import { useDirector } from "^jatev/useDirector";
+} from "^jatev/internal";
 
 import {
-  ViewTestLogContent,
-  ViewTestLogContentProps,
-} from "^jatev/ViewTestLogContent";
-import {
-  defaultState,
-  makeGetRandomInteger,
-  stateWithShownTest,
-  stateWithTestReports,
-  stateWithTests,
+  defaultJatevState,
+  makeGetIntegerSequence,
+  getStateWithShownTest,
+  getStateWithTestReports,
+  getStateWithTests,
+  makeTestInfo,
+  getPrettyHtml,
 } from ".";
 
-export const defaultConf = getConf(0xf000); //another char, than used by jatev, so we don't interfere.
+export const getDefaultConf = () => getConf(0xf000); //another char, than used by jatev, so we don't interfere.
 
-export const toAtomizedString_test = makeToAtomizedString(
-  defaultConf.mapToAtoms
-);
+export const getToAtomizedString_test = () =>
+  makeToAtomizedString(getDefaultConf().mapToAtoms);
 
-export const replaceAtoms_test = makeReplaceAtoms(
-  defaultConf.atoms,
-  defaultConf.mapToFinal
-);
+export const getReplaceAtoms_test = () =>
+  makeReplaceAtoms(getDefaultConf().atoms, getDefaultConf().mapToFinal);
 
 /**
  *
  */
-export const toHtml_test = (val: unknown) =>
-  getHtmlRTR(<>{replaceAtoms_test(toAtomizedString_test(capture(val)))}</>);
+export const toHtml_test = (val: unknown) => clonedToHtml_test(capture(val));
 
 /**
  *
  */
-export const tos_test = (val: unknown) => toAtomizedString_test(capture(val));
+export const clonedToHtml_test = (val: CapturedValue) =>
+  getPrettyHtml(<>{getReplaceAtoms_test()(getToAtomizedString_test()(val))}</>);
 
 /**
  *
  */
-export const tos_async = async (val: unknown) =>
-  toAtomizedString_test(await asyncCapture(val));
+export const toAtomizedString_test = (val: unknown) =>
+  getToAtomizedString_test()(capture(val));
+
+/**
+ *
+ */
+export const toAtomizedString_async = async (val: unknown) =>
+  getToAtomizedString_test()(await asyncCapture(val));
 
 /**
  *
@@ -141,7 +140,7 @@ export const renderUseJatevDirector = (prov: TestProvision) => {
       //executed sync. Because jatev registers effect in render.
       useWsEffectArgs = data;
     },
-    getRandomToken: makeGetRandomInteger(),
+    getRandomToken: makeGetIntegerSequence(),
     useKeyListener: () => {},
     projectRoot: "dummy",
   });
@@ -157,7 +156,7 @@ export const renderUseJatevDirector_with_tests = (prov: TestProvision) => {
 
   stuff.onServerMessage({
     type: "TestSelection",
-    data: [["test 1", "test 2"]],
+    data: [[makeTestInfo("test 1"), makeTestInfo("test 2")]],
   });
 
   return { ...stuff, result: stuff.rerender() };
@@ -187,50 +186,58 @@ export const renderUseJatevDirector_with_test_results = (
  *
  */
 export const getSetTestCaseUpdate_empty = (test: ClientTestReport) =>
-  makeTestCaseUpdater(test, makeGetRandomInteger())(defaultState);
+  makeTestCaseUpdater(test, makeGetIntegerSequence())(defaultJatevState);
 
 /**
  *
  */
 export const getSetTestCaseUpdate_with_tests = (test: ClientTestReport) =>
-  makeTestCaseUpdater(test, makeGetRandomInteger())(stateWithTests);
+  makeTestCaseUpdater(test, makeGetIntegerSequence())(getStateWithTests());
 
 /**
  *
  */
-export const getShownTestUpdate_empty = (test: TestStateUpdate) =>
-  getShowTestOnTestChangeUpdate(test, defaultState, makeGetRandomInteger());
-
-/**
- *
- */
-export const getShownTestUpdate_with_tests = (test: TestStateUpdate) =>
-  getShowTestOnTestChangeUpdate(test, stateWithTests, makeGetRandomInteger());
-
-/**
- *
- */
-export const getShownTestUpdate_with_shown_test = (test: TestStateUpdate) =>
+export const getShownTestUpdate_empty = (test: TestState) =>
   getShowTestOnTestChangeUpdate(
     test,
-    stateWithShownTest,
-    makeGetRandomInteger()
+    defaultJatevState,
+    makeGetIntegerSequence()
   );
 
 /**
  *
  */
-export const getRogueUpdater_empty = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(defaultState);
+export const getShownTestUpdate_with_tests = (test: TestState) =>
+  getShowTestOnTestChangeUpdate(
+    test,
+    getStateWithTests(),
+    makeGetIntegerSequence()
+  );
 
 /**
  *
  */
-export const getRogueUpdater_with_tests = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(stateWithTests);
+export const getShownTestUpdate_with_shown_test = (test: TestState) =>
+  getShowTestOnTestChangeUpdate(
+    test,
+    getStateWithShownTest(),
+    makeGetIntegerSequence()
+  );
 
 /**
  *
  */
-export const getRogueUpdater_with_test_reports = (rogue: RogueData) =>
-  makeRogueUpdater(rogue, makeGetRandomInteger())(stateWithTestReports);
+export const getRogueUpdate_empty = (rogue: RogueData) =>
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(defaultJatevState);
+
+/**
+ *
+ */
+export const getRogueUpdate_with_tests = (rogue: RogueData) =>
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(getStateWithTests());
+
+/**
+ *
+ */
+export const getRogueUpdate_with_test_reports = (rogue: RogueData) =>
+  makeRogueUpdater(rogue, makeGetIntegerSequence())(getStateWithTestReports());

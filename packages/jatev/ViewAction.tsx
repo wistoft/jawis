@@ -1,15 +1,13 @@
 import React, { memo } from "react";
 
 import { useFirstRouteEffect } from "^jab-react";
-import { ClientMessage } from "^jatec";
-import { WsStates } from "^react-use-ws";
-import { ClientApiSendProv, View, ViewProps } from "./internal";
+
+import { ClientMessage, View, ViewProps, ApiProv } from "./internal";
 
 export type ViewActionProps = {
   action: ClientMessage;
-  wsState: WsStates;
-  apiSend: ClientApiSendProv["apiSend"];
-} & ViewProps;
+} & ViewProps &
+  Pick<ApiProv, "apiSend" | "wsState">;
 
 /**
  * Send websocket action 'when' a component mounts.
@@ -46,7 +44,7 @@ const ViewActionInner: React.FC<ViewActionProps> = memo(
         );
         apiSend(action);
       }
-    }, []);
+    });
 
     return <View {...extra} apiSend={apiSend} />;
   }

@@ -1,0 +1,1 @@
+{"user":{},"err":["categorizeImportSpecifier: unknown protocol: file:some-file.ts","categorizeImportSpecifier: unknown protocol: bla:some-file.ts"]}

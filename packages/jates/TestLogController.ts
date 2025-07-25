@@ -1,6 +1,6 @@
-import os from "os";
-import fs from "fs";
-import path from "path";
+import os from "node:os";
+import fs from "node:fs";
+import path from "node:path";
 import fse from "fs-extra";
 
 import {
@@ -11,33 +11,9 @@ import {
   CapturedValue,
   capturedTos,
 } from "^jab";
+import { TestCurLogs, TestExpLogs, TestLogsProv } from "^jatec";
 
-import {
-  ClientTestReport,
-  getClientTestReport,
-  TestCurLogs,
-  TestExpLogs,
-  flatToTestExpLogs_compat,
-} from "^jatec";
-
-// prov
-
-export type TestLogsProv = {
-  setExpLogs: (testId: string, testLogs: TestExpLogs) => Promise<void>;
-  setCurLogs: (testId: string, testLogs: TestCurLogs) => void;
-  getExpLogs: (testid: string) => Promise<TestExpLogs>;
-  getCurLogs: (testid: string) => TestCurLogs;
-  acceptTestLog: (testId: string, logName: string) => Promise<ClientTestReport>;
-  acceptTestLogs: (testId: string) => Promise<ClientTestReport>;
-  getTempTestLogFiles: (
-    testId: string,
-    logName: string
-  ) => Promise<{ exp: string; cur: string }>;
-};
-
-// deps
-
-export type Deps = {
+type Deps = {
   absTestLogFolder: string;
   onError: (error: unknown) => void;
 };
@@ -46,7 +22,6 @@ export type Deps = {
  * Handles store of test logs.
  *
  * - Store current test logs in memory.
- * - Perform compatibility mapping of old test log formats, when reading from disk.
  *
  * note
  *  - Assumes test logs are cloned for JSON 'safety' by the test framework.
@@ -62,16 +37,26 @@ export class TestLogController implements TestLogsProv {
   }
 
   /**
-   *
+   * - bug: The path of test cases is ignored.
    */
-  public setExpLogs = (id: string, testLogs: TestExpLogs) => {
+  public getExpFilename = (id: string) => {
+    //quick fix for windows, because of 'alternate data streams'
+    const file = id.replace(/:/g, "-");
+
+    return path.join(this.deps.absTestLogFolder, path.basename(file) + ".json");
+  };
+
+  /**
+   * public for tests
+   */
+  public setExpLogs = async (file: string, testLogs: TestExpLogs) => {
     if (!this.ensuredTestDir) {
-      fse.ensureDir(this.deps.absTestLogFolder);
+      await fse.ensureDir(this.deps.absTestLogFolder);
       this.ensuredTestDir = true;
     }
 
     return fs.promises.writeFile(
-      this.getExpFilename(id),
+      this.getExpFilename(file),
       JSON.stringify(testLogs)
     );
   };
@@ -79,41 +64,30 @@ export class TestLogController implements TestLogsProv {
   /**
    *
    */
-  public setCurLogs = (testId: string, testLogs: TestCurLogs) => {
-    this.curTestLogs[testId] = testLogs;
+  public setCurLogs = (id: string, testLogs: TestCurLogs) => {
+    this.curTestLogs[id] = testLogs;
   };
 
   /**
    *
    */
-  public getExpLogs = (id: string) =>
-    fs.promises
-      .readFile(this.getExpFilename(id))
-      .then(
-        (data) => JSON.parse(data.toString()),
-        (error: unknown) => {
-          if (tryProp(error, "code") === "ENOENT") {
-            //return an empty test log, when no file.
-            return { user: {} };
-          }
-          throw error;
+  public getExpLogs = (id: string): Promise<TestExpLogs> =>
+    fs.promises.readFile(this.getExpFilename(id)).then(
+      (data) => JSON.parse(data.toString()),
+      (error: unknown) => {
+        if (tryProp(error, "code") === "ENOENT") {
+          //return an empty test log, when no file.
+          return { user: {} };
         }
-      )
-      .then((logs) => {
-        // superficial version test
-        if ("user" in logs) {
-          return logs as TestExpLogs;
-        } else {
-          //compat
-          return flatToTestExpLogs_compat(logs);
-        }
-      });
+        throw error;
+      }
+    );
 
   /**
    *
    */
-  public getCurLogs = (testId: string): TestCurLogs => {
-    const log = this.curTestLogs[testId];
+  public getCurLogs = (id: string): TestCurLogs => {
+    const log = this.curTestLogs[id];
     if (log) {
       return log;
     } else {
@@ -130,7 +104,7 @@ export class TestLogController implements TestLogsProv {
 
     await this.setExpLogs(id, exp);
 
-    return getClientTestReport(id, exp, cur);
+    return { exp, cur };
   };
 
   /**
@@ -149,7 +123,7 @@ export class TestLogController implements TestLogsProv {
 
     await this.setExpLogs(id, exp);
 
-    return getClientTestReport(id, exp, cur);
+    return { exp, cur };
   };
 
   /**
@@ -186,12 +160,6 @@ export class TestLogController implements TestLogsProv {
         user: { ...old.user, [logName]: cur.user[logName] },
       };
     });
-
-  /**
-   * - bug: The path of test cases is ignored.
-   */
-  private getExpFilename = (id: string) =>
-    path.join(this.deps.absTestLogFolder, path.basename(id) + ".json");
 
   /**
    *

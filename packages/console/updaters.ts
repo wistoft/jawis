@@ -1,5 +1,6 @@
-import { ErrorEntry } from "^bee-common";
+import { ErrorEntry } from "^jab";
 import { parseErrorData, parseTraceAndSourceMap } from "^parse-captured-stack";
+
 import {
   ConsoleEntry,
   UiEntry,
@@ -24,25 +25,6 @@ export const makeAddDataUpdater = (
     .map((tmp): UiEntry => {
       const entry = mapConsoleEntry(tmp);
 
-      if (entry.type === "stream") {
-        let filtered = entry.data;
-
-        if (entry.logName === "stdout") {
-          filtered = entry.data.replace(
-            "(electron) Sending uncompressed crash reports is deprecated and will be removed in a future version of Electron. Set { compress: true } to opt-in to the new behavior. Crash reports will be uploaded gzipped, which most crash reporting servers support.",
-            "[electron filtered]"
-          );
-        }
-
-        //quick fix - these should be properly linearized.
-        return {
-          id: makeReactKey(),
-          ...entry,
-          type: "stream-line",
-          data: filtered,
-        };
-      }
-
       if (entry.type === "error") {
         const { sync, async } = getErrorLogUpdateHelper(
           entry,
@@ -57,15 +39,49 @@ export const makeAddDataUpdater = (
         return sync;
       }
 
+      if (entry.type === "stream") {
+        return { id: makeReactKey(), ...entry, data: entry.data.toString() };
+      }
+
       return { id: makeReactKey(), ...entry };
     });
 
   const sync = (old: State): State => ({
     ...old,
-    logs: [...old.logs, ...newEntries],
+    logs: mergeOldAndNewLogs(old.logs, newEntries),
   });
 
   return { sync, asyncs };
+};
+
+/**
+ * Combine adjacent stream entries, if they have the same context and logName.
+ *
+ *  - Only last entry in old log is considered, because existing logs should already be combined.
+ *  - All adjacent entries on new entries are combined if possible.
+ */
+export const mergeOldAndNewLogs = (old: UiEntry[], entries: UiEntry[]) => {
+  const res = [...old];
+
+  let latest = res[res.length - 1];
+
+  for (const cur of entries) {
+    if (
+      latest?.type === "stream" &&
+      latest.context === cur.context &&
+      latest.logName === cur.logName
+    ) {
+      const combined = { ...latest, data: latest.data + cur.data };
+
+      res[res.length - 1] = combined; //we may mutate here, because it's a clone.
+      latest = combined;
+    } else {
+      res.push(cur);
+      latest = cur;
+    }
+  }
+
+  return res;
 };
 
 /**

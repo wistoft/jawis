@@ -1,11 +1,12 @@
-import { unRegisterTsCompiler } from "^jacs";
-import { registerPrecompilers } from "^jab-node";
-import { getScriptPath } from "../_fixture/testFixtures/diverse";
+import { registerPrecompilers } from "^node-module-hooks-plus";
 
-//returns exactly the code, that the preCompiler decides.
+import { getScriptPath } from "../_fixture";
 
-unRegisterTsCompiler();
+//returns the code, that the preCompiler decides.
 
-registerPrecompilers([".ts"], () => "console.log('this is some new code')");
+registerPrecompilers(
+  [".php"],
+  () => "console.log('code from registerPrecompilers')"
+);
 
-require(getScriptPath("helloTs.ts"));
+eval("require.eager || require")(getScriptPath("hello.php"));

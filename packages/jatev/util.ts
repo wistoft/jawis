@@ -1,5 +1,7 @@
+import { dynamicDiff } from "^assorted-algorithms";
+import { assertNever, ErrorData } from "^jab";
+
 import {
-  ClientMessage,
   TestLogMatchType,
   ZippedTestLog,
   testLogsEqual,
@@ -7,14 +9,9 @@ import {
   ErrorLog,
   ReturnLog,
   testLogOrder,
-} from "^jatec";
-import { dynamicDiff } from "^assorted-algorithms";
-import { assertNever, ErrorData } from "^jab";
-import { TestState } from "./internal";
-
-export type ClientApiSendProv = {
-  apiSend: (data: ClientMessage) => void;
-};
+  State,
+  TestState,
+} from "./internal";
 
 /**
  *
@@ -87,7 +84,7 @@ export const getTestLogMatchType_value = (
 /**
  *
  */
-export const getDefaultShowTestState = (testLog: ZippedTestLog) => {
+export const getDefaultShowTestLog = (testLog: ZippedTestLog) => {
   if (testLog.name.startsWith("rogue.")) {
     return false;
   }

@@ -8,6 +8,8 @@
     "util",
     "utilities",
     "stdlib",
+    "build",
+    "release",
     "webpack",
     "development"
   ]

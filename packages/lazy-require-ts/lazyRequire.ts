@@ -6,6 +6,7 @@ type Deps = {
   __importDefault: any;
 };
 
+//bypass the require-proxy, if it's there. It has no purpose, anymore.
 const __requireOriginalModule = "__requireOriginalModule"; //used to bypass the proxy.
 
 let disabled = false;
@@ -44,6 +45,38 @@ export const lazyRequire = (original: Deps) => {
     original,
   };
 };
+
+/**
+ * For index files
+ *
+ */
+export const getLazyIndexModule = (
+  originalRequire: any,
+  files: Map<string, string>
+) =>
+  new Proxy(
+    {},
+    {
+      get: function (_, name) {
+        if (typeof name !== "string") {
+          throw new Error("Impossible");
+        }
+
+        //get the file with the given code unit.
+        const absFile = files.get(name);
+
+        if (!absFile) {
+          throw new Error("No declaration for the code unit: " + name);
+        }
+
+        //ensure the sub module is loaded.
+        const module = originalRequire(absFile);
+
+        //return
+        return module[name];
+      },
+    }
+  );
 
 /**
  *
@@ -146,7 +179,6 @@ const makeRequire =
  */
 const makeTypeScriptDelayer =
   (originalTypeScriptWrapper: any) => (moduleProxy: any) => {
-    //by pass the require-proxy, if it's there. It has no purpose, now.
     const getModule = () =>
       originalTypeScriptWrapper(
         moduleProxy.__requireOriginalModule
@@ -192,14 +224,29 @@ const makeTypeScriptDelayer =
 /**
  * for source code generation
  *
+ * - for dev: skips lazy require if `__lazyRequire.lazyRequire` is undefined.
+ *    That avoids recursion for lazy-require requiring itself.
+ *
  * todo: proper js-escape of filename
  */
 export const makePrefixCode = () =>
   `const __lazyRequire = require("${__filename.replace(/\\/g, "/")}");
-const lazy = __lazyRequire.lazyRequire({ require, __importStar, __importDefault });
-require = lazy.require;
-var { __importStar, __importDefault } = lazy;
+if (__lazyRequire.lazyRequire){
+  const lazy = __lazyRequire.lazyRequire({ require, __importStar, __importDefault });
+  require = lazy.require;
+  var { __importStar, __importDefault } = lazy;
+}
 `.replace(/\n/g, ""); /*remove newlines, so source map isn't affected.*/
+
+/**
+ * for index files
+ *
+ * todo: proper js-escape of filename
+ */
+export const makeIndexFilePostfixCode = () =>
+  `const __lazyRequire = require("${__filename.replace(/\\/g, "/")}");
+module.exports = __lazyRequire.getLazyIndexModule(require, units);
+`;
 
 /**
  * bug: need the same module to disable.

@@ -1,18 +1,24 @@
-import path from "path";
-import { RequestOptions } from "http";
-import fs from "fs";
-import os from "os";
+import path from "node:path";
+import { RequestOptions } from "node:http";
+import fs from "node:fs";
+import os from "node:os";
 import fse from "fs-extra";
 
+import {
+  LogProv,
+  tryProp,
+  ErrorData,
+  assert,
+  OnError,
+  OnErrorData,
+  AbsoluteFile,
+  LogEntry,
+  makeJabError,
+} from "^jab";
 import { TestProvision } from "^jarun";
-import { LogProv, tryProp, ErrorData, OnError, assert } from "^jab";
-import { MainProv, httpRequest } from "^jab-node";
+import { MainProv, httpRequest, listFilesRecursiveSync } from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
-import { setGlobalHardTimeout_experimental } from "^state-waiter";
-
-//quick fix: because waiter timeout is set too low by default.
-setGlobalHardTimeout_experimental(10000);
 
 /**
  *
@@ -21,6 +27,7 @@ export type TestMainProv = {
   log: (logName: string, ...value: unknown[]) => void;
   logStream: (logName: string, value: string) => void;
   onError: OnError;
+  onErrorData: OnErrorData;
   finally: FinallyFunc;
 };
 
@@ -39,33 +46,140 @@ export const getDefaultServerConf = (): WsUrl => ({
 export const getUnusedPort = () => 6666;
 
 /**
- *
+ * quick fix, because node adds ascii to output
  */
-export const getScriptPath = (script?: string) =>
-  path.join(__dirname, "../scripts", script || "");
+export const consoleLog = (...args: any[]) => {
+  const mapped = args.map((arg) => JSON.stringify(arg));
+  console.log(...mapped);
+};
 
 /**
  *
  */
-export const getTsProjectPath = (file: string) =>
-  path.join(__dirname, "../tsProject", file);
+export const getScriptPath = (script = "") =>
+  path.join(__dirname, "../scripts", script) as AbsoluteFile;
 
 /**
  *
  */
-export const getFixturePath = (file?: string) =>
-  path.join(__dirname, "..", file || "");
+export const getTsProjectPath = (file = "") =>
+  path.join(__dirname, "../tsProject", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getEsmProjectPath = (file = "") =>
+  path.join(__dirname, "../projectEsm", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getCommonJsProjectPath = (file = "") =>
+  path.join(__dirname, "../projectCommonjs", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getMonorepoProjectPath = (file = "") =>
+  path.join(__dirname, "../monorepo", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getFixturePath = (file = "") =>
+  path.join(__dirname, "..", file) as AbsoluteFile;
 
 /**
  *
  */
 export const getProjectPath = (file = "") =>
-  path.join(__dirname, "../../../../", file);
+  path.join(__dirname, "../../../../", file) as AbsoluteFile;
+
+/**
+ * - ensure it exists, because it might get deleted.
+ */
+export const getScratchPath = (script = "") =>
+  path.join(getTmpFolder("tests-scratchFolder"), script) as AbsoluteFile;
 
 /**
  *
  */
-export const makeGetRandomInteger = () => {
+export const getTmpFolder = (sub: string) => {
+  const folder = path.join(os.tmpdir(), "jawis", sub);
+
+  fse.ensureDirSync(folder);
+
+  return folder;
+};
+
+/**
+ *
+ */
+export const emptyScratchFolder = () => {
+  const folder = getScratchPath();
+  fse.emptyDirSync(folder);
+
+  return folder;
+};
+
+/**
+ *
+ */
+export const filterAbsoluteFilepath = (file: string) => {
+  assert(path.isAbsolute(file), "File must be absolute", file);
+
+  return "abs:" + path.relative(getProjectPath(), file).replace(/\\/g, "/");
+};
+
+/**
+ *
+ */
+export const filterAbsoluteFilepathInFreetext = (text: string) =>
+  text.replace(/\\/g, "/").replaceAll(getProjectPath(), "abs:");
+
+/**
+ *
+ */
+export const filterAbsoluteFilesInStdout = (prov: TestProvision) => {
+  prov.filter("console.log", (...val: unknown[]) =>
+    val.map(filterAbsoluteFilepathInFreetext as any)
+  );
+};
+
+/**
+ *
+ */
+export const writeScriptFileThatChanges2 = (value: number) => {
+  writeScriptFileThatChanges(value, "FileThatChanges2.js");
+};
+
+/**
+ *
+ */
+export const writeScriptFileThatChanges = (
+  value: number,
+  name = "FileThatChanges.js"
+) => {
+  const code = "module.exports = " + value + ";";
+  fs.writeFileSync(getScratchPath(name), code);
+};
+
+/**
+ *
+ */
+export const logFolder = (prov: TestProvision, folder: AbsoluteFile) => {
+  for (const file of listFilesRecursiveSync(folder)) {
+    prov.log(
+      file.replace(new RegExp("^.*(tests-scratchFolder.*$)"), "$1"),
+      fs.readFileSync(file).toString()
+    );
+  }
+};
+
+/**
+ *
+ */
+export const makeGetIntegerSequence = () => {
   let i = 144000;
   return () => i++;
 };
@@ -118,10 +232,13 @@ export const filterNodeDeprecation = (prov: TestProvision, errno: string) => {
  */
 export const filterReact = (prov: TestProvision) => {
   prov.filter("console.error", (...val: unknown[]) => {
+    if (val.length === 0 || typeof val[0] !== "string") {
+      return val;
+    }
+
     if (
-      val.length > 0 &&
-      typeof val[0] === "string" &&
-      val[0].startsWith("The above error occurred in the")
+      val[0].startsWith("The above error occurred in the") ||
+      val[0].includes("useLayoutEffect does nothing on the server")
     ) {
       return [];
     } else {
@@ -138,7 +255,7 @@ export const getLogProv = (prov: TestProvision, logPrefix = ""): LogProv => ({
     prov.log(logPrefix + "log", args);
   },
   logStream: (type, data) => {
-    prov.log(logPrefix + type, data);
+    prov.logStream(logPrefix + type, data.toString());
   },
   status: (type, status) => {
     prov.log(logPrefix + "log", type + " is " + status);
@@ -154,12 +271,20 @@ export const getMainProv = (prov: TestProvision, logPrefix = ""): MainProv => {
 
   return {
     onError: prov.onError,
+    onErrorData: makeOnErrorData(prov),
     finalProv,
     finally: finalProv.finally,
     logProv,
     log: logProv.log,
     logStream: logProv.logStream,
   };
+};
+
+/**
+ *
+ */
+export const makeOnErrorData = (prov: TestProvision) => (err: ErrorData) => {
+  prov.imp(filterErrorDataStack(err));
 };
 
 /**
@@ -192,50 +317,43 @@ export class ThrowInToString {
  */
 export const removeCarriageReturn = (data: string) => data.replace(/\r/g, "");
 
-/**
- * - ensure it exists, because it might get deleted.
- */
-export const getScratchPath = (script = "") => {
-  const folder = path.join(os.tmpdir(), "jawis-tests-scratchFolder");
-
-  fse.ensureDirSync(folder);
-
-  return path.join(folder, script);
-};
+export const empty = new TextEncoder().encode("");
+export const data1 = new TextEncoder().encode("data");
+export const data2 = new TextEncoder().encode("1234");
+export const data3 = new Uint8Array([11, 22, 33, 44]);
+export const data4 = new Uint8Array([55, 66, 77, 88]);
 
 /**
  *
  */
-export const emptyScratchFolder = () => {
-  const folder = getScratchPath();
-  fse.emptyDirSync(folder);
+export const makeOnLog = (prov: TestProvision) => (msg: LogEntry) => {
+  switch (msg.type) {
+    case "log": {
+      const logName = "onLog." + msg.logName;
+      const old = (prov as any).logs.user[logName] ?? [];
 
-  return folder;
-};
+      (prov as any).logs.user[logName] = [...old, ...msg.data];
+      return;
+    }
 
-/**
- *
- */
-export const filterAbsoluteFilepath = (file: string) => {
-  assert(path.isAbsolute(file), "File must be absolute", file);
+    case "stream": {
+      prov.logStream("onLog." + msg.logName, msg.data);
+      return;
+    }
 
-  return "abs:" + path.relative(getProjectPath(), file).replace(/\\/g, "/");
-};
+    case "html": {
+      prov.onError(makeJabError("Combining html entries is not impl", msg));
+      return;
+    }
 
-/**
- *
- */
-export const writeScriptFileThatChanges2 = (value: number) => {
-  writeScriptFileThatChanges(value, "FileThatChanges2.js");
-};
+    case "error": {
+      prov.onErrorData(msg.data);
+      return;
+    }
 
-/**
- *
- */
-export const writeScriptFileThatChanges = (
-  value: number,
-  name = "FileThatChanges.js"
-) => {
-  const code = "module.exports = " + value + ";";
-  fs.writeFileSync(getScratchPath(name), code);
+    default: {
+      prov.onError(makeJabError("Unknown log type", msg));
+      return;
+    }
+  }
 };

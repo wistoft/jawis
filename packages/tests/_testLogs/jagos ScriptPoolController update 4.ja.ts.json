@@ -1,1 +1,1 @@
-{"user":{"imp":[["value",[{"id":"filtered","script":"packages/tests/_fixture/scripts/hello.js","status":"running"}]]],"hello.js":["preloading","running","listening","stopped"],"hello.js.stdout":["hello\n"]}}
+{"user":{"hello.js":["preloading","running","listening","stopped"],"imp":[["value",[{"id":"filtered","script":"abs:packages/tests/_fixture/scripts/hello.js","status":"running","time":["undefined"]}]]],"hello.js.log":[{"type":"log","logName":"console.log","data":["value",["hello"]]}]}}

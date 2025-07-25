@@ -9,6 +9,8 @@ export default (prov: TestProvision) => {
     {},
     getShownTestUpdate_empty({
       id: "succeededTest",
+      name: "succeededTest",
+      file: "file",
       status: ".",
       testLogs: [],
     })

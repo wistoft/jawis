@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { sleeping } from "^yapu";
 import { TestProvision } from "^jarun";
 
@@ -7,7 +7,6 @@ import {
   getJabScriptPoolController,
   getScratchPath,
   getScriptPath,
-  shutdownQuickFix,
 } from "../_fixture";
 
 //a script found in update can be executed.
@@ -24,7 +23,7 @@ export default (prov: TestProvision) => {
   pool.updateScripts();
 
   return pool
-    .restartScript(script)
-    .then(() => sleeping(100))
-    .then(() => shutdownQuickFix(pool));
+    .restartBee(script)
+    .then(() => sleeping(1000))
+    .then(pool.shutdown);
 };

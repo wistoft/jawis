@@ -8,9 +8,15 @@ export default (prov: TestProvision) => {
   prov.imp(
     filterConfig(
       getFullConf(
-        { scripts: [{ script: "scripts/hello.js", autoStart: false }] },
-        getFixturePath()
+        {
+          testFolder: "testsuite",
+          testLogFolder: "..",
+          scriptFolders: ["scripts"],
+          scripts: [{ script: "scripts/hello.js" }],
+        },
+        getFixturePath(),
+        "windows"
       )
-    ).scripts
+    )
   );
 };

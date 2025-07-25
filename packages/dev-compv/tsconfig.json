@@ -5,9 +5,10 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../dev-compc" },
     { "path": "../jab" },
-    { "path": "../jagoc" },
     { "path": "../jab-react" },
-    { "path": "../react-use-ws" }
+    { "path": "../react-use-ws" },
+    { "path": "../yapu" }
   ]
 }

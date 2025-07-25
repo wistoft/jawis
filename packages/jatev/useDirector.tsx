@@ -1,24 +1,20 @@
 import React, { useRef, useState } from "react";
 
 import {
-  ClientMessage,
-  ServerMessage,
-  ClientTestReport,
-  RogueData,
-} from "^jatec";
-
-import {
   useMemoDep,
-  makeUseFunction,
   useKeyListener,
   HookSetState,
   makeSetPartialState,
 } from "^jab-react";
-
-import { OpenFile } from "^jab";
-
+import { OpenFile, def } from "^jab";
 import { WebSocketProv } from "^react-use-ws";
+
 import {
+  ClientMessage,
+  ServerMessage,
+  ClientTestReport,
+  RogueData,
+  ClientTestInfo,
   makeOnServerMessage,
   ViewAction,
   ViewActionProps,
@@ -31,8 +27,8 @@ import {
   onPrevUpdater,
   makeRogueUpdater,
   getTestLogsThatDiffer,
-  StateCallbacks,
   State,
+  ViewHome,
 } from "./internal";
 
 export type DirectorProps = {
@@ -46,6 +42,11 @@ export type DirectorProps = {
     | "state"
     | "onRunCurrentTest"
     | "onEditCurrentTest"
+    | "clearAllRogueData"
+    | "showTestCase"
+    | "onCloseTestCase"
+    | "onPrev"
+    | "onNext"
     | "openFile"
   >;
 
@@ -73,7 +74,12 @@ export const useDirector = ({
   // structure
 
   const {
-    callbacks,
+    setTestSelection,
+    clearAllRogueData,
+    showTestCase,
+    onCloseTestCase,
+    onPrev,
+    onNext,
     onServerMessage,
     openFile,
     onRunCurrentTest,
@@ -93,8 +99,10 @@ export const useDirector = ({
 
   useKeyListener(
     makeOnKeydown({
-      ...callbacks,
       apiSend,
+      onCloseTestCase,
+      onPrev,
+      onNext,
       onRunCurrentTest,
       onEditCurrentTest,
     })
@@ -107,7 +115,11 @@ export const useDirector = ({
     apiSend,
     wsState,
     state,
-    callbacks,
+    clearAllRogueData,
+    showTestCase,
+    onCloseTestCase,
+    onPrev,
+    onNext,
     openFile,
     onRunCurrentTest,
     onEditCurrentTest,
@@ -120,8 +132,8 @@ export const useDirector = ({
       <ViewControls
         apiSend={apiSend}
         isRunning={state.isRunning}
-        executingTestId={state.executingTestId}
-        showTestCase={callbacks.showTestCase}
+        executingTest={state.executingTest}
+        showTestCase={showTestCase}
         runFailedTests={runFailedTests}
         acceptAllLogs={acceptAllLogs}
       />
@@ -134,13 +146,7 @@ export const useDirector = ({
   const routes = [
     {
       name: "Home",
-      elm: (
-        <>
-          {" "}
-          <br />
-          To run tests: click <i>cur</i> or <i>all</i>, and reload page.
-        </>
-      ),
+      elm: <ViewHome {...viewProps} />,
     },
     {
       name: "cur",
@@ -155,7 +161,7 @@ export const useDirector = ({
 
   // done
 
-  return { ...viewProps, postNav, routes };
+  return { ...viewProps, setTestSelection, postNav, routes };
 };
 
 //
@@ -178,11 +184,80 @@ const createStructure = ({
   stateRef,
   getRandomToken,
 }: StructureDeps) => {
-  const callbacks = getCallbacks(setState, getRandomToken);
+  //quick fix - use: makeSetStateCallback
 
-  const onServerMessage = makeOnServerMessage(callbacks);
+  const setPartialState = makeSetPartialState(setState);
 
-  const useApiSend = makeUseFunction(apiSend);
+  const setIsRunning = (isRunning: boolean) => {
+    setPartialState({ isRunning });
+  };
+
+  const setTestSelection = (data: ClientTestInfo[][]) => {
+    //filter empty levels away.
+    // A quick fix, needed to detect when there's no tests in `ViewExecutionList`
+    const mapped = data.filter((level) => level.length > 0);
+
+    setPartialState({ tests: testSelectionToCollection(mapped) });
+  };
+
+  //todo: getTest is implemented to slow, to run it for each test.
+  const setExecutingTestCase = (testId?: string) => {
+    if (testId) {
+      setPartialState((old) => ({
+        executingTest: {
+          id: testId,
+          name: def(old.tests).getTest(testId).name,
+        },
+      }));
+    } else {
+      setPartialState({ executingTest: undefined });
+    }
+  };
+
+  const setTestReport = (result: ClientTestReport) => {
+    setPartialState(makeTestCaseUpdater(result, getRandomToken));
+  };
+
+  const setRogue = (rogue: RogueData) => {
+    setPartialState(makeRogueUpdater(rogue, getRandomToken));
+  };
+
+  const clearAllRogueData = () => {
+    setPartialState({
+      unknownRogue: undefined,
+    });
+  };
+
+  //
+  // user events
+  //
+
+  const showTestCase = (testId: string) => {
+    setPartialState(makeShowTestUpdater(testId, getRandomToken));
+  };
+
+  const onCloseTestCase = () => {
+    setPartialState({
+      currentTest: undefined,
+      currentTestFressness: undefined,
+    });
+  };
+
+  const onPrev = () => {
+    setPartialState(onPrevUpdater(getRandomToken));
+  };
+
+  const onNext = () => {
+    setPartialState(onNextUpdater(getRandomToken));
+  };
+
+  const onServerMessage = makeOnServerMessage({
+    setIsRunning,
+    setTestSelection,
+    setExecutingTestCase,
+    setTestReport,
+    setRogue,
+  });
 
   const openFile: OpenFile = (deps: { file: string; line?: number }) => {
     apiSend({
@@ -205,8 +280,9 @@ const createStructure = ({
   const onEditCurrentTest = () => {
     if (stateRef.current.currentTest) {
       apiSend({
-        type: "openTest",
-        file: stateRef.current.currentTest.id,
+        type: "openFile",
+        file: stateRef.current.currentTest.file,
+        line: stateRef.current.currentTest.line,
       });
     }
   };
@@ -230,77 +306,17 @@ const createStructure = ({
   };
 
   return {
-    useApiSend,
+    setTestSelection,
+    clearAllRogueData,
+    showTestCase,
+    onCloseTestCase,
+    onPrev,
+    onNext,
     onServerMessage,
-    callbacks,
     openFile,
     onRunCurrentTest,
     onEditCurrentTest,
     runFailedTests,
     acceptAllLogs,
-  };
-};
-
-/**
- *
- */
-export const getCallbacks = (
-  setState: HookSetState<State>,
-  getRandomToken: () => number
-): StateCallbacks => {
-  //quick fix - use: makeSetStateCallback
-
-  const setPartialState = makeSetPartialState(setState);
-
-  return {
-    setIsRunning: (isRunning: boolean) => {
-      setPartialState({ isRunning });
-    },
-
-    setTestSelection: (data: string[][]) => {
-      //maybe server could map do these things.
-      //filter empty levels away.
-      // A quick fix, needed to detect when there's no test in `ViewExecutionList`
-      const mapped = data
-        .map((level) => level.map((id) => ({ id })))
-        .filter((level) => level.length > 0);
-
-      setPartialState({ tests: testSelectionToCollection(mapped) });
-    },
-
-    setExecutingTestCase: (testId?: string) => {
-      setPartialState({ executingTestId: testId });
-    },
-
-    setTestReport: (result: ClientTestReport) => {
-      setPartialState(makeTestCaseUpdater(result, getRandomToken));
-    },
-
-    setRogue: (rogue: RogueData) => {
-      setPartialState(makeRogueUpdater(rogue, getRandomToken));
-    },
-
-    //
-    // user events
-    //
-
-    showTestCase: (testId: string) => {
-      setPartialState(makeShowTestUpdater(testId, getRandomToken));
-    },
-
-    onCloseTestCase: () => {
-      setPartialState({
-        currentTest: undefined,
-        currentTestFressness: undefined,
-      });
-    },
-
-    onPrev: () => {
-      setPartialState(onPrevUpdater(getRandomToken));
-    },
-
-    onNext: () => {
-      setPartialState(onNextUpdater(getRandomToken));
-    },
   };
 };

@@ -1,0 +1,18 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~shared-buffer-store",
+  "description": "Store for variable sized buffers to use in concurrent programs.",
+  "dependencies": {},
+  "keywords": [
+    "shared",
+    "shm",
+    "SharedArrayBuffer",
+    "concurrency",
+    "parallelism",
+    "multithreading",
+    "worker_threads",
+    "thread",
+    "Atomics"
+  ]
+}

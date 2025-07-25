@@ -1,5 +1,7 @@
 import { arrayCircularNext, arrayCircularPrev, assert, err } from "^jab";
-import { TestState, TestStateUpdate } from "./internal";
+
+import { TestState } from "./internal";
+import { get2dArrayUpdate } from "^jab-react";
 
 export type TestCollection = {
   tests: TestState[][];
@@ -7,11 +9,9 @@ export type TestCollection = {
 } & Methods;
 
 type Methods = {
-  getTestUpdate: (
-    this: TestCollection,
-    test: TestStateUpdate
-  ) => TestCollection;
+  getTestUpdate: (this: TestCollection, test: TestState) => TestCollection;
   getTest: (this: TestCollection, testId: string) => TestState;
+  tryGetTest: (this: TestCollection, testId: string) => TestState | undefined;
   getPrevTest: (this: TestCollection, testId?: string) => TestState;
   getNextTest: (this: TestCollection, testId?: string) => TestState;
 };
@@ -74,6 +74,20 @@ const methods: Methods = {
   },
 
   /**
+   * Get test object from a test id.
+   */
+  tryGetTest: function (this, testId) {
+    const val = tryGetTestIdx(this.tests, testId);
+
+    if (!val) {
+      return;
+    }
+
+    const [i, j] = val;
+    return this.tests[i][j];
+  },
+
+  /**
    * Get test object that is before the given test id.
    *
    * - returns last test, if testId is undefined.
@@ -127,29 +141,29 @@ const methods: Methods = {
 //
 
 /**
- * Update an array immutable.
+ * Returns the two indexes for the test id.
+ *
+ * - exported for testing
  */
-const getArrayUpdate = <T>(arr: T[], idx: number, elm: T) => {
-  const res = arr.slice();
-  res[idx] = elm;
-  return res;
-};
+export const getTestIdx = (selection: TestState[][], testId: string) => {
+  const val = tryGetTestIdx(selection, testId);
 
-/**
- * Update a 2d array immutable.
- */
-const get2dArrayUpdate = <T>(arr: T[][], idx: number, idx2: number, elm: T) =>
-  getArrayUpdate(arr, idx, getArrayUpdate(arr[idx], idx2, elm));
+  if (val) {
+    return val;
+  } else {
+    throw err("Could not find testId: ", testId);
+  }
+};
 
 /**
  * Returns the two indexes for the test id.
  *
  * - exported for testing
  */
-export const getTestIdx = (
+export const tryGetTestIdx = (
   selection: TestState[][],
   testId: string
-): [number, number] => {
+): [number, number] | undefined => {
   let i = 0;
 
   for (const tests of selection) {
@@ -162,5 +176,5 @@ export const getTestIdx = (
     i++;
   }
 
-  throw err("Could not find testId: ", testId);
+  //implicit return undefined, when test isn't found.
 };

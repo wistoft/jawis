@@ -5,7 +5,6 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../bee-common" },
     { "path": "../jagoc" },
     { "path": "../jab" },
     { "path": "../jab-react" },

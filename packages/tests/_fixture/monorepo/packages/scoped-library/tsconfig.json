@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/scoped-library",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../first-library" },
+    { "path": "../second-library" }
+  ]
+}

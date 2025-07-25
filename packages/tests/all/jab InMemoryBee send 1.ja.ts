@@ -5,5 +5,7 @@ import { getInMemoryBee } from "../_fixture";
 export default (prov: TestProvision) => {
   const bee = getInMemoryBee(prov);
 
-  return bee.send({}).finally(bee.shutdown);
+  bee.send({});
+
+  return bee.shutdown();
 };

@@ -1,22 +1,33 @@
+import { AbsoluteFile, ErrorData, LogEntry, OnError, SendLog } from "^jab";
 import { FinallyFunc } from "^finally-provider";
-import { CapturedValue, ErrorData, OnError } from "^jab";
-import { Waiter } from "^state-waiter";
 
 export type BeeShutdownMessage = {
   type: "shutdown";
 };
 
+export type BeeDef<D = unknown> = {
+  filename: AbsoluteFile;
+  data?: D;
+  next?: BeeDef;
+};
+
+export type BeeConf = {
+  exitOnError: boolean;
+  enableLongTraces: boolean;
+};
+
 export type BeeDeps<MR> = {
-  filename: string;
+  def: BeeDef;
   finally: FinallyFunc;
 } & BeeListeners<MR>;
 
 export type BeeListeners<MR> = {
   onMessage: (msg: MR) => void;
-  onStdout: (data: Buffer) => void;
-  onStderr: (data: Buffer) => void;
+  onLog: (entry: LogEntry) => void;
+  onStdout: (data: Buffer | string) => void;
+  onStderr: (data: Buffer | string) => void;
   onError: (error: unknown) => void;
-  onExit: (exitCode: number | null) => void;
+  onExit: () => void;
 };
 
 export type BeeStates = "running" | "stopping" | "stopped";
@@ -26,11 +37,11 @@ export type BeeEvents = "message";
  * A bee is an abstaction over processes/workers.
  */
 export type Bee<MS> = {
-  send: (msg: BeeShutdownMessage | MS) => Promise<void>;
+  send: (msg: BeeShutdownMessage | MS) => void;
   shutdown: () => Promise<void>;
   kill: () => Promise<void>;
   noisyKill: () => Promise<void>;
-  waiter: Waiter<BeeStates, BeeEvents>;
+  is: (state: BeeStates) => boolean;
 };
 
 /**
@@ -40,63 +51,105 @@ export type MakeBee = <MS extends {}, MR extends {}>(
   deps: BeeDeps<MR>
 ) => Bee<MS>;
 
+export type MakeCertainBee<C extends string> = <MS extends {}, MR extends {}>(
+  type: C,
+  deps: BeeDeps<MR>
+) => Bee<MS>;
+
 export type BeeProv<MS = unknown> = {
   beeSend: (msg: MS) => void;
+  sendLog: SendLog;
   beeExit: () => void;
+  onError: OnError;
   registerErrorHandlers: (onError: OnError) => void;
   registerOnMessage: (listener: (msg: any) => void) => void;
   removeOnMessage: (listener: (msg: any) => void) => void;
   importModule: (filename: string) => Promise<any>;
+  runBee: (beeDef: BeeDef, setGlobal: boolean) => Promise<unknown>;
+};
+
+export type BeeProvAndData<MS = unknown, D = unknown> = {
+  beeData: D;
+} & BeeProv<MS>;
+
+export type BeeMain<MS = unknown, D = unknown> = (
+  deps: BeeProvAndData<MS, D>
+) => void;
+
+/**
+ * Can make scripts into worker bees.
+ */
+export type HoneyComb<C extends string = string> = {
+  isBee: (filename: string) => boolean;
+  makeBee: MakeBee;
+  makeCertainBee: MakeCertainBee<C>;
+  makeMakeCertainBee: (type: C) => MakeBee;
 };
 
 //
 // messages, logs and output
 //
 
-export type SendBeeLog = (msg: BeeLogEntry) => void;
+export type MakeSend = <M extends {}>() => (msg: M) => void;
 
-export type LogEntry = {
-  type: "log";
-  data: CapturedValue[];
-  logName?: string;
-};
-
-export type StreamEntry = {
-  type: "stream";
-  data: string;
-  logName?: string;
-};
-
-export type HtmlEntry = {
-  type: "html";
-  data: string;
-  logName?: string;
-};
-
-export type ErrorEntry = {
-  type: "error";
-  data: ErrorData;
-  logName?: string;
-};
-
-export type BeeLogEntry = LogEntry | StreamEntry | HtmlEntry | ErrorEntry;
+export type BeeOutput =
+  | {
+      type: "message";
+      data: unknown;
+    }
+  | {
+      type: "log";
+      data: LogEntry;
+    }
+  | {
+      type: "stdout";
+      data: string;
+    }
+  | {
+      type: "stderr";
+      data: string;
+    };
 
 //
-// add ons
+// from elsewhere
 //
+
+// compatible with PromiseRejectionEvent from lib.dom. I.e. this is a subset.
+export type PromiseRejectionEvent = {
+  readonly reason: unknown;
+  readonly promise: Promise<unknown>;
+  readonly defaultPrevented: boolean;
+  preventDefault(): void;
+};
+
+// compatible with ErrorEvent from lib.dom. I.e. this is a subset.
+export type ErrorEvent = {
+  readonly error: unknown;
+  readonly defaultPrevented: boolean;
+  preventDefault(): void;
+};
+
+//
+// additionally
+//
+
+export type ExecBeeDeps = {
+  def: BeeDef;
+  makeBee: MakeBee;
+  finallyFunc: FinallyFunc;
+  onError?: OnError;
+  onLog?: (data: LogEntry) => void;
+  onStdout?: (data: Buffer | string) => void;
+  onExit?: (status?: number | null) => void;
+};
 
 export type ExecBee = <MR extends {}, MS extends {}>(
-  script: string,
-  finallyFunc: FinallyFunc,
-  makeBee: MakeBee
+  deps: ExecBeeDeps
 ) => { bee: Bee<MS>; promise: Promise<BeeResult<MR>> };
 
 export type BeeResult<MR> = {
-  stdout: string;
-  stderr: string;
-  status: number | null;
   messages: MR[];
-  errors: unknown[];
+  logs: LogEntry[];
 };
 
 export type BeePreloaderProv<MR extends {}, MS extends {}> = {
@@ -104,5 +157,58 @@ export type BeePreloaderProv<MR extends {}, MS extends {}> = {
   shutdown: () => Promise<void>;
   kill: () => Promise<void>;
   noisyKill: () => Promise<void>;
-  cancel: (msg?: string) => void;
 };
+
+export type ExternalLogSource = {
+  getBufferedLogEntries: () => LogEntry[];
+};
+
+//
+// bee frost
+//
+
+export type BeeFrostClientMessage =
+  | {
+      type: "message";
+      bid: number;
+      data: unknown;
+    }
+  | {
+      type: "log";
+      bid: number;
+      data: LogEntry;
+    }
+  | {
+      type: "exit";
+      bid: number;
+      data: number | null;
+    }
+  | {
+      type: "error"; // an error, that can't be attributed to a bee.
+      data: ErrorData;
+    };
+
+export type BeeFrostServerMessage =
+  | {
+      type: "setConf"; //must be sent as the first message
+      ymerUrl: string;
+      webCsUrl: string;
+    }
+  | {
+      type: "makeBee";
+      bid: number;
+      filename: AbsoluteFile;
+    }
+  | {
+      type: "message";
+      bid: number;
+      data: {};
+    }
+  | {
+      type: "shutdown";
+      bid: number;
+    }
+  | {
+      type: "kill";
+      bid: number;
+    };

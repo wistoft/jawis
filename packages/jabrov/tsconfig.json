@@ -11,6 +11,7 @@
     { "path": "../jab-react" },
     { "path": "../jab" },
     { "path": "../yapu" },
+    { "path": "../parse-captured-stack" },
     { "path": "../react-use-ws" }
   ]
 }

@@ -29,8 +29,6 @@ export class NoopBeePreloader<MR extends {}, MS extends {}>
    */
   public shutdown = () => Promise.resolve();
 
-  public cancel = () => Promise.resolve();
-
   public noisyKill = () => Promise.resolve();
 
   public kill = () => Promise.resolve();

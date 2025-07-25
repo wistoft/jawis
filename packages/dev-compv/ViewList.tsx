@@ -1,5 +1,4 @@
 import React, { memo } from "react";
-
 import { JsLink, Link } from "^jab-react";
 
 import { ComponentDef } from "./internal";

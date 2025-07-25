@@ -1,0 +1,13 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~git-util",
+  "description": "Util for git.",
+  "dependencies": {},
+  "keywords": [
+    "util",
+    "utilities",
+    "stdlib",
+    "git"
+  ]
+}

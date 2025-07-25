@@ -1,22 +1,27 @@
-import { FinallyFunc } from "^finally-provider";
-import { prej } from "^jab";
-
-import { getFileToRequire, ProcessRestarter } from "^jab-node";
-
-import { TestRunner } from "^jatec";
+import { ProcessRestarterDeps, ProcessRestarterProv } from "^process-util";
 import { Waiter } from "^state-waiter";
+import { FinallyFunc } from "^finally-provider";
 
-import { MakeBee } from "^bee-common";
+import { SendLog, GetAbsoluteSourceFile } from "^jab";
+import { getAbsoluteSourceFile_live } from "^jab-node";
+import { jarunProcessMainDeclaration } from "^jarunc";
 import {
   JarunProcessControllerInner,
-  JarunProcessControllerInnerDeps,
   JarunProcessControllerMessage,
+  JarunTestRunnerProv,
+  JarunProcessControllerInnerDeps,
   JarunProcessMessage,
 } from "./internal";
 
+//makes it possible to be agnostic towards the compiler, makeBee.
+export type MakeJarunProcessRestarter = (
+  deps: Omit<ProcessRestarterDeps<JarunProcessMessage>, "makeBee">
+) => ProcessRestarterProv<JarunProcessControllerMessage>;
+
 export type JarunProcessControllerDeps = {
-  customBooter?: string;
-  makeTsBee: MakeBee;
+  makeProcessRestarter: MakeJarunProcessRestarter;
+  getAbsoluteSourceFile?: GetAbsoluteSourceFile;
+  onLog: SendLog;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
 } & Omit<JarunProcessControllerInnerDeps, "prSend">;
@@ -28,14 +33,16 @@ type Events = never;
  * Integrate ProcessRestarter and JarunProcessControllerInner
  *
  * - Jarun process is always started with TypeScript compiler.
+ *
+ * todo
+ *  - This should just be a factory of some sort.
+ *    - there's no need for state here.
+ *    - Inner should be responsible for kill.
  */
-export class JarunProcessController implements TestRunner {
+export class JarunProcessController implements JarunTestRunnerProv {
   private waiter: Waiter<States, Events>;
 
-  private pr: ProcessRestarter<
-    JarunProcessMessage,
-    JarunProcessControllerMessage
-  >;
+  private pr: ProcessRestarterProv<JarunProcessControllerMessage>;
 
   private inner: JarunProcessControllerInner;
 
@@ -60,19 +67,17 @@ export class JarunProcessController implements TestRunner {
       prSend: this.prSend,
     });
 
+    //booter
+
+    const getAbsoluteSourceFile = deps.getAbsoluteSourceFile ?? getAbsoluteSourceFile_live; // prettier-ignore
+
+    const filename = getAbsoluteSourceFile(jarunProcessMainDeclaration);
+
     //pr
 
-    const filename =
-      this.deps.customBooter || getFileToRequire(__dirname, "JarunProcessMain");
-
-    this.pr = new ProcessRestarter<
-      JarunProcessMessage,
-      JarunProcessControllerMessage
-    >({
+    this.pr = this.deps.makeProcessRestarter({
       ...this.deps,
-      filename,
-      filterRequireMessages: false,
-      makeBee: deps.makeTsBee,
+      def: { filename },
       onMessage: this.inner.onMessage,
       onRestarted: this.inner.onRestarted,
       onUnexpectedExit: this.inner.onUnexpectedExit,
@@ -85,13 +90,8 @@ export class JarunProcessController implements TestRunner {
   /**
    *
    */
-  public runTest = (id: string, absTestFile: string) => {
-    if (!this.waiter.is("ready")) {
-      return prej("Can't run test. (state:" + this.waiter.getState() + ")");
-    }
-
-    return this.inner.runTest(id, absTestFile);
-  };
+  public runTest = (id: string, absTestFile: string) =>
+    this.inner.runTest(id, absTestFile);
 
   /**
    * used by the inner controller.

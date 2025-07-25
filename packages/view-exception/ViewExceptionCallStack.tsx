@@ -74,9 +74,9 @@ const mapFrame =
     normalizedRemovePathPrefix: string
   ) =>
   (frame: ParsedStackFrame, index: number) => {
-    const isSystemFrame = getIsSystemFrame(frame);
+    const isSystem = isSystemFrame(frame);
 
-    if (!showSystemFrames && isSystemFrame) {
+    if (!showSystemFrames && isSystem) {
       return (
         <JsLink
           key={index}
@@ -90,7 +90,7 @@ const mapFrame =
       );
     }
 
-    const color = isSystemFrame
+    const color = isSystem
       ? "var(--text-color-faded)"
       : "var(--jawis-console-text-color)";
 
@@ -116,7 +116,7 @@ const mapFrame =
       ) : (
         <>
           &nbsp;&nbsp;
-          {isSystemFrame ? (
+          {isSystem ? (
             <i>
               <b>{firstDir}</b>
             </i>
@@ -159,14 +159,26 @@ const mapFrame =
 
 /**
  *
+ * note
+ *  detect node frames like: https://github.com/AndreasMadsen/clarify/blob/master/clarify.js
  */
-const getIsSystemFrame = (frame: ParsedStackFrame) =>
-  frame.file?.startsWith("internal") ||
-  frame.file === "events.js" ||
-  frame.file === "webpack:///webpack/bootstrap" ||
-  frame.file?.includes("node_modules") ||
-  (frame.func && frame.func === "__webpack_require__") ||
-  frame.file?.indexOf("build-alpha") !== -1; //hacky. This should be custom setting only for jawis repo.
+export const isSystemFrame = (frame: ParsedStackFrame) => {
+  const isNodeFrame =
+    frame.file?.startsWith("node:") ||
+    frame.file?.startsWith("internal") ||
+    !frame.file?.replace(/\\/g, "/").includes("/");
+
+  return (
+    isNodeFrame ||
+    frame.file === "webpack:///webpack/bootstrap" ||
+    frame.file?.includes("node_modules") ||
+    (frame.func && frame.func === "__webpack_require__") ||
+    //hacky. This should be custom setting only for jawis repo.
+    frame.file?.indexOf("build-alpha") !== -1 ||
+    frame.file?.includes("vendor") ||
+    frame.file?.indexOf("/rust") !== -1
+  );
+};
 
 /**
  *
@@ -182,12 +194,14 @@ export const getFile = (
 
   let partial: string;
 
-  if (/^webpack(-internal)?:\/\/\//.test(file)) {
+  const clientSide =
+    /^webpack(-internal)?:\/\//.test(file) ||
+    /^http:\/\/localhost:\d*\/webcs\//.test(file);
+
+  if (clientSide) {
     //it's client side
 
-    partial = file
-      .replace("webpack-internal:///", "")
-      .replace("webpack:///", "")
+    partial = trimWebpackPrefix(file)
       .replace(/^\.\//, "")
       .replace(normalizedRemovePathPrefix, "");
   } else {
@@ -218,7 +232,9 @@ export const getFunc = (frame: ParsedStackFrame) => {
     .replace(/^.*__webpack_exports__\./, "")
     .replace(/^Object\.exports\./, "")
     .replace(/^Object\.<anonymous>$/, "ano")
-    .replace(/^.* \[as ([^\]]*)/, "$1"); // patterns like `^.* [as ... ]$` but ending $ is not enforceable, due to backtracking.
+    .replace(/^.* \[as ([^\]]*)/, "$1") // patterns like `^.* [as ... ]$` but ending $ is not enforceable, due to backtracking.
+    .replace(/(\/<)+$/, "")
+    .replace(/\/this\./, "."); //webpack makes function name like: BrowserWebSocket/this.rawOpenWebSocket
 };
 
 /**
@@ -296,9 +312,7 @@ export const getAbsFile = (projectRoot: string, file?: string) => {
     return;
   }
 
-  const relPath = file
-    .replace("webpack://", "")
-    .replace("webpack-internal://", "");
+  const relPath = trimWebpackPrefix(file);
 
   if (file !== relPath) {
     //make absolute, if there was a webpack protocol.
@@ -307,6 +321,20 @@ export const getAbsFile = (projectRoot: string, file?: string) => {
     return file;
   }
 };
+
+/**
+ *
+ * - separators are turned into slashes.
+ * - ends with slash.
+ */
+export const trimWebpackPrefix = (file: string) =>
+  file
+    .replace("webpack-internal:///", "")
+    .replace("webpack:///", "")
+    .replace("webpack-internal://", "")
+    .replace("webpack://", "")
+    .replace("QUICK_FIX_EXPORT/", "") // global export variable is added by webpack.
+    .replace(/^http:\/\/localhost:\d*\/webcs\//, ""); //quick fix: only works, when webcs is relative path, like webpack.
 
 /**
  *

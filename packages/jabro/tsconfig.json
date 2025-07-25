@@ -7,9 +7,10 @@
   "references": [
     { "path": "../bee-common" },
     { "path": "../jab" },
-    { "path": "../jab-node" },
-    { "path": "../jab-express" },
     { "path": "../jabroc" },
+    { "path": "../jabrov" },
+    { "path": "../javic" },
+    { "path": "../jab-express" },
     { "path": "../state-waiter" }
   ]
 }

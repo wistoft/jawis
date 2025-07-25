@@ -12,6 +12,15 @@ const createWebpackBaseConf = ({
   define,
   defineHtml,
 }) => {
+  const plugins = [
+    template &&
+      new HtmlWebpackPlugin({
+        template,
+        ...defineHtml,
+      }),
+    define && new webpack.DefinePlugin(define || {}),
+  ].filter(Boolean);
+
   return {
     stats: "errors-only",
 
@@ -37,6 +46,8 @@ const createWebpackBaseConf = ({
                 configFile: tsConfigFile,
                 compilerOptions: {
                   module: "esnext",
+                  //explicit is needed in typescript 5
+                  moduleResolution: "classic",
                   sourceMap: true,
                 },
               },
@@ -61,13 +72,7 @@ const createWebpackBaseConf = ({
       ],
     },
 
-    plugins: [
-      new HtmlWebpackPlugin({
-        template,
-        ...defineHtml,
-      }),
-      new webpack.DefinePlugin(define || {}),
-    ],
+    plugins,
   };
 };
 

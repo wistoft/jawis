@@ -1,21 +1,21 @@
 import { TestProvision } from "^jarun";
 
 import {
-  getJabWatchableProcess_ipc_changeable,
-  shutdownQuickFix,
+  getJabWatchableProcessAndWaiter_ipc_changeable,
   writeScriptFileThatChanges,
 } from "../_fixture";
 
 // a file changes (simple :-)
 
 export default async (prov: TestProvision) => {
-  const { wp, hasRestarted } = await getJabWatchableProcess_ipc_changeable(
-    prov
-  );
+  const { wp, waiter } =
+    await getJabWatchableProcessAndWaiter_ipc_changeable(prov);
+
+  //todo - flacky unless waiting for listening here.
 
   writeScriptFileThatChanges(1000);
 
-  await hasRestarted;
+  await waiter.await("restarted");
 
-  await shutdownQuickFix(wp);
+  await wp.shutdown();
 };

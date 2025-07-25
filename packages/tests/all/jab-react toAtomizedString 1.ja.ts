@@ -1,14 +1,14 @@
 import { TestProvision } from "^jarun";
-import { tos_async, tos_test } from "../_fixture";
+import { toAtomizedString_async, toAtomizedString_test } from "../_fixture";
 
 export default async ({ imp }: TestProvision) => {
-  imp(tos_test(true));
-  imp(tos_test([true, false]));
+  imp(toAtomizedString_test(true));
+  imp(toAtomizedString_test([true, false]));
 
-  imp(tos_test(Promise.resolve("unreach")));
+  imp(toAtomizedString_test(Promise.resolve("unreach")).replace("JarunPromise : ", "")); // prettier-ignore
 
   //async
 
-  imp(await tos_async("hej"));
-  imp(await tos_async(Promise.resolve(Infinity)));
+  imp(await toAtomizedString_async("hej"));
+  imp(await toAtomizedString_async(Promise.resolve(Infinity)));
 };

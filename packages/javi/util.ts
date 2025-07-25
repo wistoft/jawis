@@ -1,103 +1,31 @@
-import fs from "fs";
-import path from "path";
-
-import { assertString, undefinedOr, isInt } from "^jab";
-import {
-  execSilent,
-  execSyncAndGetStdout,
-  MainProv,
-  MakeJabProcess,
-  makePlainJabProcess,
-  Process,
-} from "^jab-node";
-import { BeeRunner } from "^jarun";
-import { makeJatesRoute } from "^jates";
-import { makeJagosRoute } from "^jagos";
+import { Serializable } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 import { FinallyFunc } from "^finally-provider";
-
 import {
-  JaviClientConf,
-  makeJarunTestRunners,
-  Route,
-  makeApp,
-} from "./internal";
-
-export type Deps = {
-  name: string;
-  mainProv: MainProv;
-  serverPort: number;
-  staticWebFolder: string;
-  clientConf: JaviClientConf;
-  jates: Omit<Parameters<typeof makeJatesRoute>[0], | "createTestRunners" | "makeTsProcess" | "onError" | "finally" | "logProv">; // prettier-ignore
-  jagos: Omit<Parameters<typeof makeJagosRoute>[0], "onError" | "finally" | "logProv">; // prettier-ignore
-  makeRoutes?: Route[];
-};
+  NodeProcess,
+  NodeProcessDeps,
+  execAndGetStdout,
+  execSilent,
+} from "^process-util";
+import { BeeRunner } from "^jarun";
+import { MakeBee } from "^bee-common";
+import {
+  assertString,
+  undefinedOr,
+  isInt,
+  assert,
+  HandleOpenFileInEditor,
+  CompareFiles,
+} from "^jab";
 
 /**
- * - Configure routes for jates and jagos.
- * - Add additional routes, defined in deps.
- * - Start web server
  *
- * note
- *  - this caters for both production and dev sites. (to avoid code duplication.)
  */
-export const startJaviServer = async (deps: Deps) => {
-  const { onError, finalProv, logProv } = deps.mainProv;
-
-  //jates
-
-  const jates: Route = {
-    path: "/jate",
-    makeHandler: () =>
-      makeJatesRoute({
-        createTestRunners: makeJarunTestRunners,
-        makeTsProcess: makeTsNodeJabProcess,
-        onError,
-        finally: finalProv.finally,
-        logProv,
-        ...deps.jates,
-      }),
-  };
-
-  //jagos
-
-  const jagos: Route = {
-    path: "/jago",
-    makeHandler: () =>
-      makeJagosRoute({
-        onError,
-        finally: finalProv.finally,
-        logProv,
-        ...deps.jagos,
-      }),
-  };
-
-  // prefetch index.html
-
-  const indexHtml = await fs.promises
-    .readFile(path.join(deps.staticWebFolder, "index.html"))
-    .then((data) => data.toString());
-
-  // app
-
-  const app = makeApp({
-    staticWebFolder: deps.staticWebFolder,
-    mainProv: deps.mainProv,
-    makeRoutes: [jates, jagos, ...(deps.makeRoutes || [])],
-    clientConf: {
-      variable: "__JAVI_CLIENT_CONF",
-      value: deps.clientConf,
-    },
-    indexHtml,
-  });
-
-  // start server
-
-  app.listen(deps.serverPort, () =>
-    deps.mainProv.log(deps.name + " port: " + deps.serverPort)
-  );
-};
+export type MakeJabProcess = <MR extends Serializable, MS extends Serializable>(
+  deps: NodeProcessDeps<MR>
+) => NodeProcess<MR, MS>;
 
 /**
  *
@@ -106,13 +34,13 @@ export const makeProcessRunner = (deps: {
   makeTsProcess: MakeJabProcess;
   finally: FinallyFunc;
 }) => {
-  const makeTsProcessConditonally = makeMakeTsJabProcessConditionally(
+  const makeTsProcessConditionally = makeMakeTsJabProcessConditionally(
     deps.makeTsProcess
   );
 
   return new BeeRunner({
     ...deps,
-    makeBee: makeTsProcessConditonally,
+    makeBee: makeTsProcessConditionally,
   });
 };
 
@@ -120,14 +48,43 @@ export const makeProcessRunner = (deps: {
  *
  */
 export const makeMakeTsJabProcessConditionally =
-  (makeTsJabProcess: MakeJabProcess): MakeJabProcess =>
+  (makeTsJabProcess: MakeJabProcess): MakeBee =>
   (deps) => {
-    if (deps.filename.endsWith(".ts") || deps.filename.endsWith(".tsx")) {
-      return makeTsJabProcess(deps);
+    if (deps.def.data) {
+      throw new Error("data not impl");
+    }
+
+    if (deps.def.next) {
+      throw new Error("next not impl");
+    }
+
+    if (
+      deps.def.filename.endsWith(".ts") ||
+      deps.def.filename.endsWith(".tsx")
+    ) {
+      return makeTsJabProcess({ ...deps, filename: deps.def.filename });
     } else {
-      return makePlainJabProcess(deps);
+      return makeNodeProcessBee(deps);
     }
   };
+
+/**
+ *
+ */
+export const makeNodeProcessBee: MakeBee = (deps) => {
+  if (deps.def.data) {
+    throw new Error("data not impl");
+  }
+
+  if (deps.def.next) {
+    throw new Error("next not impl");
+  }
+
+  return new NodeProcess({
+    ...deps,
+    filename: deps.def.filename,
+  });
+};
 
 /**
  *
@@ -146,7 +103,7 @@ export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
 
   const nodeArgs = [...tsNodeArgs];
 
-  return new Process({
+  return new NodeProcess({
     ...deps,
     execArgv: nodeArgs,
     cwd: path.dirname(deps.filename),
@@ -156,52 +113,55 @@ export const makeTsNodeJabProcess: MakeJabProcess = (deps) => {
 /**
  *
  */
-export const openFileInVsCode = (file: string, line?: number) => {
+export const openFileInVsCode = async (
+  vsCodeBinary: string,
+  file: string,
+  line?: number
+) => {
   let fileSpec = file;
 
   if (line) {
     fileSpec += ":" + line;
   }
 
-  const stdoutNoisy = execSyncAndGetStdout(
-    "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-    ["-g", fileSpec]
-  );
+  const stdout = await execAndGetStdout(vsCodeBinary, [
+    "--log",
+    "off",
+    "-g",
+    fileSpec,
+  ]);
 
-  //this doesn't filter exceptions in `execSyncAndGetStdout`
-  const stdout = stdoutNoisy
-    .replace(
-      "(electron) Sending uncompressed crash reports is deprecated and will be removed in a future version of Electron. Set { compress: true } to opt-in to the new behavior. Crash reports will be uploaded gzipped, which most crash reporting servers support.",
-      ""
-    )
-    .trim();
-
-  if (stdout !== "") {
+  if (stdout.trim() !== "") {
     //the information that `execSyncAndGetStdout` gives isn't presented here.
-    throw new Error("Message from vs code: " + JSON.stringify(stdout));
+    throw new Error("Message from vs code: " + stdout);
   }
 };
 
 /**
  *
  */
-export const handleOpenFileInVsCode = (
-  msg: {
-    file: string;
-    line?: number;
-  },
-  baseFolder = ""
-) => {
-  const file = assertString(msg.file);
-  const line = undefinedOr(isInt)(msg.line);
-  openFileInVsCode(path.join(baseFolder, file), line);
-};
+export const makeHandleOpenFileInVsCode =
+  (vsCodeBinary: string): HandleOpenFileInEditor =>
+  (
+    location: {
+      file: string;
+      line?: number;
+    },
+    baseFolder = ""
+  ) => {
+    const file = assertString(location.file);
+    const line = undefinedOr(isInt)(location.line);
+    const fullpath = path.join(baseFolder, file);
+
+    assert(fs.existsSync(fullpath), "File not found: ", fullpath);
+
+    openFileInVsCode(vsCodeBinary, fullpath, line);
+  };
 
 /**
  *
  */
-export const compareFiles = (file1: string, file2: string) =>
-  execSilent("C:\\Program Files (x86)\\WinMerge\\WinMergeU.exe", [
-    file1,
-    file2,
-  ]);
+export const makeCompareFiles =
+  (binary: string): CompareFiles =>
+  (file1: string, file2: string) =>
+    execSilent(binary, [file1, file2]);

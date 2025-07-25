@@ -1,34 +1,38 @@
-import { useState } from "react";
-
-import { EventController } from "^jab";
-import { useAssertStatic, useUnmountSafeFunction } from "^jab-react";
+import { useState, useEffect } from "react";
 
 import {
-  makeUseWsEffect,
   BrowserWebSocket,
   WsStates,
   Deps as BwsDeps,
   WebSocketProv,
+  UseWsEffectArgs,
+  assert,
 } from "./internal";
 
 type Deps = {
   URL: string;
   reconnect: boolean;
+
+  //for testing
+  makeWebSocket?: () => WebSocket;
 };
 
 /**
- * - setup up for easy use of a web socket in components. A react useEffect, that
- *    - takes an onOpen and onServerMessage callback.
- * - provide the status/state of the web socket connection. e.g. closed, open.
- * - don't open the web socket yet. It will be done on component mount.
- * - Props must not change. There's not really a use case for that.
+ * Easily use web sockets in react components.
+ *
+ * - Returns a react useEffect, that takes an onOpen and onServerMessage callback.
+ * - Provides the status/state of the web socket connection. e.g. closed, open.
+ * - The web socket will be opened at component mount, and closed at unmount, which
+ *    it must do in react.
+ * - Props must be remain content. Changing props isn't supported.
  */
 export const useWebSocketProv = <MS, MR>(deps: Deps): WebSocketProv<MS, MR> => {
-  useAssertStatic(deps);
+  const [initialDeps] = useState(deps);
 
-  const [wsState, setWsState] = useState("closed" as WsStates);
+  assert(deps.URL === initialDeps.URL, "URL must not change");
+  assert(deps.reconnect === initialDeps.reconnect, "reconnect boolean must not change"); // prettier-ignore
 
-  const onStateChange = useUnmountSafeFunction(setWsState); // needed because we can't remove `onStateChange` from BWS.
+  const [wsState, onStateChange] = useState("closed" as WsStates);
 
   const [objects] = useState(() =>
     createStructure<MS, MR>({ ...deps, onStateChange })
@@ -39,26 +43,70 @@ export const useWebSocketProv = <MS, MR>(deps: Deps): WebSocketProv<MS, MR> => {
 
 /**
  *
+ * - Ensure onStateChange isn't called for unmounted components.
  */
 const createStructure = <MS, MR>(
   deps: Deps & Pick<BwsDeps<MR>, "onStateChange">
 ) => {
-  const eventStream = new EventController<MR>();
+  let bws: BrowserWebSocket<MS, MR> | undefined;
 
-  const bws = new BrowserWebSocket<MS, MR>({
-    URL: deps.URL,
-    onServerMesssage: eventStream.fireEvent,
-    reconnect: deps.reconnect,
-    onStateChange: deps.onStateChange,
-    onError: (event) => {
-      console.log("ws failed", event);
-    },
-  });
+  const apiSend = (data: MS) => {
+    if (!bws) {
+      console.log("Socket is closed.");
+      return;
+    }
 
-  const useWsEffect = makeUseWsEffect(bws, eventStream);
+    bws.apiSend(data);
+  };
 
   return {
-    apiSend: bws.apiSend,
-    useWsEffect,
+    apiSend,
+    useWsEffect: (inner: UseWsEffectArgs<MR>) => {
+      useEffect(() => {
+        if (bws) {
+          throw new Error("Impossible");
+        }
+
+        let active = true;
+
+        const onStateChange = (data: any) => {
+          if (active) {
+            deps.onStateChange?.(data);
+          }
+        };
+
+        const onServerMessage = (data: any) => {
+          if (active) {
+            inner.onServerMessage?.(data);
+          }
+        };
+
+        bws = new BrowserWebSocket<MS, MR>({
+          URL: deps.URL,
+          onServerMessage,
+          reconnect: deps.reconnect,
+          onStateChange,
+          onError: () => {
+            //todo:  this error could tell the URL at least.
+          },
+          makeWebSocket: deps.makeWebSocket,
+        });
+
+        bws.openWebSocket().then(inner.onOpen || (() => {}));
+
+        return () => {
+          if (!bws) {
+            throw new Error("Impossible");
+          }
+
+          try {
+            bws.closeWebSocket();
+          } finally {
+            bws = undefined;
+            active = false;
+          }
+        };
+      }, Object.values(inner));
+    },
   };
 };

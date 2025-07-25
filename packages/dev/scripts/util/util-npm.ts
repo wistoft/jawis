@@ -1,6 +1,19 @@
-import { exec, httpRequest } from "^jab-node";
-
+import { exec } from "^process-util";
+import { httpRequest } from "^jab-node";
 import { err } from "^jab/error";
+import { fetchJson } from "./util";
+
+let npmRequests = 0;
+let maxNpmRequests = 50;
+
+export type Cache = {
+  [_: string | number]: {
+    total?: number;
+    versions?: {
+      [_: string | number]: string;
+    };
+  };
+};
 
 /**
  *
@@ -43,43 +56,45 @@ export const getNpmLatestInfo = async (
 /**
  *
  */
-export const execNpmAndGetStdout = async (command: string, cwd: string) => {
-  const res = await exec(command, [], {
-    cwd,
-    shell: true,
-    //to revert yarn's 'crazy' injection of environment variables.
-    env: {},
-  });
+export const tryGetPackageTotalDownloadByVersions = async (
+  packageName: string,
+  cache: Cache
+) => {
+  // use total if exists
 
-  const stdout = filterNpmOutput(res.stdout);
-  const stderr = filterNpmOutput(res.stderr);
-
-  if (stderr === "" && res.status === 0) {
-    return stdout;
+  if (cache[packageName]?.total) {
+    return cache[packageName].total;
   }
 
-  // it's an error
+  //use versions
 
-  throw err("Npm failed", {
-    command,
-    cwd,
-    retval: res.status,
-    stdout: stdout,
-    stderr: stderr,
-  });
-};
+  if (!cache[packageName]?.versions) {
+    if (npmRequests++ >= maxNpmRequests) {
+      return;
+    }
 
-/**
- *
- */
-export const filterNpmOutput = (stdio: string) => {
-  let last = "";
-  let tmp = stdio;
+    try {
+      const data = await fetchJson(
+        "https://api.npmjs.org/versions/" +
+          packageName.replace("/", "%2F") +
+          "/last-week/"
+      );
 
-  while (tmp !== last) {
-    last = tmp;
-    tmp = tmp.replace(/(?=\n|)\s*npm notice.*(?=\n|)/, "");
+      if (!cache[packageName]) {
+        cache[packageName] = {};
+      }
+
+      cache[packageName].versions = data.downloads;
+    } catch (error) {
+      npmRequests = maxNpmRequests;
+      console.log("fetch failed: " + packageName);
+      return;
+    }
   }
 
-  return tmp.trim();
+  cache[packageName].total = Object.values(
+    cache[packageName].versions as any
+  ).reduce<number>((acc, cur: any) => acc + cur, 0);
+
+  return cache[packageName].total;
 };

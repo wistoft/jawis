@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/process-util",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../finally-provider" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../node-module-hooks-plus" },
+    { "path": "../state-waiter" },
+    { "path": "../yapu" },
+    { "path": "../stdio-protocol" }
+  ]
+}

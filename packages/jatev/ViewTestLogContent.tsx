@@ -1,12 +1,11 @@
 import React, { memo } from "react";
 
 import { assertNever, CapturedValue, indent, tos } from "^jab";
-import { ZippedTestLog } from "^jatec";
-import { toAtomizedString, replaceAtoms } from "^jab-react";
-
+import { toAtomizedString, replaceAtoms, ViewDiff } from "^jab-react";
 import { ViewException } from "^view-exception";
 import { parseErrorData } from "^parse-captured-stack";
-import { ViewDiff, ViewErrorLog, ViewErrorLogProps } from "./internal";
+
+import { ZippedTestLog, ViewErrorLog, ViewErrorLogProps } from "./internal";
 
 export type ShowType = "cmp" | "exp" | "cur";
 
@@ -27,15 +26,15 @@ export const ViewTestLogContent: React.FC<ViewTestLogContentProps> = memo(
 
       case "return":
         return renderHelper(
-          clonedToString(testLog.exp),
-          clonedToString(testLog.cur),
+          capturedToString(testLog.exp),
+          capturedToString(testLog.cur),
           showTestLogType
         );
 
       case "chk": {
         const diff = renderHelper(
-          clonedToString(testLog.exp),
-          clonedToString(testLog.cur),
+          capturedToString(testLog.exp),
+          capturedToString(testLog.cur),
           showTestLogType
         );
 
@@ -62,8 +61,8 @@ export const ViewTestLogContent: React.FC<ViewTestLogContentProps> = memo(
       }
 
       case "user": {
-        const left = clonedArrayToString(testLog.exp);
-        const right = clonedArrayToString(testLog.cur);
+        const left = capturedArrayToString(testLog.exp);
+        const right = capturedArrayToString(testLog.cur);
 
         return renderHelper(left, right, showTestLogType);
       }
@@ -105,9 +104,9 @@ export const renderHelper = (
 
 /**
  *
- * Like clonedArrayEntriesTos(), but for toAtomizedString()
+ * Like capturedArrayEntriesTos(), but for toAtomizedString()
  */
-export const clonedArrayToString = (arr: CapturedValue[]) => {
+export const capturedArrayToString = (arr: CapturedValue[]) => {
   try {
     return arr.reduce<string>(
       (acc, value) =>
@@ -115,17 +114,17 @@ export const clonedArrayToString = (arr: CapturedValue[]) => {
       ""
     );
   } catch (unk) {
-    return "Coundn't parse ClonedValue\n" + tos(arr);
+    return "Coundn't parse CapturedValue\n" + tos(arr);
   }
 };
 
 /**
  *
  */
-export const clonedToString = (value?: CapturedValue) => {
+export const capturedToString = (value?: CapturedValue) => {
   if (value === undefined) {
     return "";
   }
 
-  return clonedArrayToString([value]);
+  return capturedArrayToString([value]);
 };

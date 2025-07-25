@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jate-rust",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../bee-common" },
+    { "path": "../jates" },
+    { "path": "../jarun" },
+    { "path": "../process-util" },
+    { "path": "../javic" },
+    { "path": "../finally-provider" }
+  ]
+}

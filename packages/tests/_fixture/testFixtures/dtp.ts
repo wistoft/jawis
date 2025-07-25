@@ -1,7 +1,6 @@
-import { DependencyGraph, DtpController, extractDeps } from "^misc/dtp";
+import { CodePieceGraph, DtpController, extractDeps } from "^misc/dtp/internal";
 
-import { getSourceFile } from "./ts";
-import { getInMemoryCompilerHost } from "./ts compiler host";
+import { getInMemoryCompilerHost, getSourceFile } from ".";
 
 /**
  *
@@ -15,7 +14,7 @@ export const getDtpGraph = (defaultFiles: { [_: string]: string }) => {
     }
   );
 
-  const g = new DependencyGraph();
+  const g = new CodePieceGraph();
 
   Object.keys(defaultFiles).forEach((file) => {
     const code = defaultFiles[file];

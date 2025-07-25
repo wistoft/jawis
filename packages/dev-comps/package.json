@@ -1,0 +1,13 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~dev-comps",
+  "description": "Dev components server",
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "component",
+    "components",
+    "react"
+  ]
+}

@@ -1,0 +1,1 @@
+{"user":{"div":["DummyPackage ignores setCache"],"imp":[{"diagnoticsCache":["map",["value",[["value",["package1",["value",[{"file":"","message":"something is wrong"}]]]]]]],"referenceCache":["map",["value",[["value",["package1",["set",["value",[]]]]]]]],"packages":["value",[{"id":"package1","data":"DummyPackage cache"}]]}]}}

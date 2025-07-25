@@ -4,8 +4,8 @@ const os = require("os");
 
 // - require files, so WPP can change them, and test its reloading.
 
-const library = require(path.join(os.tmpdir(), "jawis-tests-scratchFolder/FileThatChanges")); // prettier-ignore
-const library2 = require(path.join(os.tmpdir(), "jawis-tests-scratchFolder/FileThatChanges2")); // prettier-ignore
+const library = require(path.join(os.tmpdir(), "jawis/tests-scratchFolder/FileThatChanges")); // prettier-ignore
+const library2 = require(path.join(os.tmpdir(), "jawis/tests-scratchFolder/FileThatChanges2")); // prettier-ignore
 
 //values that can change in files. Using message instead of console.log, makes it possible to synchronize on this info.
 

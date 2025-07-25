@@ -4,5 +4,5 @@ import { getJaviConf } from "^javi/getConf";
 import { filterConfig, getFixturePath } from "^tests/_fixture";
 
 export default (prov: TestProvision) => {
-  prov.imp(filterConfig(getJaviConf(getFixturePath())));
+  prov.imp(filterConfig(getJaviConf(getFixturePath(), "windows")));
 };

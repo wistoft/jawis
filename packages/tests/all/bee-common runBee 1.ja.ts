@@ -1,0 +1,9 @@
+import { AbsoluteFile } from "^jab";
+import { TestProvision } from "^jarun";
+
+import { getBeeProv } from "../_fixture/index";
+
+//run single bee
+
+export default (prov: TestProvision) =>
+  getBeeProv(prov).runBee({ filename: "helloModule" as AbsoluteFile }, false);

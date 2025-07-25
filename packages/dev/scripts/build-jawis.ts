@@ -1,6 +1,14 @@
-import { webpackCompileHelper } from "./util/build";
+import { compileJawisFiles } from "./build";
+import { makeLiveJawisBuildManager } from "./build";
+import { publishBuildFolder, relativeWebBuildFolder } from "../project.conf";
 
-webpackCompileHelper("jacs", "JacsConsumerMain");
-webpackCompileHelper("jarun", "JarunProcessMain");
-webpackCompileHelper("jab-node/process", "WatchableProcessMain");
-webpackCompileHelper("jagos", "ScriptWrapperMain");
+makeLiveJawisBuildManager()
+  .build()
+  .then(() =>
+    compileJawisFiles({
+      buildFolder: publishBuildFolder,
+      keepSubFoldersInNodeBeesAndPlainFiles: true,
+      relativeWebBuildFolder,
+    })
+  )
+  .catch(console.log);

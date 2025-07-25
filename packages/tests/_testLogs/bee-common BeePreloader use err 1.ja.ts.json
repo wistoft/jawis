@@ -1,0 +1,1 @@
+{"user":{"bee.message":[{"type":"msg","value":"hello"},{"type":"script-required"}]},"err":["Error: Can't use bee in state: done"]}

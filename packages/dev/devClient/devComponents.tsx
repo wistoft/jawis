@@ -1,6 +1,6 @@
 const webpackRequire = require as __WebpackModuleApi.RequireFunction;
 
-//note: webpack context only takes string literals as arguments. Because it's processsed at compile time.
+//note: webpack context only takes string literals as arguments. Because it's processed at compile time.
 
 export const devComponents = [
   {

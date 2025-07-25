@@ -1,34 +1,24 @@
-import fs from "fs";
-import nativeModule from "module";
+import fs from "node:fs";
 import * as tsConfigPaths from "tsconfig-paths";
 import sourceMapSupport from "source-map-support";
 
-import { def, ErrorWithParsedNodeStack } from "^jab";
-import {
-  CompileFunction,
-  FullNativeModule,
-  interceptResolve,
-  nodeRequire,
-} from "^jab-node";
-
+import { def, ErrorWithParsedNodeStack, MainFileDeclaration } from "^jab";
+import { interceptResolve } from "^node-module-hooks-plus";
+import { getBeeProv } from "^bee-node";
 import { makeMakeCachedResolve } from "^cached-resolve";
-import {
-  JacsConsumer,
-  extractStackTraceInfo,
-  unRegisterSourceMapSupport,
-  unRegisterTsCompiler,
-  WorkerData,
-} from "./internal";
 
-const Module = nativeModule as unknown as FullNativeModule & {
-  prototype: { _compile: CompileFunction; _jacsUninstall?: () => void };
+import { extractStackTraceInfo, WorkerData, JacsConsumer } from "./internal";
+
+export const jacsConsumerMainDeclaration: MainFileDeclaration = {
+  type: "node-bee",
+  file: "JacsConsumerMain",
+  folder: __dirname,
 };
 
 export type UninstallInfo = {
   resolveCache?: () => void;
   stackTraceLimit: number;
   prepareStackTrace: typeof Error.prepareStackTrace;
-  _compile: CompileFunction; //to revert 'hookRequire' in source-map-support
   tsConfigPaths?: () => void;
   consumer?: JacsConsumer;
 };
@@ -46,15 +36,7 @@ export const install = (shared: WorkerData) => {
   const uninstallInfo: UninstallInfo = {
     stackTraceLimit: Error.stackTraceLimit,
     prepareStackTrace: Error.prepareStackTrace,
-    _compile: Module.prototype._compile,
   };
-
-  //unregister - for development
-
-  if (shared.unregister) {
-    //this should be done elsewhere. Because we don't know which compiler to uninstall.
-    unRegisterTsCompiler();
-  }
 
   //A better default, because it will give all information.
 
@@ -73,19 +55,21 @@ export const install = (shared: WorkerData) => {
   //Resolve cache
   // Must come after ts-paths, its work can be cached as well.
 
-  if (shared.experimentalResolveCache) {
+  if (shared.resolveCache) {
     uninstallInfo.resolveCache = interceptResolve(
-      makeMakeCachedResolve(shared.experimentalResolveCache)
+      makeMakeCachedResolve(shared.resolveCache)
     );
   }
 
   //install source map
 
-  sourceMapSupport.install({
-    handleUncaughtExceptions: false,
-    environment: "node",
-    hookRequire: true,
-  });
+  if (shared.doSourceMap) {
+    sourceMapSupport.install({
+      handleUncaughtExceptions: false,
+      environment: "node",
+      retrieveFile: (path) => retrieveFile(consumer, path),
+    });
+  }
 
   //replace source-map-support's prepareStackTrace - to get more information.
 
@@ -93,22 +77,26 @@ export const install = (shared: WorkerData) => {
     error: ErrorWithParsedNodeStack,
     stackTraces: NodeJS.CallSite[]
   ) => {
-    const { stack, fullInfo } = extractStackTraceInfo(error, stackTraces);
+    const { stack, fullInfo } = extractStackTraceInfo(
+      error,
+      stackTraces,
+      shared.doSourceMap
+    );
 
     error.__jawisNodeStack = fullInfo;
 
     return stack;
   };
 
-  //setup jacs
+  // bee provision
 
-  const onError = (error: unknown) => {
-    console.log("JacsConsumer.onError: ", error);
-  };
+  const beeProv = getBeeProv(shared.channelToken, false);
+
+  //setup jacs
 
   const consumer = new JacsConsumer({
     shared,
-    onError,
+    onError: beeProv.onError,
   });
 
   consumer.register();
@@ -120,10 +108,9 @@ export const install = (shared: WorkerData) => {
   (global as any)._jacsUninstall = makeUninstall(uninstallInfo);
 
   //run the script
+  //  catch errors to avoid unhandled rejection noise.
 
-  if (shared.beeFilename) {
-    nodeRequire(shared.beeFilename);
-  }
+  beeProv.runBee(shared.next, true).catch(beeProv.onError);
 
   // return
 
@@ -156,8 +143,6 @@ export const uninstall = () => {
 const makeUninstall = (uninstallInfo: UninstallInfo) => () => {
   def(uninstallInfo.consumer).unregister();
 
-  unRegisterSourceMapSupport(uninstallInfo);
-
   if (uninstallInfo.resolveCache) {
     uninstallInfo.resolveCache();
   }
@@ -167,4 +152,16 @@ const makeUninstall = (uninstallInfo: UninstallInfo) => () => {
   }
 
   Error.stackTraceLimit = uninstallInfo.stackTraceLimit;
+};
+
+/**
+ * Deliver generated source code to source-map-support
+ *
+ * source-map-support has an option, that does the same: hookRequire:true
+ *  but it can't be compiled with webpack, because source-map-support's dynamicRequire fix doesn't work.
+ */
+const retrieveFile = (consumer: JacsConsumer, path: string): string | null => {
+  const res = consumer.getCachedCode(path);
+
+  return res ? res : null;
 };

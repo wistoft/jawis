@@ -1,16 +1,17 @@
+import { then } from "^yapu";
+import { RogueData } from "^jatec";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
+
 import {
   TestProvision,
   JarunProcessControllerDeps,
   JarunProcessController,
-} from "^jarun";
-import { RogueData } from "^jatec";
-import { then } from "^yapu";
-import {
   JarunProcessControllerInner,
   JarunProcessControllerInnerDeps,
-} from "^jarun/JarunProcessControllerInner";
+} from "^jarun/internal";
 
-import { getLogProv, makeDormentInMemoryBee } from ".";
+import { ProcessRestarter } from "^process-util/internal";
+import { getLogProv, makeDormentInMemoryBee, makeOnLog } from ".";
 
 /**
  *
@@ -34,8 +35,6 @@ export const getJarunProcessControllerInnerDeps = (
   onRogueTest: (rogue: RogueData) => {
     prov.log(logPrefix + "onRogueTest", rogue);
   },
-
-  onRequire: () => {},
 
   prSend: (msg) =>
     then(() => {
@@ -70,7 +69,13 @@ export const getJarunProcessControllerDeps = (
 ): JarunProcessControllerDeps => ({
   ...getJarunProcessControllerInnerDeps(prov, logPrefix, prov),
 
-  makeTsBee: makeDormentInMemoryBee,
+  onLog: makeOnLog(prov),
+
+  makeProcessRestarter: (deps) =>
+    new ProcessRestarter({ ...deps, makeBee: makeDormentInMemoryBee }),
+
+  getAbsoluteSourceFile,
+
   onError: prov.onError,
   finally: prov.finally,
 

@@ -1,0 +1,21 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~shared-tree",
+  "description": "TreeMap for concurrent programs.",
+  "dependencies": {},
+  "keywords": [
+    "tree",
+    "map",
+    "treemap",
+    "shared",
+    "shm",
+    "SharedArrayBuffer",
+    "concurrency",
+    "parallelism",
+    "multithreading",
+    "worker_threads",
+    "thread",
+    "Atomics"
+  ]
+}

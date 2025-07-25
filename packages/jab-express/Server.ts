@@ -1,6 +1,5 @@
-import http from "http";
-
-import { Socket } from "net";
+import http from "node:http";
+import { Socket } from "node:net";
 import { Application } from "express";
 
 export type ServerDeps = {

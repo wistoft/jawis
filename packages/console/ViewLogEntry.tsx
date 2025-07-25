@@ -1,13 +1,12 @@
 import React from "react";
 
-import { LogEntry } from "^bee-common";
-import { capturedTos } from "^jab";
-import { clonedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
+import { ValueEntry, capturedTos } from "^jab";
+import { capturedArrayEntriesToHtml, ClickableDivBackground } from "^jab-react";
 
 export const multiLineEntryMarginBottom = "10px";
 
 type Props = {
-  entry: LogEntry;
+  entry: ValueEntry;
   wrapperStyle: React.CSSProperties;
   onToggleEntry: () => void;
 };
@@ -30,7 +29,7 @@ export const ViewLogEntry = ({
   if (data.length === 0) {
     content = <i>NoArgs</i>;
   } else {
-    content = <span>{clonedArrayEntriesToHtml(data)}</span>;
+    content = <span>{capturedArrayEntriesToHtml(data)}</span>;
   }
 
   return (

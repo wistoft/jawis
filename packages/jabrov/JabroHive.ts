@@ -1,7 +1,8 @@
 import jsStringEscape from "js-string-escape";
 
-import { BeeLogEntry, tryHandleBeeLogChannel } from "^bee-common";
+import { tryHandleTunneledLog } from "^bee-common";
 import {
+  LogEntry,
   assertNever,
   def,
   err,
@@ -25,10 +26,10 @@ export class JabroHive {
 
   private channelToken;
   private ymerUrl?: string;
-  private scriptsUrl?: string;
+  private webCsUrl?: string;
 
   constructor(private deps: JabroHiveDeps) {
-    this.channelToken = getRandomInteger();
+    this.channelToken = "" + getRandomInteger();
   }
 
   /**
@@ -60,12 +61,12 @@ export class JabroHive {
       case "setConf": {
         //this may be sent again: when ws reconnects.
         this.ymerUrl = msg.ymerUrl;
-        this.scriptsUrl = msg.scriptsUrl;
+        this.webCsUrl = msg.webCsUrl;
         break;
       }
 
       case "makeBee": {
-        this.make(msg.bid, msg.fileUrl, def(this.ymerUrl));
+        this.make(msg.bid, msg.filename, def(this.ymerUrl));
         break;
       }
 
@@ -118,7 +119,6 @@ export class JabroHive {
     this.deps.apiSend({
       type: "exit",
       bid,
-      data: 0,
     });
   };
 
@@ -133,15 +133,18 @@ export class JabroHive {
     //    async errors aren't squashed for some reason.
     //problem 2
     //  syntax errors are made into useless 'Script error.'
+    //    therefore we try to report it to ymer otherwise just print.
+    //extra
+    //    we also need to guard against ymer throwing.
     const code = `
         
-    function panicError(error){
+    function panicError(error, info = []){
       postMessage({
         beeLog: ${this.channelToken},
         type: "error",
         data: {
           msg: error.message,
-          info: "panic",
+          info: info,
           stack: {
             type: "other",
             stack: error.stack
@@ -162,16 +165,34 @@ export class JabroHive {
 
           //stuff
 
+            let reported = false
             var e = QUICK_FIX;
             delete QUICK_FIX;
             
+          //try to report to ymer
+          
+            if (self.onError){
+              try{
+                self.onError(e);
+                reported = true
+              }catch(error) {
+                panicError(error, ["Error in ymer"])
+              }
+            }
+            
           //output error from server
             
-            panicError(e)
+            if (!reported){
+              panicError(e, ["JabroHive: nowhere to report errors"])
+            }
             
           //send the error, because throwing means we loose the stack trace.
             
             panicError(new Error("Could not require: " + url))
+
+          //stop further execution
+
+            close(); //empties the event-loop. Might be to aggressive
 
           //ask main to kill, because we can't do it from within the worker
 
@@ -183,7 +204,7 @@ export class JabroHive {
     
     //todo url encode filename
     function jabroRequire(filename){
-      return jabroRequireUrl("${jsStringEscape(this.scriptsUrl)}" + filename);
+      return jabroRequireUrl("${jsStringEscape(this.webCsUrl)}" + filename);
     }
 
     function jabroRequireUrl(url){
@@ -211,9 +232,9 @@ export class JabroHive {
       })
     );
 
-    const onLog = (data: BeeLogEntry) =>
+    const onLog = (data: LogEntry) =>
       this.deps.apiSend({
-        type: "message",
+        type: "log",
         bid,
         data,
       });
@@ -233,11 +254,12 @@ export class JabroHive {
     // URL.revokeObjectURL(url);
 
     worker.onmessage = (msg: MessageEvent) => {
-      if (tryHandleBeeLogChannel(msg.data, onLog, this.channelToken)) {
+      if (tryHandleTunneledLog(msg.data, onLog, this.channelToken)) {
         return;
       }
 
-      if (tryProp(msg.data, "noMoreWork") === this.channelToken) {
+      //for some reason is the type wrong here, so loose comparison
+      if (tryProp(msg.data, "noMoreWork") == this.channelToken) {
         this.killBee(bid);
       } else {
         //the message belongs to the user.
@@ -260,7 +282,7 @@ export class JabroHive {
     worker.addEventListener("error", (event) => {
       event.preventDefault(); //needed so the error doesn't continue to window.onerror
 
-      //check it kill is requested.
+      //check if kill is requested.
 
       if (event.message.includes("noMoreWork" + this.channelToken)) {
         this.killBee(bid);

@@ -1,0 +1,19 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~shared-dynamic-map",
+  "description": "TreeMap with variable sized keys/values for concurrent programs.",
+  "dependencies": {},
+  "keywords": [
+    "map",
+    "shared",
+    "shm",
+    "SharedArrayBuffer",
+    "concurrency",
+    "parallelism",
+    "multithreading",
+    "worker_threads",
+    "thread",
+    "Atomics"
+  ]
+}

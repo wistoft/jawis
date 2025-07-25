@@ -1,1 +1,1 @@
-{"user":{"WsPoolMock.send":[{"type":"processStatus","data":["value",[{"id":"filtered","script":"packages/tests/_fixture/scripts/hello.js","status":"preloading"}]]}]}}
+{"user":{"WsPoolMock.send":[{"type":"processStatus","data":["value",[{"id":"filtered","script":"abs:packages/tests/_fixture/scripts/hello.js","status":"preloading","time":["undefined"]}]]}]}}

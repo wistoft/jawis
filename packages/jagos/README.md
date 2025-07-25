@@ -12,6 +12,9 @@ npm i jagos
 
 ## Known issues
 
+- Output from scripts isn't captured, if they start processes with {"stdio":
+  "inherit"}. Output from such processes goes directly to the parent process.
+
 ## Related work
 
 ## License

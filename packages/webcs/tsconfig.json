@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/webcs",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab-express" },
+    { "path": "../jab" },
+    { "path": "../javic" },
+    { "path": "../jab-node" }
+  ]
+}

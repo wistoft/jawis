@@ -1,1 +1,1 @@
-{"user":{"workerMessage":[{"type":"msg","value":"hello"}]}}
+{"user":{"workerMessage":[{"type":"ready"}]}}

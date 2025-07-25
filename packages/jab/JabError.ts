@@ -1,7 +1,7 @@
 import {
   captureArrayEntries,
   capturedTos,
-  captureStack,
+  captureLongStack,
   ErrorData,
 } from "./internal";
 
@@ -46,7 +46,7 @@ export const makeJabError = (message: string, ...info: Array<unknown>) => {
   const getErrorData = (extraInfo: Array<unknown> = []) => ({
     msg: state.message,
     info: [...state.clonedInfo, ...captureArrayEntries(extraInfo)],
-    stack: captureStack(error),
+    stack: captureLongStack(error),
   });
 
   Object.defineProperty(error, "reset", {

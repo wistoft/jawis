@@ -16,6 +16,12 @@ export const isUndefined = (value: unknown): value is undefined =>
 /**
  *
  */
+export const isset = <T>(value: T | undefined): value is T =>
+  value !== undefined;
+
+/**
+ *
+ */
 export const isBoolean = (value: unknown): value is boolean =>
   typeof value === "boolean";
 

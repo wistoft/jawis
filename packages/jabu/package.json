@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jabu",
+  "description": "Build tools for development and release",
+  "dependencies": {},
+  "keywords": [
+    "dev",
+    "development",
+    "build",
+    "compiler",
+    "compile-service",
+    "release",
+    "lint"
+  ]
+}

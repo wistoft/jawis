@@ -1,6 +1,10 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
+
+export const main = async () => {
+  await writeRootTsConfig();
+};
 
 /**
  *
@@ -25,5 +29,3 @@ export const writeRootTsConfig = async () => {
 
   await fs.promises.writeFile(path.join(projectRoot, "tsconfig.json"), content);
 };
-
-writeRootTsConfig();

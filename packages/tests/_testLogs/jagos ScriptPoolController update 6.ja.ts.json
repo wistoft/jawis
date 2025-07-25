@@ -1,1 +1,1 @@
-{"user":{"script.js.message":[{"type":"msg","value":"hello"}],"script.js":["preloading","running","listening","stopped"]}}
+{"user":{"script.js":["preloading","running","listening","stopped"],"script.js.message":[{"type":"msg","value":"hello"}]}}

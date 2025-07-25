@@ -1,6 +1,4 @@
-import { def, assert, assertNever, prej, LogProv, capture } from "^jab";
-import { OnRequire, RequireSenderMessage } from "^jab-node";
-
+import { def, assertNever, prej, LogProv, capture } from "^jab";
 import { OnRogue, TestResult } from "^jatec";
 import { Waiter } from "^state-waiter";
 import { getPromise, PromiseTriple } from "^yapu";
@@ -9,10 +7,9 @@ import { JarunProcessControllerMessage, JarunProcessMessage } from "./internal";
 
 export type JarunProcessControllerInnerDeps = {
   onRogueTest: OnRogue;
-  onRequire: OnRequire;
 
   //for sending to ProcessRestarter, that is assumed to 'lie' below this.
-  prSend: (msg: JarunProcessControllerMessage) => Promise<void>;
+  prSend: (msg: JarunProcessControllerMessage) => void;
   onError: (error: unknown) => void;
   logProv: LogProv;
 };
@@ -57,9 +54,11 @@ export class JarunProcessControllerInner {
 
     this.waiter.set("testing");
 
+    this.sendRun(id, absTestFile);
+
     this.testProm = getPromise();
 
-    return this.sendRun(id, absTestFile).then(() => def(this.testProm).promise);
+    return this.testProm.promise;
   };
 
   /**
@@ -71,7 +70,7 @@ export class JarunProcessControllerInner {
     this.curStdout = "";
     this.curStderr = "";
 
-    return this.deps.prSend({
+    this.deps.prSend({
       type: "run",
       id,
       file: absTestFile,
@@ -104,7 +103,7 @@ export class JarunProcessControllerInner {
     }
   };
 
-  public onStdout = (data: Buffer) => {
+  public onStdout = (data: Buffer | string) => {
     if (this.waiter.is("testing")) {
       this.curStdout += data.toString();
     } else {
@@ -112,7 +111,7 @@ export class JarunProcessControllerInner {
     }
   };
 
-  public onStderr = (data: Buffer) => {
+  public onStderr = (data: Buffer | string) => {
     if (this.waiter.is("testing")) {
       this.curStderr += data.toString();
     } else {
@@ -121,9 +120,10 @@ export class JarunProcessControllerInner {
   };
 
   /**
-   *
+   * stdio must be rogue, because we have no way to ensure all io has been received. So it could
+   *  go to next test case. It's to much effort to send an end-token on both stdio after test ends, and wait for those here.
    */
-  public onMessage = (msg: RequireSenderMessage | JarunProcessMessage) => {
+  public onMessage = (msg: JarunProcessMessage) => {
     switch (msg.type) {
       case "testDone": {
         //not really cloned right. i.e. only shallow. Only a problem for test cases.
@@ -131,19 +131,14 @@ export class JarunProcessControllerInner {
           ...msg.value,
         };
 
-        //to ensure we don't overwrite something.
-
-        assert(result.cur.user.stdout === undefined);
-        assert(result.cur.user.stdout === undefined);
-
         //add captured io to test result.
 
         if (this.curStdout) {
-          result.cur.user.stdout = [this.curStdout];
+          result.cur.user["rogue.stdout"] = [this.curStdout + (result.cur.user.stdout ?? "")]; // prettier-ignore
         }
 
         if (this.curStderr) {
-          result.cur.user.stderr = [this.curStderr];
+          result.cur.user["rogue.stderr"] = [this.curStderr + (result.cur.user.stderr ?? "")]; // prettier-ignore
         }
 
         //done
@@ -156,12 +151,6 @@ export class JarunProcessControllerInner {
 
       case "rogue":
         this.deps.onRogueTest(msg.value);
-        break;
-
-      // extracting dependencies - Could be given to jates, so ProcessRunner also can have its requiring analyzed.
-
-      case "require":
-        this.deps.onRequire(msg);
         break;
 
       default: {
@@ -196,7 +185,7 @@ export class JarunProcessControllerInner {
    *
    */
   public onUnexpectedExit = () => {
-    // output the cache io.
+    // emit cached io.
 
     if (this.curStdout || this.curStderr) {
       console.log({

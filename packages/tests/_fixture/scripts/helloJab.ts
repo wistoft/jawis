@@ -9,7 +9,7 @@ Object.keys(require.cache).forEach((key) => {
 import { basename } from "^jab";
 
 try {
-  console.log(basename("mikael/wistoft"));
+  console.log(basename("fido/hans"));
 } catch (error) {
   console.log(error);
 }

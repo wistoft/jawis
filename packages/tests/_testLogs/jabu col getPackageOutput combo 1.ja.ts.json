@@ -1,0 +1,1 @@
+{"user":{"have dianostics":[{"diagnostics":["value",[{"file":"","message":"dummy diagnostics"}]]}],"have output":[{"files":["value",[{"name":"file1","data":"dummy file content"}]]}],"have dianostics again":[{"diagnostics":["value",[{"file":"","message":"not again!!"}]]}]}}

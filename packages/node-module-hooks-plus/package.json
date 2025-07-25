@@ -1,0 +1,19 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~node-module-hooks-plus",
+  "description": "Utilities for monkey patching node module loading.",
+  "dependencies": {},
+  "keywords": [
+    "node",
+    "nodejs",
+    "module",
+    "require",
+    "resolve",
+    "load",
+    "compile",
+    "transform",
+    "override",
+    "monkeypatch"
+  ]
+}

@@ -1,50 +1,55 @@
-import { capture, unknownToErrorData } from "^jab";
-import { TestRunner, TestResult, UserTestLogs } from "^jatec";
-import { execBee, Bee, MakeBee } from "^bee-common";
+import { Bee, execBee, MakeBee } from "^bee-common";
 import { FinallyFunc } from "^finally-provider";
+import { AbsoluteFile, assert, capture } from "^jab";
+import {
+  combineTestResultWithLogEntries_byref,
+  TestResult,
+  UserTestLogs,
+} from "^jatec";
 
-export type Deps = Readonly<{
+import { JarunTestRunnerProv } from "./internal";
+
+type Deps = Readonly<{
   makeBee: MakeBee;
   finally: FinallyFunc;
+  onExit?: (status?: number | null) => void;
 }>;
 
 /**
  * Run a test completely in its own process/worker.
  *
  */
-export class BeeRunner implements TestRunner {
+export class BeeRunner implements JarunTestRunnerProv {
   private curTest?: Bee<any>;
 
   constructor(private deps: Deps) {}
 
   /**
-   *
+   * similarity between BeeRunner, PHPUnitAdapter, BehatAdapter
    */
-  public runTest = (id: string, absTestFile: string) => {
-    const startTime = Date.now();
+  public runTest = (id: string, absTestFile: AbsoluteFile) => {
+    assert(this.curTest === undefined, "Already running");
 
-    const { bee, promise } = execBee(
-      absTestFile,
-      this.deps.finally,
-      this.deps.makeBee
-    );
+    const startTime = Date.now();
+    let status: number | null | undefined = null;
+
+    const { bee, promise } = execBee({
+      def: {
+        filename: absTestFile,
+      },
+      finallyFunc: this.deps.finally,
+      makeBee: this.deps.makeBee,
+
+      onExit: (_status) => {
+        status = _status;
+        this.deps.onExit?.(status);
+      },
+    });
 
     this.curTest = bee;
 
     return promise.then((data): TestResult => {
       const userLog: UserTestLogs = {};
-
-      if (data.stdout !== "") {
-        userLog.stdout = [data.stdout];
-      }
-
-      if (data.stderr !== "") {
-        userLog.stderr = [data.stderr];
-      }
-
-      if (data.status !== 0) {
-        userLog.exitCode = [data.status];
-      }
 
       if (data.messages.length !== 0) {
         userLog.messages = data.messages.map((msg) => capture(msg));
@@ -59,11 +64,21 @@ export class BeeRunner implements TestRunner {
         execTime: Date.now() - startTime,
       };
 
-      //errors
+      //exit status
 
-      if (data.errors.length !== 0) {
-        result.cur.err = data.errors.map((error) => unknownToErrorData(error));
+      if (status !== null && status !== undefined && status !== 0) {
+        result.cur.user["exitcode"] = ["" + status];
       }
+
+      //combine with bee logs
+
+      combineTestResultWithLogEntries_byref(result.cur, data.logs);
+
+      //reset
+
+      this.curTest = undefined;
+
+      //done
 
       return result;
     });
@@ -72,5 +87,12 @@ export class BeeRunner implements TestRunner {
   /**
    *
    */
-  public kill = () => Promise.resolve().then(() => this.curTest?.kill());
+  public kill = () =>
+    Promise.resolve().then(() => {
+      const prom = this.curTest?.kill();
+
+      this.curTest = undefined;
+
+      return prom;
+    });
 }

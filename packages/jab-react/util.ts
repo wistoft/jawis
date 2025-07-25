@@ -1,7 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ReactDOM from "react-dom";
 import { shallowEqualObjects } from "shallow-equal";
 
 import { err } from "^jab";
+
+declare const require: any;
 
 //
 // component set state
@@ -75,6 +78,9 @@ export const useObject = <T extends {}>(obj: T) =>
  *  - shallow merge with current state.
  *  - This function is basically the difference between class and hook setState.
  *
+ * todo
+ *  - allow no deps. Quick fix is to use `{}`.
+ *
  * note
  *  taken deps isn't necessary. It's easy for user to do, but it removes boilerplate in user.
  */
@@ -91,7 +97,21 @@ export const makeSetStateCallback =
   };
 
 /**
- * Turn a hook setState into a class setState.
+ *
+ * Data must be simple to ensure react recreates method.
+ */
+export const makeHookCallback =
+  <D extends string | number, S>(
+    updater: PartialStateUpdater<D, S>,
+    setState: HookSetState<S>
+  ) =>
+  (deps: D) =>
+    useCallback(() => {
+      makeSetStateCallback(updater, setState)(deps);
+    }, [deps]);
+
+/**
+ * deprecated
  */
 export const makeSetPartialState =
   <S>(setState: HookSetState<S>) =>
@@ -112,7 +132,10 @@ export const makeSetPartialState =
 export const makeUseFunction =
   <D extends {}>(func: (deps: D) => void) =>
   (deps: D) =>
-    useMemo(() => () => func(deps), [func, ...Object.values(deps)]);
+    useMemo(
+      () => () => func(deps),
+      [func, ...Object.keys(deps), ...Object.values(deps)]
+    );
 
 /**
  * Wrap a function, so it's a no-op, after the component has unmounted.
@@ -179,3 +202,59 @@ export const useScrollIntoView = () => {
 
   return scrollTarget;
 };
+
+/**
+ *
+ */
+export const mountReact = (jsx: JSX.Element, element: any) => {
+  //
+  // detect if React 18
+  //
+
+  let reactClient = undefined;
+
+  try {
+    reactClient = require("react-dom/client");
+  } catch (error) {
+    // eslint-disable no-empty
+  }
+
+  //
+  // mount
+  //
+
+  if (reactClient) {
+    // mount as React 18
+
+    const root = reactClient.createRoot(element);
+
+    root.render(jsx);
+  } else {
+    // mount as pre React 18
+
+    ReactDOM.render(jsx, element);
+  }
+};
+
+/**
+ * Update an array immutable.
+ */
+export const getArrayUpdate = <T>(
+  arr: T[],
+  idx: number,
+  elm: T | undefined
+) => {
+  const res = arr.slice();
+  res[idx] = elm as T;
+  return res;
+};
+
+/**
+ * Update a 2d array immutable.
+ */
+export const get2dArrayUpdate = <T>(
+  arr: T[][],
+  idx: number,
+  idx2: number,
+  elm: T | undefined
+) => getArrayUpdate(arr, idx, getArrayUpdate(arr[idx] ?? [], idx2, elm));

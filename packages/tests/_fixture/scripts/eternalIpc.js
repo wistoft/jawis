@@ -1,7 +1,7 @@
 console.log("Argh, Sisyphus");
 
 process.on("message", () => {
-  console.log("I want die!");
+  console.log("I won't die!");
 });
 
 let i = 0;

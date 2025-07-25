@@ -1,10 +1,13 @@
 import { TestProvision } from "^jarun";
-import { clonedToString, clonedArrayToString } from "^jatev/ViewTestLogContent";
+import {
+  capturedToString,
+  capturedArrayToString,
+} from "^jatev/ViewTestLogContent";
 
 export default (prov: TestProvision) => {
-  prov.eq("", clonedArrayToString([]));
-  prov.eq("", clonedToString());
+  prov.eq("", capturedArrayToString([]));
+  prov.eq("", capturedToString());
 
-  prov.imp(clonedArrayToString([null]));
-  prov.imp(clonedToString(null));
+  prov.imp(capturedArrayToString([null]));
+  prov.imp(capturedToString(null));
 };

@@ -1,4 +1,4 @@
-import { unknownToErrorData } from "^jab";
+import { MainFileDeclaration, unknownToErrorData } from "^jab";
 
 import {
   createConsoleFunction,
@@ -7,6 +7,12 @@ import {
 } from "./internal";
 
 declare const window: any; //quick fix
+
+export const consoleCaptureMainDeclaration: MainFileDeclaration = {
+  type: "web-entry",
+  file: "consoleCaptureMain",
+  folder: __dirname,
+};
 
 /**
  * - Intercept "console data"

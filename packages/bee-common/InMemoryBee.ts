@@ -1,18 +1,15 @@
 import { then } from "^yapu";
 import { Waiter } from "^state-waiter";
 
-import { Bee, BeeDeps, BeeShutdownMessage } from "./internal";
+import { Bee, BeeDeps, BeeStates, BeeShutdownMessage } from "./internal";
 
 type States = "running" | "stopping" | "stopped";
 type Events = "message";
 
 type Beehavior<MS extends {}, MR extends {}> = {
+  requireGracefulShutdown?: boolean;
   onInit?: (bee: InMemoryBee<MS, MR>) => void;
-  onSend?: (
-    data: BeeShutdownMessage | MS,
-    bee: InMemoryBee<MS, MR>
-  ) => Promise<void>;
-  onTerminate?: (bee: InMemoryBee<MS, MR>) => void;
+  onSend?: (data: BeeShutdownMessage | MS, bee: InMemoryBee<MS, MR>) => void;
 };
 
 /**
@@ -21,12 +18,16 @@ type Beehavior<MS extends {}, MR extends {}> = {
 export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
   public waiter: Waiter<States, Events>;
 
+  private isGraceful = false;
   private terminated = false;
 
   /**
    *
    */
-  constructor(public deps: BeeDeps<MR>, private beehavior: Beehavior<MS, MR>) {
+  constructor(
+    public deps: BeeDeps<MR>,
+    private beehavior: Beehavior<MS, MR>
+  ) {
     this.waiter = new Waiter<States, Events>({
       onError: deps.onError,
       startState: "running",
@@ -42,21 +43,25 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
   }
 
   /**
-   * async, because caller will not be ready to handle sync, when it sending.
+   * async, because caller will not be ready to handle sync, when it sends.
    *
    */
   public send = (data: BeeShutdownMessage | MS) => {
     if (!this.waiter.is("running")) {
-      return Promise.reject(
-        new Error(
-          "Can't send. Bee not flying. (state:" + this.waiter.getState() + ")"
-        )
+      throw new Error(
+        "Can't send. Bee not flying. (state:" + this.waiter.getState() + ")"
       );
     }
 
-    return then(
-      () => this.beehavior.onSend && this.beehavior.onSend(data, this)
-    );
+    //async, because caller will not be ready here.
+
+    then(() => {
+      if ((data as any)?.type === "shutdown") {
+        this.kill();
+      } else {
+        this.beehavior.onSend && this.beehavior.onSend(data, this);
+      }
+    });
   };
 
   /**
@@ -77,23 +82,32 @@ export class InMemoryBee<MS extends {}, MR extends {}> implements Bee<MS> {
    *
    */
   public terminate = () => {
-    Promise.resolve()
-      .then(
-        () => this.beehavior.onTerminate && this.beehavior.onTerminate(this)
-      )
-      .then(() => {
-        this.terminated = true;
-        this.deps.onExit(0);
+    if (this.beehavior.requireGracefulShutdown && !this.isGraceful) {
+      throw new Error("I expected more kindness.");
+    }
+
+    this.waiter.set("stopped");
+
+    if (!this.terminated) {
+      Promise.resolve().then(() => {
+        this.deps.onExit();
       });
+    }
+
+    this.terminated = true;
   };
 
   /**
    *
    */
-  public shutdown = () => this.waiter.shutdown(this.terminate, true);
+  public shutdown = () => {
+    this.isGraceful = true;
+    return this.waiter.shutdown(this.terminate);
+  };
 
-  public noisyKill = () =>
-    this.waiter.noisyKill(this.terminate, "InMemoryBee", true);
+  public noisyKill = () => this.waiter.noisyKill(this.terminate, "InMemoryBee");
 
-  public kill = () => this.waiter.kill(this.terminate, true);
+  public kill = () => this.waiter.kill(this.terminate);
+
+  public is = (state: BeeStates) => this.waiter.is(state);
 }

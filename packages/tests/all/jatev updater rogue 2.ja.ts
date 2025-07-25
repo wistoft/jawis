@@ -2,9 +2,9 @@ import { TestProvision } from "^jarun";
 import { makeRogueUpdater } from "^jatev/updaters";
 
 import {
-  getRogueUpdater_with_test_reports,
-  makeGetRandomInteger,
-  defaultState,
+  getRogueUpdate_with_test_reports,
+  makeGetIntegerSequence,
+  defaultJatevState,
 } from "../_fixture";
 
 //return log
@@ -12,7 +12,7 @@ import {
 export default (prov: TestProvision) => {
   //
 
-  const state = getRogueUpdater_with_test_reports({
+  const state = getRogueUpdate_with_test_reports({
     id: "test 1",
     data: { return: "hello ret", user: {} },
   });
@@ -26,8 +26,8 @@ export default (prov: TestProvision) => {
       id: "test 1",
       data: { return: "return again", user: {} },
     },
-    makeGetRandomInteger()
-  )({ ...defaultState, ...state });
+    makeGetIntegerSequence()
+  )({ ...defaultJatevState, ...state });
 
   prov.log("test that has same test logs", state2);
 };

@@ -1,12 +1,15 @@
 import express from "express";
-import * as ws from "ws";
 
 import { NodeWS, SocketData } from "./internal";
 
-//tobe-deprecated
-export type ServerAppRouter = {
-  router: express.Router;
-  onShutdown?: () => Promise<void>;
+//
+// ws
+//
+
+export type NodeWSProv<MS extends {}> = {
+  send: (data: MS) => void;
+  shutdown: () => Promise<void>;
+  noisyKill: () => Promise<void>;
 };
 
 export type WsMessageListener<MS extends SocketData, MR extends SocketData> = (
@@ -14,8 +17,12 @@ export type WsMessageListener<MS extends SocketData, MR extends SocketData> = (
   nws: NodeWS<MS, MR>
 ) => void;
 
-//Taken from @types/express-ws
-export type WebsocketRequestHandler = (ws: ws, _req: any, _next: any) => void;
+//
+// from @types/express-serve-static-core
+//
+export interface ParamsDictionary {
+  [key: string]: string;
+}
 
 //quick fix
 export { express };

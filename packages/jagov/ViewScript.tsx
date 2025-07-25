@@ -11,19 +11,20 @@ import {
   getScriptColor,
   getStopLink,
   ApiProv,
+  getKillLink,
 } from "./internal";
 
 export type ViewScriptProps = {
   singleProcessStatus: ScriptStatus;
   jcvProps: Omit<ConsoleProps, "showClearLink">;
-} & ApiProv;
+} & Pick<ApiProv, "apiSend">;
 
 /**
  *
  */
 export const ViewScript: React.FC<ViewScriptProps> = memo((props) => {
   const {
-    singleProcessStatus: { script, status },
+    singleProcessStatus: { script, status, time },
     jcvProps,
   } = props;
 
@@ -42,11 +43,13 @@ export const ViewScript: React.FC<ViewScriptProps> = memo((props) => {
   return (
     <>
       <br />
-      {getRestartLink(props, script)} {getStopLink(props, script)}{" "}
-      {getEditLink(props, script)}
+      {getRestartLink(props.apiSend, script)}{" "}
+      {getStopLink(props.apiSend, script)} {getKillLink(props.apiSend, script)}{" "}
+      {getEditLink(props.apiSend, script)}
       {" - "}
       <span style={{ color: getScriptColor(status) }}>{basename(script)}</span>
       {status === "preloading" && " - preloading"}
+      {time !== undefined && " - " + time}
       <br />
       <br />
       <ConsoleView

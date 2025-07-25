@@ -3,21 +3,21 @@ import React, { memo } from "react";
 import { def } from "^jab";
 import { JsLink, TogglePanel } from "^jab-react";
 
-import { ClientApiSendProv } from "./internal";
+import { State, ApiProv } from "./internal";
 
-type Props = ClientApiSendProv & {
-  isRunning: boolean;
-  executingTestId: string | undefined;
-  runFailedTests: () => void;
-  acceptAllLogs: () => void;
-  showTestCase: (test: string) => void;
-};
+type Props = Pick<ApiProv, "apiSend"> &
+  Pick<State, "executingTest"> & {
+    isRunning: boolean;
+    runFailedTests: () => void;
+    acceptAllLogs: () => void;
+    showTestCase: (test: string) => void;
+  };
 
 export const ViewControls: React.FC<Props> = memo((props) => {
   const startStopLink = (
     <JsLink
       name={props.isRunning ? "stop" : "start"}
-      onClick={() => props.apiSend({ type: "stopRunning" })}
+      onClick={() => props.apiSend({ type: "toggleRunning" })}
       title={props.isRunning ? "Stop test execution" : "Start test execution"}
     />
   );
@@ -47,12 +47,12 @@ export const ViewControls: React.FC<Props> = memo((props) => {
         linkTitle={"Show executing test"}
         initial={false}
       >
-        {props.executingTestId && (
+        {props.executingTest && (
           <>
             {", "}
             <JsLink
-              name={props.executingTestId}
-              onClick={() => props.showTestCase(def(props.executingTestId))}
+              name={props.executingTest.name}
+              onClick={() => props.showTestCase(def(props.executingTest).id)}
               title="Show executing test"
             />
           </>

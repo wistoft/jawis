@@ -10,25 +10,23 @@ import {
   CapturedNonPlainObject,
 } from "./internal";
 
-const MAX_DEPTH = 10;
+const DEFAULT_MAX_DEPTH = 10;
 
 type Context = {
   seenStack: Array<unknown>;
-  nodeCount: number;
   customCapture: CustomCapture; //return null to have no effect.
 };
 
 /**
- * Captures only the entries in the array. No the array itself.
+ * Captures only the entries in the array. Not the array itself.
  */
 export const captureArrayEntries = (
   value: unknown[],
-  maxDepth = MAX_DEPTH,
+  maxDepth = DEFAULT_MAX_DEPTH,
   customCapture: CustomCapture = () => null
 ) => {
   const context = {
     seenStack: [],
-    nodeCount: 0,
     customCapture,
   };
 
@@ -49,12 +47,11 @@ export const captureArrayEntries = (
  */
 export const capture = (
   value: unknown,
-  maxDepth = MAX_DEPTH,
+  maxDepth = DEFAULT_MAX_DEPTH,
   customCapture: CustomCapture = () => null
 ): CapturedValue =>
   internalCapture(value, maxDepth, {
     seenStack: [],
-    nodeCount: 0,
     customCapture,
   });
 
@@ -63,7 +60,7 @@ export const capture = (
  */
 const internalCapture = (
   value: unknown,
-  maxDepth = MAX_DEPTH,
+  maxDepth = DEFAULT_MAX_DEPTH,
   context: Context
 ): CapturedValue => {
   // detect cycles
@@ -88,8 +85,6 @@ const coreCapture = (
   maxDepth: number,
   context: Context
 ): CapturedValue => {
-  context.nodeCount++;
-
   //custom
 
   const tmp = context.customCapture(value);

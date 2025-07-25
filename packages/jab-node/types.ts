@@ -1,17 +1,4 @@
-import { FinallyProvider } from "^finally-provider";
-import { LogProv, OnError } from "^jab";
-
-//covenience: duplicates some properties to be compatible with TestMainProv
-export type MainProv = {
-  onError: OnError;
-
-  finalProv: FinallyProvider;
-  finally: FinallyProvider["finally"]; //covenience
-
-  logProv: LogProv;
-  log: LogProv["log"]; //covenience
-  logStream: LogProv["logStream"]; //covenience
-};
+export type { MainProv } from "^jab";
 
 //
 // not found in official places

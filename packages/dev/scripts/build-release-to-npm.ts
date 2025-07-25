@@ -1,31 +1,28 @@
-import path from "path";
-import { execNpmAndGetStdout } from "./util/index";
-
-import { looping } from "^yapu/yapu";
-import { getLiveBuildVersionInfo } from "./build/util3";
-import { publishBuildFolder } from "^dev/project.conf";
-import { tos } from "^jab";
+import { makeLiveJawisBuildManager } from "./build";
+import { topologicalSortObject } from "^assorted-algorithms";
 
 /**
  *
  */
 export const doit = async () => {
-  const { torelease, toignore } = await getLiveBuildVersionInfo();
+  const builder = makeLiveJawisBuildManager();
 
-  console.log(tos({ torelease, toignore }));
+  const allowPrivate = false;
 
-  //release
+  const tmp = await builder.getAllPackageDeps(false, allowPrivate);
 
-  const otp = "";
+  let sorted = topologicalSortObject(tmp as any) as string[];
 
-  looping(torelease, async (fullPackageName) => {
-    const out = await execNpmAndGetStdout(
-      "npm publish --access public -otp=" + otp,
-      path.join(publishBuildFolder, fullPackageName)
-    );
-
-    console.log(out);
-  });
+  console.log(
+    sorted
+      .map(
+        (elm) =>
+          "cd " +
+          elm +
+          " && npm publish --tag dev --access public --loglevel warn -otp="
+      )
+      .join("\n")
+  );
 };
 
 doit();

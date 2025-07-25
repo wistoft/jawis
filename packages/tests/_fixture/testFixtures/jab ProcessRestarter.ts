@@ -1,7 +1,9 @@
+import { BeeDeps, InMemoryBee } from "^bee-common";
 import { TestProvision } from "^jarun";
-import { ProcessRestarter, ProcessRestarterDeps } from "^jab-node";
+import { ProcessRestarter, ProcessRestarterDeps } from "^process-util";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
 
-import { getLogProv, getScriptPath, makeInMemoryWppMain } from ".";
+import { filterAbsoluteFilepath, getLogProv, getScriptPath } from ".";
 
 /**
  *
@@ -28,8 +30,31 @@ export const getProcessRestarter_running = (
 
   jpr.firstInitProcess();
 
-  return jpr.waiter.await("running", 10000).then(() => jpr);
+  return jpr.waiter.await("running").then(() => jpr);
 };
+
+/**
+ *
+ */
+export const makeInMemoryWppMain =
+  (prov: TestProvision, outputMessages?: boolean) =>
+  <MR extends {}>(deps: BeeDeps<MR>) =>
+    new InMemoryBee(deps, {
+      onInit: (bee) => {
+        bee.sendBack({ type: "ready" } as any);
+      },
+      onSend: (msg) => {
+        if (!outputMessages) {
+          return;
+        }
+        if ((msg as any)?.def?.filename) {
+          (msg as any).def.filename = filterAbsoluteFilepath(
+            (msg as any).def.filename
+          );
+        }
+        prov.log("onSend", msg);
+      },
+    });
 
 /**
  *
@@ -39,18 +64,24 @@ export const getJarunProcessRestarterDeps = (
   logPrefix = "",
   extraDeps?: Partial<ProcessRestarterDeps<any>>
 ): ProcessRestarterDeps<any> => ({
-  filename: getScriptPath("silentWait.js"),
-  makeBee: makeInMemoryWppMain,
+  def: { filename: getScriptPath("silentWait.js") },
 
-  onMessage: (msg: unknown) => {
+  makeBee: makeInMemoryWppMain(prov),
+  getAbsoluteSourceFile,
+
+  onMessage: (msg) => {
     prov.log(logPrefix + "onMessage", msg);
   },
 
-  onStdout: (data: Buffer) => {
+  onLog: (entry) => {
+    prov.log(logPrefix + "onLog", entry);
+  },
+
+  onStdout: (data) => {
     prov.logStream(logPrefix + "stdout", data.toString());
   },
 
-  onStderr: (data: Buffer) => {
+  onStderr: (data) => {
     prov.logStream(logPrefix + "stderr", data.toString());
   },
 

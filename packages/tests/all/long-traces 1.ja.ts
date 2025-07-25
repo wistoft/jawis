@@ -1,24 +1,33 @@
-import async_hooks from "async_hooks";
+import async_hooks from "node:async_hooks";
 
-import { unknownToErrorData } from "^jab";
+import { makeJabError, unknownToErrorData } from "^jab";
+import { TestProvision } from "^jarun";
 import { enable } from "^long-traces";
+import { getPromise } from "^yapu";
 
 import {
-  filterStackTrace,
-  runLiveJacsBee,
-} from "../_fixture/testFixtures/diverse jacs compile";
+  runLiveJacsBee_lazy,
+  filterLongStackTrace,
+  consoleLog,
+} from "../_fixture";
 
-//single nested setTimeout
+// Error trace request in later context. But retains trace from creation context.
 
-export default (prov: any) => runLiveJacsBee(prov, __filename);
+export default (prov: TestProvision) => runLiveJacsBee_lazy(prov, __filename);
 
-//hacky way to detect if in test process or in sub bee.
-if (module.parent?.parent === null) {
+export const main = () => {
   enable(async_hooks);
 
-  setTimeout(() => {
-    console.log(
-      JSON.stringify(filterStackTrace(unknownToErrorData(new Error())))
-    );
-  }, 0);
-}
+  const prom = getPromise<any>();
+
+  setTimeout(function outer() {
+    function inner() {
+      prom.resolve(makeJabError("asdf"));
+    }
+    inner();
+  });
+
+  return prom.promise.then((err) => {
+    consoleLog(filterLongStackTrace(unknownToErrorData(err)));
+  });
+};

@@ -26,12 +26,12 @@ export const getServerAndNodeWs = (
 /**
  *
  */
-export const getNodeWs = <MS extends SocketData, MR extends SocketData>(
+export const getNodeWs = (
   prov: TestProvision,
   logPrefix = "",
   extraDeps?: Partial<NodeWsDeps>
 ) => {
-  const nws = getNodeWs_starting<MS, MR>(prov, logPrefix, extraDeps);
+  const nws = getNodeWs_starting<any, any>(prov, logPrefix, extraDeps);
 
   return nws.waiter.await("running").then(() => nws);
 };
@@ -41,7 +41,7 @@ export const getNodeWs = <MS extends SocketData, MR extends SocketData>(
  */
 export const getNodeWs_starting = <
   MS extends SocketData,
-  MR extends SocketData
+  MR extends SocketData,
 >(
   prov: TestProvision,
   logPrefix = "",

@@ -1,1 +1,0 @@
-{"user":{"imp":[["object",{"protoChain":["Error","Object"],"fields":{},"toStringValue":"Error: message\nNumber: 1\nNumber: 2"}],{"msg":"message","info":["value",[1,2]],"stack":"filtered"},{"msg":"message","info":["value",[1,2,3]],"stack":"filtered"}]}}

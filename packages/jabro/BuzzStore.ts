@@ -1,12 +1,14 @@
 import { MakeBee } from "^bee-common";
+import { OnErrorData } from "^jab";
 
 import { BuzzChannel, BuzzStoreProv, BuzzController } from "./internal";
 
-type Deps = {};
+type Deps = {
+  onErrorData: OnErrorData;
+};
 
 /**
- * Stores connections to hives, which register/unregister themselves.
- *
+ * todo: merge this into makeBrowserBeeFrost.
  */
 export class BuzzStore implements BuzzStoreProv {
   private store: Set<BuzzController> = new Set();

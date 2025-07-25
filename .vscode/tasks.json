@@ -8,9 +8,9 @@
       "tsconfig": "./tsconfig.json",
       "option": "watch",
       "options": {
-        "shell": {
-          "executable": "powershell.exe"
-        },
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // },
         "env": {
           "TSC_NONPOLLING_WATCHER": "true"
         }
@@ -30,9 +30,9 @@
       "type": "npm",
       "script": "lint",
       "options": {
-        "shell": {
-          "executable": "powershell.exe"
-        }
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // }
       },
       "problemMatcher": ["$eslint-stylish"],
       "detail": " "
@@ -43,9 +43,9 @@
       "type": "npm",
       "script": "lint:fix",
       "options": {
-        "shell": {
-          "executable": "powershell.exe"
-        }
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // }
       },
       "problemMatcher": ["$eslint-stylish"],
       "detail": " "
@@ -56,9 +56,9 @@
       "type": "npm",
       "script": "pretty:fix",
       "options": {
-        "shell": {
-          "executable": "powershell.exe"
-        }
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // }
       },
       "detail": " "
     },
@@ -68,9 +68,9 @@
       "type": "npm",
       "script": "custom:fix",
       "options": {
-        "shell": {
-          "executable": "powershell.exe"
-        }
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // }
       },
       "detail": " ",
       "problemMatcher": {
@@ -83,6 +83,36 @@
           "file": 3,
           "line": 4,
           "column": 5
+        }
+      }
+    },
+    {
+      "label": "dev-lint-fix",
+      "group": "build",
+      "type": "npm",
+      "script": "dev-lint-fix",
+      "options": {
+        // "shell": {
+        //   "executable": "powershell.exe"
+        // }
+      },
+      "detail": " ",
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "jawis",
+        "fileLocation": "absolute",
+        "pattern": {
+          "regexp": "^\\s*(.*) - (warning|error) - (.*):(\\d+):(\\d+)\\s*$",
+          "message": 1,
+          "severity": 2,
+          "file": 3,
+          "line": 4,
+          "column": 5
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "linting...",
+          "endsPattern": "done"
         }
       }
     }

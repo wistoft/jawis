@@ -5,9 +5,11 @@ import {
   mergeTestLogsAndRogue,
   testLogStatus,
   zipTestLogs,
-} from "^jatec";
-
-import { sortTestLogs, TestState, State, TestStateUpdate } from "./internal";
+  sortTestLogs,
+  TestState,
+  State,
+  TestStateUpdate,
+} from "./internal";
 
 /**
  *
@@ -60,15 +62,8 @@ export const makeRogueUpdater =
  *
  */
 export const makeTestCaseUpdater =
-  (unsortedTest: TestStateUpdate, getRandomToken: () => number) =>
+  (unsortedTestUpdate: TestStateUpdate, getRandomToken: () => number) =>
   (old: State): Partial<State> => {
-    const testCase = {
-      ...unsortedTest,
-      testLogs: sortTestLogs(unsortedTest.testLogs),
-    };
-
-    //quick fix: ensure we know the test. The test result could be from an old test selection, that is in progress of stopping.
-    // otherwise `getTestUpdate` will throw.
     //We can't even assert we have a test selection. Because an old test result, might arrive between a page is reloaded,
     // and the new test selection arrives.
 
@@ -76,13 +71,24 @@ export const makeTestCaseUpdater =
       return {};
     }
 
-    const knownTest = old.tests.flatIds.some((id) => id === testCase.id);
+    //Ignore udpate, if we don't know the test. The test result could be from an old test selection,
+    // that is in progress of stopping. Otherwise `getTestUpdate` will throw.
+
+    const knownTest = old.tests.tryGetTest(unsortedTestUpdate.id);
 
     if (!knownTest) {
       return {};
     }
 
     //do it
+
+    const testCase = {
+      ...unsortedTestUpdate,
+      name: knownTest.name,
+      file: knownTest.file,
+      line: knownTest.line,
+      testLogs: sortTestLogs(unsortedTestUpdate.testLogs),
+    };
 
     const update1 = { tests: old.tests.getTestUpdate(testCase) };
 
@@ -103,7 +109,7 @@ export const makeTestCaseUpdater =
  * update needed to current test, when some test changes.
  */
 export const getShowTestOnTestChangeUpdate = (
-  test: TestStateUpdate,
+  test: TestState,
   old: State,
   getRandomToken: () => number
 ): Partial<State> => {
@@ -111,13 +117,13 @@ export const getShowTestOnTestChangeUpdate = (
     // no test case is shown, so show new test if failed.
 
     return test.status !== "."
-      ? getUpdateToCurrentTest(test, getRandomToken)
+      ? getCurrentTestUpdate(test, getRandomToken)
       : {};
   } else {
     // update shown test, if that the one that changed.
 
     return old.currentTest.id === test.id
-      ? getUpdateToCurrentTest(test, getRandomToken)
+      ? getCurrentTestUpdate(test, getRandomToken)
       : {};
   }
 };
@@ -125,7 +131,7 @@ export const getShowTestOnTestChangeUpdate = (
 /**
  * Handles the freshness thing.
  */
-export const getUpdateToCurrentTest = (
+export const getCurrentTestUpdate = (
   test: TestState,
   getRandomToken: () => number
 ): Partial<State> => ({
@@ -145,7 +151,7 @@ export const makeShowTestUpdater =
 
     const test = old.tests.getTest(testId);
 
-    return getUpdateToCurrentTest(test, getRandomToken);
+    return getCurrentTestUpdate(test, getRandomToken);
   };
 
 /**
@@ -158,7 +164,7 @@ export const onPrevUpdater =
       return { userMessage: "No tests, so can't show previous." };
     }
 
-    return getUpdateToCurrentTest(
+    return getCurrentTestUpdate(
       old.tests.getPrevTest(old.currentTest?.id),
       getRandomToken
     );
@@ -174,7 +180,7 @@ export const onNextUpdater =
       return { userMessage: "No tests, so can't show next." };
     }
 
-    return getUpdateToCurrentTest(
+    return getCurrentTestUpdate(
       old.tests.getNextTest(old.currentTest?.id),
       getRandomToken
     );

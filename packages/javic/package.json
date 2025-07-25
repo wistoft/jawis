@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~javic",
+  "description": "Javi common",
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "watch",
+    "autoload",
+    "reload",
+    "restart",
+    "typescript",
+    "ts"
+  ]
+}

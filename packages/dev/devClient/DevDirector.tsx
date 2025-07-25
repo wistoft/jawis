@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { makeUseConsoleStream } from "@jawis/console";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { ConsoleMain } from "@jawis/jagov/console/ConsoleMain";
-
-import { JaviDirector, JaviDirectorProps } from "^javi-client";
+import { Main as DevAppMain } from "^dev-appv";
+import { getApiPath, JaviDirector, JaviDirectorProps } from "^javi-client";
 import { Main as DevComponentPanel } from "^dev-compv";
+
 import { devComponents } from "./devComponents";
-import { getApiPath } from "^javi-client/util";
-import { useJabroHive } from "^jabrov";
+import { Console } from "../project-released-web";
 
 type Props = {
   serverPort: number; //mandatory in development, because server is on a different port than client.
   jagoConsolePortForDev: number;
 } & Omit<JaviDirectorProps, "routes" | "postNav">;
+
+export type DevClientConf = {
+  serverPort: number;
+  jagoConsolePortForDev: number;
+};
 
 /**
  *
@@ -24,13 +25,9 @@ export const DevDirector: React.FC<Props> = ({
   jagoConsolePortForDev,
   ...extra
 }) => {
-  useJabroHive(getApiPath(serverPort, "jabro"));
-
-  // const [useConsoleStream] = useState(makeUseConsoleStream);
-
   const postNav = (
     <span style={{ color: "var(--link-color)" }}>
-      , <a href="http://localhost:3001">Server</a>
+      , <a href="http://localhost:3000">Server</a>
     </span>
   );
 
@@ -39,27 +36,27 @@ export const DevDirector: React.FC<Props> = ({
       name: "Comps",
       elm: (
         <DevComponentPanel
-          apiPath={getApiPath(jagoConsolePortForDev, "jago")}
+          apiPath={getApiPath(serverPort, "dev-comp")}
           contexts={devComponents}
         />
       ),
     },
+    {
+      name: "App",
+      elm: <DevAppMain apiPath={"localhost:" + serverPort + "/default"} />,
+    },
   ];
 
-  // const consolePanel = (
-  //   <ConsoleMain
-  //     {...extra}
-  //     useConsoleStream={useConsoleStream}
-  //     apiPath={getApiPath(jagoConsolePortForDev, "jago")}
-  //   />
-  // );
+  const consolePanel = (
+    <Console {...extra} apiPath={getApiPath(jagoConsolePortForDev, "jago")} />
+  );
 
   return (
     <JaviDirector
       {...extra}
       serverPort={serverPort}
       postNav={postNav}
-      consolePanel={<>console must support react 17</>}
+      consolePanel={consolePanel}
       routes={extraRoutes}
     />
   );

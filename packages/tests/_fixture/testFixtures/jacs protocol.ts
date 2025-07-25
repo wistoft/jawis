@@ -1,5 +1,7 @@
 import { ConsumerMessage } from "^jacs";
 import { TestProvision } from "^jarun";
+import { WaitFunc } from "^jab";
+
 import {
   ConsumerStates,
   CaIndex,
@@ -7,8 +9,7 @@ import {
   requestProducerSync,
   setCompiling,
   signalConsumerSync,
-  WaitFunc,
-} from "^jacs/protocol";
+} from "^jacs/internal";
 
 /**
  *
@@ -71,8 +72,10 @@ export const requestProducerSync_test = (
     dataArray,
     extraDeps?.timeout || 20,
     softTimeout,
+    "jacs-compile",
     extraDeps?.postMessage || (() => {}),
-    extraDeps?.wait || syntheticWait("success", controlArray, dataArray)
+    extraDeps?.wait || syntheticWait("success", controlArray, dataArray),
+    /* DateNow */ () => 1
   );
 
   prov.eq("ready", ConsumerStates[controlArray[CaIndex.consumer_state]]);

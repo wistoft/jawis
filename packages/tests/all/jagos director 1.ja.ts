@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJagosDirector } from "^tests/_fixture/testFixtures/jagos";
+import { getJagosDirector } from "^tests/_fixture";
 
 //stop all, when nothing is running.
 

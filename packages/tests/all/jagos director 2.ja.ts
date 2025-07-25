@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJagosDirector_with_script } from "^tests/_fixture/testFixtures/jagos";
+import { getJagosDirector_with_script } from "^tests/_fixture";
 
 //on start listen
 

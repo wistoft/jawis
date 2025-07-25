@@ -1,96 +1,101 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
+
+import {
+  def,
+  LogProv,
+  unknownToErrorData,
+  assert,
+  AbsoluteFile,
+  GetAbsoluteSourceFile,
+  LogEntry,
+} from "^jab";
+import { WatchableProcessPreloader } from "^process-util";
+import { getAbsoluteSourceFile_live } from "^jab-node";
 import {
   Bee,
   BeeDeps,
   BeePreloaderProv,
-  MakeBee,
   NoopBeePreloader,
+  HoneyComb,
 } from "^bee-common";
+import { paralleling, timeRace } from "^yapu";
 import { FinallyFunc } from "^finally-provider";
-
-import { def, LogProv, unknownToErrorData, err } from "^jab";
-import {
-  WatchableProcessPreloader,
-  makePlainWorkerBee,
-  getFileToRequire,
-} from "^jab-node";
-import { ScriptStatus, ScriptStatusTypes } from "^jagoc";
 import { Waiter } from "^state-waiter";
-import { paralleling } from "^yapu";
 
-import { ActionProv, loadScriptFolders, ScriptDefinition } from "./internal";
-
-const DO_PRELOAD_FOR_ACTIVE_SCRIPTS = true;
-
-//quick fix: guard against client problems.
-const MAX_PROC_COUNT = 1000;
-let procCount = 0;
+import {
+  ScriptDefinition,
+  ScriptStatus,
+  ScriptStatusTypes,
+  loadScriptFolders,
+  scriptWrapperMainDeclaration,
+} from "./internal";
 
 export type ScriptPoolProv = {
   updateScripts: () => void;
   getScriptStatus: () => ScriptStatus[];
+  restartBee: (filename: string, data?: unknown) => void;
+  stopScript: (script: string) => void;
+  killScript: (script: string) => void;
   restartAllScripts: () => void;
-  ensureAllScriptsStopped: () => Promise<void>;
-  ensureScriptStopped: (script: string) => void;
-  restartScript: (script: string) => void;
+  stopAllScripts: () => Promise<void>;
   shutdown: () => Promise<void>;
 };
 
 export type ScriptPoolControllerDeps = {
-  scriptFolders?: string[];
-  scripts?: ScriptDefinition[];
-  makeTsBee: MakeBee;
-  experimentalMakeBrowserBee?: MakeBee; //feature flag
-  alwaysTypeScript?: boolean; //default false.
+  scriptFolders: string[];
+  scripts: ScriptDefinition[];
+  honeyComb: HoneyComb<"ts">;
+  showTime: boolean;
+  preloadActiveScripts?: boolean;
+  getAbsoluteSourceFile?: GetAbsoluteSourceFile;
+
+  onStatusChange: (script: string, status: ScriptStatusTypes) => void;
+  onScriptLog: (script: string, entry: LogEntry) => void;
+  onScriptMessage: (script: string, msg: any) => void;
 
   onError: (error: unknown) => void;
   finally: FinallyFunc;
   logProv: LogProv;
+};
 
-  //for testing
-  scriptsDefs?: ScriptDefinition[];
-  onStatusChange?: (script: string, status: ScriptStatusTypes) => void;
-} & Pick<
-  ActionProv,
-  "sendProcessStatus" | "onControlMessage" | "onScriptOutput"
->;
+//timeout to wait for scripts when shutting down pool. They will be killed if timeout expires.
+//zero indicates, that the scripts should be killed.
+const PoolShutdownTimeout = 5000;
 
 type ScriptState = {
-  script: string;
+  script: AbsoluteFile;
   autoRestart?: boolean;
   preload?: BeePreloaderProv<any, any>;
   process?: Bee<any>;
   dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
-};
-
-type ScriptStatusExtra = ScriptStatus & {
-  dynamicallyLoaded: boolean; //whether it's loaded based on being in a script folder.
-};
+  startTimeMillis?: number;
+} & ScriptStatus;
 
 type States = "ready" | "stopping" | "stopped";
 
 /**
+ * todo
+ *  - bug: need to be protected against events while async work hasn't finished
+ *
  * Manages both processes/worker threads.
  *
  * - Manages a fixed set of scripts (JavaScript or TypeScript).
  * - Scripts ending with '.ts' will have TypeScript support.
- * - guarantees, that the script only has one process open. When a process is starting, the
+ * - The script will only have one process open. When a process is starting, the
  *     old process is always shutdown first.
- * - preloads processes. For minimizing compile startup-delay.
+ * - Preloads processes. For minimizing compile startup-delay.
  *
- * bug: need to be protected against events while async work hasn't finished
- *
- * todo
- *  there's no need for both `this.state` and `this.status`, they should just be merged.
  */
 export class ScriptPoolController implements ScriptPoolProv {
-  private state: Map<string, ScriptState> = new Map();
-  private status: ScriptStatusExtra[] = [];
+  private stateCollection: Map<string, ScriptState> = new Map();
 
   private waiter: Waiter<States, never>;
+  private preloadActiveScripts: boolean;
 
   constructor(private deps: ScriptPoolControllerDeps) {
     this.deps.finally(() => this.noisyKill()); //must be before the processes, because we want to shutdown, before them.
+
+    this.preloadActiveScripts = this.deps.preloadActiveScripts ?? true;
 
     //init
 
@@ -108,11 +113,11 @@ export class ScriptPoolController implements ScriptPoolProv {
    *
    */
   private initScripts = () => {
-    loadScriptFolders(this.deps.scriptFolders).forEach(this.addScript(true));
+    loadScriptFolders(this.deps.honeyComb, this.deps.scriptFolders).forEach(
+      this.addScript(true)
+    );
 
     this.deps.scripts?.forEach(this.addScript(false));
-
-    this.deps.scriptsDefs?.forEach(this.addScript(false));
   };
 
   /**
@@ -120,19 +125,10 @@ export class ScriptPoolController implements ScriptPoolProv {
    */
   private addScript =
     (dynamicallyLoaded: boolean) => (def: ScriptDefinition) => {
-      //status
-
-      this.status.push({
-        id: crypto.createHash("md5").update(def.script).digest("hex"),
-        script: def.script,
-        status: "stopped",
-        dynamicallyLoaded,
-      });
-
-      //state
-
-      this.state.set(def.script, {
+      this.stateCollection.set(def.script, {
         ...def,
+        id: crypto.createHash("md5").update(def.script).digest("hex"),
+        status: "stopped",
         dynamicallyLoaded,
       });
 
@@ -140,89 +136,77 @@ export class ScriptPoolController implements ScriptPoolProv {
 
       if (def.autoStart) {
         //depends on state being set.
-        this.restartScript(def.script);
+        this.restartBee(def.script);
       }
     };
 
   /**
-   * Read scriptFolders again to find new script, and deleted scripts.
+   * Read scriptFolders again to find new and deleted scripts.
    *
-   * - Preserve script status, that are non-stopped.
-   * - Script state doesn't need to be pruned. It can linger. Actually, not really.
-   * - Scripts definitions in `deps.scripts` will just stay the same.
-   *
-   * impl
-   *  1. Find dynamically loaded scripts that is still running.
-   *  2. Remove all dynamically loaded scripts from `status`
-   *  3. Load new scritps and add them one by one.
-   *      - Use old status, if any.
-   *      - Keep track of running scritps, that are readded, because they still exist.
-   *  4. Add all running scripts, that was deleted.
+   * - Preserve state for non-stopped scripts.
+   * - Script definitions in `deps.scripts` will just stay the same.
    */
   public updateScripts = () => {
-    const nonStopped = this.status.filter(
-      (def) => def.dynamicallyLoaded && def.status !== "stopped"
-    );
+    //clone
 
-    this.status = this.status.filter((def) => !def.dynamicallyLoaded);
+    const oldStates = new Map(this.stateCollection);
 
     //load
 
-    const defs = loadScriptFolders(this.deps.scriptFolders);
+    const defs = loadScriptFolders(
+      this.deps.honeyComb,
+      this.deps.scriptFolders
+    );
+
+    //create new state collection
+
+    this.stateCollection = new Map();
 
     defs.forEach((def) => {
-      const oldIndex = nonStopped.findIndex((x) => x.script === def.script);
+      //reuse old states
 
-      let old: any = undefined;
+      const oldState = oldStates.get(def.script);
 
-      if (oldIndex !== -1) {
-        old = nonStopped[oldIndex];
+      oldStates.delete(def.script);
 
-        nonStopped[oldIndex].script = "script-readded";
-      }
+      //update/create state
 
-      //status
-
-      this.status.push({
-        id: crypto.createHash("md5").update(def.script).digest("hex"),
+      this.stateCollection.set(def.script, {
+        status: "stopped",
         script: def.script,
-        status: old?.status || "stopped",
+        id: crypto.createHash("md5").update(def.script).digest("hex"),
+        ...oldState,
         dynamicallyLoaded: true,
       });
-
-      //create states for new scripts.
-
-      const oldState = this.state.get(def.script);
-
-      if (oldState === undefined) {
-        this.state.set(def.script, { ...def, dynamicallyLoaded: true });
-      }
     });
 
-    for (const def of nonStopped) {
-      if (def.script !== "script-readded") {
-        this.status.push(def);
+    //prune states
+
+    oldStates.forEach((state, key) => {
+      if (state.dynamicallyLoaded && state.status === "stopped") {
+        this.killPreloader(state); //clean up garbage
+      } else {
+        this.stateCollection.set(key, state); //re-add scripts, that aren't dynamic.
       }
-    }
+    });
   };
 
   /**
    *
    */
   public getScriptStatus = (): ScriptStatus[] =>
-    this.status.map((elm) => ({
-      id: elm.id,
-      script: elm.script,
-      status: elm.status,
+    Array.from(this.stateCollection.values()).map((state) => ({
+      id: state.id,
+      script: state.script,
+      status: state.status,
+      time: state.time,
     }));
 
   /**
    * only used in tests
-   *
-   * @internal
    */
   public getSingleScriptStatus = (script: string) => {
-    for (const state of this.status) {
+    for (const state of this.stateCollection.values()) {
       if (state.script === script) {
         return state.status;
       }
@@ -234,142 +218,141 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  public onStatusChange = (script: string, status: ScriptStatusTypes) => {
-    const index = this.status.findIndex((x) => x.script === script);
+  public restartBee = (filename: string, data?: unknown) => {
+    const state = this.stateCollection.get(filename);
 
-    if (index === -1) {
-      throw err("script not found in state: ", script);
+    if (state === undefined) {
+      return Promise.reject(new Error("Script not found: " + filename));
     }
 
-    this.status[index].status = status;
+    return this.killJustBeeByState(state).then(() =>
+      this.startBee(state, data)
+    );
+  };
 
-    //just send all of it.
+  /**
+   *
+   */
+  public stopScript = (script: string) => {
+    const state = def(this.stateCollection.get(script));
+    return this.stopJustBeeByState_new(state);
+  };
 
-    this.deps.sendProcessStatus(this.getScriptStatus());
-
-    //for testing, because all that information is too much
-
-    this.deps.onStatusChange && this.deps.onStatusChange(script, status);
+  /**
+   *
+   */
+  public killScript = (script: string) => {
+    const state = def(this.stateCollection.get(script));
+    return this.killJustBeeByState(state);
   };
 
   /**
    * No need to stop all scripts. restartScript() will do that.
    *
-   * resolves when preloader have sent startScript event to all processes.
+   * resolves when preloader has sent startScript event to all processes.
    */
   public restartAllScripts = () =>
     paralleling(
-      Array.from(this.state.values()),
-      (state) => this.restartScript(state.script),
+      Array.from(this.stateCollection.values()),
+      (state) => this.restartBee(state.script),
       this.deps.onError
     );
 
   /**
-   * This is not a shutdown! Preloader will remain active.
+   * This is not a shutdown. Preloader will remain active.
    */
-  public ensureAllScriptsStopped = () =>
+  public stopAllScripts = () =>
     paralleling(
-      Array.from(this.state.values()),
-      (state) => this.ensureScriptStoppedByState(state),
+      Array.from(this.stateCollection.values()),
+      (state) => this.stopJustBeeByState_new(state),
       this.deps.onError
     ).then(() => {}); //just for typing
 
   /**
    *
    */
-  public restartScript = (script: string) => {
-    procCount++;
-    if (procCount > MAX_PROC_COUNT) {
-      this.deps.logProv.log("max proc count");
-
-      return Promise.reject(new Error("max proc count."));
-    }
-
-    const state = this.state.get(script);
-
-    if (state === undefined) {
-      return Promise.reject(new Error("Script not found: " + script));
-    }
-
-    return this.ensureScriptStoppedByState(state)
-      .then(() => this.getStartedProcess(state))
-      .then((newState) => {
-        this.state.set(script, newState);
-      })
-      .catch(this.cancelSquash);
-  };
-
-  /**
-   * used by socket handler.
-   */
-  public ensureScriptStopped = (script: string) => {
-    const state = def(this.state.get(script));
-    return this.ensureScriptStoppedByState(state);
-  };
-
-  /**
-   * Kills if the script doesn't stop when told to.
-   */
-  private ensureScriptStoppedByState = (state: ScriptState) => {
+  private stopJustBeeByState_new = (state: ScriptState) => {
     if (!state.process) {
       //no entry, so not running
       return Promise.resolve();
     }
 
-    return state.process.shutdown().catch((error: Error) => {
-      if (Waiter.isTimeout(error)) {
-        //it's a timeout - so the process is killed.
-
-        //it seems to noisy to emit this message
-        // this.deps.onControlMessage(state.script, "Had to kill script.");
-
-        return state.process?.kill();
-      } else {
-        //no a timeout - but should we kill anyway?
-        throw error;
+    return state.process.shutdown().catch((error: any) => {
+      if (error.message === "Cancelled by kill.") {
+        return;
       }
+
+      throw error;
     });
   };
 
   /**
    *
    */
-  public shutdown = () => this.waiter.shutdown(this.shutdownAll);
+  private killJustBeeByState = (state: ScriptState) => {
+    if (!state.process) {
+      //no entry, so not running
+      return Promise.resolve();
+    }
+
+    return state.process.kill();
+  };
+
+  /**
+   *
+   */
+  public kill = () => this.waiter.shutdown(this.killAll); //burde dette ikke være this.waiter.kill
 
   public noisyKill = () => this.waiter.noisyKill(this.killAll, "pool");
 
   private killAll = () => this.finalizeHelper(this.killByState);
 
-  private shutdownAll = () => this.finalizeHelper(this.shutdownByState);
+  public shutdown = () =>
+    this.waiter.shutdown(() => this.finalizeHelper(this.shutdownByState));
 
   /**
    *
    */
   private finalizeHelper = (finalizer: (state: ScriptState) => Promise<void>) =>
     paralleling(
-      Array.from(this.state.values()),
+      Array.from(this.stateCollection.values()),
       finalizer,
       this.deps.onError
-    ).then(this.checkIfStopped); //if no processes are alive, it won't be called by onExit-callback.
+    ).then(this.checkIfStopped); //if there's no process alive, it won't be called by onExit-callback.
 
-  private killByState = (state: ScriptState) =>
-    Promise.resolve()
-      .then(() => state.process?.kill())
-      .then(() => this.killPreloader(state));
+  /**
+   *
+   */
+  private killByState = async (state: ScriptState) => {
+    await state.process?.kill();
+    await this.killPreloader(state);
+  };
 
-  private shutdownByState = (state: ScriptState) =>
-    Promise.resolve()
-      .then(() => state.process?.shutdown())
-      .then(() => this.killPreloader(state));
+  /**
+   * Kills if the script doesn't stop when told to.
+   *  But that isn't quite like the bee-interface specifies.
+   *
+   */
+  private shutdownByState = async (state: ScriptState) => {
+    if (state.process) {
+      await timeRace(
+        state.process.shutdown(),
+        (prom) => prom.catch(() => {}) /* squash errors if timed out */,
+        PoolShutdownTimeout
+      ).catch(state.process.kill); //kill not matter which error. Incl. timeout.
+    }
 
-  private killPreloader = (state: ScriptState) =>
-    Promise.resolve().then(() => {
-      if (state.preload) {
-        state.preload.cancel();
+    await this.killPreloader(state);
+  };
 
-        return state.preload.kill();
-      }
-    });
+  /**
+   *
+   */
+  private killPreloader = async (state: ScriptState) => {
+    if (state.preload) {
+      return state.preload.kill();
+    }
+  };
 
   /**
    *
@@ -378,47 +361,44 @@ export class ScriptPoolController implements ScriptPoolProv {
     script,
     autoRestart,
   }: ScriptDefinition): BeePreloaderProv<any, any> => {
-    //experimental browser bee
+    //new stuff
 
-    if (this.deps.experimentalMakeBrowserBee && script.endsWith(".ww.js")) {
+    if (this.deps.honeyComb?.isBee(script)) {
       return new NoopBeePreloader({
-        makeBee: this.deps.experimentalMakeBrowserBee,
+        makeBee: this.deps.honeyComb.makeBee,
         finally: this.deps.finally,
       });
     }
 
-    // depends on script, not preloader, so default `makeTsProcessConditonally` can't be used.
+    // old non-honey comb stuff
 
-    const makeTsBeeConditonally =
-      this.deps.alwaysTypeScript || script.endsWith(".ts")
-        ? this.deps.makeTsBee
-        : makePlainWorkerBee;
+    const getAbsoluteSourceFile = this.deps.getAbsoluteSourceFile ?? getAbsoluteSourceFile_live; // prettier-ignore
 
     //custom main
 
-    const customBooter = getFileToRequire(__dirname, "ScriptWrapperMain");
+    const customBooter = getAbsoluteSourceFile(scriptWrapperMainDeclaration);
 
     //create
 
     return new WatchableProcessPreloader({
       customBooter,
-      filename: script,
       onRestartNeeded: () => {
         if (autoRestart) {
-          this.restartScript(script);
+          this.restartBee(script);
         }
       },
       onScriptRequired: () => {
         this.onStatusChange(script, "listening");
       },
 
-      timeout: 10000, //for jacs compiler.
-
-      makeBee: makeTsBeeConditonally,
+      makeBee: this.deps.honeyComb.makeMakeCertainBee("ts"),
 
       onError: this.deps.onError,
       finally: this.deps.finally,
+
+      //could these two be combined?
       logProv: this.deps.logProv,
+      onLog: (args) => this.deps.onScriptLog(script, args),
     });
   };
 
@@ -428,8 +408,9 @@ export class ScriptPoolController implements ScriptPoolProv {
   private checkIfStopped = () => {
     if (this.waiter.is("stopping")) {
       let allStopped = true;
-      this.state.forEach((state) => {
-        if (state.process && !state.process.waiter.is("stopped")) {
+
+      this.stateCollection.forEach((state) => {
+        if (state.process && !state.process.is("stopped")) {
           allStopped = false;
         }
       });
@@ -443,35 +424,63 @@ export class ScriptPoolController implements ScriptPoolProv {
   /**
    *
    */
-  private getStartedProcess = (state: ScriptState): Promise<ScriptState> => {
+  private onStatusChange = (script: string, status: ScriptStatusTypes) => {
+    //update state
+
+    const oldState = this.stateCollection.get(script);
+
+    if (!oldState) {
+      console.log("script not found in state: ", script);
+    } else {
+      oldState.status = status;
+
+      if (status === "stopped" && this.deps.showTime) {
+        const tmp = Math.floor(Date.now() - def(oldState.startTimeMillis));
+
+        oldState.time = tmp / 1000;
+      }
+    }
+
+    //for testing, because all that information is too much
+
+    this.deps.onStatusChange && this.deps.onStatusChange(script, status);
+  };
+
+  /**
+   *
+   */
+  private startBee = (state: ScriptState, data: unknown): Promise<void> => {
     const { script } = state;
 
-    const beeConf: BeeDeps<any> = {
-      filename: script,
-      onMessage: (msg: unknown) => {
-        //the view will handle, if the message wasn't a jago log entry.
-        this.deps.onScriptOutput(script, { type: "message", data: msg as any });
+    const onLog = (args: LogEntry) => this.deps.onScriptLog(script, args);
+
+    //could extract turning bee output into a single message type. But not needed anywhere else.
+    // execBee does something similar
+    const beeDeps: BeeDeps<unknown> = {
+      def: {
+        filename: script,
+        data,
       },
-      onStdout: (data: Buffer) => {
-        this.deps.onScriptOutput(script, {
-          type: "stdout",
-          data: data.toString(),
+      onLog,
+      onMessage: (msg) => this.deps.onScriptMessage(script, msg),
+      onStdout: (data) => {
+        onLog({
+          type: "stream",
+          logName: "stdout",
+          data,
         });
       },
-      onStderr: (data: Buffer) => {
-        this.deps.onScriptOutput(script, {
-          type: "stderr",
-          data: data.toString(),
+      onStderr: (data) => {
+        onLog({
+          type: "stream",
+          logName: "stderr",
+          data,
         });
       },
-      onError: (error: unknown) => {
-        //we use jago message convention.
-        this.deps.onScriptOutput(script, {
-          type: "message",
-          data: {
-            type: "error",
-            data: unknownToErrorData(error),
-          },
+      onError: (error) => {
+        onLog({
+          type: "error",
+          data: unknownToErrorData(error),
         });
       },
       onExit: () => {
@@ -485,31 +494,29 @@ export class ScriptPoolController implements ScriptPoolProv {
       state.preload = this.makePreloader(state);
     }
 
+    state.time = undefined;
+
     this.onStatusChange(script, "preloading");
 
-    return state.preload.useBee(beeConf).then((process) => {
+    return state.preload.useBee(beeDeps).then((bee) => {
       this.onStatusChange(script, "running");
 
-      return {
+      assert(state.status === "running");
+
+      //create new state
+
+      this.stateCollection.set(script, {
         ...state,
-        process,
+        process: bee,
+
+        time: undefined,
+        startTimeMillis: Date.now(),
 
         //starts the preload for next time.
-        preload: DO_PRELOAD_FOR_ACTIVE_SCRIPTS
+        preload: this.preloadActiveScripts
           ? this.makePreloader(state)
           : undefined,
-      };
+      });
     });
-  };
-
-  /**
-   *
-   */
-  private cancelSquash = (error: Error) => {
-    if (this.waiter.is("stopping") && Waiter.isCancel(error)) {
-      return;
-    }
-
-    throw error; //everything else is re-thrown
   };
 }

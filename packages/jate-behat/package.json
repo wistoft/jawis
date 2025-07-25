@@ -1,0 +1,17 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jate-behat",
+  "description": "Behat test runner adapter for jate.",
+  "dependencies": {},
+  "keywords": [
+    "test runner",
+    "unit test",
+    "testing",
+    "test",
+    "javi",
+    "jate",
+    "php",
+    "behat"
+  ]
+}

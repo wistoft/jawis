@@ -1,4 +1,9 @@
-import { ClientTestReport, TestCurLogs, TestResult } from "./internal";
+import {
+  ClientTestInfo,
+  ClientTestReport,
+  TestCurLogs,
+  TestResult,
+} from "./internal";
 
 export type OnTestResult = (id: string, result: TestResult) => void;
 
@@ -9,12 +14,16 @@ export type RogueData = { id?: string; data: TestCurLogs };
 export type OnRogue = (rogue: RogueData) => void;
 
 //
-// api - client messasge
+// websocket - client message
 //
 
 export type ClientMessage =
   | {
-      type: "stopRunning" | "runAllTests" | "runCurrentSelection";
+      type:
+        | "toggleRunning"
+        | "getAllTests"
+        | "runAllTests"
+        | "runCurrentSelection";
     }
   | {
       type: "prependTests";
@@ -38,14 +47,10 @@ export type ClientMessage =
       type: "openFile";
       file: string;
       line?: number;
-    }
-  | {
-      type: "openTest";
-      file: string;
     };
 
 //
-// api - server message
+// websocket - server message
 //
 
 export type ServerMessage =
@@ -55,7 +60,7 @@ export type ServerMessage =
     }
   | {
       type: "TestSelection";
-      data: string[][]; //list of levels.
+      data: ClientTestInfo[][]; //list of levels.
     }
   | {
       type: "TestCaseStarts";

@@ -1,29 +1,35 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { makeMakeJacsWorkerBee } from "@jawis/jacs";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { TestProvision } from "@jawis/jarun";
-// eslint-disable-next-line import/no-extraneous-dependencies
-import { mainProvToConsole } from "@jawis/jab-node";
+import { TestProvision } from "^jarun";
+import { BeeDeps, MakeBee } from "^bee-common";
+import { makeMainProvToConsole } from "^main-wrapper";
+
+import { getMakeMakeJacsWorkerBee } from "^dev/project.conf";
+import { assertAbsolute } from "^jab-node/internal";
+import { getBeeDeps } from ".";
 
 //compile service
 
-let makeJacsWorkerCached: any;
+let makeJacsWorkerCached: MakeBee;
 
 /**
  * Compile service for test cases.
  *
  *  - Take no conf or provision, because it's cached across test cases.
  *
+ * todo
+ *  Always used within a test with jacs active, so we could relay to the outer jacs,
+ *    instead of creating new cache here.
+ *
  */
-export const getLiveMakeJacsWorker = (): any => {
+export const getLiveMakeJacsWorker = (): MakeBee => {
   if (!makeJacsWorkerCached) {
-    const mainProv = mainProvToConsole("jacs.");
+    const mainProv = makeMainProvToConsole("jacs.");
 
-    makeJacsWorkerCached = makeMakeJacsWorkerBee({
+    makeJacsWorkerCached = getMakeMakeJacsWorkerBee()({
       ...mainProv,
-      // experimentalCacheNodeResolve: true, //todo
-      // experimentalLazyRequire: true, //todo
-    }) as any;
+      lazyRequire: true,
+      cacheNodeResolve: true,
+      module: "commonjs",
+    }) as unknown as MakeBee; //bug: there is a difference between dev/released version.
   }
 
   return makeJacsWorkerCached;
@@ -32,71 +38,20 @@ export const getLiveMakeJacsWorker = (): any => {
 /**
  *
  */
-export const runLiveJacsBee = (
+export const runLiveJacsBee_lazy = (
   prov: TestProvision,
   filename: string,
   data?: unknown,
-  extraDeps?: any
+  extraDeps?: Partial<BeeDeps<any>>
 ) => {
   const makeBee = getLiveMakeJacsWorker();
 
   const bee = makeBee(
     getBeeDeps(prov, {
-      filename: filename,
+      def: { filename: assertAbsolute(filename), data },
       ...extraDeps,
     })
   );
 
-  return (bee as any).waiter.await("stopped", 10000);
-};
-
-// duplicated to avoid loading anything from fixture
-const getBeeDeps = (
-  prov: any /* TestMainProv */,
-  extraDeps?: any,
-  logPrefix = "bee."
-) => ({
-  filename: "dummy",
-  onMessage: (msg: unknown) => {
-    prov.log(logPrefix + "message", msg);
-  },
-  onStdout: (data: Buffer) => {
-    prov.logStream(logPrefix + "stdout", data.toString());
-  },
-  onStderr: (data: Buffer) => {
-    prov.logStream(logPrefix + "stderr", data.toString());
-  },
-  onExit: () => {},
-  onError: prov.onError,
-  finally: prov.finally,
-  ...extraDeps,
-});
-
-/**
- *
- */
-export const filterStackTrace = (data: any) => {
-  if (data.stack.type !== "parsed") {
-    throw new Error("only jacs supported.");
-  }
-
-  return data.stack.stack
-    .filter((elm: any) => {
-      return (
-        elm.file?.includes("\\tests\\") ||
-        elm.file?.includes("/tests/") ||
-        elm.file === "-----"
-      );
-    })
-    .map((elm: any) => {
-      if (elm.file === "-----") {
-        if (elm.func) {
-          return `----- ${elm.func}`;
-        } else {
-          return "-----";
-        }
-      } else {
-        return elm.func;
-      }
-    });
+  return (bee as any).waiter.await("stopped");
 };

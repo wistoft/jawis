@@ -1,9 +1,14 @@
 import { TestProvision } from "^jarun";
-import { toHtml_test } from "../_fixture";
+import { clonedToHtml_test, toHtml_test } from "../_fixture";
 
-export default ({ imp }: TestProvision) => {
-  imp(toHtml_test(true));
-  imp(toHtml_test([true, false]));
+export default async (prov: TestProvision) => {
+  prov.log("true", await toHtml_test(true));
+  prov.log("true & false", await toHtml_test([true, false]));
 
-  imp(toHtml_test(Promise.resolve()));
+  prov.log(
+    "promise",
+    (await toHtml_test(Promise.resolve())).replace("JarunPromise : ", "")
+  );
+
+  prov.log("resouce", await clonedToHtml_test(["resource", "stream"]));
 };

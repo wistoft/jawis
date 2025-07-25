@@ -1,0 +1,17 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jate-php-unit",
+  "description": "PhpUnit test runner adapter for jate.",
+  "dependencies": {},
+  "keywords": [
+    "test runner",
+    "unit test",
+    "testing",
+    "test",
+    "javi",
+    "jate",
+    "php",
+    "phpunit"
+  ]
+}

@@ -1,11 +1,12 @@
 import { BeeDeps } from "^bee-common";
-import { err } from "^jab";
+import { err, OnErrorData, GetUrlToRequire } from "^jab";
+import { ymerMainDeclaration } from "^jabrov";
 import {
+  makeMakeGeneralRouter,
   NodeWS,
   WsMessageListener,
   makeUpgradeHandler,
   MakeUpgradeHandlerDeps,
-  makeGeneralRouter,
 } from "^jab-express";
 
 import {
@@ -15,14 +16,16 @@ import {
 } from "./internal";
 
 type Deps = {
-  scriptsUrl: string;
+  getUrlToRequire: GetUrlToRequire;
+  webCsUrl: string;
+  onErrorData: OnErrorData;
 } & MakeUpgradeHandlerDeps;
 
 /**
  *  - `makeBrowserBee` can be used to create bee, when the channel is open.
  */
 export const makeBrowserBeeFrost = (deps: Deps) => {
-  const ymerUrl = "http://localhost:3000/ymer.js"; //todo: switch between dev and prod
+  const ymerUrl = deps.getUrlToRequire(ymerMainDeclaration);
 
   const store = new BuzzStore(deps);
 
@@ -56,7 +59,7 @@ export const makeBrowserBeeFrost = (deps: Deps) => {
     nws.send({
       type: "setConf",
       ymerUrl,
-      scriptsUrl: deps.scriptsUrl,
+      webCsUrl: deps.webCsUrl,
     });
 
     //ensure unregister on web socket close
@@ -77,13 +80,12 @@ export const makeBrowserBeeFrost = (deps: Deps) => {
     onMessage(msg);
   };
 
-  const makeJabroRouter = () =>
-    makeGeneralRouter({
-      onWsUpgrade: makeUpgradeHandler<
-        BeeFrostServerMessage,
-        BeeFrostClientMessage
-      >(deps, onMessage, onOpen),
-    });
+  const makeJabroRouter = makeMakeGeneralRouter({
+    onWsUpgrade: makeUpgradeHandler<
+      BeeFrostServerMessage,
+      BeeFrostClientMessage
+    >(deps, onMessage, onOpen),
+  });
 
   return { makeBrowserBee, makeJabroRouter };
 };

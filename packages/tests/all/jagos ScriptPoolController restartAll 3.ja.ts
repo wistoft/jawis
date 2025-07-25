@@ -3,7 +3,6 @@ import { TestProvision } from "^jarun";
 import {
   getJabScriptPoolController_many,
   waitForAllStoppedOrListening,
-  shutdownQuickFix,
 } from "../_fixture";
 
 //shutdown, when scripts (probably) have stopped itself.
@@ -14,5 +13,5 @@ export default (prov: TestProvision) => {
   return pool
     .restartAllScripts()
     .then(() => waitForAllStoppedOrListening(pool))
-    .then(() => shutdownQuickFix(pool));
+    .then(() => pool.shutdown());
 };

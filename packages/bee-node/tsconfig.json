@@ -4,5 +4,9 @@
     "outDir": "../../build-tsc/bee-node",
     "rootDir": "."
   },
-  "references": [{ "path": "../bee-common" }, { "path": "../jab-node" }]
+  "references": [
+    { "path": "../bee-common" },
+    { "path": "../jab" },
+    { "path": "../jab-node" }
+  ]
 }

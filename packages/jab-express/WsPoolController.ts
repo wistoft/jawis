@@ -1,4 +1,6 @@
+import { WebsocketRequestHandler } from "express-ws";
 import WebSocket from "ws";
+
 import { FinallyFunc } from "^finally-provider";
 import { LogProv } from "^jab";
 import { safeAll } from "^yapu";
@@ -8,16 +10,18 @@ import {
   SocketData,
   makeUpgradeHandler,
   WsMessageListener,
-  WebsocketRequestHandler,
 } from "./internal";
 
 export type WsPoolProv<
   MS extends SocketData,
-  MR extends SocketData
+  MR extends SocketData,
 > = Readonly<{
   send: (data: MS) => void;
   forAll: (cb: (nws: NodeWS<MS, MR>) => void) => void;
-  makeUpgradeHandler: ( onMessage: WsMessageListener<MS, MR> ) => WebsocketRequestHandler; // prettier-ignore
+  makeUpgradeHandler: (
+    onMessage: WsMessageListener<MS, MR>,
+    onOpen?: (nws: NodeWS<MS, MR>) => void
+  ) => WebsocketRequestHandler;
   shutdown: () => Promise<void>;
 }>;
 
@@ -62,16 +66,23 @@ export class WsPoolController<MS extends SocketData, MR extends SocketData>
   /**
    *
    */
-  public makeUpgradeHandler = (onMessage: WsMessageListener<MS, MR>) => {
-    const onOpen = (nws: NodeWS<MS, MR>) => {
+  public makeUpgradeHandler = (
+    onMessage: WsMessageListener<MS, MR>,
+    onOpen?: (nws: NodeWS<MS, MR>) => void
+  ) => {
+    const onOpenReal = (nws: NodeWS<MS, MR>) => {
       this.clients.add(nws);
 
       nws.ws.on("close", () => {
         this.clients.delete(nws);
       });
+
+      //call the user's onOpen
+
+      onOpen && onOpen(nws);
     };
 
-    return makeUpgradeHandler(this.deps, onMessage, onOpen);
+    return makeUpgradeHandler(this.deps, onMessage, onOpenReal);
   };
 
   /**

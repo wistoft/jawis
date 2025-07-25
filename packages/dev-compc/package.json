@@ -1,0 +1,13 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~dev-compc",
+  "description": "Common for view and server",
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "component",
+    "components",
+    "react"
+  ]
+}

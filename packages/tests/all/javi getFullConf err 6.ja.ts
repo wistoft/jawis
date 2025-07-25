@@ -5,5 +5,10 @@ import { getFixturePath } from "^tests/_fixture";
 //script folder doesn't exist
 
 export default (prov: TestProvision) => {
-  getFullConf({ scriptFolders: ["dontExist"] }, getFixturePath(), true);
+  getFullConf(
+    { scriptFolders: ["dontExist"] },
+    getFixturePath(),
+    "windows",
+    true
+  );
 };

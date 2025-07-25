@@ -1,12 +1,6 @@
 import React, { memo, ReactNode } from "react";
 
-import {
-  Route,
-  UseFirstRouteEffectProvider,
-  Link,
-  NoRouteElement,
-  Routes,
-} from "./internal";
+import { Route, Routes, Link, NoRouteElement } from "./internal";
 
 export type RouteDef = {
   name: string;
@@ -16,7 +10,6 @@ export type RouteDef = {
 export type ComponentMenuProps = {
   routes: RouteDef[];
   postNav?: ReactNode;
-  provideFirstRouteEffect?: boolean; //default false.
 };
 
 /**
@@ -25,27 +18,16 @@ export type ComponentMenuProps = {
 export const ComponentMenu: React.FC<ComponentMenuProps> = memo((props) => {
   const { menu, routes } = getStuff(props.routes);
 
-  const helper = props.provideFirstRouteEffect ? (
-    <UseFirstRouteEffectProvider>
-      <Routes>
-        {routes}
-        {NoRouteElement}
-      </Routes>
-    </UseFirstRouteEffectProvider>
-  ) : (
-    <Routes>
-      {routes}
-      {NoRouteElement}
-    </Routes>
-  );
-
   return (
     <>
       <nav>
         <span style={{ color: "var(--link-color)" }}>{menu}</span>
         {props.postNav}
       </nav>
-      {helper}
+      <Routes>
+        {routes}
+        {NoRouteElement}
+      </Routes>
     </>
   );
 });

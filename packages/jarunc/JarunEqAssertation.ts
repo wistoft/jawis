@@ -1,36 +1,28 @@
-import {
-  capture,
-  CapturedValue,
-  tos,
-  fixErrorInheritance,
-  captureStack,
-} from "^jab";
+import { capture, tos, captureLongStack } from "^jab";
 
 /**
  *
  */
-export class JarunEqAssertation extends Error {
-  public readonly name: string = "JarunEqAssertation";
-  private exp: CapturedValue;
-  private cur: CapturedValue;
+export const makeJarunEqAssertation = (exp: unknown, cur: unknown) => {
+  const error = new Error("JarunEqAssertation: " + tos(exp) + ", " + tos(cur));
 
-  constructor(exp: unknown, cur: unknown) {
-    super("JarunEqAssertation: " + tos(exp) + ", " + tos(cur));
-
-    this.exp = capture(exp);
-    this.cur = capture(cur);
-
-    fixErrorInheritance(this, JarunEqAssertation.prototype);
-  }
+  const clonedExp = capture(exp);
+  const clonedCur = capture(cur);
 
   /**
    *
    */
-  public getSomething() {
-    return {
-      exp: this.exp,
-      cur: this.cur,
-      stack: captureStack(this),
-    };
-  }
-}
+  const getJarunEqAssertationData = () => ({
+    exp: clonedExp,
+    cur: clonedCur,
+    stack: captureLongStack(error),
+  });
+
+  Object.defineProperty(error, "getJarunEqAssertationData", {
+    value: getJarunEqAssertationData,
+    enumerable: false,
+    configurable: true,
+  });
+
+  return error;
+};

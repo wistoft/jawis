@@ -6,11 +6,23 @@
   },
   "references": [
     { "path": "../assorted-algorithms" },
+    { "path": "../bee-common" },
+    { "path": "../bee-php" },
+    { "path": "../cached-resolve" },
+    { "path": "../finally-provider" },
     { "path": "../jab" },
+    { "path": "../jab-node" },
     { "path": "../jab-react" },
     { "path": "../jacs" },
     { "path": "../jagoc" },
     { "path": "../jatec" },
+    { "path": "../pack-util" },
+    { "path": "../node-module-hooks-plus" },
+    { "path": "../state-waiter" },
+    { "path": "../stdio-protocol" },
+    { "path": "../ts-config-util" },
+    { "path": "../react-use-ws" },
+    { "path": "../webcs" },
     { "path": "../yapu" }
   ]
 }

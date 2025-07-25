@@ -1,1 +1,1 @@
-{"user":{"imp":[{"baseUrl":"packages/tests/_fixture","paths":{"^*":["value",["./packages/*"]]}}]}}
+{"user":{"imp":[{"baseUrl":"abs:packages/tests/_fixture","paths":{"^*":["value",["./packages/*"]]}}]}}

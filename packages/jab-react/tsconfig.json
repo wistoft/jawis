@@ -5,5 +5,5 @@
     "rootDir": ".",
     "types": []
   },
-  "references": [{ "path": "../jab" }]
+  "references": [{ "path": "../jab" }, { "path": "../assorted-algorithms" }]
 }

@@ -4,6 +4,8 @@ import { err } from "^jab";
 import { FinallyFunc } from "^finally-provider";
 import { Waiter } from "^state-waiter";
 
+import { NodeWSProv } from "./internal";
+
 export type WsUrl = { host: string; port: number; path: string };
 
 type Conf =
@@ -37,7 +39,9 @@ export type SocketData = {};
  *  Stringent state management. I.e. hard fail, if methods called in wrong state.
  *  Kill functionality. Useful for also closing resource, when errors happen.
  */
-export class NodeWS<MS extends SocketData, MR extends SocketData> {
+export class NodeWS<MS extends SocketData, MR extends SocketData>
+  implements NodeWSProv<MS>
+{
   public ws: WebSocket;
 
   public waiter: Waiter<States, Events>;
@@ -87,52 +91,35 @@ export class NodeWS<MS extends SocketData, MR extends SocketData> {
   }
 
   /**
-   * Send a message, and wait for the first returned message.
-   *
-   * @tobe-deprecated Too fragile
-   */
-  public simpleRequest = (data: MS, timeout?: number): Promise<MR> =>
-    this.send(data).then(() => this.waiter.await("data", timeout) as any);
-
-  /**
    *
    */
   public send = (data: MS) => {
     if (!this.waiter.is("running")) {
-      return Promise.reject(
-        new Error(
-          "Can't send. Socket not open." +
-            " (state:" +
-            this.waiter.getState() +
-            ")"
-        )
+      throw new Error(
+        "Can't send. Socket not open." +
+          " (state:" +
+          this.waiter.getState() +
+          ")"
       );
     }
 
-    return this.rawSend(data);
+    this.rawSend(data);
   };
 
   /**
    * doesn't check for running state.
    */
-  private rawSend = (data: MS) =>
-    new Promise<void>((resolve, reject) => {
-      let msg;
+  private rawSend = (data: MS) => {
+    if (typeof data !== "object") {
+      throw new Error("non objects not supported.");
+    }
 
-      if (typeof data === "object") {
-        msg = JSON.stringify(data);
-      } else {
-        throw new Error("non objects not supported.");
+    this.ws.send(JSON.stringify(data), (error) => {
+      if (error) {
+        this.deps.onError(error);
       }
-
-      this.ws.send(msg, (error) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      });
     });
+  };
 
   /**
    *

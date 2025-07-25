@@ -9,10 +9,6 @@ mounts/unmounts.
 npm i react-use-ws
 ```
 
-## Usage
-
-## Known issues
-
 ## Related work
 
 - [react-use-websocket](https://www.npmjs.com/package/react-use-websocket)

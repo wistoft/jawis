@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~dev-apps",
+  "description": "Dev server",
+  "dependencies": {},
+  "keywords": []
+}

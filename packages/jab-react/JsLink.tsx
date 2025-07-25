@@ -2,7 +2,7 @@ import React, { memo, MouseEvent, ReactNode } from "react";
 
 export type JsLinkProps = {
   name?: string;
-  children?: ReactNode;
+  children?: ReactNode | undefined;
   onClick: (e: MouseEvent<HTMLAnchorElement>) => void;
   title?: string;
   href?: string;

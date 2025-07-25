@@ -22,8 +22,7 @@ export const asyncCapture = (
   ) => void = () => {},
   onError: (error: unknown) => void = () => {},
   externalCustomCapture: CustomCapture = () => null,
-  includeErrorStack = false,
-  orgPromise: PromiseConstructor = Promise //quick fix
+  includeErrorStack = false
 ): Promise<CapturedValue> => {
   let resolved = false;
 
@@ -40,7 +39,7 @@ export const asyncCapture = (
 
     //default
 
-    if (!(value instanceof orgPromise)) {
+    if (!(value instanceof Promise)) {
       return null;
     } else {
       const holder = {} as PendingCapturedPromise;

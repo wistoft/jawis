@@ -1,8 +1,10 @@
 import { TestProvision } from "^jarun";
-import { testSelectionToCollection } from "^jatev/TestCollection";
+import { testSelectionToCollection_for_tests } from "^tests/_fixture";
 
 export default ({ eq }: TestProvision) => {
-  const a = testSelectionToCollection([[{ id: "1" }]]);
+  const a = testSelectionToCollection_for_tests([
+    [{ id: "1", name: "1", file: "file" }],
+  ]);
 
-  eq({ id: "1" }, a.getTest("1"));
+  eq({ id: "1", name: "1", file: "file" }, a.getTest("1"));
 };

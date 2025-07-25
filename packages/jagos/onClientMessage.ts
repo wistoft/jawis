@@ -1,11 +1,14 @@
-import { assertNever, HandleOpenFileInEditor } from "^jab";
-
-import { ClientMessage, ServerMessage } from "^jagoc";
-
+import { HandleOpenFileInEditor, assertNever } from "^jab";
 import { WsMessageListener } from "^jab-express";
-import { BehaviorProv, ScriptPoolProv } from "./internal";
 
-export type Deps = ScriptPoolProv &
+import {
+  ClientMessage,
+  ServerMessage,
+  BehaviorProv,
+  ScriptPoolProv,
+} from "./internal";
+
+type Deps = ScriptPoolProv &
   BehaviorProv & {
     handleOpenRelativeFileInEditor: HandleOpenFileInEditor;
     handleOpenFileInEditor: HandleOpenFileInEditor;
@@ -14,39 +17,35 @@ export type Deps = ScriptPoolProv &
 /**
  *
  */
-export const makeOnClientMesssage =
+export const makeOnClientMessage =
   (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
   (msg) => {
     switch (msg.type) {
       case "startListen":
-        deps.onStartListen();
-        break;
+        return deps.onStartListen();
 
       case "restartAll":
-        deps.restartAllScripts();
-        break;
+        return deps.restartAllScripts();
 
       case "stopAll":
-        deps.ensureAllScriptsStopped();
-        break;
+        return deps.stopAllScripts();
 
       case "restartScript":
-        //return for testing
-        return deps.restartScript(msg.script);
+        return deps.restartBee(msg.script, msg.data);
 
       case "stopScript":
-        deps.ensureScriptStopped(msg.script);
-        break;
+        return deps.stopScript(msg.script);
+
+      case "killScript":
+        return deps.killScript(msg.script);
 
       case "openFile":
-        deps.handleOpenFileInEditor(msg);
-        break;
+        return deps.handleOpenFileInEditor(msg);
 
       case "openRelFile":
-        deps.handleOpenRelativeFileInEditor(msg);
-        break;
+        return deps.handleOpenRelativeFileInEditor(msg);
 
       default:
-        throw assertNever(msg, "Unknown client message type.");
+        assertNever(msg, "Unknown client message type.");
     }
   };

@@ -1,57 +1,68 @@
 import { WsPoolController, WsPoolProv } from "^jab-express";
 import { HandleOpenFileInEditor } from "^jab";
-import { ClientMessage, ServerMessage } from "^jagoc";
 
 import {
+  ClientMessage,
+  ServerMessage,
   Behavior,
   ScriptPoolController,
+  ClientComController,
+  makeOnClientMessage,
   ScriptPoolControllerDeps,
-  ActionProvider,
-  makeOnClientMesssage,
 } from "./internal";
 
-export type DirectorDeps = Readonly<{
-  handleOpenRelativeFileInEditor: HandleOpenFileInEditor;
-  handleOpenFileInEditor: HandleOpenFileInEditor;
+export type DirectorDeps = Readonly<
+  {
+    handleOpenRelativeFileInEditor: HandleOpenFileInEditor;
+    handleOpenFileInEditor: HandleOpenFileInEditor;
 
-  //optional and abstract for testing
-  wsPool?: WsPoolProv<ServerMessage, ClientMessage>;
-}> &
-  Omit<ScriptPoolControllerDeps, keyof ActionProvider | "onStatusChange">;
+    //for testing
+    wsPool?: WsPoolProv<ServerMessage, ClientMessage>;
+  } & Omit<
+    ScriptPoolControllerDeps,
+    keyof ClientComController | "onStatusChange"
+  >
+>;
 
 /**
  *
  */
 export const director = (deps: DirectorDeps) => {
-  deps.finally(() => behaviorProv.onShutdown()); //trick to register onShutdown, before it has been defined.
+  deps.finally(() => behavior.onShutdown()); //trick to register onShutdown, before it has been defined.
 
-  const wsPool =
-    deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps);
+  const wsPool = deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps); // prettier-ignore
 
-  const actionProv = new ActionProvider({
+  const clientCom = new ClientComController({
     wsPool,
   });
 
-  const poolProv = new ScriptPoolController({
+  const scriptPool = new ScriptPoolController({
     ...deps,
-    ...actionProv,
+    ...clientCom,
+    onStatusChange,
   });
 
-  const behaviorProv = new Behavior({
+  const behavior = new Behavior({
+    ...clientCom,
     wsPool,
-    ...actionProv,
-    ...poolProv,
-    scriptPool: poolProv,
+    scriptPool,
     onError: deps.onError,
   });
 
-  const onClientMessage = makeOnClientMesssage({
+  const onClientMessage = makeOnClientMessage({
     ...deps,
-    ...poolProv,
-    ...behaviorProv,
+    ...scriptPool,
+    ...behavior,
   });
 
   const onWsUpgrade = wsPool.makeUpgradeHandler(onClientMessage);
+
+  //internal messages
+
+  function onStatusChange() {
+    //just send all of it.
+    clientCom.sendProcessStatus(scriptPool.getScriptStatus());
+  }
 
   return {
     onWsUpgrade,

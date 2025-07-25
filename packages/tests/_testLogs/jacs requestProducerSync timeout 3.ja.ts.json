@@ -1,1 +1,1 @@
-{"user":{"imp":["the result"],"console.log":["Soft timeout in consumer.",{"file":"myfile","consumerState":"requesting","producerState":"ready","resultType":"none","dataLength":-1,"shouldSleep":"sleep","timeout":20,"softTimeout":10}]}}
+{"user":{"console.log":["Soft timeout in consumer.",{"file":"myfile","consumerState":"requesting","producerState":"ready","resultType":"none","dataLength":-1,"shouldSleep":"sleep","timeout":20,"softTimeout":10},"Producer responded late, time: 0"],"imp":["the result"]}}

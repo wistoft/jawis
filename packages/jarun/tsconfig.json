@@ -5,13 +5,14 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../async-capture" },
     { "path": "../bee-common" },
-    { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-node" },
-    { "path": "../jatec" },
     { "path": "../jarunc" },
+    { "path": "../jatec" },
+    { "path": "../jates" },
+    { "path": "../finally-provider" },
+    { "path": "../process-util" },
     { "path": "../state-waiter" },
     { "path": "../yapu" }
   ]

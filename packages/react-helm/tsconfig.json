@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.web.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/react-helm",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }, { "path": "../jab-react" }]
+}

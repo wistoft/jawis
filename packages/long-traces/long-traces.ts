@@ -1,4 +1,4 @@
-import async_hooks from "async_hooks";
+import async_hooks from "node:async_hooks";
 
 import {
   assert,
@@ -7,14 +7,20 @@ import {
   ParsedStackFrame,
   replaceGlobalClass,
 } from "^jab";
+import { onThrow } from "./internal";
 
 //Monkey patches Error constructor.
 // This is needed, because we can't determine at a later time, which async context the error was constructed in.
 // Problem: extending Error must be done after enabling, to get things work for those errors.
+//
+//notes
+// it's a problem to get access to all error constructions. Natively thrown errors (nodejs, v8) are not monkey patchable.
+//  it's not possible to detect when they are constructed or have some code run at construction.
 
 type AsyncType = "PROMISE" | "Timeout" | "FSREQCALLBACK"; //and a lot more.
 
 type TraceData = {
+  asyncId: number;
   parentId: number;
   err: Error;
   type: AsyncType;
@@ -58,50 +64,28 @@ let unreplaceErrorClass: () => void;
 export const makeProxyErrorForLongTrace = () => {
   const OriginalError = Error; //captured at enable-time.
 
+  const OriginalPrepareStackTrace = Error.prepareStackTrace;
+
+  //todo: Error has an options argument too.
   function ProxyErrorForLongTrace(msg?: string) {
     const error = new OriginalError(msg);
 
-    if (enabled) {
-      try {
-        //we need to look up here, so we have a reference to the context. Otherwise it might get garbage collected.
-
-        const traceData = ancestorTraceDataById.get(
-          asyncHooksImpl.executionAsyncId()
-        );
-
-        //for `captureStack` to use.
-
-        Object.defineProperty(error, "getAncestorStackFrames", {
-          value: (): CapturedStack => ({
-            type: "parsed",
-            stack: getAncestorStackFrames(traceData),
-          }),
-          enumerable: false,
-          configurable: true,
-        });
-      } catch (e) {
-        //throwing when making an error, would be problematic.
-        console.log("Panic in ProxyErrorForLongTrace: " + e);
-      }
-    }
+    addPropertiesToError(error);
 
     return error;
   }
 
   //copy all static properties from Error
 
+  //duplication between makeProxyErrorForLongTrace and makePromiseConstructor
+
   // This also copies the prototype property, which means:
-  // 1. Make instances of Error also instance of ProxyErrorForLongTrace.
+  // 1. Instances of Error are also instances of ProxyErrorForLongTrace.
   //      - Already existing instances of Error will return true for `error instanceof ProxyErrorForLongTrace`
   //      - ProxyErrorForLongTrace also returns instances for Error, so it also need it, for `instanceof` to work.
   // 2. And get inherited methods.
 
-  //quick fix for bug in "1.0.2-dev.1". Released long-traces didn't inherit properly.
-  const quick_fix = Object.hasOwnProperty.call(Error, "stackTraceLimit")
-    ? Error
-    : Object.getPrototypeOf(Error);
-
-  for (const method of Object.getOwnPropertyNames(quick_fix)) {
+  for (const method of Object.getOwnPropertyNames(Error)) {
     if (
       method === "length" ||
       method === "name" ||
@@ -115,13 +99,82 @@ export const makeProxyErrorForLongTrace = () => {
     (ProxyErrorForLongTrace as any)[method] = (Error as any)[method];
   }
 
+  //hope the stack trace is accessed in same tick.
+
+  ProxyErrorForLongTrace.prepareStackTrace = (
+    error: Error & {
+      traceData?: TraceData;
+      getAncestorStackFrames?: any;
+    },
+    stackTraces: NodeJS.CallSite[]
+  ) => {
+    try {
+      //check the id is registered.
+
+      if (!error.getAncestorStackFrames) {
+        addPropertiesToError(error);
+      }
+
+      //the original work
+
+      if (!OriginalPrepareStackTrace) {
+        //what to do here. Now we have responsibility to format the stack,
+        // but there is no default implementation to call.
+        console.log("not impl: no original Error.prepareStackTrace");
+        return;
+      }
+
+      return OriginalPrepareStackTrace(error, stackTraces);
+    } catch (e) {
+      //throwing when making an error, would be problematic.
+      console.log("Panic in ProxyErrorForLongTrace.prepareStackTrace: " + e);
+    }
+  };
+
   return ProxyErrorForLongTrace;
 };
 
 /**
  *
+ */
+export const addPropertiesToError = (error: any) => {
+  if (enabled) {
+    try {
+      //we need to look up here, so we have a reference to the context. Otherwise it might get garbage collected.
+
+      const traceData = ancestorTraceDataById.get(
+        asyncHooksImpl.executionAsyncId()
+      );
+
+      //for `captureStack` to use.
+
+      Object.defineProperty(error, "getAncestorStackFrames", {
+        value: (): CapturedStack => ({
+          type: "parsed",
+          stack: getAncestorStackFrames(traceData),
+        }),
+        enumerable: false,
+        configurable: true,
+      });
+
+      //for consistency check
+
+      Object.defineProperty(error, "traceData", {
+        value: traceData,
+        enumerable: false,
+        configurable: true,
+      });
+    } catch (e) {
+      //throwing when making an error, would be problematic.
+      console.log("Panic in ProxyErrorForLongTrace: " + e);
+    }
+  }
+};
+
+/**
+ *
  * - Takes the async_hooks module to avoid being depend on node.
- *    Teoretically a polyfill for the browser could be implemented.
+ *    Theoretically a polyfill for the browser could be implemented.
  */
 export const enable = (_asyncHooksImpl: typeof async_hooks) => {
   assert(!enabled, "Already enabled");
@@ -130,6 +183,12 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
     "Error",
     makeProxyErrorForLongTrace()
   );
+
+  onThrow((error: any) => {
+    if (!error.getAncestorStackFrames) {
+      addPropertiesToError(error);
+    }
+  });
 
   enabled = true;
   asyncHooksImpl = _asyncHooksImpl;
@@ -140,12 +199,17 @@ export const enable = (_asyncHooksImpl: typeof async_hooks) => {
      */
     init(asyncId: number, type: AsyncType, triggerAsyncId: number) {
       if (asyncHooksImpl.executionAsyncId() === asyncId) {
-        console.log("init() - excepted other async id.");
+        console.log("init() - expected other async id.");
       }
 
+      const err = new Error(); //this becomes the parent for errors thrown in this context.
+
+      (err as any).__jawisSynctheticLongTracesError = true; //to ensure we don't check cons/prep asyncId consistency.
+
       const traceData: TraceData = {
+        asyncId,
         parentId: triggerAsyncId,
-        err: new Error(), //this becomes the parent for errors thrown in this context.
+        err,
         type,
       };
 
@@ -246,7 +310,7 @@ const getAncestorStackFramesReal = (traceData: TraceData) => {
 
   const frames = stack.stack as ParsedStackFrame[];
 
-  //only keep few frames for chained promises
+  //only keep one frame for chained promises
 
   if (traceData.chainedPromise) {
     result = [...result, ...getChainedPromiseFrames(frames)];
@@ -254,7 +318,7 @@ const getAncestorStackFramesReal = (traceData: TraceData) => {
     result = [...result, ...frames];
   }
 
-  //all ancesters, if any.
+  //all ancestors, if any.
 
   const ancestorTrace = getAncestorStackFrames(ancestorTree.get(traceData)); // prettier-ignore
 

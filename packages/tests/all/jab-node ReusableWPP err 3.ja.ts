@@ -1,5 +1,6 @@
 import { TestProvision } from "^jarun";
 
+import { assertUnsettled } from "^yapu";
 import { getReusableWPPAndDeps } from "../_fixture";
 
 //kill, before process has returned.
@@ -7,8 +8,7 @@ import { getReusableWPPAndDeps } from "../_fixture";
 export default (prov: TestProvision) => {
   const [angel, deps] = getReusableWPPAndDeps(prov);
 
-  const p1 = angel.useProcess(deps);
-  const p2 = angel.noisyKill();
+  assertUnsettled(angel.useBee(deps), prov.onError);
 
-  return [p1, p2];
+  return angel.noisyKill();
 };

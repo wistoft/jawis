@@ -1,6 +1,5 @@
-import { MakeBee } from "^bee-common";
-import { ScriptOutput } from "^jagoc";
-import { ErrorData } from "^jabc";
+import { MakeBee, BeeOutput } from "^bee-common";
+import { AbsoluteFile, ErrorData } from "^jabc";
 
 /**
  *
@@ -13,7 +12,7 @@ export type BuzzStoreProv = {
  * The interface, that a bee hive channel must support.
  */
 export type BuzzChannel = {
-  send: (data: BeeFrostServerMessage) => Promise<void>;
+  send: (data: BeeFrostServerMessage) => void;
 };
 
 //
@@ -21,7 +20,7 @@ export type BuzzChannel = {
 //
 
 export type BeeFrostClientMessage =
-  | (ScriptOutput & { bid: number })
+  | (BeeOutput & { bid: number })
   | {
       type: "error"; // error, that can't be attributed to a bee.
       data: ErrorData;
@@ -29,19 +28,18 @@ export type BeeFrostClientMessage =
   | {
       type: "exit";
       bid: number;
-      data: number | null;
     };
 
 export type BeeFrostServerMessage =
   | {
       type: "setConf"; //must be sent as the first message
       ymerUrl: string;
-      scriptsUrl: string;
+      webCsUrl: string;
     }
   | {
       type: "makeBee";
       bid: number;
-      fileUrl: string;
+      filename: AbsoluteFile;
     }
   | {
       type: "message";

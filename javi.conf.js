@@ -1,5 +1,6 @@
 module.exports = {
   testFolder: "packages/tests",
+
   removePathPrefix: "packages",
   scriptFolders: ["packages/dev/scripts/"],
   scripts: [
@@ -12,4 +13,22 @@ module.exports = {
       script: "packages/dev/devServer/devJaviTestMain.ts",
     },
   ],
+  serviceConf: {},
+
+  //options:
+  //
+  // siteTitle: "",
+  // port: "",
+  // removePathPrefix: "",
+  // vsCodeBinary: "",
+  // winMergeBinary: "",
+
+  //jate
+  // testFolder: "",
+  // testLogFolder: "",
+  // tecTimeout: "",
+
+  //jago
+  // scriptFolders: [],
+  // scripts: [],
 };

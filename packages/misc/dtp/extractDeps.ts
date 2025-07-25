@@ -15,6 +15,7 @@ import ts, {
   isNamespaceExport,
   isVariableStatement,
   JsxAttributes,
+  JsxAttributeValue,
   JsxChild,
   JsxTagNameExpression,
   ModuleResolutionHost,
@@ -29,65 +30,39 @@ import ts, {
 
 import { assert, assertNever, def, err, assertPropString } from "^jab";
 
+import {
+  BindingInfo,
+  CodePiece,
+  DependencyInfo,
+  Export,
+  Import,
+  InternalPieces,
+  ReExport,
+} from "./types";
+
 /**
- * DTP
- *  - assume people make pure declarations in module scope. E.g. `const a = myFunc()` is a code piece, not main code.
- *  - ignore use of IO, network, random, async, etc.
+ *
+ * details
  *  - LExpr in assignments are also dependencies, because the assigner assumes a certain data type. At least that it's declared.
  *  - it's not important to distinguish export/non-exported code pieces. Because users won't be able to make edges to an internal
  *      piece, anyway.
- *  - code pieces with no dependencies don't need to be in the graph. They will impact users fine, when they get added with their
+ *  - code pieces without dependencies need not be in the graph. They will impact users fine, when they get added with their
  *      first dependency.
  *
  * note
- *  - it's not important to be certain, that no type end up as code pieces, accidentially. Because no code piece
- *      will ever make a reference to a type. So the 'type' piece will never impact anything. Probably we'll never
- *      start a search from a 'type' piece either.
+ *  - There's no need to ensure types don't accidentially end up as code pieces. Because code pieces
+ *      will never make references to types. So the 'type' piece won't impact anything. Probably we'll never
+ *      start a search from a 'type' piece, either.
+ *
+ * todo
+ *  - check no unpure declarations in module scope. E.g. `const a = myFunc()` is main code.
+ *  - check for nondeterminism: IO, network, random, async, etc.
  */
-
-export type DependencyInfo =
-  | Import
-  | Export
-  | ReExport
-  | InternalPieces
-  | MainCode;
-
-export type CodePiece = { name: string; deps: string[] };
-
-type Import = {
-  type: "import";
-  file: string;
-  named?: CodePiece[]; //it can only have one dep. Put for simplicity, it's regarded as a code piece.
-  nsAlias?: string;
-};
-
-export type ReExport = {
-  type: "reexport";
-  file: string;
-  data: "all" | CodePiece[] | { nsAlias: string };
-};
-
-type Export = {
-  type: "export";
-  data: CodePiece[]; //export can have more than one dep. Because export-default have no internal piece to depend on.
-};
-
-type InternalPieces = {
-  type: "internal";
-  data: CodePiece[];
-};
-
-type MainCode = {
-  type: "main";
-  deps: string[];
-};
-
-type BindingInfo = { names: string[]; deps: string[] };
 
 /**
  *
  * impl
- *  - loops through top-level children, and recurses as needed.
+ *  - loops through top-level children and recurse as needed.
  *
  * notes
  *  - SourceFile doesn't need parent nodes.
@@ -953,6 +928,10 @@ export const parsePropertyNameDependencies = (
     return [];
   }
 
+  if (ts.isNoSubstitutionTemplateLiteral(propName)) {
+    throw new Error("not impl - new in typescript 5");
+  }
+
   throw assertNever(
     propName,
     "unknown node in binding name",
@@ -1155,10 +1134,18 @@ export const parseJsxTagNameExpression = (
     return parseJsxTagNameExpression(node.expression); // one could filter "React" here. But it's from node_modules, so it will be filtered.
   }
 
-  //never
+  //JsxNamespacedName is introduced in ts 5
 
-  throw assertNever(
-    node,
+  if (
+    "isJsxNamespacedName" in ts &&
+    (node as any).kind === ts.isJsxNamespacedName
+  ) {
+    throw new Error("not impl - new in typescript 5");
+  }
+
+  //assertNever not possible because of ts 5
+
+  throw err(
     "unknown tagName in JsxSelfClosingElement",
     ts.SyntaxKind[(node as any).kind]
   );
@@ -1199,7 +1186,7 @@ export const parseJsxAttributes = (node: JsxAttributes): string[] => {
  *
  * handles StringLiteral for convenience in JsxAttributes.
  */
-export const parseJsxExpression = (node: any): string[] => {
+export const parseJsxExpression = (node: JsxAttributeValue): string[] => {
   if (ts.isStringLiteral(node)) {
     return [];
   }

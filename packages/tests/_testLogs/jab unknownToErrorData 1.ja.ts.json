@@ -1,1 +1,1 @@
-{"user":{"imp":[{"msg":"Unknown Error object: ","info":["value",["hejsa"]],"stack":"filtered"},{"msg":"Error: hej","info":["value",[1,2]],"stack":"filtered"}]}}
+{"user":{"imp":[{"msg":"hejsa","info":["value",[]],"stack":"filtered"},{"msg":"Error: hej","info":["value",[1,2]],"stack":"filtered"}]}}

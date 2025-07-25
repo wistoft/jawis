@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~jate-rust",
+  "description": "Rust test runner adapter for jate.",
+  "dependencies": {},
+  "keywords": [
+    "test runner",
+    "unit test",
+    "testing",
+    "test",
+    "javi",
+    "jate",
+    "rust"
+  ]
+}

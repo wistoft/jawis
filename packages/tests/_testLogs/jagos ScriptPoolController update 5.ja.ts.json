@@ -1,1 +1,1 @@
-{"user":{"beeSendAndWait.js":["preloading","running","listening","stopped"],"beeSendAndWait.js.message":[{"type":"msg","value":"hello"}],"imp":[["value",[{"id":"filtered","script":"packages/tests/_fixture/scripts/beeSendAndWait.js","status":"running"}]]]}}
+{"user":{"beeSendAndWait.js":["preloading","running","listening","stopped"],"imp":[["value",[{"id":"filtered","script":"abs:packages/tests/_fixture/scripts/beeSendAndWait.js","status":"running","time":["undefined"]}]]],"beeSendAndWait.js.message":[{"type":"msg","value":"hello"}]}}

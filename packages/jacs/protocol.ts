@@ -1,6 +1,7 @@
-import { TextDecoder, TextEncoder } from "util";
+import { TextDecoder, TextEncoder } from "node:util";
 
 import { assert, assertNever, err } from "^jab";
+import { niceWait, WaitFunc } from "^jab";
 
 import { ConsumerMessage, getDebugSummary } from "./internal";
 
@@ -39,13 +40,6 @@ export enum ResultType {
   "error",
 }
 
-export type WaitFunc = (
-  typedArray: Int32Array,
-  index: number,
-  value: number,
-  timeout?: number
-) => "ok" | "not-equal" | "timed-out";
-
 const NoDataLength = -1;
 
 /**
@@ -75,8 +69,10 @@ export const requestProducerSync = (
   dataArray: Uint8Array,
   timeout: number,
   softTimeout: number | undefined,
+  channelToken: string | number,
   postMessage: (msg: ConsumerMessage) => void,
-  wait: WaitFunc = Atomics.wait
+  wait: WaitFunc = Atomics.wait,
+  DateNow: () => number
 ): string => {
   assert(controlArray.length === ControlArrayLength, "controlArray has wrong length:", controlArray.length ); // prettier-ignore
 
@@ -108,43 +104,24 @@ export const requestProducerSync = (
   // this can actually finish "synchronously". I.e. the producer receives this event process it,
   // and tries to notify, before this consumer can make one step.
 
-  postMessage({ type: "jacs-compile", file });
+  postMessage({ compileRequest: channelToken, file });
 
   // sleep if needed
 
-  let val: "ok" | "timed-out" | "not-equal";
-  let actualTimeout: number | undefined = softTimeout || timeout;
-  let hasBeenSoftTimeout = false;
-
-  // eslint-disable-next-line no-constant-condition
-  while (true) {
-    val = wait(controlArray, CaIndex.sleep_bit, ConsumerShould.sleep, actualTimeout); // prettier-ignore
-
-    //give warning on first timeout
-
-    if (val === "timed-out" && softTimeout && !hasBeenSoftTimeout) {
-      //give warning
-
+  const val = niceWait({
+    sharedArray: controlArray,
+    index: CaIndex.sleep_bit,
+    value: ConsumerShould.sleep,
+    timeout,
+    softTimeout,
+    sleepCondition: () => controlArray[CaIndex.sleep_bit] === ConsumerShould.sleep, // prettier-ignore
+    onSoftTimeout: () => {
       console.log("Soft timeout in consumer.", getDebugSummary(file, controlArray, timeout, softTimeout) ); // prettier-ignore
-
-      //setup to wait for next timeout
-
-      actualTimeout = timeout - softTimeout;
-      hasBeenSoftTimeout = true;
-      continue;
-    }
-
-    //protect against spurious wake
-
-    if (
-      val === "ok" &&
-      controlArray[CaIndex.sleep_bit] === ConsumerShould.sleep
-    ) {
-      continue;
-    }
-
-    break;
-  }
+    },
+    waitName: "Producer",
+    wait,
+    DateNow,
+  });
 
   //process result
 

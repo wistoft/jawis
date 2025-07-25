@@ -1,4 +1,4 @@
-import { OnError, err, makeJabError } from "^jab";
+import { err, isBoolean, makeJabError, OnError } from "^jab";
 
 export type PromiseTriple<T> = {
   promise: Promise<T>;
@@ -29,7 +29,8 @@ export const nightmare = (ms: number, msg = "You asked for nightmare") =>
 /**
  * Run some code without waiting for it to return.
  */
-export const then = (func: () => void) => Promise.resolve().then(func);
+export const then = <V>(func: () => V | Promise<V>) =>
+  Promise.resolve().then(func);
 
 /**
  * Keep executing the promises, until false is returned.
@@ -51,10 +52,25 @@ export const whiling = (makePromise: () => Promise<boolean>) =>
 /**
  * Poll until true.
  */
-export const poll = (func: () => boolean, interval: number) => {
+export const poll = (
+  func: () => boolean,
+  interval = 100,
+  timeout = 1000,
+  timeoutMessage = "Poll timed out"
+) => {
+  const start = Date.now();
   const prom = getPromise<void>();
 
   const pollFunction = () => {
+    //check for timeout
+
+    if (Date.now() - start >= timeout) {
+      prom.reject(new Error(timeoutMessage));
+      return;
+    }
+
+    //poll the function
+
     if (func()) {
       prom.resolve();
     } else {
@@ -67,6 +83,76 @@ export const poll = (func: () => boolean, interval: number) => {
   return prom.promise;
 };
 
+type PollResult<T> =
+  | boolean
+  | {
+      done: false;
+      value?: T;
+    }
+  | {
+      done: true;
+      value: T;
+    };
+
+type PollFinalResult<R extends PollResult<any>> = R extends boolean
+  ? undefined
+  : R extends {
+        done: boolean;
+        value: infer T;
+      }
+    ? T
+    : never;
+
+/**
+ * Poll until done, and return the value
+ *
+ *  - The `func` param returning false is shortcut for returning { done: false }
+ *  - The `func` param returning true is shortcut for returning { done: true, value: undefined }
+ *      Except the overall return type will be void.
+ *
+ */
+export const pollAsync = async <R extends PollResult<any>>(
+  func: () => Promise<R>,
+  interval = 100,
+  timeout = 1000,
+  timeoutMessage = "Poll timed out"
+) => {
+  const start = Date.now();
+  const pollFunction = async (): Promise<PollFinalResult<R>> => {
+    //check for timeout
+
+    if (Date.now() - start >= timeout) {
+      throw new Error(timeoutMessage);
+    }
+
+    //poll the function
+
+    const _ret = await func();
+
+    // compat
+
+    let ret;
+
+    if (isBoolean(_ret)) {
+      ret = { done: _ret, value: undefined };
+    } else {
+      ret = _ret;
+    }
+
+    //are we done
+
+    if (ret.done) {
+      return ret.value as PollFinalResult<R>;
+    } else {
+      await sleeping(interval);
+
+      return pollFunction();
+    }
+  };
+
+  return pollFunction();
+};
+
 /**
  * Sequential execute promises over elements of an array.
  * Break/reject on first rejection.
@@ -75,7 +161,10 @@ export const poll = (func: () => boolean, interval: number) => {
  *  - There is no need to protect against throw in first `makePromise`, because the
  *      promise will reject, if the executor function throws.
  */
-export const looping = <T>(arr: T[], makePromise: (elm: T) => Promise<void>) =>
+export const looping = <T>(
+  arr: T[],
+  makePromise: (elm: T) => Promise<unknown>
+) =>
   new Promise<void>((resolve, reject) => {
     let idx = 0;
     const nextLoop = () => {
@@ -196,6 +285,40 @@ export const safeRace = <T, P extends Promise<T>>(
     });
 
   return race;
+};
+
+/**
+ * hardTimeRace
+ *
+ * - This function will be a no-op, if timeout is undefind or non-positive.
+ * - It's reported, if the promise settles after timeout.
+ *
+ */
+export const timeRace2 = (
+  promise: Promise<unknown>,
+  onError: (error: unknown, extraInfo?: Array<unknown>) => void,
+  timeout?: number,
+  name = ""
+) => {
+  if (timeout === undefined || timeout <= 0) {
+    return promise;
+  }
+
+  const fallback = (prom: Promise<unknown>) =>
+    prom
+      .then((result: unknown) => {
+        onError(makeJabError(name + " resolved after timeout", result));
+      })
+      .catch((error: unknown) => {
+        onError(error, [name + " rejected after timeout"]);
+      });
+
+  return timeRace(
+    promise,
+    fallback,
+    timeout,
+    name + " timeout (" + timeout + "ms)"
+  );
 };
 
 /**
@@ -342,6 +465,25 @@ export const getPromise = <T>(): PromiseTriple<T> => {
 };
 
 /**
+ *
+ */
+export const getPromiseNodeStyle = <T>() => {
+  let callback!: (err: Error | null, val: T) => void;
+
+  const promise = new Promise<T>((res, rej) => {
+    callback = (err: Error | null, val: T) => {
+      if (err) {
+        rej(err);
+      } else {
+        res(val);
+      }
+    };
+  });
+
+  return { promise, callback };
+};
+
+/**
  * - resolves to void if nothing wrong.
  * - rejects both on value and rejection
  */
@@ -391,25 +533,74 @@ export const assertUnsettled = (
 
 export type SetTimeoutFunction = (
   callback: (...args: any[]) => void,
-  ms: number,
+  ms?: number,
   ...args: any[]
-) => NodeJS.Timeout;
+) => any;
 
 /**
- * - catch errors and report them to test provision, instead of just writing to console.
+ * - catch errors and report them to onError, instead of just writing to console.
  */
 export const makeCatchingSetTimeout =
-  (onError: OnError, orgSetTimeout: SetTimeoutFunction): SetTimeoutFunction =>
-  (callback: (...args: any[]) => void, ms: number, ...args: any[]) =>
+  (
+    onError: OnError,
+    orgSetTimeout: SetTimeoutFunction = (global as any).setTimeout
+  ): SetTimeoutFunction =>
+  (callback: (...args: any[]) => void, ms?: number, ...args: any[]) =>
     orgSetTimeout(
       (...innerArgs) => {
         try {
           callback(...innerArgs);
-        } catch (a) {
-          const error = a as unknown;
-          onError(error, ["uh-exception in setTimeout"]);
+        } catch (error) {
+          onError(error, ["uh-exception"]);
         }
       },
       ms,
       ...args
     );
+
+/**
+ * Await promises dynamically. Meaning the array of promises can be added during wait.
+ */
+export class PromiseAwait {
+  private promiseCount = 0;
+  private settleCount = 0;
+  private prom?: PromiseTriple<void>;
+
+  constructor(
+    private deps: {
+      onError: (error: unknown, extraInfo?: Array<unknown>) => void;
+    }
+  ) {}
+
+  /**
+   *
+   */
+  public await = (p: Promise<unknown>) => {
+    this.promiseCount++;
+
+    p.catch(this.deps.onError).finally(() => {
+      this.settleCount++;
+
+      if (this.prom && this.promiseCount === this.settleCount) {
+        this.prom.resolve();
+      }
+    });
+  };
+
+  /**
+   *
+   */
+  public start = () => {
+    if (this.prom) {
+      throw new Error("Multiple use not implemented");
+    }
+
+    if (this.promiseCount === this.settleCount) {
+      return Promise.resolve();
+    }
+
+    this.prom = getPromise();
+
+    return this.prom.promise;
+  };
+}

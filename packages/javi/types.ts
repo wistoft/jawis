@@ -1,19 +1,19 @@
+import { MakeBee } from "^bee-common";
+import { MainProv } from "^jab-node";
 import { ScriptDefinition } from "^jagos";
 
-/**
- * - Explicitly duplicated here, to avoid depending on javi client.
- */
-export type JaviClientConf = {
-  projectRoot: string;
-  removePathPrefix: string;
-  initialShowSystemFrames: boolean;
-  showClearLink: boolean;
-};
+import { TestFrameworkDefinitionNew } from "./internal";
 
 export type FullJaviConf = {
+  siteTitle: string;
   port: number;
-  projectRoot: string;
   removePathPrefix: string;
+  phpBinary: string;
+  vsCodeBinary: string;
+  winMergeBinary: string;
+
+  //unconfigurable
+  projectRoot: string;
   initialShowSystemFrames: boolean;
   showClearLink: boolean;
 
@@ -25,4 +25,39 @@ export type FullJaviConf = {
   //jago
   scriptFolders: string[];
   scripts: ScriptDefinition[];
+
+  serviceConf: {};
+
+  //test frameworks
+  testFrameworks: TestFrameworkDefinitionNew;
+};
+
+//
+// new: config specific for javi
+//
+
+export type JaviPresetBaseConf = {
+  siteTitle: string;
+  port: number;
+  projectRoot: string;
+};
+
+export type JaviPresetBaseProv = {
+  mainProv: MainProv;
+  javiConfig: JaviPresetBaseConf;
+};
+
+export type JaviPresetRecommendedConf = {
+  siteTitle: string;
+  port: number;
+  projectRoot: string;
+};
+
+export type JaviPresetRecommendedProv = JaviPresetBaseProv & {
+  honeyCombPreset: HoneyCombPreset;
+};
+
+export type HoneyCombPreset<C extends string = string> = {
+  certainBees: Map<C, (preset: JaviPresetBaseProv) => MakeBee>;
+  suffixBees: Map<string, (preset: JaviPresetBaseProv) => MakeBee>;
 };

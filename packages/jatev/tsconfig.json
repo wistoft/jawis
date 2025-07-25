@@ -9,6 +9,7 @@
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../jatec" },
+    { "path": "../react-helm" },
     { "path": "../parse-captured-stack" },
     { "path": "../react-use-ws" },
     { "path": "../view-exception" }

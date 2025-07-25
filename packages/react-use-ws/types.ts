@@ -1,9 +1,4 @@
-export type WsStates =
-  | "connecting"
-  | "connected"
-  | "reconnecting"
-  | "closing"
-  | "closed";
+export type WsStates = "closed" | "connecting" | "connected" | "reconnecting";
 
 export type WebSocketProv<MS, MR> = {
   apiSend: (data: MS) => void;

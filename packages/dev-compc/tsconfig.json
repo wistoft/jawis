@@ -1,0 +1,8 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/dev-compc",
+    "rootDir": "."
+  },
+  "references": [{ "path": "../jab" }]
+}

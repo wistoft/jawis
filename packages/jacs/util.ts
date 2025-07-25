@@ -1,37 +1,14 @@
-import nativeModule from "module";
 import sourceMapSupport from "source-map-support";
 
 import { ParsedStackFrame } from "^jab";
-import { nodeRequire } from "^jab-node";
 
 import {
-  UninstallInfo,
   CaIndex,
   ConsumerShould,
   ConsumerStates,
   ProducerStates,
   ResultType,
 } from "./internal";
-
-/**
- * This is hacky
- *
- */
-export const unRegisterTsCompiler = () => {
-  delete nodeRequire.extensions[".ts"];
-  delete nodeRequire.extensions[".tsx"];
-};
-
-/**
- * This is hacky
- *
- * bug
- *  - Error.prepareStackTrace wont be reinstalled by source-map-support. But happily, jacs has its own.
- */
-export const unRegisterSourceMapSupport = (uninstallInfo: UninstallInfo) => {
-  (nativeModule.prototype as any)._compile = uninstallInfo._compile;
-  Error.prepareStackTrace = uninstallInfo.prepareStackTrace;
-};
 
 /**
  *
@@ -107,7 +84,8 @@ export const getFunctionNameFromFrame = (frame: NodeJS.CallSite) => {
  */
 export const extractStackTraceInfo = (
   error: Error,
-  stackTraces: NodeJS.CallSite[]
+  stackTraces: NodeJS.CallSite[],
+  doSourceMap: boolean
 ) => {
   const name = error.name || "Error";
   const message = error.message || "";
@@ -118,8 +96,12 @@ export const extractStackTraceInfo = (
   const processedStack = [];
   const fullInfo = [];
 
+  const mapCallSite = doSourceMap
+    ? (sourceMapSupport as any).wrapCallSite
+    : (x: NodeJS.CallSite) => x;
+
   for (let i = stackTraces.length - 1; i >= 0; i--) {
-    const frame = (sourceMapSupport as any).wrapCallSite(stackTraces[i], state);
+    const frame = mapCallSite(stackTraces[i], state);
 
     processedStack.push("\n    at " + frame);
 

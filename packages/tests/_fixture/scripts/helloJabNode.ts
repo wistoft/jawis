@@ -1,5 +1,5 @@
 //for compile tests
 
-import { execSync } from "^jab-node";
+import { execSync } from "^process-util";
 
 console.log(execSync("blabla-fipghdfvn"));

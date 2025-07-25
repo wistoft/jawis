@@ -1,24 +1,25 @@
 import { assertNever, CompareFiles, HandleOpenFileInEditor } from "^jab";
-import { ServerMessage, ClientMessage } from "^jatec";
 import { WsMessageListener } from "^jab-express";
 
 import {
+  ServerMessage,
+  ClientMessage,
+  getClientTestReport,
+  ComposedTestFramework,
   BehaviorProv,
   ClientComProv,
-  TestLogsProv,
   TestExecutionControllerProv,
   TestListControllerProv,
 } from "./internal";
 
 type Deps = {
-  absTestFolder: string;
+  testFramework: ComposedTestFramework;
   handleOpenFileInEditor: HandleOpenFileInEditor;
   compareFiles: CompareFiles;
   onError: (error: unknown) => void;
 } & ClientComProv &
   TestExecutionControllerProv &
   TestListControllerProv &
-  TestLogsProv &
   BehaviorProv;
 
 /**
@@ -28,53 +29,49 @@ export const makeOnClientMessage =
   (deps: Deps): WsMessageListener<ServerMessage, ClientMessage> =>
   async (msg) => {
     switch (msg.type) {
-      case "stopRunning":
-        deps.onToggleRunning();
-        return;
+      case "toggleRunning":
+        return deps.onToggleRunning();
+
+      case "getAllTests":
+        return deps.onGetAllTests();
 
       case "runAllTests":
-        deps.onRunAllTests();
-        return;
+        return deps.onRunAllTests();
 
       case "runCurrentSelection":
-        deps.onRunCurrentSelection();
-        return;
+        return deps.onRunCurrentSelection();
 
       case "prependTests":
-        deps.prependTestList(msg.ids);
-        return;
+        return deps.prependTestList(msg.ids);
 
       case "acceptTestLogs": {
         //maybe do this in parallel
         for (const id of msg.testIds) {
-          const report = await deps.acceptTestLogs(id);
-          deps.sendTestReport(report);
+          const { exp, cur } = await deps.testFramework.acceptTestLogs(id);
+
+          deps.sendTestReport(getClientTestReport(id, exp, cur));
         }
         return;
       }
 
       case "acceptTestLog": {
-        const report = await deps.acceptTestLog(msg.testId, msg.logName);
+        const { exp, cur } = await deps.testFramework.acceptTestLog(
+          msg.testId,
+          msg.logName
+        );
 
-        deps.sendTestReport(report);
-        return;
+        return deps.sendTestReport(getClientTestReport(msg.testId, exp, cur));
       }
 
       case "compareTestLog":
-        deps
+        return deps.testFramework
           .getTempTestLogFiles(msg.testId, msg.logName)
           .then(({ exp, cur }) => {
             deps.compareFiles(exp, cur);
           });
-        return;
-
-      case "openTest":
-        deps.handleOpenFileInEditor(msg, deps.absTestFolder);
-        return;
 
       case "openFile":
-        deps.handleOpenFileInEditor(msg);
-        return;
+        return deps.handleOpenFileInEditor(msg);
 
       default:
         assertNever(msg, "Unknown client message type.");

@@ -1,4 +1,5 @@
 import { renderHook as originalRenderHook } from "@testing-library/react-hooks";
+import { ensureMonkeyPatchUseEffect } from "./internal";
 
 /**
  * Improved version of renderHook.
@@ -17,6 +18,8 @@ export function renderHook<H extends (...a: any[]) => any>(
   originalHook: H,
   ...args: Parameters<H>
 ) {
+  ensureMonkeyPatchUseEffect();
+
   //wrap hook to support arguments
 
   let argsQuickFix = args;

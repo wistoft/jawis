@@ -2,16 +2,11 @@ import React, { memo } from "react";
 
 import { ViewProps as ConsoleProps, View as ConsoleView } from "^console";
 
-import {
-  ViewProcessOverview,
-  ViewProcessOverviewProps,
-  ApiProv,
-} from "./internal";
+import { ViewProcessOverview, ViewProcessOverviewProps } from "./internal";
 
-export type ViewHomeProps = ViewProcessOverviewProps &
-  ApiProv & {
-    jcvProps: Omit<ConsoleProps, "showClearLink">;
-  };
+export type ViewHomeProps = ViewProcessOverviewProps & {
+  jcvProps: Omit<ConsoleProps, "showClearLink">;
+};
 
 export const ViewHome: React.FC<ViewHomeProps> = memo((props) => (
   <>

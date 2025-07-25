@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import filewatcher from "filewatcher";
 import ts, {
   CompilerOptions,
@@ -10,9 +10,16 @@ import ts, {
   TranspileOptions,
 } from "typescript";
 
-import { makePrefixCode } from "^lazy-require-ts";
-import { basename, CompileService, err, prej, tos } from "^jab";
-
+import {
+  CompileService,
+  assert,
+  assertNever,
+  basename,
+  err,
+  prej,
+  tos,
+} from "^jab";
+import { makeIndexFilePostfixCode, makePrefixCode } from "^lazy-require-ts";
 import {
   dianosticToString,
   getTsPathsConfig,
@@ -20,7 +27,9 @@ import {
 } from "^ts-config-util";
 
 export type SourceFileLoaderDeps = {
-  experimentalLazyRequire?: boolean;
+  lazyRequire: boolean;
+  lazyRequireIndexFiles: boolean;
+  module: "commonjs" | "esm";
   onError: (error: unknown) => void;
 };
 
@@ -49,11 +58,18 @@ export class SourceFileLoader implements CompileService {
   private confCache: Map<string, CompilerOptions> = new Map();
 
   private static prefix = makePrefixCode();
+  private static prefixIndexFile = makeIndexFilePostfixCode();
 
   /**
    *
    */
   constructor(private deps: SourceFileLoaderDeps) {
+    //checks
+
+    if (deps.module === "esm" && deps.lazyRequire === true) {
+      throw new Error("lazy require not supported for ECMAScript modules.");
+    }
+
     //watcher
 
     this.watcher = filewatcher();
@@ -75,7 +91,7 @@ export class SourceFileLoader implements CompileService {
    */
   public load = (absFile: string) => {
     if (!path.isAbsolute(absFile)) {
-      return prej("absScriptPath must be absolute");
+      return prej("absFile must be absolute: " + absFile);
     }
 
     const cachedData = this.cache.get(absFile);
@@ -87,15 +103,45 @@ export class SourceFileLoader implements CompileService {
     return fs.promises.readFile(absFile).then((indata) => {
       this.watcher.add(absFile);
 
+      if (this.deps.lazyRequireIndexFiles && absFile.endsWith("index.ts")) {
+        assert(this.deps.lazyRequire, "only implemented for lazy");
+
+        const compiledSource =
+          this.transpileIndexFile(indata.toString(), path.dirname(absFile)) +
+          SourceFileLoader.prefixIndexFile;
+
+        this.cache.set(absFile, compiledSource);
+
+        return compiledSource;
+      }
+
       const raw = this.getCompilerOptions(absFile);
 
-      //something fucks up for .ts files, when jsx is set.
+      //overwrite some of the parameters.
+
+      let module;
+
+      switch (this.deps.module) {
+        case "commonjs":
+          module = ModuleKind.CommonJS;
+          break;
+
+        case "esm":
+          module = ModuleKind.ESNext;
+
+          break;
+
+        default:
+          return assertNever(this.deps.module);
+      }
 
       const compilerOptions: CompilerOptions = {
         ...raw,
-        module: ModuleKind.CommonJS,
+        module,
         inlineSourceMap: true,
       };
+
+      //something fucks up for .ts files, when jsx is set.
 
       if (absFile.endsWith(".ts")) {
         delete compilerOptions.jsx;
@@ -103,7 +149,7 @@ export class SourceFileLoader implements CompileService {
 
       //add lazy loading
 
-      const source = this.deps.experimentalLazyRequire
+      const source = this.deps.lazyRequire
         ? SourceFileLoader.prefix + indata.toString()
         : indata.toString();
 
@@ -121,6 +167,46 @@ export class SourceFileLoader implements CompileService {
 
       return compiledSource;
     });
+  };
+
+  /**
+   *
+   * All lines must be on the form:
+   *    export * from "./internal";
+   */
+  public transpileIndexFile = (data: string, folder: string) => {
+    const units = data
+      .replace(/\r/g, "")
+      .split("\n")
+      .filter((line) => line.trim() !== "")
+      .map((line) => {
+        const match = line.match(
+          /^\s*export\s+\*\s+from\s+"\.\/([^"]+)"\s*;?\s*$/
+        );
+
+        if (match === null) {
+          throw new Error("All lines in index file must be on the required form."); // prettier-ignore
+        }
+
+        const absFile = path.join(folder, match[1] + ".ts");
+
+        // const content = fs.readFileSync(absFile);
+
+        const exports: string[] = ["todo-extract-exports"];
+
+        return { absFile, exports };
+      })
+      .reduce<[string, string][]>((acc, cur) => {
+        // map each export/unit to its file
+        const mapped: [string, string][] = cur.exports.map((ex) => [
+          ex,
+          cur.absFile,
+        ]);
+
+        return [...acc, ...mapped];
+      }, []);
+
+    return "const units = new Map(" + JSON.stringify(units) + ");\n";
   };
 
   /**
@@ -189,7 +275,7 @@ export class SourceFileLoader implements CompileService {
     const res = findConfigFile(dir, fileExists);
 
     filesLookedAt.forEach((file) => {
-      //we have to used null, because undefined means no cache entry.
+      //we have to use null, because undefined means no cache entry.
       this.confLookupCache.set(
         path.normalize(path.dirname(file)),
         res === undefined ? null : res

@@ -8,8 +8,8 @@ import {
   err,
   ErrorData,
   unknownToErrorData,
+  LogEntry,
 } from "^jab";
-
 import {
   UserTestLogs,
   TestResult,
@@ -63,6 +63,8 @@ export const errorToTestResult = (
 
 /**
  * - Extra error message is shown first.
+ *
+ * todo: implement with: addErrorToTestLog
  */
 export const errorToTestLog = (
   error: unknown,
@@ -86,6 +88,46 @@ export const errorToTestLog = (
       user: {},
     };
   }
+};
+
+/**
+ *
+ */
+export const addErrorToTestResult = (
+  result: TestResult,
+  error: unknown,
+  extraInfo: Array<unknown> = [],
+  extraErrorMsg?: string
+): TestResult => ({
+  ...result,
+  cur: addErrorToTestLog(result.cur, error, extraInfo, extraErrorMsg),
+});
+
+/**
+ *
+ */
+export const addErrorToTestLog = (
+  testLog: TestCurLogs,
+  error: unknown,
+  extraInfo: Array<unknown> = [],
+  extraErrorMsg?: string
+): TestCurLogs => {
+  const newErrorLog = [...(testLog.err || [])];
+
+  newErrorLog.push(unknownToErrorData(error, extraInfo));
+
+  if (extraErrorMsg !== undefined) {
+    newErrorLog.push({
+      msg: extraErrorMsg,
+      info: [],
+      stack: { type: "node", stack: "dummy" },
+    });
+  }
+
+  return {
+    ...testLog,
+    err: newErrorLog,
+  };
 };
 
 /**
@@ -347,56 +389,6 @@ export const getClientTestReport = (
   };
 };
 
-//
-// old
-//
-
-/**
- * compat for converting from old test log format.
- */
-export const flatToTestExpLogs_compat = (
-  logs: UserTestLogs,
-  isExp = true
-): TestExpLogs => {
-  const copy: any = { ...logs };
-  const res: TestExpLogs = { user: {} };
-
-  if (logs.err) {
-    res.err = logs.err.map((elm) => {
-      if (isExp) {
-        //compat for error logs, that have been saved in full.
-        return typeof elm === "string" ? elm : (elm as any).msg;
-      } else {
-        return elm;
-      }
-    });
-
-    delete copy.err;
-  }
-
-  if (logs.chk) {
-    if (isExp) {
-      throw new Error("chk log not allowed in exp logs");
-    } else {
-      (res as TestCurLogs).chk = logs.chk[0] as unknown as ChkInfo;
-
-      delete copy.chk;
-    }
-  }
-
-  if (logs.return) {
-    res.return = logs.return[0];
-
-    delete copy.return;
-  }
-
-  //add the rest, they are user logs.
-
-  res.user = copy;
-
-  return res;
-};
-
 /**
  * note
  * - very cumbersome.
@@ -559,4 +551,72 @@ const testLogsToFlat = (logs: TestCurLogs | TestExpLogs): UserTestLogs => {
   });
 
   return res;
+};
+
+/**
+ * todo: wouldn't it be better to be able to store LogEntry directly in test-logs
+ *        jate could combine log entries before sending to view, if that's desired.
+ * todo: name may collide with logs from the test case.
+ */
+export const combineTestResultWithLogEntries_byref = (
+  cur: TestCurLogs,
+  logs: LogEntry[]
+) => {
+  logs.forEach((msg) => {
+    switch (msg.type) {
+      case "log": {
+        const logName = msg.logName ?? "log";
+        const old = cur.user[logName] ?? [];
+
+        cur.user[logName] = [...old, ...msg.data];
+        return;
+      }
+
+      case "stream": {
+        const logName = msg.logName ?? "log";
+
+        //quick fix - until test logs support streams
+
+        if (cur.user[logName] === undefined) {
+          cur.user[logName] = [""];
+        } else {
+          if (def(cur.user[logName]).length !== 1) {
+            err("logStream should have one entry.", cur);
+          }
+
+          if (typeof def(cur.user[logName])[0] !== "string") {
+            err("logStream should be a string.", cur);
+          }
+        }
+
+        const old = def(cur.user[logName])[0];
+
+        cur.user[logName] = [old + msg.data.toString()];
+        return;
+      }
+
+      case "html": {
+        const errLog = cur.err || (cur.err = []);
+
+        errLog.push(unknownToErrorData(new Error("Combining html entries is not impl"), [msg])); // prettier-ignore
+
+        return;
+      }
+
+      case "error": {
+        const errLog = cur.err || (cur.err = []);
+
+        errLog.push(msg.data);
+        return;
+      }
+
+      default: {
+        const errLog = cur.err || (cur.err = []);
+
+        errLog.push(unknownToErrorData(new Error("Unknown log type"), [msg])); // prettier-ignore
+
+        return;
+      }
+    }
+  });
 };

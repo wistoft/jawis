@@ -5,8 +5,11 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../async-capture" },
+    { "path": "../bee-common" },
     { "path": "../jab" },
     { "path": "../jatec" },
-    { "path": "../finally-provider" }
+    { "path": "../finally-provider" },
+    { "path": "../yapu" }
   ]
 }

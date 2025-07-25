@@ -1,28 +1,25 @@
-import path from "path";
-
-import { ProcessDeps, Process } from "^jab-node";
-import { makeTsNodeJabProcess } from "^javi/util";
+import { NodeProcessDeps, NodeProcess } from "^process-util";
 
 import { getScriptPath, TestMainProv } from ".";
 
 /**
  *
  */
-export const getJabProcess = (
+export const getNodeProcess = (
   prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
+  extraDeps?: Partial<NodeProcessDeps<any>>,
   logPrefix?: string
-) => new Process(getJabProcessDeps(prov, extraDeps, logPrefix));
+) => new NodeProcess(getJabProcessDeps(prov, extraDeps, logPrefix));
 
 /**
  *
  */
-export const getJabProcess_ready = (
+export const getNodeProcess_ready = (
   prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
+  extraDeps?: Partial<NodeProcessDeps<any>>,
   logPrefix?: string
 ) => {
-  const proc = getJabProcess(
+  const proc = getNodeProcess(
     prov,
     {
       filename: getScriptPath("ipcSendAndWait.js"),
@@ -31,90 +28,37 @@ export const getJabProcess_ready = (
     logPrefix
   );
 
-  return proc.waiter.await("message", 10000).then(() => proc);
-};
-
-/**
- *
- */
-export const getJabTsProcess = (
-  prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
-  logPrefix?: string
-) => makeTsNodeJabProcess(getJabProcessDeps(prov, extraDeps, logPrefix));
-
-/**
- *
- */
-export const getJabTsProcess_ready = (
-  prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
-  logPrefix?: string
-) => {
-  const proc = getJabTsProcess(
-    prov,
-    {
-      filename: getScriptPath("ipcSendAndWait.js"),
-      ...extraDeps,
-    },
-    logPrefix
-  );
-
-  return proc.waiter.await("message", 10000).then(() => proc);
+  return proc.waiter.await("message").then(() => proc);
 };
 
 /**
  *
  */
 export const getStdinBlockProcess = (prov: TestMainProv) =>
-  getJabProcess(prov, {
+  getNodeProcess(prov, {
     filename: getScriptPath("helloBlock.js"),
   });
 
 /**
  *
  */
-export const getProcessDepsThatMustNotBeUsed = (): ProcessDeps<any> => {
-  const complain = () => {
-    throw new Error("Must not be called");
-  };
-
-  return {
-    filename: getScriptPath("thisFileMustNotBeUsed.js"),
-    onMessage: complain,
-    onStdout: complain,
-    onStderr: complain,
-    onError: complain,
-    onExit: complain,
-    onClose: complain,
-    finally: complain,
-  };
-};
-
-/**
- *
- */
 export const getJabProcessDeps = (
   prov: TestMainProv,
-  extraDeps?: Partial<ProcessDeps<any>>,
+  extraDeps?: Partial<NodeProcessDeps<any>>,
   logPrefix = "child."
-): ProcessDeps<any> => {
-  if (extraDeps && extraDeps.filename && !path.isAbsolute(extraDeps.filename)) {
-    throw new Error("Script must be absolute: " + extraDeps.filename);
-  }
-
+): NodeProcessDeps<any> => {
   return {
     filename: getScriptPath("hello.js"),
-    onMessage: (msg: unknown) => {
+    onMessage: (msg) => {
       prov.log("childMessage", msg);
     },
-    onStdout: (data: Buffer) => {
+    onStdout: (data) => {
       prov.logStream(logPrefix + "stdout", data.toString());
     },
-    onStderr: (data: Buffer) => {
+    onStderr: (data) => {
       prov.logStream(logPrefix + "stderr", data.toString());
     },
-    onError: (error: unknown) => {
+    onError: (error) => {
       prov.onError(error);
     },
     onExit: () => {},

@@ -1,26 +1,23 @@
-import { CapturedValue, ParsedStack } from "^jab";
-import { HtmlEntry, BeeLogEntry, LogEntry } from "^bee-common";
+import {
+  CapturedValue,
+  ParsedStack,
+  HtmlEntry,
+  LogEntry,
+  ValueEntry,
+  StatusEntry,
+} from "^jab";
 
 //
 // console entries - the input data
 //
 
-export type ConsoleEntry = BeeLogEntry & {
+export type ConsoleEntry = LogEntry & {
   context: string;
 };
 
 //
 // UI entries - data stored in state
 //
-
-//ensured, that each entry has exactly one line.
-//Meaning all entries end on newline. Except the last, that may not.
-export type StreamLineEntry = {
-  type: "stream-line";
-  data: string;
-  logName?: string;
-  context: string;
-};
 
 export type UiErrorEntry = {
   type: "error";
@@ -36,9 +33,15 @@ export type UiErrorEntry = {
   expandEntry?: boolean;
 };
 
+export type UiStreamEntry = {
+  type: "stream";
+  data: string;
+  logName?: string;
+};
+
 export type UiEntry =
   | UiErrorEntry
-  | ((LogEntry | HtmlEntry | StreamLineEntry) & {
+  | ((ValueEntry | StatusEntry | HtmlEntry | UiStreamEntry) & {
       id: number;
       context: string;
       expandEntry?: boolean;

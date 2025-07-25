@@ -1,19 +1,26 @@
 import { WsPoolProv } from "^jab-express";
-import { ClientMessage, ServerMessage } from "^jatec";
 import { safeAllWait } from "^yapu";
-import { TestFrameworkProv } from "./internal";
+
+import {
+  ClientMessage,
+  ServerMessage,
+  ComposedTestFrameworkProv,
+  ClientComProv,
+} from "./internal";
 
 // prov
 
-export type BehaviorProv = {};
+export type BehaviorProv = {
+  onGetAllTests: () => void;
+};
 
 // deps
 
 export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
-  testFramework: TestFrameworkProv;
+  testFramework: ComposedTestFrameworkProv;
   onError: (error: unknown) => void;
-};
+} & Pick<ClientComProv, "onTestSelectionReady">;
 
 /**
  *
@@ -31,6 +38,18 @@ export class Behavior implements BehaviorProv {
 
     prom.finally(() => {
       this.currentWork.delete(prom);
+    });
+  };
+
+  /**
+   *
+   */
+  public onGetAllTests = () => {
+    this.deps.testFramework.getTestInfo().then((ids) => {
+      this.deps.wsPool.send({
+        type: "TestSelection",
+        data: [ids],
+      });
     });
   };
 

@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "name": "ts-project",
+  "imports": {
+    "#*": "./*.js",
+    "#$*": "./*"
+  },
+  "type": "module"
+}

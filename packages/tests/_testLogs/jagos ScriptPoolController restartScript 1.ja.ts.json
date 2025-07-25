@@ -1,1 +1,1 @@
-{"user":{"hello.js.stdout":["hello\n"],"hello.js":["preloading","running","listening","stopped"]}}
+{"user":{"hello.js":["preloading","running","listening","stopped"],"hello.js.log":[{"type":"log","logName":"console.log","data":["value",["hello"]]}]}}

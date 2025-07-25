@@ -9,6 +9,8 @@ export default (prov: TestProvision) => {
     {},
     getShownTestUpdate_with_shown_test({
       id: "succeededTest",
+      name: "succeededTest",
+      file: "file",
       status: ".",
       testLogs: [],
     })
@@ -18,6 +20,8 @@ export default (prov: TestProvision) => {
     {},
     getShownTestUpdate_with_shown_test({
       id: "failingTest",
+      name: "failingTest",
+      file: "file",
       status: 1,
       testLogs: [],
     })

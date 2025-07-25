@@ -1,13 +1,16 @@
 import { SourceFileLoader } from "^jacs/";
 import { TestProvision } from "^jarun";
-import { getScratchPath, writeSimpleConfigFile } from "^tests/_fixture";
+import { getScratchPath } from "^tests/_fixture";
 
 export default (prov: TestProvision) => {
   const { eq } = prov;
 
-  const sfl = new SourceFileLoader({ onError: prov.onError });
-
-  writeSimpleConfigFile(getScratchPath("tsconfig.json"));
+  const sfl = new SourceFileLoader({
+    lazyRequire: true,
+    lazyRequireIndexFiles: false,
+    module: "commonjs",
+    onError: prov.onError,
+  });
 
   const c1 = sfl.getCompilerOptions(getScratchPath("hello.js"));
   const c2 = sfl.getCompilerOptions(getScratchPath("hello.js"));

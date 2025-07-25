@@ -6,6 +6,7 @@
   },
   "references": [
     { "path": "../jab" },
+    { "path": "../jab-node" },
     { "path": "../ts-config-util" },
     { "path": "../yapu" }
   ]

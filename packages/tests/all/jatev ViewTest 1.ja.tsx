@@ -1,12 +1,13 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^misc/node";
 import { TestState } from "^jatev/types";
-import { getViewTest } from "../_fixture";
+import { getPrettyHtml, getViewTest } from "../_fixture";
 
-export default (prov: TestProvision) => {
+export default async (prov: TestProvision) => {
   const test: TestState = {
     id: "1",
+    name: "1",
+    file: "file",
     testLogs: [
       // testLogs aren't sorted here.
       {
@@ -24,5 +25,5 @@ export default (prov: TestProvision) => {
     ],
   };
 
-  prov.imp(getHtmlRTR(getViewTest(test)));
+  prov.imp(await getPrettyHtml(getViewTest(test)));
 };

@@ -24,7 +24,7 @@ const bee = makeBee({
   onStdout: console.log,
   onStderr: console.log,
   onError: console.log,
-  onExit: (status) => {
+  onExit: () => {
     //needed because jacs blocks exit, by watching files for change
     process.exit();
   },

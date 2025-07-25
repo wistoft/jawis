@@ -1,7 +1,5 @@
 {
-  "sideEffects": [
-    "./ScriptWrapperMain.ts"
-  ],
+  "sideEffects": false,
   "version": "3.1.0",
   "name": "~jagos",
   "description": "Show output from both node and browser in the browser",

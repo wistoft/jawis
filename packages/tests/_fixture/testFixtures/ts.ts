@@ -1,4 +1,3 @@
-import fs from "fs";
 import ts, { Node } from "typescript";
 
 export const getJsxSourceFile = (source: string) => {
@@ -16,18 +15,6 @@ export const getSourceFile = (source: string, filename = "myFileName.ts") => {
     source,
     ts.ScriptTarget.ES2015,
     /*setParentNodes */ false
-  );
-};
-
-export const writeSimpleConfigFile = (file: string) => {
-  fs.writeFileSync(
-    file,
-    JSON.stringify({
-      compilerOptions: {
-        isolatedModules: false,
-      },
-      files: ["./hello.js"],
-    })
   );
 };
 

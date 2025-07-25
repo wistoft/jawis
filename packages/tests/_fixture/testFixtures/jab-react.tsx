@@ -26,6 +26,9 @@ export const getDevComponentPanel = (
       {...props}
       openComponnent={() => {}}
       useKeyListener={() => {}}
+      useProvision={() => ({}) as any}
+      apiSend={() => {}}
+      wsState={"connected"}
     />
   </MemoryRouter>
 );

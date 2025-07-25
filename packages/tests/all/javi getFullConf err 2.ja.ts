@@ -5,5 +5,5 @@ import { getFixturePath } from "^tests/_fixture";
 //script folders must be string
 
 export default (prov: TestProvision) => {
-  getFullConf({ scriptFolders: [1234] }, getFixturePath());
+  getFullConf({ scriptFolders: [1234] }, getFixturePath(), "windows");
 };

@@ -3,9 +3,13 @@ import React, { memo } from "react";
 import { useKeyListener, ErrorBoundary, ComponentMenu } from "^jab-react";
 import { useWebSocketProv } from "^react-use-ws";
 import { getRandomInteger } from "^jab";
-import { ClientMessage, ServerMessage } from "^jatec";
 
-import { useDirector, DirectorProps } from "./internal";
+import {
+  useDirector,
+  DirectorProps,
+  ClientMessage,
+  ServerMessage,
+} from "./internal";
 
 export type Props = {
   apiPath: string;

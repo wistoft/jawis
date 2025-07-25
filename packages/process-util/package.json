@@ -1,0 +1,19 @@
+{
+  "sideEffects": [
+    "./JabWorkerMain.js"
+  ],
+  "version": "0.0.0",
+  "name": "~process-util",
+  "description": "Utilities for working with processes and workers in node.js.",
+  "dependencies": {},
+  "keywords": [
+    "process",
+    "thread",
+    "worker",
+    "exec",
+    "nodejs",
+    "util",
+    "utilities",
+    "stdlib"
+  ]
+}

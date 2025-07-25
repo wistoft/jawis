@@ -1,10 +1,9 @@
 import { useState } from "react";
 
 import { getRandomInteger, OpenFile } from "^jab";
-import { ConsoleEntry, UseConsoleStream, useConsoleState } from "^console";
+import { ConsoleEntry, useConsoleState } from "^console";
 import {
   useMemoDep,
-  makeUseFunction,
   HookSetState,
   makeSetStateCallback,
   useAssertStatic,
@@ -19,32 +18,24 @@ import {
   State,
 } from "./internal";
 
-export type DirectorProps = {
-  useConsoleStream?: UseConsoleStream;
-} & Omit<WebSocketProv<ClientMessage, ServerMessage>, "wsState">;
+export type DirectorProps = Omit<
+  WebSocketProv<ClientMessage, ServerMessage>,
+  "wsState"
+>;
 
 /**
  *
  *  - Used by both in jago view and in the standalone Console.
+ *  - Shows logs from jago, not from the browser.
  */
-export const useDirector = ({
-  apiSend,
-  useWsEffect,
-  useConsoleStream,
-}: DirectorProps) => {
+export const useDirector = ({ apiSend, useWsEffect }: DirectorProps) => {
   // we take hooks, so they must not change.
 
-  useAssertStatic({ useWsEffect, useConsoleStream });
+  useAssertStatic({ useWsEffect });
 
   // console state
 
   const consoleState = useConsoleState(getRandomInteger);
-
-  //listen to console data from the browser.
-
-  if (useConsoleStream) {
-    useConsoleStream((entries) => consoleState.addData(entries, true));
-  }
 
   // state
 
@@ -52,7 +43,7 @@ export const useDirector = ({
 
   // structure
 
-  const { useApiSend, onServerMessage, onOpen, openFile } = useMemoDep(
+  const { onOpen, openFile, restartAll, stopAll, onServerMessage } = useMemoDep(
     { apiSend, setState, addConsoleData: consoleState.addData },
     createStructure
   );
@@ -66,8 +57,9 @@ export const useDirector = ({
   return {
     ...state,
     ...consoleState,
-    useApiSend,
     openFile,
+    restartAll,
+    stopAll,
   };
 };
 
@@ -89,9 +81,10 @@ const createStructure = ({
   setState,
   addConsoleData,
 }: StructureDeps) => {
-  const callbacks = {
-    setProcessStatus: makeSetStateCallback(setProcessStatusUpdater, setState),
-  };
+  const setProcessStatus = makeSetStateCallback(
+    setProcessStatusUpdater,
+    setState
+  );
 
   const onOpen = () => {
     apiSend({ type: "startListen" });
@@ -104,12 +97,26 @@ const createStructure = ({
     });
   };
 
-  const useApiSend = makeUseFunction(apiSend);
+  const restartAll = () => {
+    apiSend({
+      type: "restartAll",
+    });
+  };
 
-  const onServerMessage = makeOnServerMessage({ ...callbacks, addConsoleData });
+  const stopAll = () => {
+    apiSend({
+      type: "stopAll",
+    });
+  };
+
+  const onServerMessage = makeOnServerMessage({
+    setProcessStatus,
+    addConsoleData,
+  });
 
   return {
-    useApiSend,
+    restartAll,
+    stopAll,
     onServerMessage,
     onOpen,
     openFile,

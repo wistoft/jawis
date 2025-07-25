@@ -1,7 +1,5 @@
-import path from "path";
+import path from "node:path";
 import ts, { CompilerOptions } from "typescript";
-
-import { tos } from "^jab";
 
 type Deps = {
   defaultFiles: { [_: string]: string };
@@ -26,17 +24,16 @@ const makeAbsolute = (input: string) => {
  * - Everything is served from the root directory: /
  * - Current directory is /
  * - default files doesn't need to have preceeding slash. They are in root directory by default.
- * - library files are served form file system.
+ * - library files are served from file system.
  *
  * impl
  *  all files are absolute (starting with /) in the `fileSystem`
  */
 export const getInMemoryCompilerHost = (
   options: CompilerOptions,
-  { defaultFiles, debug = () => {} }: Deps
+  { defaultFiles, debug = () => {} }: Deps,
+  host: ts.CompilerHost = ts.createCompilerHost(options)
 ) => {
-  const scriptTarget = ts.ScriptTarget.Latest;
-
   const libFile = ts.getDefaultLibFilePath(options).replace(/\\/g, "/");
 
   const libFolder = path.dirname(libFile);
@@ -51,114 +48,90 @@ export const getInMemoryCompilerHost = (
 
   //the host
 
-  const host: ts.CompilerHost = {
-    fileExists: (file) => {
-      const abs = makeAbsolute(file);
+  host.fileExists = (file) => {
+    const abs = makeAbsolute(file);
 
-      if (fileSystem[abs] !== undefined) {
-        debug("fileExists:" + file);
+    if (fileSystem[abs] !== undefined) {
+      debug("fileExists:" + file);
+      return true;
+    }
+
+    debug("fileExists, not:" + file);
+
+    return false;
+  };
+
+  host.directoryExists = (dir) => {
+    const a = makeAbsolute(dir);
+
+    let abs: string;
+    if (a.endsWith("/")) {
+      abs = a;
+    } else {
+      abs = a + "/";
+    }
+
+    for (const file in fileSystem) {
+      if (file.startsWith(abs)) {
+        debug("dirExists:" + dir);
         return true;
       }
+    }
 
-      debug("fileExists, not:" + file);
+    debug("dirExists, not:" + dir);
+    return false;
+  };
 
-      return false;
-    },
-    directoryExists: (dir) => {
-      const a = makeAbsolute(dir);
+  host.getCurrentDirectory = () => {
+    debug("getCurrentDirectory");
+    return "/";
+  };
 
-      let abs: string;
-      if (a.endsWith("/")) {
-        abs = a;
-      } else {
-        abs = a + "/";
-      }
+  host.readDirectory = (rootDir, extensions, excludes, includes, depth) => {
+    throw new Error("not impl");
 
-      for (const file in fileSystem) {
-        if (file.startsWith(abs)) {
-          debug("dirExists:" + dir);
-          return true;
-        }
-      }
+    debug("readDirectory: " + rootDir);
+    return ts.sys.readDirectory(rootDir, extensions, excludes, includes, depth);
+  };
 
-      debug("dirExists, not:" + dir);
-      return false;
-    },
-    getCurrentDirectory: () => {
-      debug("getCurrentDirectory");
-      return "/";
-    },
-    readDirectory: (rootDir, extensions, excludes, includes, depth) => {
-      throw new Error("not impl");
+  host.getDirectories = () => [];
+  host.getCanonicalFileName = (fileName) => fileName;
+  host.getNewLine = () => "\n";
+  host.useCaseSensitiveFileNames = () => true;
+  host.getDefaultLibFileName = () => libFile;
 
-      debug("readDirectory: " + rootDir);
-      return ts.sys.readDirectory(
-        rootDir,
-        extensions,
-        excludes,
-        includes,
-        depth
-      );
-    },
-    getDirectories: () => [],
-    getCanonicalFileName: (fileName) => fileName,
-    getNewLine: () => "\n",
-    useCaseSensitiveFileNames: () => true,
-    getDefaultLibFileName: () => libFile,
+  /**
+   *
+   */
+  host.readFile = (file) => {
+    debug("readFile: " + file);
 
-    /**
-     * todo: what to do with these: languageVersion, shouldCreateNewSourceFile
-     */
-    getSourceFile: (file) => {
-      debug("getSourceFile:" + file);
+    //read lib files from file system.
 
-      const abs = makeAbsolute(file);
+    if (file.startsWith(libFolder)) {
+      return ts.sys.readFile(file);
+    }
 
-      //default files.
+    const abs = makeAbsolute(file);
 
-      if (abs in fileSystem) {
-        return ts.createSourceFile(file, fileSystem[abs], scriptTarget);
-      }
+    if (abs in fileSystem) {
+      return fileSystem[abs];
+    }
 
-      //read lib files from file system.
+    debug("readFile: not found: " + file);
+  };
 
-      if (file.startsWith(libFolder)) {
-        return ts.createSourceFile(
-          file,
-          ts.sys.readFile(file) || "",
-          scriptTarget
-        );
-      }
-
-      console.log("getSourceFile: not found: " + file);
-    },
-
-    /**
-     *
-     */
-    readFile: (file) => {
-      debug("readFile:" + file);
-
-      const abs = makeAbsolute(file);
-
-      if (abs in fileSystem) {
-        return fileSystem[abs];
-      }
-
-      console.log("readFile: not found: " + file);
-    },
-
-    /**
-     *
-     */
-    writeFile: (file, data, writeByteOrderMark, onError, sourceFiles) => {
-      fileSystem[makeAbsolute(file)] = data;
-
-      console.log(
-        "writeFile: don't know what to do with: " +
-          tos({ writeByteOrderMark, sourceFiles })
-      );
-    },
+  /**
+   * todo: what to do with: writeByteOrderMark, onError, sourceFiles
+   */
+  host.writeFile = (
+    file,
+    data,
+    _writeByteOrderMark,
+    _onError,
+    _sourceFiles
+  ) => {
+    fileSystem[makeAbsolute(file)] = data;
   };
 
   return host;

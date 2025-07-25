@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 
 import { ParsedErrorData } from "^jab";
-import { ClickableDivBackground, clonedArrayEntriesToHtml } from "^jab-react";
+import { ClickableDivBackground, capturedArrayEntriesToHtml } from "^jab-react";
 
 import {
   filterErrorMessage,
@@ -49,7 +49,7 @@ export const ViewException: React.FC<ViewExceptionProps> = memo(
         <div
           style={{ marginLeft: "16px" }} //equivalent to 2 spaces.
         >
-          {clonedArrayEntriesToHtml(info)}
+          {capturedArrayEntriesToHtml(info)}
           {lineMargin}
         </div>
 

@@ -1,9 +1,7 @@
 import React from "react";
 import { Route, useHref } from "react-router-dom";
 
-/**
- * to make it possible to be abstract to router implementation
- */
+//to allow packages to use the same react-router-dom version.
 export { Link, useParams, Routes, Route } from "react-router-dom";
 
 /**

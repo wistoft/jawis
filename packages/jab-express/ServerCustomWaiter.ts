@@ -1,4 +1,4 @@
-import http from "http";
+import http from "node:http";
 
 import { err } from "^jab";
 import { safeRace, sleepingValue } from "^yapu";

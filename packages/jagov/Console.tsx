@@ -1,7 +1,7 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 
 import { ErrorBoundary } from "^jab-react";
-import { ViewProps, View } from "^console";
+import { ViewProps, View, makeUseConsoleStream } from "^console";
 import { useWebSocketProv } from "^react-use-ws";
 
 import {
@@ -20,8 +20,9 @@ export type ConsoleProps = {
   >;
 
 /**
- * Component that show the console data from browser and/or server scripts.
+ * Component that show the console logs from server and/or browser.
  *
+ * - Not used by jago itself. But meant for adding jago console to other pages.
  */
 export const Console: React.FC<ConsoleProps> = memo(({ apiPath, ...extra }) => {
   const { apiSend, useWsEffect } = useWebSocketProv<
@@ -37,6 +38,12 @@ export const Console: React.FC<ConsoleProps> = memo(({ apiPath, ...extra }) => {
     apiSend,
     useWsEffect,
   });
+
+  //listen to console data from the browser.
+
+  const [useConsoleStream] = useState(makeUseConsoleStream);
+
+  useConsoleStream((entries) => prov.addData(entries, true));
 
   return (
     <ErrorBoundary renderOnError={"Jago Console failed"}>

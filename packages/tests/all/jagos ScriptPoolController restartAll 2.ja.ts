@@ -3,7 +3,6 @@ import { TestProvision } from "^jarun";
 import {
   getJabScriptPoolController_one,
   getScriptPath,
-  shutdownQuickFix,
   mapScriptFilesToDefault,
   waitForAllStoppedOrListening,
 } from "../_fixture";
@@ -12,11 +11,11 @@ import {
 
 export default (prov: TestProvision) => {
   const pool = getJabScriptPoolController_one(prov, {
-    scriptsDefs: mapScriptFilesToDefault([getScriptPath("beeSendAndWait.js")]),
+    scripts: mapScriptFilesToDefault([getScriptPath("beeSendAndWait.js")]),
   });
 
   return pool
     .restartAllScripts()
     .then(() => waitForAllStoppedOrListening(pool))
-    .then(() => shutdownQuickFix(pool));
+    .then(() => pool.shutdown());
 };

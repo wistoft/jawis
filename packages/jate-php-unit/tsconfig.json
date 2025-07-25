@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jate-php-unit",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../bee-common" },
+    { "path": "../jates" },
+    { "path": "../javic" },
+    { "path": "../finally-provider" },
+    { "path": "../bee-php" }
+  ]
+}

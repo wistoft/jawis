@@ -1,5 +1,5 @@
 //for compile tests
 
-import { WatchableProcessPreloader } from "^jab-node";
+import { WatchableProcessPreloader } from "^process-util";
 
 console.log(WatchableProcessPreloader);

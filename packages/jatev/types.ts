@@ -1,5 +1,19 @@
-import { ZippedTestLog, ClientTestReport, RogueData, TestStatus } from "^jatec";
-import { TestCollection } from "./internal";
+import { WsStates } from "^react-use-ws";
+
+import {
+  TestCollection,
+  ZippedTestLog,
+  ClientTestReport,
+  RogueData,
+  TestStatus,
+  ClientTestInfo,
+  ClientMessage,
+} from "./internal";
+
+export type ApiProv = {
+  apiSend: (data: ClientMessage) => void;
+  wsState: WsStates;
+};
 
 //
 // state
@@ -10,7 +24,8 @@ export type State = Readonly<{
   currentTest?: TestState;
   currentTestFressness?: number;
   tests?: TestCollection; //undefined means nothing received from server.
-  executingTestId?: string;
+  executingTest?: { id: string; name: string };
+
   userMessage: string;
   unknownRogue?: ZippedTestLog[];
 }>;
@@ -21,18 +36,18 @@ export type State = Readonly<{
 
 export type StateCallbacks = {
   setIsRunning: (isRunning: boolean) => void;
-  setTestSelection: (testCases: string[][]) => void;
+  setTestSelection: (testCases: ClientTestInfo[][]) => void;
   setExecutingTestCase: (testId?: string) => void;
   setTestReport: (result: ClientTestReport) => void;
   setRogue: (rogue: RogueData) => void;
+  clearAllRogueData: () => void;
   showTestCase: (test: string) => void;
   onCloseTestCase: () => void;
   onPrev: () => void;
   onNext: () => void;
 };
 
-export type TestState = {
-  id: string;
+export type TestState = ClientTestInfo & {
   status?: TestStatus;
   testLogs?: ZippedTestLog[];
   rogue?: boolean;

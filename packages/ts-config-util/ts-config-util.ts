@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { err, tos } from "^jab";
 
@@ -88,6 +88,32 @@ export function dianosticToString(
     }
   }
 }
+
+/**
+ *
+ */
+export const dianosticToString2 = (
+  ts: any,
+  diag: readonly Diagnostic[]
+): string =>
+  diag
+    .map((diagnostic: any) => {
+      const message = ts.flattenDiagnosticMessageText(
+        diagnostic.messageText,
+        "\n"
+      );
+
+      if (diagnostic.file) {
+        const { line, character } =
+          diagnostic.file.getLineAndCharacterOfPosition(diagnostic.start!);
+        return `  Error ${diagnostic.file.fileName} (${line + 1},${
+          character + 1
+        }): ${message}`;
+      } else {
+        return `  Error: ${message}`;
+      }
+    })
+    .join("\n");
 
 /**
  *

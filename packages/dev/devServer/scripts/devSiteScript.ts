@@ -1,5 +1,20 @@
-export {};
+import { BeeMain } from "^bee-common/types";
+import { setStatus } from "^jagoc";
 
-setInterval(() => {
-  console.log("dav");
-}, 1000);
+/**
+ *
+ */
+export const main: BeeMain = (prov) => {
+  let i = 0;
+
+  let func = () =>
+    setTimeout(() => {
+      setStatus(++i + "%");
+
+      if (i < 100) {
+        func();
+      }
+    }, 100);
+
+  func();
+};

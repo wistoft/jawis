@@ -1,10 +1,30 @@
-import { makeBeeOnError } from "^bee-common";
-import { makeSend, registerRejectionHandlers, wppMain } from "^jab-node";
+import async_hooks from "node:async_hooks";
 
-//register rejection handlers
+import { BeeMain, monkeyPatchConsoleFunction } from "^bee-common";
+import { enable } from "^long-traces";
 
-registerRejectionHandlers(makeBeeOnError(makeSend()));
+import { main as wppMain } from "^process-util";
 
-//process preloader
+/**
+ * duplication between beeConfMain, ScriptWrapperMain and ymer
+ */
+export const main: BeeMain = (prov) => {
+  //register rejection handlers
 
-wppMain();
+  prov.registerErrorHandlers(prov.onError);
+
+  // intercept logging
+
+  monkeyPatchConsoleFunction(prov.sendLog, "error");
+  monkeyPatchConsoleFunction(prov.sendLog, "warn");
+  monkeyPatchConsoleFunction(prov.sendLog, "log");
+  monkeyPatchConsoleFunction(prov.sendLog, "info");
+
+  //long traces
+
+  enable(async_hooks);
+
+  //process preloader
+
+  wppMain(prov);
+};

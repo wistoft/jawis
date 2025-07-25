@@ -1,15 +1,19 @@
-import { unknownToErrorData } from "^jab";
-import {
-  getFileToRequire,
-  JabWorker,
-  MakeNodeWorker,
-  makePlainWorker,
-} from "^jab-node";
+import path from "node:path";
+import { Worker, WorkerOptions } from "node:worker_threads";
 
+import {
+  AbsoluteFile,
+  err,
+  GetAbsoluteSourceFile,
+  getRandomInteger,
+  unknownToErrorData,
+} from "^jab";
+import { getAbsoluteSourceFile_live } from "^jab-node";
+import { JabWorker, MakeNodeWorker } from "^process-util";
 import { FinallyFunc } from "^finally-provider";
 import { safeCatch } from "^yapu";
-import { BeeDeps } from "^bee-common";
-import { makeSharedResolveMap } from "^cached-resolve";
+import { BeeDef, BeeDeps, tryHandleTunneledLog } from "^bee-common";
+import { makeSharedResolveMap, ResolveCacheMap } from "^cached-resolve";
 
 import {
   getControlArray,
@@ -18,35 +22,46 @@ import {
   SourceFileLoader,
   ConsumerMessage,
   WorkerData,
+  jacsConsumerMainDeclaration,
 } from "./internal";
 
 export type JacsProducerDeps = {
-  consumerTimeout: number;
-  consumerSoftTimeout: number;
-  maxSourceFileSize: number;
-  customBooter?: string;
   sfl: Pick<SourceFileLoader, "load" | "getTsConfigPaths">;
-  experimentalCacheNodeResolve?: boolean;
   onError: (error: unknown) => void;
   finally: FinallyFunc;
 
+  //config
+
+  consumerTimeout: number;
+  consumerSoftTimeout: number;
+  maxSourceFileSize: number;
+  cacheNodeResolve: boolean;
+  tsConfigPath: boolean;
+  doSourceMap: boolean;
+
   //for development
 
+  customBooter?: string;
+  getAbsoluteSourceFile?: GetAbsoluteSourceFile;
   notify?: typeof Atomics.notify;
-  makeWorker?: MakeNodeWorker;
-  unregisterTsInWorker?: boolean; // default false
 };
 
 /**
  *
+ * - It's impossible to compile dev code to esm, because lazy load can't be done for esm.
+ *
  */
 export class JacsProducer {
-  private resolveCache?: ReturnType<typeof makeSharedResolveMap>;
+  private resolveCache?: ResolveCacheMap;
+
+  private channelToken;
 
   constructor(private deps: JacsProducerDeps) {
-    if (deps.experimentalCacheNodeResolve) {
+    if (deps.cacheNodeResolve) {
       this.resolveCache = makeSharedResolveMap();
     }
+
+    this.channelToken = "" + getRandomInteger();
   }
 
   /**
@@ -91,49 +106,31 @@ export class JacsProducer {
    *
    */
   public makeJacsWorkerBee = <MS, MR>(beeDeps: BeeDeps<MR>) => {
-    //booter
-
-    const filename =
-      this.deps.customBooter || getFileToRequire(__dirname, "JacsConsumerMain");
-
-    //shared memory
-
-    const dataArray = new Uint8Array(
-      new SharedArrayBuffer(this.deps.maxSourceFileSize)
-    );
-
-    const shared: WorkerData = {
-      controlArray: getControlArray(),
-      dataArray,
-      timeout: this.deps.consumerTimeout,
-      softTimeout: this.deps.consumerSoftTimeout,
-      beeFilename: beeDeps.filename,
-      tsPaths: this.deps.sfl.getTsConfigPaths(beeDeps.filename),
-      experimentalResolveCache: this.resolveCache,
-
-      //for developement
-      unregister: this.deps?.unregisterTsInWorker || false,
-    };
+    const { realFilename, shared } = this.getWorkerConf(beeDeps.def);
 
     //on message
 
     const onMessage = (msg: ConsumerMessage) => {
-      switch (msg.type) {
-        case "jacs-compile":
-          this.onCompile(shared.controlArray, shared.dataArray, msg.file);
-          return;
+      if (tryHandleTunneledLog(msg, beeDeps.onLog, this.channelToken)) {
+        return;
+      }
 
-        default:
-          //the message belongs to the user.
+      //todo: this fails if message is null. And user controls this.
+      if (msg.compileRequest === this.channelToken) {
+        this.onCompile(shared.controlArray, shared.dataArray, msg.file);
+      } else {
+        //the message belongs to the user.
 
-          beeDeps.onMessage(msg as unknown as MR);
+        beeDeps.onMessage(msg as unknown as MR);
       }
     };
 
     //worker
 
+    const execArgv: string[] = [];
+
     return new JabWorker<MS, ConsumerMessage, WorkerData>({
-      filename,
+      filename: realFilename,
       workerData: shared,
       onMessage,
       onStdout: beeDeps.onStdout,
@@ -141,7 +138,116 @@ export class JacsProducer {
       onError: beeDeps.onError,
       onExit: beeDeps.onExit,
       finally: beeDeps.finally,
-      makeWorker: this.deps?.makeWorker || makePlainWorker,
+      workerOptions: {
+        execArgv,
+      },
+      collectSubprocesses: true,
     });
+  };
+
+  /**
+   * Make a worker thread, that compiles TypeScript automatically.
+   *
+   * - WorkerData is given to the script, if it exports a `main` function.
+   *
+   * impl
+   *  - Filter out compile messages, so the users don't see them.
+   */
+  public makeTsWorker: MakeNodeWorker = (
+    filename: AbsoluteFile,
+    options: WorkerOptions = {}
+  ) => {
+    const { realFilename, shared } = this.getWorkerConf({
+      filename,
+      data: options.workerData,
+    });
+
+    const worker = new Worker(realFilename, {
+      ...options,
+      workerData: shared,
+    });
+
+    //on message
+
+    const onMessage = (msg: ConsumerMessage) => {
+      if (msg.compileRequest === this.channelToken) {
+        this.onCompile(shared.controlArray, shared.dataArray, msg.file);
+      }
+    };
+
+    worker.addListener("message", onMessage);
+
+    //ensure listener isn't disturbed by jacs.
+
+    this.monkeyPatchWorker(worker);
+
+    return worker;
+  };
+
+  /**
+   *
+   * Monkey patch add message listener, so we can filter away jacs-compile messages.
+   */
+  private monkeyPatchWorker = (worker: Worker) => {
+    (worker as any).__originalAddListener = worker.addListener;
+
+    worker.addListener = (event: any, outerListener: any, ...args: any[]) => {
+      let listener = outerListener;
+
+      if (event === "message") {
+        listener = (msg: any, ...args: any[]) => {
+          //only send to outer, if it's not a jacs message.
+          if (msg.compileRequest !== this.channelToken) {
+            outerListener(msg, ...args);
+          }
+        };
+      }
+
+      return (worker as any).__originalAddListener(event, listener, ...args);
+    };
+  };
+
+  /**
+   *
+   */
+  private getWorkerConf = (beeDef: BeeDef) => {
+    if (!path.isAbsolute(beeDef.filename)) {
+      err("filename must be absolute.", beeDef.filename);
+    }
+
+    const getAbsoluteSourceFile = this.deps.getAbsoluteSourceFile ?? getAbsoluteSourceFile_live; // prettier-ignore
+
+    //booter
+
+    const realFilename =
+      this.deps.customBooter ||
+      getAbsoluteSourceFile(jacsConsumerMainDeclaration);
+
+    //shared memory
+
+    const dataArray = new Uint8Array(
+      new SharedArrayBuffer(this.deps.maxSourceFileSize)
+    );
+
+    const tsPaths = this.deps.tsConfigPath
+      ? this.deps.sfl.getTsConfigPaths(beeDef.filename)
+      : undefined;
+
+    const shared: WorkerData = {
+      controlArray: getControlArray(),
+      dataArray,
+      channelToken: this.channelToken,
+      next: beeDef,
+
+      //config
+
+      timeout: this.deps.consumerTimeout,
+      softTimeout: this.deps.consumerSoftTimeout,
+      tsPaths,
+      resolveCache: this.resolveCache,
+      doSourceMap: this.deps.doSourceMap,
+    };
+
+    return { realFilename, shared };
   };
 }

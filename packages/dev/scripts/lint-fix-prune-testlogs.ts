@@ -1,17 +1,21 @@
-import fs from "fs";
-import path from "path";
-import { ComposedTestFramework } from "^jates";
-import { TestLogController } from "^jates/TestLogController";
-import { projectRoot } from "^dev/project.conf";
+import fs from "node:fs";
+import path from "node:path";
+import fastGlob from "fast-glob";
+import { packagesPatternIncludingPrivate, projectRoot } from "../project.conf";
+import { JarunTestFramework } from "^jarun";
+import { BeeMain } from "^bee-common/types";
 import { difference } from "^jab";
 
 /**
  *
  */
-export const doit = async () => {
-  //todo: get this configuration from javi configuration.
-
+export const main: BeeMain = async (prov) => {
+  //very hacky
   const runners = {
+    ".ww.ja.js": undefined,
+    ".ww.ja.ts": undefined,
+    ".ww.ja.jsx": undefined,
+    ".ww.ja.tsx": undefined,
     ".ja.js": undefined,
     ".ja.ts": undefined,
     ".ja.jsx": undefined,
@@ -20,22 +24,23 @@ export const doit = async () => {
     ".pr.ts": undefined,
     ".wo.js": undefined,
     ".wo.ts": undefined,
+    ".ww.js": undefined,
+    ".ww.ts": undefined,
+    ".cmd": undefined,
+    ".ps1": undefined,
+    ".php": undefined,
+    ".go": undefined,
   } as any;
 
   const absTestFolder = path.join(projectRoot, "packages/tests/");
   const absTestLogFolder = path.join(projectRoot, "packages/tests/_testLogs");
 
-  //the objects
-
-  const jarun = new ComposedTestFramework({
-    absTestFolder,
+  const jarun = new JarunTestFramework({
+    absTestFolders: [absTestFolder],
+    absTestLogFolder,
     subFolderIgnore: ["node_modules"],
     runners,
-  });
-
-  const testLogController = new TestLogController({
-    absTestLogFolder,
-    onError: console.log,
+    onError: prov.onError,
   });
 
   //test logs
@@ -45,10 +50,10 @@ export const doit = async () => {
   //tests
 
   const test = await jarun
-    .getTestIds()
+    .getTestInfo()
     .then((data) =>
-      data.map((file) =>
-        path.basename((testLogController as any).getExpFilename(file))
+      data.map(({ file }) =>
+        path.basename((jarun.testLogController as any).getExpFilename(file))
       )
     );
 
@@ -60,5 +65,3 @@ export const doit = async () => {
 
   console.log(toDelete.length + " files deleted");
 };
-
-doit();

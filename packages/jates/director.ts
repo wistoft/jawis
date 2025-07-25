@@ -1,107 +1,93 @@
-import path from "path";
+import { LogProv, CompareFiles, HandleOpenFileInEditor } from "^jab";
+import { ExternalLogSource } from "^bee-common";
+import { WsPoolController, WsPoolProv } from "^jab-express";
+import { FinallyFunc } from "^finally-provider";
 
-import { MakeJabProcess } from "^jab-node";
-import { LogProv, err, CompareFiles, HandleOpenFileInEditor } from "^jab";
 import {
   ClientMessage,
   getJatesTestReport,
   OnTestResult,
   ServerMessage,
   TestResult,
-} from "^jatec";
-import { WsPoolController } from "^jab-express";
-
-import { FinallyFunc } from "^finally-provider";
-import { MakeBee } from "^bee-common";
-import {
+  MakeTestFrameworks,
   ClientComController,
   Behavior,
   makeOnClientMessage,
-  TestAnalyticsController,
-  TestLogController,
   TestExecutionController,
   TestListController,
+  TestAnalytics,
+  ClientTestInfo,
   ComposedTestFramework,
-  CreateTestRunners,
+  combineTestResultWithLogEntries_byref,
 } from "./internal";
 
 export type DirectorDeps = Readonly<{
-  absTestFolder: string;
-  absTestLogFolder: string;
   tecTimeout: number;
+  makeTestFrameworks: MakeTestFrameworks;
   handleOpenFileInEditor: HandleOpenFileInEditor;
   compareFiles: CompareFiles;
-
-  createTestRunners: CreateTestRunners;
-  makeTsProcess: MakeJabProcess;
-  makeTsBee: MakeBee;
+  externalBeeLogSource: ExternalLogSource;
 
   onError: (error: unknown) => void;
   finally: FinallyFunc;
   logProv: LogProv;
+
+  //for testing
+  wsPool?: WsPoolProv<ServerMessage, ClientMessage>;
 }>;
 
 /**
  * Integrate all the controllers.
  *
- * todo: run finally on shutdown.
- *
  * state
- *   cur test logs are only stored if they are different from expected test logs. Note they aren't remove on accept, though.
+ *   cur test logs are only stored if they are different from expected test logs. Note they aren't removed on accept.
+ *
+ * Test selection structure
+ *  - Defines which tests the client presents to the user.
+ *  - Defines a prioritisation of the tests. E.g. sorted by exec time.
+ *  - Contains unselected tests as last level.
+ *  - It's ok to have the client present tests, that aren't going to execute. The user might be
+ *      interested in seeing the unselected tests.
+ *
+ * Test execution list
+ *  - A subset of the selection structure. The tests that will execute.
+ *
  */
 export const director = (deps: DirectorDeps) => {
-  if (!path.isAbsolute(deps.absTestFolder)) {
-    err("absTestFolder must be absolute");
-  }
-
-  if (!path.isAbsolute(deps.absTestLogFolder)) {
-    err("testLogFolder must be absolute");
-  }
-
   deps.finally(() => behavior.onShutdown()); //trick to register onShutdown, before it has been defined.
 
-  const wsPool = new WsPoolController<ServerMessage, ClientMessage>(deps);
+  const wsPool = deps.wsPool || new WsPoolController<ServerMessage, ClientMessage>(deps); // prettier-ignore
 
   const clientCom = new ClientComController({
     wsPool,
   });
 
-  const testLogController = new TestLogController({
-    absTestLogFolder: deps.absTestLogFolder,
-    onError: deps.onError,
-  });
-
-  const tac = new TestAnalyticsController({
-    absTestFolder: deps.absTestFolder,
-    onError: deps.onError,
-  });
-
-  const runners = deps.createTestRunners({
-    onRogueTest: clientCom.onRogueTest,
-    makeTsProcess: deps.makeTsProcess,
-    makeTsBee: deps.makeTsBee,
-    onError: deps.onError,
-    logProv: deps.logProv,
-    finally: deps.finally,
-    onRequire: tac.onRequire,
-  });
+  const testAnalytics = new TestAnalytics();
 
   const testFramework = new ComposedTestFramework({
-    absTestFolder: deps.absTestFolder,
-    runners,
-    subFolderIgnore: [], //extract to conf
+    onError: deps.onError,
+    frameworks: deps.makeTestFrameworks({
+      onRogueTest: clientCom.onRogueTest,
+      onError: deps.onError,
+      logProv: deps.logProv,
+      finally: deps.finally,
+    }),
   });
 
   const onTestResult: OnTestResult = (id: string, result: TestResult) => {
-    const prom = testLogController.getExpLogs(id).then((exp) => {
+    const prom = testFramework.getExpLogs(id).then((exp) => {
+      combineTestResultWithLogEntries_byref(
+        result.cur,
+        deps.externalBeeLogSource.getBufferedLogEntries()
+      );
+
       const report = getJatesTestReport(id, exp, result);
 
-      tac.ta.setTestExecTime(report.id, report.result.execTime);
+      testAnalytics.setTestExecTime(report.id, report.result.execTime);
 
-      if (report.status === ".") {
-        tac.ta.setTestValid(report.id);
-      } else {
-        testLogController.setCurLogs(id, result.cur);
+      if (report.status !== ".") {
+        //why not set always?
+        testFramework.setCurLogs(id, result.cur);
       }
 
       clientCom.onTestReport(report);
@@ -112,24 +98,33 @@ export const director = (deps: DirectorDeps) => {
 
   const tec = new TestExecutionController({
     ...clientCom,
-    absTestFolder: deps.absTestFolder,
     timeoutms: deps.tecTimeout,
-    tr: testFramework,
+    testFramework,
     onError: deps.onError,
     onTestResult,
-
     DateNow: Date.now,
   });
 
+  /**
+   * - Sort test cases by execution time.
+   * - Send test selection structure to client, and ask TEC to execute the tests.
+   */
+  const onTestSelectionReady = (ids: ClientTestInfo[]) => {
+    const sortedIds = testAnalytics.sortTests(ids);
+
+    clientCom.onTestSelectionReady([sortedIds]);
+
+    tec.setTestList(sortedIds.map((info) => info.id));
+  };
+
   const testListController = new TestListController({
-    ...clientCom,
     testFramework,
-    ta: tac.ta,
-    setTestExecutionList: tec.setTestList,
+    onTestSelectionReady,
     onError: deps.onError,
   });
 
   const behavior = new Behavior({
+    ...clientCom,
     onError: deps.onError,
     wsPool,
     testFramework,
@@ -138,18 +133,19 @@ export const director = (deps: DirectorDeps) => {
   const onClientMessage = makeOnClientMessage({
     ...deps,
     ...clientCom,
-    ...testLogController,
     ...tec,
     ...testListController,
     ...behavior,
-    absTestFolder: deps.absTestFolder,
-    onError: deps.onError,
+    testFramework,
   });
 
   const onWsUpgrade = wsPool.makeUpgradeHandler(onClientMessage);
 
   return {
     onWsUpgrade,
+
+    //for testing
     onClientMessage,
+    shutdown: () => behavior.onShutdown(),
   };
 };

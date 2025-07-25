@@ -69,5 +69,16 @@ export const mapConsoleEntry = (entry: ConsoleEntry): ConsoleEntry => {
     return { ...entry, data: { ...entry.data, msg } };
   }
 
+  if (entry.type === "stream" && entry.logName === "stdout") {
+    const data = entry.data
+      .toString()
+      .replace(
+        "(electron) Sending uncompressed crash reports is deprecated and will be removed in a future version of Electron. Set { compress: true } to opt-in to the new behavior. Crash reports will be uploaded gzipped, which most crash reporting servers support.",
+        "[electron filtered]"
+      );
+
+    return { ...entry, data };
+  }
+
   return entry;
 };

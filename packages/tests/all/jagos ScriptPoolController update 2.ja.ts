@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 import { TestProvision } from "^jarun";
 
 import {
@@ -25,7 +25,7 @@ export default (prov: TestProvision) => {
   prov.eq(1, pool.getScriptStatus().length);
 
   return pool
-    .restartScript(script)
+    .restartBee(script)
     .then(() => waitForAllStoppedOrListening(pool))
     .then(() => {
       fs.unlinkSync(script);
@@ -35,7 +35,7 @@ export default (prov: TestProvision) => {
 
       prov.eq(1, pool.getScriptStatus().length);
     })
-    .then(pool.ensureAllScriptsStopped)
+    .then(pool.stopAllScripts)
     .then(() => {
       //now the script is stopped, so it will be removed from the list.
       pool.updateScripts();

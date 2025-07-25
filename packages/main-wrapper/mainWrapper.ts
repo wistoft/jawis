@@ -1,16 +1,47 @@
-import async_hooks from "async_hooks";
+import async_hooks from "node:async_hooks";
 
-import { fixErrorInheritance, indent, LogProv, OnError } from "^jab";
+import { ErrorData, indent, LogProv, OnError, OnErrorData } from "^jab";
 import { FinallyProvider } from "^finally-provider";
-import { BeeShutdownMessage, makeMainBeeProv } from "^bee-common";
+import { BeeShutdownMessage } from "^bee-common";
 import { enable } from "^long-traces";
 import {
-  flushAndExit,
+  asyncFlushAndExit,
   MainProv,
-  makeSend,
   registerOnMessage,
-  registerRejectionHandlers,
+  registerErrorHandlers,
 } from "^jab-node";
+
+export type MainConsoleWrapperDeps = MainWrapperDeps & {
+  consoleGroupingDelay?: number;
+};
+
+export type MainWrapperDeps = {
+  logPrefix?: string;
+  main: (mainProv: MainProv) => void;
+  registerOnShutdown?: boolean;
+  doRegisterErrorHandlers?: boolean;
+  enableLongTraces?: boolean;
+};
+
+type MainWrapperHelperDeps = {
+  main: (mainProv: MainProv) => void;
+  mainProv: MainProv;
+  registerOnShutdown?: boolean;
+  doRegisterErrorHandlers?: boolean;
+  enableLongTraces?: boolean;
+};
+
+/**
+ *
+ */
+export const mainWrapper = (deps: MainConsoleWrapperDeps) => {
+  const mainProv = makeMainProvToConsole(
+    deps.logPrefix,
+    deps.consoleGroupingDelay
+  );
+
+  mainWrapperHelper({ ...deps, mainProv });
+};
 
 /**
  * Wrap main logic
@@ -22,29 +53,24 @@ import {
  * - Execute finally functions before exit.
  *   - But not if process.exit is called. There's no way to register a handler for that.
  * - Flush std io before exit. This allows finally functions to use std io.
- * - Send output to either console or jago.
  * - registerOnShutdown means to explicit exit, when: Jab sends an ipc message to exit.
  *    - This keeps the process running, even if everything else has finished.
  *        So can't be used with a process, that exits by itself.
  *
  */
-export const mainWrapper = (
-  logPrefix: string,
-  main: (mainProv: MainProv) => void,
-  type: "console" | "jago" = "console",
-  registerOnShutdown = false,
-  doRegisterRejectionHandlers = true,
-  experimentalEnableLongTraces = false
-) => {
-  if (experimentalEnableLongTraces) {
+export const mainWrapperHelper = ({
+  main,
+  mainProv,
+  registerOnShutdown = true,
+  doRegisterErrorHandlers = true,
+  enableLongTraces = false,
+}: MainWrapperHelperDeps) => {
+  if (enableLongTraces) {
     enable(async_hooks);
   }
 
-  const mainProv =
-    type === "console" ? mainProvToConsole() : makeMainBeeProv(makeSend());
-
-  if (doRegisterRejectionHandlers) {
-    registerRejectionHandlers(mainProv.onError);
+  if (doRegisterErrorHandlers) {
+    registerErrorHandlers(mainProv.onError);
   }
 
   process.on("beforeExit", () => {
@@ -59,7 +85,7 @@ export const mainWrapper = (
       if (msg.type === "shutdown") {
         Promise.resolve()
           .then(mainProv.finalProv.runFinally)
-          .finally(flushAndExit);
+          .finally(asyncFlushAndExit);
       }
     });
   }
@@ -67,8 +93,8 @@ export const mainWrapper = (
   try {
     main(mainProv);
   } catch (e) {
-    if (e instanceof UserMessage) {
-      mainProv.log(e.getUserMessage());
+    if ((e as any).userMessage) {
+      mainProv.log((e as any).userMessage);
     } else {
       throw e;
     }
@@ -78,12 +104,16 @@ export const mainWrapper = (
 /**
  *
  */
-export const mainProvToConsole = (logPrefix = ""): MainProv => {
+export const makeMainProvToConsole = (
+  logPrefix = "",
+  consoleGroupingDelay = 250
+): MainProv => {
   const finalProv = new FinallyProvider({ onError });
-  const logProv = makeLogServiceToConsole(logPrefix);
+  const logProv = makeLogServiceToConsole(logPrefix, consoleGroupingDelay);
 
   return {
     onError,
+    onErrorData,
     finalProv,
     finally: finalProv.finally,
     logProv,
@@ -93,11 +123,20 @@ export const mainProvToConsole = (logPrefix = ""): MainProv => {
 };
 
 /**
+ * quick fix. should be printed better
+ */
+export const onErrorData: OnErrorData = (error: ErrorData) => {
+  console.log(error.msg);
+  console.log(error.stack);
+  console.log(error.info);
+};
+
+/**
  *
  * - errors are printed slightly different than node would.
  */
 export const onError: OnError = (error: any, extraInfo) => {
-  if (!(error instanceof Error)) {
+  if (typeof error !== "object" || error === null) {
     console.log("Threw non-error:");
     console.log(error);
     return;
@@ -142,7 +181,7 @@ export const onError: OnError = (error: any, extraInfo) => {
  */
 export const makeLogServiceToConsole = (
   logPrefix = "",
-  delay = 250
+  consoleGroupingDelay = 250
 ): LogProv => {
   let streamData: any = {};
   let timeoutHandle: any;
@@ -176,7 +215,7 @@ export const makeLogServiceToConsole = (
       }
 
       if (!timeoutHandle) {
-        timeoutHandle = setTimeout(emitStream, delay);
+        timeoutHandle = setTimeout(emitStream, consoleGroupingDelay);
       }
     },
     status: (type, status) => {
@@ -193,15 +232,10 @@ export const makeLogServiceToConsole = (
  *    The message is for the end user, which have little use for the stack, in general, and no use for the stack,
  *    in this case, because the application intended to show a message to the user.
  */
-export class UserMessage extends Error {
-  constructor(private ownMessage: string) {
-    // fallback message for when this is caught as Error
-    super(ownMessage);
+export const makeUserMessage = (msg: string) => {
+  const e = new Error(msg);
 
-    fixErrorInheritance(this, UserMessage.prototype);
-  }
+  (e as any).userMessage = msg;
 
-  public getUserMessage() {
-    return this.ownMessage;
-  }
-}
+  return e;
+};

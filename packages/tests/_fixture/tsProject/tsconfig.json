@@ -7,7 +7,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "paths": {
-      "^myAliasForJabs": ["jab"]
+      "^*": ["./*"]
     },
     "target": "ES6"
   }

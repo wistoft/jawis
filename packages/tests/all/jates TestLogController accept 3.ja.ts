@@ -13,22 +13,24 @@ export default async (prov: TestProvision) => {
 
   const tlc = getTestLogController_scratch(prov);
 
+  const id = "1";
+
   //err log
 
-  tlc.setCurLogs("1", { err: [errorData1], user: { hej: [7] } });
+  tlc.setCurLogs(id, { err: [errorData1], user: { hej: [7] } });
 
-  prov.imp(await tlc.acceptTestLogs("1"));
+  prov.imp(await tlc.acceptTestLogs(id));
 
   prov.eq(
     { err: ["Some message from server"], user: { hej: [7] } },
-    await tlc.getExpLogs("1")
+    await tlc.getExpLogs(id)
   );
 
   //remove and update
 
-  tlc.setCurLogs("1", { user: { hej: [9] } });
+  tlc.setCurLogs(id, { user: { hej: [9] } });
 
-  prov.imp(await tlc.acceptTestLogs("1"));
+  prov.imp(await tlc.acceptTestLogs(id));
 
-  prov.eq({ user: { hej: [9] } }, await tlc.getExpLogs("1"));
+  prov.eq({ user: { hej: [9] } }, await tlc.getExpLogs(id));
 };

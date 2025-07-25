@@ -2,8 +2,6 @@ import { TestProvision } from "^jarun";
 
 import { FinallyProvider } from "^finally-provider";
 
-//
-
 export default (prov: TestProvision) => {
   const f = new FinallyProvider(prov);
 

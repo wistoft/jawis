@@ -1,20 +1,16 @@
 import { TestProvision } from "^jarun";
 
-import {
-  getJabWatchableProcessPreloaderAndDeps,
-  getProcessDepsThatMustNotBeUsed,
-  shutdownQuickFix,
-} from "../_fixture";
+import { getJabWatchableProcessPreloaderAndDeps } from "../_fixture";
 
 //double use.
 
 export default (prov: TestProvision) => {
   const [wpp, deps] = getJabWatchableProcessPreloaderAndDeps(prov);
 
-  return wpp.useProcess(deps).then(
-    (process) =>
+  return wpp.useBee(deps).then(
+    (bee) =>
       wpp
-        .useProcess(getProcessDepsThatMustNotBeUsed()) // use again
-        .finally(() => shutdownQuickFix(process)) //just to clean up
+        .useBee(deps) // use again
+        .finally(bee.shutdown) //just to clean up
   );
 };

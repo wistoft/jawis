@@ -4,11 +4,6 @@ import { JsLink } from "^jab-react";
 
 import { ConsoleStateProv, ViewEntry, ViewEntryProps } from "./internal";
 
-/**
- * tobe-deprecated Use ViewProps instead.
- */
-export type Props = ViewProps;
-
 export type ViewProps = { showClearLink?: boolean } & Pick<
   ConsoleStateProv,
   "logs" | "clearAllLogs"

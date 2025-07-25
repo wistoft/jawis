@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJagosDirector_with_script } from "^tests/_fixture/testFixtures/jagos";
+import { getJagosDirector_with_script } from "^tests/_fixture";
 import { getScriptPath } from "../_fixture";
 
 //start script
@@ -8,5 +8,6 @@ import { getScriptPath } from "../_fixture";
 export default (prov: TestProvision) =>
   getJagosDirector_with_script(prov).onClientMessage({
     type: "restartScript",
-    script: getScriptPath("hello.js"),
+    script: getScriptPath("silent.js"),
+    data: { dum: "dummy" },
   });

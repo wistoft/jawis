@@ -14,7 +14,6 @@
       "^*": ["./packages/*"]
     },
     "skipLibCheck": true,
-    "resolveJsonModule": true,
     "strict": true,
     "target": "ES6",
     "composite": true

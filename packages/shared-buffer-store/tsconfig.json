@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/shared-buffer-store",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../jab" },
+    { "path": "../shared-algs" },
+    { "path": "../shared-lock" }
+  ]
+}

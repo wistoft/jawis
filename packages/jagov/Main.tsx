@@ -1,5 +1,6 @@
 import React, { memo } from "react";
 
+import { ErrorBoundary } from "^jab-react";
 import { useWebSocketProv } from "^react-use-ws";
 
 import {
@@ -13,13 +14,15 @@ import {
 
 export type Props = {
   apiPath: string;
-} & Omit<
-  DirectorProps,
-  "useWsEffect" | "apiSend" | "wsState" | "useConsoleStream"
-> &
+} & Omit<DirectorProps, "useWsEffect" | "apiSend" | "wsState"> &
   Omit<
     ViewProps,
-    "processStatus" | "jcvProps" | "apiSend" | "wsState" | "useApiSend"
+    | "processStatus"
+    | "jcvProps"
+    | "apiSend"
+    | "wsState"
+    | "restartAll"
+    | "stopAll"
   > &
   //raise the jcvProps to top-level
   Omit<
@@ -45,12 +48,16 @@ export const Main: React.FC<Props> = memo(({ apiPath, ...extra }) => {
   });
 
   return (
-    <View
-      {...extra}
-      {...prov}
-      apiSend={apiSend}
-      wsState={wsState}
-      jcvProps={{ ...extra, ...prov }}
-    />
+    <ErrorBoundary renderOnError={"Jagov failed"}>
+      <View
+        {...extra}
+        {...prov}
+        apiSend={apiSend}
+        wsState={wsState}
+        jcvProps={{ ...extra, ...prov }}
+      />
+    </ErrorBoundary>
   );
 });
+
+Main.displayName = "JagoMain";

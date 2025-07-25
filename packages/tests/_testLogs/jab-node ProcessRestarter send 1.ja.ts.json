@@ -1,0 +1,1 @@
+{"user":{"onSend":[{"type":"startScript","def":{"filename":"abs:packages/tests/_fixture/scripts/silentWait.js","data":["undefined"]}},{"type":"dummy"}]}}

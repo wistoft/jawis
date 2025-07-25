@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJagosDirector } from "^tests/_fixture/testFixtures/jagos";
+import { getJagosDirector } from "^tests/_fixture";
 
 //unknown message from client.
 

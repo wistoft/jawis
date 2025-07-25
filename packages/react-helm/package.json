@@ -1,0 +1,17 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~react-helm",
+  "description": "Component for handling data",
+  "dependencies": {},
+  "keywords": [
+    "data",
+    "table",
+    "datatable",
+    "datagrid",
+    "react",
+    "ui",
+    "component",
+    "components"
+  ]
+}

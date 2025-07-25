@@ -6,6 +6,7 @@ import {
   CapturedStack,
   isNode,
   tryProp,
+  Diagnostic,
 } from "./internal";
 
 /**
@@ -126,23 +127,26 @@ export const captureStack = (error: {
 };
 
 /**
- * Convert an error object til structured data.
+ * Convert an error object to structured data.
  *
  */
 export const unknownToErrorData = (
-  error: unknown,
+  error: any,
   extraInfo: Array<unknown> = []
 ): ErrorData => {
-  if (tryProp(error, "getErrorData")) {
-    return (error as any).getErrorData(extraInfo);
-  } else if (error instanceof Error) {
-    return {
-      msg: error.toString(),
-      info: captureArrayEntries(extraInfo),
-      stack: captureLongStack(error),
-    };
-  } else {
-    const wrapper = makeJabError("Unknown Error object: ", error);
+  try {
+    if (tryProp(error, "getErrorData")) {
+      return (error as any).getErrorData(extraInfo);
+    } else {
+      return {
+        msg: error.toString(),
+        info: captureArrayEntries(extraInfo),
+        stack: captureLongStack(error),
+      };
+    }
+  } catch (extraError) {
+    //todo: the extraError should also be reported
+    const wrapper = makeJabError("Could not clone Error object: ", error);
 
     return wrapper.getErrorData(extraInfo);
   }
@@ -166,3 +170,54 @@ export const getSyntheticError = (
     },
   }),
 });
+
+/**
+ *
+ */
+export const mapErrorsForInclusionInJs = (errors: unknown[]) => {
+  const quickFixMessage: string[] = [];
+
+  const errorsAsJson = errors.map((error) => {
+    const { msg, info, stack } = unknownToErrorData(error);
+
+    quickFixMessage.push(msg);
+
+    return `{msg:${JSON.stringify(msg)}, info:${JSON.stringify(
+      info
+    )}, stack:${JSON.stringify(stack)}}`;
+  });
+
+  const errorsOutput = errorsAsJson.join(",");
+
+  const message = JSON.stringify(
+    "RawAggragateError:\n" + quickFixMessage.join("\n")
+  );
+
+  return `QUICK_FIX = {message:${message}, getAggregateErrors: () => [${errorsOutput}]}`;
+};
+
+/**
+ * duplicate between util.js and jab
+ *
+ *
+ */
+export const emitVsCodeError = (deps: Diagnostic) => {
+  assert(!deps.file.includes("\n"));
+
+  assert(
+    typeof deps.message === "string" && !deps.message.includes("\n"),
+    "message"
+  );
+  assert(deps.line === undefined || typeof deps.line === "number");
+  assert(deps.column === undefined || typeof deps.column === "number");
+  assert(
+    deps.severity === undefined ||
+      (typeof deps.severity === "string" && !deps.severity.includes("\n"))
+  );
+
+  const line = deps.line ?? 1;
+  const column = deps.column ?? 1;
+  const severity = deps.severity ?? "error";
+
+  console.log( deps.message + " - " + severity + " - " + deps.file + ":" + line + ":" + column ); // prettier-ignore
+};

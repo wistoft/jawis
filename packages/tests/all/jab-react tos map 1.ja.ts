@@ -1,18 +1,18 @@
-import { objMap } from "^jab";
 import { TestProvision } from "^jarun";
-import { getHtmlRTR } from "^misc/node";
-import { defaultConf } from "../_fixture";
+import { getPrettyHtml, getDefaultConf } from "../_fixture";
 
-export default ({ imp }: TestProvision) => {
-  imp(defaultConf.mapToAtoms);
-  imp(defaultConf.atoms);
+export default async ({ imp }: TestProvision) => {
+  imp(getDefaultConf().mapToAtoms);
+  imp(getDefaultConf().atoms);
   imp(
-    objMap(defaultConf.mapToFinal, (key, value) => {
-      if (typeof value === "string") {
-        return value;
-      } else {
-        return getHtmlRTR(value);
-      }
-    })
+    await Promise.all(
+      Object.entries(getDefaultConf().mapToFinal).map(async ([key, value]) => {
+        if (typeof value === "string") {
+          return [key, value];
+        } else {
+          return [key, await getPrettyHtml(value)];
+        }
+      })
+    )
   );
 };

@@ -12,7 +12,7 @@ export default (prov: TestProvision) => {
   const pool = getJabScriptPoolController_one(prov);
 
   return pool
-    .restartScript(getScriptPath("hello.js"))
+    .restartBee(getScriptPath("hello.js"))
     .then(() => waitForAllStoppedOrListening(pool))
     .then(pool.shutdown);
 };

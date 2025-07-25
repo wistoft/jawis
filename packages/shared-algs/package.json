@@ -1,0 +1,18 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~shared-algs",
+  "description": "Data structures for building concurrent programs.",
+  "dependencies": {},
+  "keywords": [
+    "shared",
+    "shm",
+    "SharedArrayBuffer",
+    "concurrency",
+    "parallelism",
+    "multithreading",
+    "worker_threads",
+    "thread",
+    "Atomics"
+  ]
+}

@@ -1,4 +1,12 @@
-import { assert, err, TypedArray, TypedArrayContructor } from "./internal";
+import {
+  assert,
+  err,
+  TypedArray,
+  TypedArrayContructor,
+  WaitFunc,
+} from "./internal";
+
+declare const global: any;
 
 /**
  * Deprecate a function
@@ -101,16 +109,16 @@ export const arrayCircularPrev = <T extends {}>(arr: T[], curIdx: number) => {
 };
 
 /**
- * Get a random integer withnin the range.
+ * Get a random integer within the range.
  */
 export const getRandomRange = (min: number, max: number) =>
-  Math.floor(Math.random() * max) + min;
+  Math.floor(Math.random() * (max + 1 - min)) + min;
 
 /**
  * A random non-negative integer.
  */
 export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
-  Math.floor(Math.random() * max);
+  Math.floor(Math.random() * (max + 1));
 
 /**
  *
@@ -137,13 +145,16 @@ export const getRandomArray = (length: number) => {
   return array;
 };
 
+export const getRandomElement = <T>(arr: T[]) =>
+  arr[getRandomInteger(arr.length - 1)];
+
 /**
  * A random length Uint8Array with random data.
  *
  * note: Can do this in node 15: https://nodejs.org/api/webcrypto.html#cryptogetrandomvaluestypedarray
  */
-export const getRandomUint8Array = (maxLength = 1000) => {
-  const length = Math.floor(Math.random() * maxLength);
+export const getRandomUint8Array = (min = 0, max = 1000) => {
+  const length = getRandomRange(min, max);
 
   const array = new Uint8Array(length);
 
@@ -152,6 +163,33 @@ export const getRandomUint8Array = (maxLength = 1000) => {
   }
 
   return array;
+};
+
+/**
+ *
+ */
+export const getRandomUint8Array_old = (maxLength = 1000) => {
+  return getRandomUint8Array(0, maxLength);
+};
+
+/**
+ *
+ */
+export const splitStringRandomly = (str: string) => {
+  const res: string[] = [];
+  let i = 0;
+
+  while (i < str.length) {
+    const next = getRandomInteger(10);
+
+    res.push(str.slice(i, i + next));
+
+    i += next;
+  }
+
+  assert(str === res.join(""));
+
+  return res;
 };
 
 /**
@@ -170,12 +208,6 @@ export const fixErrorInheritance = (obj: {}, cls: {} | null) => {
     Object.setPrototypeOf(obj, cls);
   }
 };
-
-/**
- * tobe-deprecated Use fixErrorInheritance instead
- */
-export const fixErrorInheritence = (...args: any[]) =>
-  (fixErrorInheritance as any)(...args);
 
 /**
  * Omit fields from an object.
@@ -200,7 +232,6 @@ export const objOmit = (obj: {} | null, ...props: string[]): unknown => {
  * Map a the values of an object.
  *
  * - Only for own enumerable keys. Protype chain not preserved.
- * - Map parameter must return a new value. Keys cannot be changed by this.
  * - The map-function must handle `string | number` keys, because the object can be a any subtype.
  * - @alternatives https://stackoverflow.com/questions/14810506/map-function-for-objects-instead-of-arrays
  */
@@ -303,6 +334,13 @@ export const splitSurroundingWhitespace = (
 
   return [startStr, value.slice(startIdx, endIdx), endStr];
 };
+
+/**
+ *
+ */
+export function toJsCode(val: Uint8Array) {
+  return `new Uint8Array([${Array.from(val.values()).join(", ")}])`;
+}
 
 /**
  *
@@ -418,6 +456,17 @@ export const escapeBashArgument = (str: string) =>
     .replace(/\?/g, "\\?");
 
 /**
+ * source: https://stackoverflow.com/a/20403618
+ */
+export const escapeHtml = (str: string) =>
+  str
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&apos;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+
+/**
  *
  */
 export const once = (func: () => void) => {
@@ -444,7 +493,12 @@ export const refable = () => {
 };
 
 /**
- * - only implements part of the constructor interface.
+ *
+ * - will preserve the possibly underlying sharedArray, because `source.buffer`
+ *    is used. Fx the following will not do that: `new Int32Array(source)`
+ *
+ * notes
+ *  - only implements part of the constructor interface.
  */
 export const makeTypedArray = <T extends TypedArray, U extends TypedArray>(
   source: T,
@@ -522,6 +576,81 @@ export const setDifference = <T>(a: Set<T>, ...bs: Set<T>[]) => {
 /**
  *
  */
+export const range = (amount: number, start: number, step: number) => {
+  const res: number[] = [];
+  let cur = start;
+
+  for (let i = 0; i < amount; i++) {
+    res.push(cur);
+    cur += step;
+  }
+
+  return res;
+};
+
+/**
+ *
+ */
+export const average = (arr: number[]) => {
+  let cur = 0;
+
+  for (let i = 0; i < arr.length; i++) {
+    cur += arr[i];
+  }
+
+  return cur / arr.length;
+};
+
+/**
+ *
+ */
+export const group = <T>(arr: T[], amount: number, fullGroups = false) => {
+  let size = 0;
+  let tmp: T[] = [];
+  const res: T[][] = [];
+
+  for (const val of arr) {
+    tmp.push(val);
+
+    size++;
+    if (size == amount) {
+      res.push(tmp);
+      size = 0;
+      tmp = [];
+    }
+  }
+
+  if (tmp.length !== 0 && !fullGroups) {
+    res.push(tmp);
+  }
+
+  return res;
+};
+
+/**
+ *
+ */
+export const pastTimestamp = (days: number) =>
+  Date.now() - days * 24 * 3600 * 1000;
+
+/**
+ *
+ */
+export const pathJoin = (...args: string[]) =>
+  args.reduce<string>((a, b) => {
+    if (a === "") {
+      return b;
+    }
+    if (b === "") {
+      return a;
+    }
+
+    return a.replace(/\/$/, "") + "/" + b.replace(/^\//, "");
+  }, "");
+
+/**
+ *
+ */
 export function replaceGlobalClass(key: string, _new: any) {
   const original = global[key];
 
@@ -530,4 +659,127 @@ export function replaceGlobalClass(key: string, _new: any) {
   return () => {
     global[key] = original;
   };
+}
+
+/**
+ *
+ */
+export const makeDebounce = <T>(
+  callback: (data: T) => void,
+  timeoutDelay: number
+) => makeThrottle(callback, timeoutDelay, true);
+
+/**
+ *
+ * - Last-consistent, but not immediate-emitting.
+ */
+export const makeThrottle = <T>(
+  callback: (data: T) => void,
+  timeoutDelay: number,
+  alwaysClearTimeout = false
+) => {
+  let timeoutHandle: any;
+  let bufferedValue: any;
+
+  const emit = () => {
+    callback(bufferedValue);
+
+    // set state
+
+    timeoutHandle = undefined;
+    bufferedValue = undefined;
+  };
+
+  return (data: T) => {
+    if (alwaysClearTimeout && timeoutHandle !== undefined) {
+      clearTimeout(timeoutHandle);
+    }
+
+    bufferedValue = data;
+
+    if (timeoutHandle === undefined) {
+      timeoutHandle = setTimeout(emit, timeoutDelay);
+    }
+  };
+};
+
+/**
+ *
+ * - sleepCondition is only used to check if the wait should continue in case of spurious wake.
+ *    That's different from the condition for waiting. Though they could be the same.
+ */
+export function niceWait({
+  sharedArray,
+  index,
+  value,
+  timeout,
+  softTimeout,
+  sleepCondition,
+  onSoftTimeout,
+  waitName = "Wait",
+  throwOnTimeout = false,
+  wait = Atomics.wait,
+  DateNow,
+}: {
+  sharedArray: Int32Array;
+  index: number;
+  value: number;
+  timeout: number;
+  softTimeout: number | undefined;
+  sleepCondition: () => boolean;
+  onSoftTimeout: () => void;
+  waitName?: string;
+  throwOnTimeout?: boolean | string;
+  wait: WaitFunc;
+  DateNow: () => number;
+}) {
+  if (softTimeout && softTimeout >= timeout) {
+    throw new Error("Soft timeout " + softTimeout+" must be smaller than hard timeout: " + timeout); // prettier-ignore
+  }
+
+  const startTime = DateNow();
+  let val: "ok" | "timed-out" | "not-equal";
+  let actualTimeout: number | undefined = softTimeout || timeout;
+  let hasBeenSoftTimeout = false;
+
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    val = wait(sharedArray, index, value, actualTimeout); // prettier-ignore
+
+    //give warning on first timeout
+
+    if (val === "timed-out" && softTimeout && !hasBeenSoftTimeout) {
+      //give warning
+
+      onSoftTimeout();
+
+      //setup to wait for next timeout
+
+      actualTimeout = timeout - softTimeout;
+      hasBeenSoftTimeout = true;
+      continue;
+    }
+
+    //protect against spurious wake
+
+    if (val === "ok" && sleepCondition()) {
+      continue;
+    }
+
+    break;
+  }
+
+  //tell if wait responsed between first and second timeout
+
+  if (val !== "timed-out" && hasBeenSoftTimeout) {
+    console.log(waitName + " responded late, time: " + (DateNow() - startTime));
+  }
+
+  if (val === "timed-out" && throwOnTimeout) {
+    throw new Error(
+      waitName + " did not respond, time: " + (DateNow() - startTime)
+    );
+  }
+
+  return val;
 }

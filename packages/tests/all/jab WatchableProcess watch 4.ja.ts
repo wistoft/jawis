@@ -2,8 +2,7 @@ import { TestProvision } from "^jarun";
 import { sleeping } from "^yapu";
 
 import {
-  getJabWatchableProcess_ipc_changeable,
-  shutdownQuickFix,
+  getJabWatchableProcessAndWaiter_ipc_changeable,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
 } from "../_fixture";
@@ -11,12 +10,14 @@ import {
 // change after shutdown
 
 export default async (prov: TestProvision) => {
-  const { wp } = await getJabWatchableProcess_ipc_changeable(prov);
+  const { wp } = await getJabWatchableProcessAndWaiter_ipc_changeable(prov);
 
-  await shutdownQuickFix(wp);
+  //todo - flacky unless waiting for listening here.
+
+  await wp.shutdown();
 
   writeScriptFileThatChanges(1000);
   writeScriptFileThatChanges2(2000);
 
-  await sleeping(100);
+  await sleeping(100); // give time for file event (that will never come.)
 };

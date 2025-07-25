@@ -1,10 +1,15 @@
 import { assertNever } from "^jab";
 
-import { ServerMessage } from "^jatec";
+import { StateCallbacks, ServerMessage } from "./internal";
 
-import { StateCallbacks } from "./internal";
-
-type Deps = StateCallbacks;
+type Deps = Pick<
+  StateCallbacks,
+  | "setIsRunning"
+  | "setTestSelection"
+  | "setExecutingTestCase"
+  | "setTestReport"
+  | "setRogue"
+>;
 
 /**
  *
@@ -40,6 +45,6 @@ export const makeOnServerMessage = (deps: Deps) => (msg: ServerMessage) => {
       break;
 
     default:
-      assertNever(msg, "Unknown server message");
+      assertNever(msg, "Unknown server message.");
   }
 };

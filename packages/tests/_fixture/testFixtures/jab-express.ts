@@ -1,9 +1,5 @@
 import { WsPoolProv, SocketData, NodeWS } from "^jab-express";
-
 import { TestProvision } from "^jarun";
-import { makeApp } from "^javi/makeApp";
-import { getServer, getServerDeps } from "./jab Server";
-import { getMainProv, getScriptPath } from "./diverse";
 
 export type Deps<MS extends SocketData> = {
   log: TestProvision["log"];
@@ -37,26 +33,3 @@ export class WsPoolMock<MS extends SocketData, MR extends SocketData>
 
   public shutdown = () => Promise.resolve();
 }
-
-/**
- *
- */
-export const makeApp_no_routes = (prov: TestProvision) => {
-  const app = makeApp({
-    staticWebFolder: getScriptPath(),
-    mainProv: getMainProv(prov),
-    makeRoutes: [],
-    clientConf: {
-      variable: "__JAVI_CLIENT_CONF",
-      value: { var1: "hello" },
-    },
-    indexHtml: "index html content",
-  });
-
-  return getServer(
-    prov,
-    getServerDeps(prov, undefined, {
-      app,
-    })
-  );
-};

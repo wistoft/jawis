@@ -7,14 +7,15 @@ import {
   ClientMessage,
   JatesTestReport,
   ClientTestReport,
-} from "^jatec";
+  ClientTestInfo,
+} from "./internal";
 
 export type ClientComProv = {
   onTestStarts: (testId: string) => void;
   onTestReport: (data: JatesTestReport) => void;
   onTestRunnerStarts: () => void;
   onTestRunnerStops: () => void;
-  onTestSelectionReady: (tests: string[][]) => void;
+  onTestSelectionReady: (tests: ClientTestInfo[][]) => void;
   notifyIsRunning: (running: boolean) => void;
   sendTestReport: (data: ClientTestReport) => void;
   onRogueTest: OnRogue;
@@ -25,7 +26,7 @@ type Deps = {
 };
 
 /**
- *
+ * todo: This class has no purpose.
  */
 export class ClientComController implements ClientComProv {
   constructor(private deps: Deps) {}
@@ -76,7 +77,7 @@ export class ClientComController implements ClientComProv {
   /**
    *
    */
-  public onTestSelectionReady = (tests: string[][]) => {
+  public onTestSelectionReady = (tests: ClientTestInfo[][]) => {
     this.deps.wsPool.send({
       type: "TestSelection",
       data: tests,

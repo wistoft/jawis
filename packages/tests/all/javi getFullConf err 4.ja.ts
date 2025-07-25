@@ -5,5 +5,5 @@ import { getFixturePath } from "^tests/_fixture";
 //script in script definition must be string
 
 export default (prov: TestProvision) => {
-  getFullConf({ scripts: [{}] }, getFixturePath());
+  getFullConf({ scripts: [{}] }, getFixturePath(), "windows");
 };

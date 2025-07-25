@@ -1,15 +1,25 @@
 import isBuiltinModule from "is-builtin-module";
 import { SharedMap as SharedMapType } from "sharedmap";
-import { ResolveFilename } from "^jab-node";
+import { ResolveFilename } from "^node-module-hooks-plus";
 
 //hack because of typing mismatch.
 
-const SharedMap = require("sharedmap") as typeof SharedMapType;
+let SharedMap = require("sharedmap") as typeof SharedMapType;
+
+if ((SharedMap as any).default) {
+  //ESM quick fix needed if webpack compiles this file.
+  SharedMap = (SharedMap as any).default;
+}
+
+export type ResolveCacheMap = {
+  get: (key: string) => string | undefined | null;
+  set: (key: string, value: string) => void;
+};
 
 /**
  *
  */
-export const makeSharedResolveMap = () => {
+export const makeSharedResolveMap = (): ResolveCacheMap => {
   const maxEntries = 10000;
 
   // Size is in UTF-16 codepoints
@@ -31,7 +41,7 @@ export const makeSharedResolveMap = () => {
  *  - Use \x01 byte as separator, because SharedMap uses \x00
  */
 export const makeMakeCachedResolve =
-  (sharedMap: any) =>
+  (sharedMap: ResolveCacheMap) =>
   (original: ResolveFilename): ResolveFilename => {
     // Manually restore the prototype of SharedMap
     Object.setPrototypeOf(sharedMap, SharedMap.prototype);

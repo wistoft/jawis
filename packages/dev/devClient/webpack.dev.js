@@ -4,26 +4,14 @@ const {
   createWebpackBaseConf,
 } = require("../../misc/node/createWebpackBaseConf");
 
-const conf = require("../dev.conf");
-const { getPackagePath } = require("../project.conf");
+const { webpackPort, packageFolder } = require("../project.conf");
 
 //
 // base conf
 //
 
 const baseWebpackConf = createWebpackBaseConf({
-  template: getPackagePath("javi-client/index.ejs"),
   tsConfigFile: path.join(__dirname, "../tsconfig.json"),
-  defineHtml: {
-    __pageTitle: "Dev",
-    __conf_url: "http://localhost:" + conf.serverPort + "/conf.js",
-  },
-  define: {
-    __DEV_CLIENT_CONF: JSON.stringify({
-      serverPort: conf.serverPort,
-      jagoConsolePortForDev: conf.jagoConsolePortForDev,
-    }),
-  },
 });
 
 //
@@ -36,10 +24,13 @@ module.exports = {
   mode: "development",
 
   entry: {
-    // consoleCaptureMain: "@jawis/console/consoleCaptureMain.js",
     app: path.join(__dirname, "clientEntry.tsx"),
-    //quick fix
-    ymer: getPackagePath("jabrov/ymer.ts"),
+
+    consoleBooterMain: path.join(
+      packageFolder,
+      "log-server",
+      "consoleBooterMain.tsx"
+    ),
   },
 
   output: {
@@ -48,12 +39,13 @@ module.exports = {
 
   devtool: "inline-cheap-module-source-map",
   devServer: {
-    port: conf.clientPort,
+    port: webpackPort,
     historyApiFallback: true,
     hot: false,
     liveReload: false,
     client: {
-      logging: "error",
+      logging: "none",
+      overlay: false,
       reconnect: false,
     },
   },

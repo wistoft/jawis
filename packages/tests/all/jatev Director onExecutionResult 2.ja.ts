@@ -9,7 +9,7 @@ export default (prov: TestProvision) => {
   const { result, rerender, onServerMessage } =
     renderUseJatevDirector_with_tests(prov);
 
-  result.callbacks.onNext();
+  result.onNext();
 
   onServerMessage({
     type: "TestReport",

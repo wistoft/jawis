@@ -1,12 +1,12 @@
 import { TestProvision } from "^jarun";
-import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
+import { filterScriptStatuses } from "^tests/_fixture";
 
 import {
   emptyScratchFolder,
   getJabScriptPoolController_one,
 } from "../_fixture";
 
-//stopped explicitly defined scripts, are not affected by script folder update.
+//stopped explicitly-defined scripts, are not affected by script folder update.
 
 export default (prov: TestProvision) => {
   const pool = getJabScriptPoolController_one(prov, {

@@ -1,22 +1,8 @@
-import { BeeLogEntry } from "^bee-common";
+import { AbsoluteFile, LogEntry } from "^jab";
 
 //
 // script
 //
-
-export type ScriptOutput =
-  | {
-      type: "stdout";
-      data: string;
-    }
-  | {
-      type: "stderr";
-      data: string;
-    }
-  | {
-      type: "message";
-      data: BeeLogEntry;
-    };
 
 export type ScriptStatusTypes =
   | "preloading"
@@ -24,14 +10,23 @@ export type ScriptStatusTypes =
   | "listening"
   | "stopped";
 
+//id: opaque for the client. It's used for creating url routes. Udgår.
 export type ScriptStatus = {
   id: string;
   script: string;
   status: ScriptStatusTypes;
+  time?: number; //seconds floating point
+};
+
+export type ScriptDefinition = {
+  script: AbsoluteFile;
+  autoStart?: boolean;
+  autoRestart?: boolean;
+  shutdownTimeout?: number;
 };
 
 //
-// websocket - client messasge
+// websocket - client message
 //
 
 export type ClientMessage =
@@ -47,9 +42,14 @@ export type ClientMessage =
   | {
       type: "restartScript";
       script: string;
+      data: Record<string, any>;
     }
   | {
       type: "stopScript";
+      script: string;
+    }
+  | {
+      type: "killScript";
       script: string;
     }
   | {
@@ -64,15 +64,11 @@ export type ClientMessage =
     };
 
 //
-// websocket - server messasge
+// websocket - server message
 //
 
 /**
- *
- * properties
- *
- *  id      opaque for the client. It's used for creating url routes. (maybe just to avoid do md5 in the browser.) //udgår.
- *  script  is the absolute path of the script.
+ *  script is the absolute path of the script.
  */
 export type ServerMessage =
   | {
@@ -80,8 +76,17 @@ export type ServerMessage =
       data: ScriptStatus[];
     }
   | {
-      script: string;
-      type: "control";
-      data: string;
+      type: "gotoUrl";
+      url: string;
     }
-  | (ScriptOutput & { script: string });
+  | {
+      type: "pushUrlState";
+      urlState: UrlState;
+    }
+  | {
+      type: "replaceUrlState";
+      urlState: UrlState;
+    }
+  | ({ script: string } & LogEntry);
+
+export type UrlState = { [_: string | number]: string };

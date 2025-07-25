@@ -1,16 +1,14 @@
 import { TestProvision } from "^jarun";
 
-import { getReusableWPPAndDeps, shutdownQuickFix } from "../_fixture";
+import { getReusableWPPAndDeps } from "../_fixture";
 
 //double use, before the old has returned is not allowed.
 
 export default (prov: TestProvision) => {
   const [angel, deps] = getReusableWPPAndDeps(prov);
 
-  const p1 = angel.useProcess(deps).then((process) => shutdownQuickFix(process)); // prettier-ignore
-  const p2 = angel.useProcess(deps).catch((error: unknown) => {
-    prov.onError(error);
-  });
+  const p1 = angel.useBee(deps).then((process) => process.shutdown());
+  const p2 = angel.useBee(deps).catch(prov.onError);
 
-  return Promise.allSettled([p1, p2]).finally(() => shutdownQuickFix(angel));
+  return Promise.allSettled([p1, p2]).finally(() => angel.shutdown());
 };

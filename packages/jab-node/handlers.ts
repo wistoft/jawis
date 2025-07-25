@@ -1,6 +1,36 @@
-import { parentPort, isMainThread } from "worker_threads";
+import { parentPort, isMainThread } from "node:worker_threads";
 
 import { OnError } from "^jab";
+
+/**
+ *
+ */
+export const registerOnMessage = (listener: (msg: any) => void) => {
+  if (isMainThread) {
+    process.on("message", listener);
+  } else {
+    if (!parentPort) {
+      throw new Error("You should be there for me parentPort.");
+    }
+
+    parentPort.on("message", listener);
+  }
+};
+
+/**
+ *
+ */
+export const removeOnMessage = (listener: (msg: any) => void) => {
+  if (isMainThread) {
+    process.removeListener("message", listener);
+  } else {
+    if (!parentPort) {
+      throw new Error("You should be there for me parentPort.");
+    }
+
+    parentPort.removeListener("message", listener);
+  }
+};
 
 /**
  *
@@ -26,8 +56,6 @@ export const registerErrorHandlers = (onError: OnError) => {
     onError(reason, ["uh-promise"]);
   });
 };
-
-export { registerErrorHandlers as registerRejectionHandlers };
 
 /**
  *

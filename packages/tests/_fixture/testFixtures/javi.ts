@@ -1,29 +1,30 @@
-import path from "path";
+import { FullJaviConf } from "^javi/internal";
 
-import { FullJaviConf } from "^javi/types";
-
-const projectConf = require("../../../../packages/dev/project.conf");
+import { filterAbsoluteFilepath } from ".";
 
 /**
  *
  */
 export const filterConfig = (conf: FullJaviConf) => {
   const scriptFolders = conf.scriptFolders.map((str) =>
-    path.relative(projectConf.projectRoot, str).replace(/\\/g, "/")
+    filterAbsoluteFilepath(str)
   );
 
   const scripts = conf.scripts.map((obj) => ({
     ...obj,
-    script: path
-      .relative(projectConf.projectRoot, obj.script)
-      .replace(/\\/g, "/"),
+    script: filterAbsoluteFilepath(obj.script),
   }));
+
+  if (conf.testFrameworks.phpunit?.absFolders) {
+    conf.testFrameworks.phpunit.absFolders =
+      conf.testFrameworks.phpunit.absFolders.map(filterAbsoluteFilepath);
+  }
 
   return {
     ...conf,
-    absTestFolder: path.relative(projectConf.projectRoot, conf.absTestFolder).replace(/\\/g, "/"), // prettier-ignore
-    absTestLogFolder: path.relative(projectConf.projectRoot, conf.absTestLogFolder).replace(/\\/g, "/"), // prettier-ignore
-    projectRoot: path.relative(projectConf.projectRoot, conf.projectRoot).replace(/\\/g, "/"), // prettier-ignore
+    absTestFolder: filterAbsoluteFilepath(conf.absTestFolder),
+    absTestLogFolder: filterAbsoluteFilepath(conf.absTestLogFolder),
+    projectRoot: filterAbsoluteFilepath(conf.projectRoot),
     scriptFolders,
     scripts,
   };

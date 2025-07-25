@@ -1,13 +1,18 @@
 import React, { memo } from "react";
+import { useParams } from "react-router-dom";
 
-import { useFirstRouteEffect, useParams } from "^jab-react";
+import { useFirstRouteEffect } from "^jab-react";
 import { assertPropString } from "^jab";
 
-import { ScriptStatus } from "^jagoc";
+import {
+  ScriptStatus,
+  ApiProv,
+  ViewScript,
+  ViewScriptProps,
+  urlQueryParamsToJson,
+} from "./internal";
 
-import { ViewScript, ViewScriptProps, ApiProv } from "./internal";
-
-export type ViewScriptRouteProps = ApiProv &
+export type ViewScriptRouteProps = Pick<ApiProv, "apiSend"> &
   Omit<ViewScriptProps, "singleProcessStatus"> & {
     processStatus?: ScriptStatus[];
   };
@@ -17,12 +22,21 @@ export type ViewScriptRouteProps = ApiProv &
  * impl
  *  socket is guaranteed to be open, when sending `restartScript`, because processStatus !== undefined.
  */
-export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo(
-  ({ processStatus, apiSend, useApiSend, jcvProps }) => {
-    if (processStatus === undefined) {
-      return null;
-    }
+export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo((props) => {
+  if (props.processStatus !== undefined) {
+    return <ViewScriptRouteInner {...props} />;
+  } else {
+    return null;
+  }
+});
 
+ViewScriptRoute.displayName = "ViewScriptRoute";
+
+/**
+ *
+ */
+const ViewScriptRouteInner: React.FC<ViewScriptRouteProps> = memo(
+  ({ processStatus, apiSend, jcvProps }) => {
     //get params from url
 
     const params = useParams();
@@ -31,30 +45,29 @@ export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo(
 
     //lookup "props"
 
-    const script = processStatus.find((x) => x.id === id);
+    const script = processStatus!.find((x) => x.id === id);
 
     // restart script "onload"
 
     useFirstRouteEffect(() => {
       if (script) {
-        apiSend({ type: "restartScript", script: script.script });
+        apiSend({
+          type: "restartScript",
+          script: script.script,
+          data: urlQueryParamsToJson(),
+        });
       }
-    }, []);
+    });
 
     //render
 
     if (script) {
       return (
-        <>
-          {
-            <ViewScript
-              singleProcessStatus={script}
-              jcvProps={jcvProps}
-              apiSend={apiSend}
-              useApiSend={useApiSend}
-            />
-          }
-        </>
+        <ViewScript
+          singleProcessStatus={script}
+          jcvProps={jcvProps}
+          apiSend={apiSend}
+        />
       );
     } else {
       return <>Script not found</>;
@@ -62,4 +75,4 @@ export const ViewScriptRoute: React.FC<ViewScriptRouteProps> = memo(
   }
 );
 
-ViewScriptRoute.displayName = "ViewScriptRoute";
+ViewScriptRouteInner.displayName = "ViewScriptRouteInner";

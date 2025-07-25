@@ -1,6 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJagosDirector } from "^tests/_fixture/testFixtures/jagos";
+import { getJagosDirector } from "^tests/_fixture";
 import { getScriptPath } from "../_fixture";
 
 //shutdown with started script: is just silent
@@ -12,5 +12,9 @@ export default (prov: TestProvision) => {
     scripts: [{ script }],
   });
 
-  director.onClientMessage({ type: "restartScript", script });
+  director.onClientMessage({
+    type: "restartScript",
+    script,
+    data: { dum: "dummy" },
+  });
 };

@@ -24,7 +24,7 @@ export const makeOnKeydown = (deps: Deps) => (e: KeyboardEvent) => {
       deps.onNext();
       break;
     case "s":
-      deps.apiSend({ type: "stopRunning" });
+      deps.apiSend({ type: "toggleRunning" });
       break;
     case "r":
       deps.onRunCurrentTest();

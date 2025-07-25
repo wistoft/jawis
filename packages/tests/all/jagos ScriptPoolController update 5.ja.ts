@@ -1,11 +1,7 @@
 import { TestProvision } from "^jarun";
-import { filterScriptStatuses } from "^tests/_fixture/testFixtures/jagos";
+import { filterScriptStatuses } from "^tests/_fixture";
 
-import {
-  getJabScriptPoolController,
-  getScriptPath,
-  shutdownQuickFix,
-} from "../_fixture";
+import { getJabScriptPoolController, getScriptPath } from "../_fixture";
 
 //running scripts will be preserved at update
 
@@ -19,7 +15,7 @@ export default (prov: TestProvision) => {
   const preCount = pool.getScriptStatus().length;
 
   return pool
-    .restartScript(script)
+    .restartBee(script)
 
     .then(() => {
       pool.updateScripts();
@@ -35,5 +31,5 @@ export default (prov: TestProvision) => {
         )
       );
     })
-    .then(() => shutdownQuickFix(pool));
+    .then(pool.shutdown);
 };

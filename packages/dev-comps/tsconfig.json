@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/dev-comps",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../dev-compc" },
+    { "path": "../finally-provider" },
+    { "path": "../jab" },
+    { "path": "../yapu" },
+    { "path": "../jab-express" }
+  ]
+}

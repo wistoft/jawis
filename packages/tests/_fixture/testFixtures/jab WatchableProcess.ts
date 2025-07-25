@@ -1,35 +1,90 @@
+import path from "node:path";
+
 import { TestProvision } from "^jarun";
 import {
-  ProcessDeps,
   WatchableProcessPreloaderDeps,
   WatchableProcessPreloader,
-} from "^jab-node";
+} from "^process-util";
+import { BeeDeps } from "^bee-common";
+import { getDynamicWaiter } from "^state-waiter";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
+import { RequireSenderMessage } from "^process-util/internal";
 
-import { getPromise } from "^yapu";
 import {
-  getJabProcessDeps,
   getLogProv,
   getScriptPath,
   getLiveMakeJacsWorker,
   writeScriptFileThatChanges,
   writeScriptFileThatChanges2,
+  getBeeDeps,
+  filterAbsoluteFilepath,
 } from ".";
 
 /**
- * This is a quick fix, because shutdown has to low timeout.
+ * - Doesn't exit by it self
+ * - A script, that loads the library files
  */
-export const shutdownQuickFix = async (process: {
-  shutdown: () => Promise<any>;
-}) => {
-  try {
-    await process.shutdown();
-  } catch (error: any) {
-    if (error.message.includes("Timeout waiting for: stopped")) {
-      await (process as any).waiter.rawAwait("stopped", 10000);
-    } else {
-      throw error;
-    }
-  }
+export const getJabWatchableProcessAndWaiter_ipc_changeable = (
+  prov: TestProvision,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
+) =>
+  getJabWatchableProcess_nonIpc_changeable(prov, {
+    def: { filename: getScriptPath("WPP_wait.js") },
+    ...extraDeps,
+  }).then(({ wp, waiter }) =>
+    waiter.await("message").then(() => ({ wp, waiter }))
+  );
+
+/**
+ * - Exits by it self
+ * - A script, that loads the library files
+ */
+export const getJabWatchableProcess_nonIpc_changeable = (
+  prov: TestProvision,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
+) => {
+  writeScriptFileThatChanges(144);
+  writeScriptFileThatChanges2(355);
+
+  return getJabWatchableProcess(prov, {
+    def: { filename: getScriptPath("WPP.js") },
+    ...extraDeps,
+    onMessage: (msg) => {
+      prov.log("message", msg);
+    },
+  });
+};
+
+/**
+ *
+ */
+export const getJabWatchableProcess = (
+  prov: TestProvision,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>
+) => {
+  const { waiter, callbacks } = getDynamicWaiter(
+    ["message", "restarted", "exit"],
+    prov.onError
+  );
+
+  const [wpp, deps] = getJabWatchableProcessPreloaderAndDeps(prov, {
+    onExit: callbacks.exit,
+    onError: waiter.onError,
+
+    ...extraDeps,
+
+    onRestartNeeded: () => {
+      callbacks.restarted();
+      extraDeps?.onRestartNeeded?.();
+      prov.imp("onRestartNeeded");
+    },
+    onMessage: (msg: any) => {
+      callbacks.message();
+      extraDeps?.onMessage?.(msg);
+    },
+  });
+
+  return wpp.useBee(deps).then((wp) => ({ wp, waiter }));
 };
 
 /**
@@ -37,11 +92,11 @@ export const shutdownQuickFix = async (process: {
  */
 export const getJabWatchableProcessPreloaderAndDeps = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps>,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>,
   logPrefix?: string
 ): [
   WatchableProcessPreloader<any, any>,
-  WatchableProcessPreloaderDeps & ProcessDeps<any>
+  WatchableProcessPreloaderDeps & BeeDeps<any>,
 ] => {
   const deps = getJabWatchbleProcessPreloaderDeps(prov, extraDeps, logPrefix);
 
@@ -53,81 +108,17 @@ export const getJabWatchableProcessPreloaderAndDeps = (
 /**
  *
  */
-export const getJabWatchableProcess = (
-  prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
-) => {
-  const [wpp, deps] = getJabWatchableProcessPreloaderAndDeps(prov, extraDeps);
-
-  return wpp.useProcess(deps);
-};
-
-/**
- * - Exits by it self
- * - A script, that loads the library files
- */
-export const getJabWatchableProcess_nonIpc_changeable = (
-  prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
-) => {
-  writeScriptFileThatChanges(144);
-  writeScriptFileThatChanges2(355);
-
-  return getJabWatchableProcess(prov, {
-    filename: getScriptPath("WPP.js"),
-    ...extraDeps,
-  });
-};
-
-/**
- * - Doesn't exit by it self
- * - A script, that loads the library files
- */
-export const getJabWatchableProcess_ipc_changeable = async (
-  prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>
-) => {
-  const booterIsReady = getPromise<void>();
-  const hasRestarted = getPromise<void>();
-
-  const wp = await getJabWatchableProcess_nonIpc_changeable(prov, {
-    filename: getScriptPath("WPP_wait.js"),
-    ...extraDeps,
-
-    onMessage: (msg: any) => {
-      if (msg.type === "msg" && msg.value === "hello") {
-        booterIsReady.resolve();
-      }
-      prov.log("onMessage", msg);
-      extraDeps?.onMessage?.(msg);
-    },
-
-    onRestartNeeded: () => {
-      hasRestarted.resolve();
-      prov.imp("onRestartNeeded.");
-      extraDeps?.onRestartNeeded?.();
-    },
-  });
-
-  await booterIsReady.promise;
-
-  return { wp, hasRestarted: hasRestarted.promise };
-};
-
-/**
- *
- */
 export const getJabWatchbleProcessPreloaderDeps = (
   prov: TestProvision,
-  extraDeps?: Partial<WatchableProcessPreloaderDeps & ProcessDeps<any>>,
+  extraDeps?: Partial<WatchableProcessPreloaderDeps & BeeDeps<any>>,
   logPrefix?: string
-): WatchableProcessPreloaderDeps & ProcessDeps<any> => {
-  const procDeps = getJabProcessDeps(
+): WatchableProcessPreloaderDeps & BeeDeps<any> => {
+  const procDeps = getBeeDeps(
     prov,
     {
-      filename: getScriptPath("beeSendAndWait.js"),
-      onMessage: (msg) => {
-        prov.log("onMessage", msg);
+      def: { filename: getScriptPath("beeSendAndWait.js") },
+      onMessage: () => {
+        //hidden, because all those require messages are anoying
       },
       ...extraDeps,
     },
@@ -147,5 +138,22 @@ export const getJabWatchbleProcessPreloaderDeps = (
 
     makeBee: getLiveMakeJacsWorker(),
     logProv: getLogProv(prov, logPrefix),
+    getAbsoluteSourceFile,
   };
+};
+
+/**
+ *
+ */
+export const logRequireMessage = (msg: RequireSenderMessage) => {
+  const file = filterAbsoluteFilepath(msg.file);
+  if (!file.startsWith("abs:packages")) {
+    return;
+  }
+
+  console.log({
+    ...msg,
+    file,
+    source: msg.source && path.basename(msg.source),
+  });
 };

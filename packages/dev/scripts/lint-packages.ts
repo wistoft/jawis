@@ -1,3 +1,5 @@
-import { makeLiveJawisBuildManager } from "./build/util2";
+import { makeLiveJawisBuildManager } from "./build";
 
-makeLiveJawisBuildManager().checkPackages();
+export const main = async () => {
+  await makeLiveJawisBuildManager().checkPackages();
+};

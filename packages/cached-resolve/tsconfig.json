@@ -4,5 +4,5 @@
     "outDir": "../../build-tsc/cached-resolve",
     "rootDir": "."
   },
-  "references": [{ "path": "../jab-node" }]
+  "references": [{ "path": "../node-module-hooks-plus" }]
 }

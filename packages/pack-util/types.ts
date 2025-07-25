@@ -6,3 +6,8 @@ export type WebpackExternalsFunc = (
     result?: string | boolean | string[] | { [index: string]: any }
   ) => void
 ) => void;
+
+export type OnExternals = (data: {
+  request?: string;
+  context?: string;
+}) => void;

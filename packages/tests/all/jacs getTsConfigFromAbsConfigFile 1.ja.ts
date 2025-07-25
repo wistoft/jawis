@@ -5,7 +5,9 @@ import { TestProvision } from "^jarun";
 import { filterTsConfig, getTsProjectPath } from "^tests/_fixture";
 
 export default ({ imp }: TestProvision) => {
-  const c = getTsConfigFromAbsConfigFile(ts, getTsProjectPath("tsconfig.json"));
-
-  imp(filterTsConfig(c));
+  imp(
+    filterTsConfig(
+      getTsConfigFromAbsConfigFile(ts, getTsProjectPath("tsconfig.json"))
+    )
+  );
 };

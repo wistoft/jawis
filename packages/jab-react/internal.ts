@@ -1,9 +1,8 @@
+export * from "./capturedToHtml";
 export * from "./ClickableDivBackground";
-export * from "./clonedToHtml";
 export * from "./ComponentMenu";
 export * from "./ErrorBoundary";
 export * from "./first-route-effect";
-export * from "./first-route-effect-helper";
 export * from "./JabHttpProvider";
 export * from "./JsLink";
 export * from "./makeUseEventStream";
@@ -12,3 +11,4 @@ export * from "./ScrollbarTail";
 export * from "./TogglePanel";
 export * from "./useKeyListener";
 export * from "./util";
+export * from "./ViewDiff";

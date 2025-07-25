@@ -5,8 +5,8 @@ import { getJabWorker, getScriptPath } from "../_fixture";
 
 export default (prov: TestProvision) => {
   const worker = getJabWorker(prov, {
-    filename: getScriptPath("beeSend.js"),
+    filename: getScriptPath("ipcSendOnly.js"),
   });
 
-  return worker.waiter.await("message", 10000).then(() => worker.shutdown());
+  return worker.waiter.await("message").then(() => worker.shutdown());
 };

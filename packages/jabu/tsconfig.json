@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "../../build-tsc/jabu",
+    "rootDir": "."
+  },
+  "references": [
+    { "path": "../assorted-algorithms" },
+    { "path": "../git-util" },
+    { "path": "../jab" },
+    { "path": "../jab-node" },
+    { "path": "../state-waiter" },
+    { "path": "../ts-config-util" },
+    { "path": "../yapu" }
+  ]
+}

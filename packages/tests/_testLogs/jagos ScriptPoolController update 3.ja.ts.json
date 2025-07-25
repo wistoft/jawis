@@ -1,1 +1,1 @@
-{"user":{"imp":[["value",[{"id":"filtered","script":"packages/tests/_fixture/scripts/hello.js","status":"stopped"}]]]}}
+{"user":{"imp":[["value",[{"id":"filtered","script":"abs:packages/tests/_fixture/scripts/hello.js","status":"stopped","time":["undefined"]}]]]}}

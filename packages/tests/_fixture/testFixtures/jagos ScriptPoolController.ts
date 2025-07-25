@@ -1,13 +1,20 @@
+import { AbsoluteFile, basename } from "^jab";
 import { TestProvision } from "^jarun";
-import { basename } from "^jab";
-import { ScriptDefinition } from "^jagos";
-import { poll } from "^yapu";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
+
 import {
   ScriptPoolController,
   ScriptPoolControllerDeps,
-} from "^jagos/ScriptPoolController";
+  ScriptDefinition,
+} from "^jagos/internal";
 
-import { getLogProv, getScriptPath, getLiveMakeJacsWorker } from ".";
+import {
+  getLogProv,
+  getScriptPath,
+  getTestHoneyComb2,
+  filterLogEntries,
+} from ".";
+import { poll } from "^yapu";
 
 /**
  *
@@ -26,10 +33,34 @@ export const getJabScriptPoolController_one = (
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
-      scriptsDefs: mapScriptFilesToDefault([getScriptPath("hello.js")]),
+      scripts: [{ script: getScriptPath("hello.js") }],
       ...extraDeps,
     })
   );
+
+/**
+ *
+ */
+export const getJabScriptPoolController_new = (
+  prov: TestProvision,
+  extraDeps?: Partial<ScriptPoolControllerDeps>
+) =>
+  new ScriptPoolController(
+    getJabScriptPoolControllerDeps(prov, {
+      scripts: [
+        { script: "dormitory.bee" as AbsoluteFile },
+        { script: "hello.bee" as AbsoluteFile },
+        { script: "angry.bee" as AbsoluteFile },
+        { script: "message.bee" as AbsoluteFile },
+        { script: "ready.bee" as AbsoluteFile },
+        { script: "failing.bee" as AbsoluteFile },
+        { script: "logging.bee" as AbsoluteFile },
+        { script: "graceful.bee" as AbsoluteFile, shutdownTimeout: 100 },
+      ],
+      ...extraDeps,
+    })
+  );
+
 /**
  *
  */
@@ -39,11 +70,11 @@ export const getJabScriptPoolController_many = (
 ) =>
   new ScriptPoolController(
     getJabScriptPoolControllerDeps(prov, {
-      scriptsDefs: mapScriptFilesToDefault([
-        getScriptPath("beeSendAndWait.js"),
-        getScriptPath("stderrWithExit0.js"),
-        getScriptPath("hello.js"),
-      ]),
+      scripts: [
+        { script: getScriptPath("beeSendAndWait.js") },
+        { script: getScriptPath("stderrWithExit0.js") },
+        { script: getScriptPath("hello.js") },
+      ],
       ...extraDeps,
     })
   );
@@ -58,29 +89,28 @@ export const getJabScriptPoolControllerDeps = (
   const logProv = getLogProv(prov);
 
   return {
+    scriptFolders: [],
+    scripts: [],
     onStatusChange: (script, status) => {
       prov.log(basename(script), status);
     },
 
-    sendProcessStatus: () => {
-      //just ignored
+    onScriptMessage: (script, msg) => {
+      prov.log(basename(script) + ".message", msg);
     },
 
-    onScriptOutput: (script, output) => {
-      prov.log(basename(script) + "." + output.type, output.data);
+    onScriptLog: (script, log) => {
+      prov.log(basename(script) + ".log", filterLogEntries(log));
     },
 
-    onControlMessage: (script, data) => {
-      prov.log(basename(script) + ".control", data);
-    },
+    honeyComb: getTestHoneyComb2(),
 
-    alwaysTypeScript: true, //development needs typescript for the preloader.
-
-    makeTsBee: getLiveMakeJacsWorker(),
+    showTime: false,
 
     onError: prov.onError,
     finally: prov.finally,
     logProv,
+    getAbsoluteSourceFile,
 
     ...extraDeps,
   };
@@ -89,7 +119,7 @@ export const getJabScriptPoolControllerDeps = (
 /**
  *
  */
-export const mapScriptFilesToDefault = (scripts: string[]) =>
+export const mapScriptFilesToDefault = (scripts: AbsoluteFile[]) =>
   scripts.map(
     (script): ScriptDefinition => ({
       script,

@@ -1,0 +1,1 @@
+{"user":{"hello.bee":["preloading","running","stopped"],"hello.bee.log":[{"type":"stream","logName":"stdout","data":["TypedArray",{"type":"Buffer","length":5,"base64":"aGVsbG8="}]}]}}

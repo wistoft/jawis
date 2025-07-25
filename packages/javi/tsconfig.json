@@ -5,15 +5,23 @@
     "rootDir": "."
   },
   "references": [
+    { "path": "../bee-common" },
+    { "path": "../bee-node" },
+    { "path": "../bee-php" },
     { "path": "../finally-provider" },
     { "path": "../jab" },
     { "path": "../jab-express" },
     { "path": "../jab-node" },
+    { "path": "../jabro" },
     { "path": "../jacs" },
-    { "path": "../main-wrapper" },
     { "path": "../jarun" },
-    { "path": "../bee-common" },
     { "path": "../jagos" },
-    { "path": "../jates" }
+    { "path": "../yapu" },
+    { "path": "../javic" },
+    { "path": "../jates" },
+    { "path": "../main-wrapper" },
+    { "path": "../process-util" },
+    { "path": "../webcs" },
+    { "path": "../pack-util" }
   ]
 }

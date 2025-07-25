@@ -1,21 +1,36 @@
-import { ErrorData } from "^jab";
-import { TestProvision, JarunProcessController, BeeRunner } from "^jarun";
-import { TestResult, JatesTestReport, TestCurLogs } from "^jatec";
-import { ComposedTestFramework } from "^jates";
+import path from "node:path";
+
+import { ErrorData, FileService, LogEntry } from "^jab";
+import { NodeWS } from "^jab-express";
+import { ProcessRestarter } from "^process-util";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
+import { makeProcessRunner, makeTsNodeJabProcess } from "^javi/internal";
 import {
+  TestProvision,
+  JarunProcessController,
+  BeeRunner,
+  JarunTestFramework,
+} from "^jarun/internal";
+
+import {
+  TestResult,
+  JatesTestReport,
+  TestCurLogs,
+  ClientTestInfo,
+  TestInfo,
   TestExecutionController,
   TestExecutionControllerDeps,
-} from "^jates/TestExecutionController";
-import {
   TestListController,
   TestListControllerDeps,
-} from "^jates/TestListController";
-import { TestLogController } from "^jates/TestLogController";
-import { TestAnalytics } from "^jates/TestAnalytics";
-import { ClientComController } from "^jates/ClientComController";
+  TestAnalytics,
+  ClientComController,
+  DirectorDeps,
+  director,
+  ServerMessage,
+  ClientMessage,
+  TestLogController,
+} from "^jates/internal";
 
-import { makeProcessRunner, makeTsNodeJabProcess } from "^javi/util";
-import { getDefaultRunnersAssignments } from "^javi/makeJarunTestRunners";
 import {
   getLogProv,
   WsPoolMock,
@@ -24,7 +39,27 @@ import {
   TestFrameworkMock,
   getLiveMakeJacsWorker,
   getScratchPath,
+  makeOnLog,
+  filterAbsoluteFilepath,
 } from ".";
+
+export const makeTestInfo = (str: string): ClientTestInfo => ({
+  id: str,
+  name: str,
+  file: str,
+});
+
+/**
+ *
+ */
+export const filterTestInfo = <T extends TestInfo>(data: T[]) =>
+  data.map((info) => ({
+    ...info,
+    //this id format is specific to jarun.
+    id: filterAbsoluteFilepath(info.id),
+    name: info.name.replace(/\\/g, "/"),
+    file: filterAbsoluteFilepath(info.file),
+  }));
 
 /**
  *
@@ -89,22 +124,57 @@ export const filterErrorLog = (testLog: ErrorData[]) =>
 /**
  *
  */
+export const getJatesDirector = (
+  prov: TestProvision,
+  extraDeps?: Partial<DirectorDeps>,
+  externalLogEntries: LogEntry[] = []
+) => {
+  const fileService: FileService = {
+    handleOpenFileInEditor: () => {},
+    handleOpenRelativeFileInEditor: () => {},
+    compareFiles: () => {},
+  };
+
+  const d = director({
+    tecTimeout: 100,
+    makeTestFrameworks: () => [new TestFrameworkMock()],
+    externalBeeLogSource: {
+      getBufferedLogEntries: () => externalLogEntries,
+    },
+    onError: prov.onError,
+    finally: prov.finally,
+    logProv: getLogProv(prov),
+    wsPool: new WsPoolMock<ServerMessage, ClientMessage>({
+      log: prov.log,
+    }),
+    ...fileService,
+    ...extraDeps,
+  });
+
+  //to avoid specifying NodeWs each time.
+
+  const onClientMessage = (
+    msg: ClientMessage,
+    nws?: NodeWS<ServerMessage, ClientMessage>
+  ) => d.onClientMessage(msg, nws || ({ ws: "dummy" } as any));
+
+  return {
+    ...d,
+    onClientMessage,
+  };
+};
+
+/**
+ *
+ */
 export const getTestListController = (
   prov: TestProvision,
   extraDeps?: Partial<TestListControllerDeps>
-) => {
-  const absTestFolder = "path/to/tests";
-
-  return new TestListController({
+) =>
+  new TestListController({
     onError: prov.onError,
 
     testFramework: new TestFrameworkMock(),
-    ta: getTestAnalytics(prov, absTestFolder),
-
-    setTestExecutionList: (tests) => {
-      prov.log("TestFramework", "setTestExecutionList:");
-      prov.log("TestFramework", tests);
-    },
 
     onTestSelectionReady: (tests) => {
       prov.log("TestFramework", "onTestSelectionReady:");
@@ -113,7 +183,6 @@ export const getTestListController = (
 
     ...extraDeps,
   });
-};
 
 /**
  *
@@ -124,7 +193,7 @@ export const getTestExecutionController = (
 ) =>
   new TestExecutionController({
     ...getTestExecutionControllerDeps(prov, {}, logPrefix),
-    tr: new TestFrameworkMock(),
+    testFramework: new TestFrameworkMock(),
   });
 
 /**
@@ -148,8 +217,7 @@ export const getTestExecutionControllerDeps = (
   prov: TestProvision,
   extraDeps?: Partial<TestExecutionControllerDeps>,
   logPrefix = ""
-): Omit<TestExecutionControllerDeps, "tr"> => ({
-  absTestFolder,
+): Omit<TestExecutionControllerDeps, "testFramework"> => ({
   timeoutms: 50,
 
   onTestStarts: (id) =>
@@ -196,9 +264,13 @@ export const getComposedTestFramework = (
 
   const jpc = new JarunProcessController({
     ...deps,
-    makeTsBee: getLiveMakeJacsWorker(),
+    onLog: makeOnLog(prov),
+
+    makeProcessRestarter: (deps) =>
+      new ProcessRestarter({ ...deps, makeBee: getLiveMakeJacsWorker() }),
+
     onRogueTest: (data) => prov.log("Jate", ["onRogueTest: ", data]),
-    onRequire: () => {},
+    getAbsoluteSourceFile,
   });
 
   const pr = makeProcessRunner({
@@ -211,21 +283,28 @@ export const getComposedTestFramework = (
     makeBee: getLiveMakeJacsWorker(),
   });
 
-  return new ComposedTestFramework({
+  return new JarunTestFramework({
     ...deps,
-    absTestFolder,
+    absTestFolders: [absTestFolder],
+    absTestLogFolder: absTestLogFolder,
     subFolderIgnore: ["alsoIgnoreThis"],
-    runners: getDefaultRunnersAssignments(jpc, pr, wo),
+    runners: {
+      ".ja.js": jpc,
+      ".ja.ts": jpc,
+      ".ja.jsx": jpc,
+      ".ja.tsx": jpc,
+      ".pr.js": pr,
+      ".pr.ts": pr,
+      ".wo.js": wo,
+      ".wo.ts": wo,
+    },
   });
 };
 
 /**
  *
  */
-export const getTestAnalytics = (prov: TestProvision, absTestFolder = "") =>
-  new TestAnalytics({
-    absTestFolder,
-  });
+export const getTestAnalytics = () => new TestAnalytics();
 
 /**
  *

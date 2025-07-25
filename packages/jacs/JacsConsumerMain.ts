@@ -1,4 +1,4 @@
-import { workerData } from "worker_threads";
+import { workerData } from "node:worker_threads";
 
 import { install } from "./internal";
 

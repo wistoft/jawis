@@ -1,5 +1,7 @@
-import { MakeBee } from "^bee-common";
+import { Bee, BeeEvents, BeeStates, BeeDeps } from "^bee-common";
+import { Waiter } from "^state-waiter";
 
+import { FinallyFunc } from "^finally-provider";
 import {
   JacsProducer,
   JacsProducerDeps,
@@ -7,16 +9,46 @@ import {
   SourceFileLoaderDeps,
 } from "./internal";
 
-export type MakeMakeJacsBeeDeps = Partial<
-  Omit<JacsProducerDeps, "getTranspiledSource">
-> &
-  Pick<JacsProducerDeps, "onError" | "finally"> &
-  SourceFileLoaderDeps;
+/**
+ * waiter is quick fix for testing.
+ */
+export type MakeBeeWithWaiter = <MS extends {}, MR extends {}>(
+  deps: BeeDeps<MR>
+) => Bee<MS> & { waiter: Waiter<BeeStates, BeeEvents> };
+
+export type MakeMakeJacsBeeDeps = {
+  onError: (error: unknown) => void;
+  finally: FinallyFunc;
+} & Partial<JacsProducerDeps> &
+  Partial<SourceFileLoaderDeps>;
+
+export type JacsConf = {
+  lazyRequire: boolean;
+  module: "commonjs" | "esm";
+  consumerTimeout: number;
+  consumerSoftTimeout: number;
+  maxSourceFileSize: number;
+  cacheNodeResolve: boolean;
+  tsConfigPath: boolean;
+  doSourceMap: boolean;
+};
+
+//to make it easier for hive to get its conf
+export const jacsDefaultDeps: JacsConf = {
+  lazyRequire: false,
+  module: "commonjs",
+  consumerTimeout: 10000,
+  consumerSoftTimeout: 3000,
+  maxSourceFileSize: 256 * 1000,
+  cacheNodeResolve: false,
+  tsConfigPath: true,
+  doSourceMap: true,
+};
 
 /**
- * Init jacs producer, and return a function for creating workers.
+ * Init jacs producer.
  *
- * - Only use once. To be able to shared compiled results between workers.
+ * - Only use once. To be able to share compiled results between workers.
  * - Give all the live stuff to components.
  *
  * impl
@@ -24,22 +56,26 @@ export type MakeMakeJacsBeeDeps = Partial<
  *  - Setup up worker in subsequent makes.
  *
  */
-export const makeMakeJacsWorkerBee: (deps: MakeMakeJacsBeeDeps) => MakeBee = (
-  deps
-) => {
-  const consumerTimeout = 10000; //throws
-  const consumerSoftTimeout = 3000; //gives warning, but continues to wait for producer.
-  const maxSourceFileSize = 256 * 1000;
-
-  const sfl = new SourceFileLoader(deps);
+export const makeJacsProducer = (deps: MakeMakeJacsBeeDeps) => {
+  const sfl = new SourceFileLoader({
+    ...jacsDefaultDeps,
+    ...deps,
+    lazyRequireIndexFiles: false,
+  });
 
   const producer = new JacsProducer({
     sfl,
-    maxSourceFileSize,
-    consumerTimeout,
-    consumerSoftTimeout,
+    ...jacsDefaultDeps,
     ...deps,
   });
 
-  return producer.makeJacsWorkerBee;
+  return producer;
 };
+
+/**
+ * Init jacs producer, and return a function for creating worker bees.
+ *
+ */
+export const makeMakeJacsWorkerBee: (
+  deps: MakeMakeJacsBeeDeps
+) => MakeBeeWithWaiter = (deps) => makeJacsProducer(deps).makeJacsWorkerBee;

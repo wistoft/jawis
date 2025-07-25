@@ -1,18 +1,3 @@
-const { parentPort, isMainThread } = require("worker_threads");
-
-// - send an ipc message and exit
-// - support beeing both process and worker
-
-if (isMainThread) {
-  if (!process.send) {
-    throw new Error("Ipc should be active in main thread.");
-  }
-
-  process.send({ type: "msg", value: "hello" });
-} else {
-  if (!parentPort) {
-    throw new Error("You should be there for me parentPort.");
-  }
-
-  parentPort.postMessage({ type: "msg", value: "hello" });
-}
+module.exports.main = (prov) => {
+  prov.beeSend({ type: "msg", value: "hello" });
+};

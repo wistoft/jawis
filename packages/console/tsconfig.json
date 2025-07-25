@@ -5,7 +5,6 @@
     "rootDir": "."
   },
   "references": [
-    { "path": "../bee-common" },
     { "path": "../jab" },
     { "path": "../jab-react" },
     { "path": "../parse-captured-stack" },

@@ -10,9 +10,11 @@ import {
   getStopLink,
   ApiProv,
   State,
+  getKillLink,
 } from "./internal";
 
-export type ViewProcessOverviewProps = Pick<State, "processStatus"> & ApiProv;
+export type ViewProcessOverviewProps = Pick<State, "processStatus"> &
+  Pick<ApiProv, "apiSend">;
 
 const showStateAsText = false;
 
@@ -27,28 +29,25 @@ export const ViewProcessOverview: React.FC<ViewProcessOverviewProps> = memo(
 
     const status =
       props.processStatus &&
-      props.processStatus.map((entry) => {
-        //can't use `useApiSend` because this is not a place for calling hooks.
-
-        return (
-          <React.Fragment key={entry.id}>
-            {getRestartLink(props, entry.script)}{" "}
-            {getStopLink(props, entry.script)}{" "}
-            {getEditLink(props, entry.script)}
-            {" - "}
-            <Link
-              to={"script/" + entry.id}
-              style={{ color: getScriptColor(entry.status) }}
-            >
-              {basename(entry.script)}
-            </Link>
-            {showStateAsText &&
-              entry.status !== "stopped" &&
-              " - " + entry.status}
-            <br />
-          </React.Fragment>
-        );
-      });
+      props.processStatus.map((entry) => (
+        <React.Fragment key={entry.id}>
+          {getRestartLink(props.apiSend, entry.script)}{" "}
+          {getStopLink(props.apiSend, entry.script)}{" "}
+          {getKillLink(props.apiSend, entry.script)}{" "}
+          {getEditLink(props.apiSend, entry.script)}
+          {" - "}
+          <Link
+            to={"script/" + entry.id}
+            style={{ color: getScriptColor(entry.status) }}
+          >
+            {basename(entry.script)}
+          </Link>
+          {showStateAsText &&
+            entry.status !== "stopped" &&
+            " - " + entry.status}
+          <br />
+        </React.Fragment>
+      ));
 
     return <>{status}</>;
   }

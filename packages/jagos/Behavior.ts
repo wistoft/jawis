@@ -1,9 +1,12 @@
 import { WsPoolProv } from "^jab-express";
-
-import { ClientMessage, ServerMessage } from "^jagoc";
-
 import { safeAll } from "^yapu";
-import { ScriptPoolProv, ActionProv } from "./internal";
+
+import {
+  ClientMessage,
+  ServerMessage,
+  ScriptPoolProv,
+  ClientComProv,
+} from "./internal";
 
 // prov
 
@@ -17,7 +20,7 @@ export type BehaviorDeps = {
   wsPool: WsPoolProv<ServerMessage, ClientMessage>;
   scriptPool: ScriptPoolProv;
   onError: (error: unknown) => void;
-} & Pick<ActionProv, "sendProcessStatus">;
+} & Pick<ClientComProv, "sendProcessStatus">;
 
 /**
  *

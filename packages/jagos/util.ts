@@ -1,16 +1,24 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
-export type ScriptDefinition = {
-  script: string;
-  autoStart?: boolean;
-  autoRestart?: boolean;
+import { HoneyComb } from "^bee-common";
+import { AbsoluteFile, MainFileDeclaration } from "^jab";
+
+import { ScriptDefinition } from "./internal";
+
+export const scriptWrapperMainDeclaration: MainFileDeclaration = {
+  type: "node-bee",
+  file: "ScriptWrapperMain",
+  folder: __dirname,
 };
 
 /**
  *
  */
-export const loadScriptFolders = (folders?: string[]) => {
+export const loadScriptFolders = (
+  honeyComb?: HoneyComb<any>,
+  folders?: string[]
+) => {
   if (!folders) {
     return [];
   }
@@ -23,13 +31,15 @@ export const loadScriptFolders = (folders?: string[]) => {
         .readdirSync(folder)
         .map(
           (file): ScriptDefinition => ({
-            script: path.join(folder, file),
+            script: path.join(folder, file) as AbsoluteFile,
           })
         )
         .filter(
           ({ script }) =>
             fs.lstatSync(script).isFile() &&
-            (script.endsWith(".js") || script.endsWith(".ts"))
+            (script.endsWith(".js") ||
+              script.endsWith(".ts") ||
+              honeyComb?.isBee(script))
         )
     );
   });

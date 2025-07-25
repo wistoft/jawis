@@ -1,18 +1,20 @@
 import { TestProvision } from "^jarun";
 
-import { getHtmlRTR } from "^misc/node";
-import { getViewExecutionLevel } from "../_fixture";
+import { getPrettyHtml, getViewExecutionLevel } from "../_fixture";
 
-export default (prov: TestProvision) => {
-  prov.log("no tests", getHtmlRTR(getViewExecutionLevel({ level: [] })));
+export default async (prov: TestProvision) => {
+  prov.log(
+    "no tests",
+    await getPrettyHtml(getViewExecutionLevel({ level: [] }))
+  );
 
   // no result
 
   prov.log(
     "test with no status",
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
       })
     )
   );
@@ -21,9 +23,9 @@ export default (prov: TestProvision) => {
 
   prov.log(
     "test with status 1",
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewExecutionLevel({
-        level: [{ id: "test 1", status: 1 }],
+        level: [{ id: "test 1", name: "1", file: "file", status: 1 }],
       })
     )
   );
@@ -32,9 +34,9 @@ export default (prov: TestProvision) => {
 
   prov.log(
     "test that passes",
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewExecutionLevel({
-        level: [{ id: "test 1", status: "." }],
+        level: [{ id: "test 1", name: "1", file: "file", status: "." }],
       })
     )
   );
@@ -43,9 +45,9 @@ export default (prov: TestProvision) => {
 
   prov.log(
     "test that is shown",
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
         currentTestId: "test 1",
       })
     )
@@ -55,9 +57,9 @@ export default (prov: TestProvision) => {
 
   prov.log(
     "test that is executing",
-    getHtmlRTR(
+    await getPrettyHtml(
       getViewExecutionLevel({
-        level: [{ id: "test 1" }],
+        level: [{ id: "test 1", name: "1", file: "file" }],
         executingTestId: "test 1",
       })
     )

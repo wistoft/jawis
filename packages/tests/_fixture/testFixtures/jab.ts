@@ -66,6 +66,7 @@ export const cloneTosGeneral_test = (value: CapturedValue) =>
     "set-prefix": "set-prefix",
     "map-prefix": "map-prefix",
     "function-prefix": "function-prefix",
+    "resource-prefix": "resource-prefix",
 
     "array-buffer-prefix": "array-buffer-prefix",
     "shared-array-buffer-prefix": "shared-array-buffer-prefix",
@@ -81,6 +82,8 @@ export const cloneTosGeneral_test = (value: CapturedValue) =>
     "brace-end": ")",
     "bracket-start": "<",
     "bracket-end": ">",
+
+    "partial-prefix": "partial-prefix",
   });
 
 /**

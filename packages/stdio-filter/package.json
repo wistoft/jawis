@@ -1,0 +1,17 @@
+{
+  "sideEffects": [
+    "console-filter-main.ts",
+    "console-filter-main-new.ts"
+  ],
+  "version": "0.0.1",
+  "name": "~stdio-filter",
+  "bin": {
+    "cf": "./console-filter-main.js"
+  },
+  "description": "Filter the stdio from console applications.",
+  "dependencies": {},
+  "keywords": [
+    "development",
+    "console"
+  ]
+}

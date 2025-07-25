@@ -13,6 +13,6 @@ export default (prov: TestProvision) => {
   return pool
     .restartAllScripts()
     .then(() => waitForAllStoppedOrListening(pool))
-    .then(pool.ensureAllScriptsStopped)
+    .then(pool.stopAllScripts)
     .then(pool.shutdown);
 };

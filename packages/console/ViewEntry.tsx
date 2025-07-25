@@ -72,10 +72,13 @@ const renderEntry = ({ entry, onToggleEntry, ...extra }: RenderEntryProps) => {
     case "log":
       return <ViewLogEntry {...subProps} entry={entry} />;
 
+    case "status":
+      return <>Status: {entry.data}</>;
+
     case "html":
       return <div dangerouslySetInnerHTML={{ __html: entry.data }} />;
 
-    case "stream-line":
+    case "stream":
       return <div className={"divPre scrollbox"}>{entry.data}</div>;
 
     default:

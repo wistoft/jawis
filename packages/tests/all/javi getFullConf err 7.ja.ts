@@ -5,5 +5,5 @@ import { getFixturePath } from "^tests/_fixture";
 //testFolder doesn't exist
 
 export default (prov: TestProvision) => {
-  getFullConf({ testFolder: "dontExist" }, getFixturePath(), true);
+  getFullConf({ testFolder: "dontExist" }, getFixturePath(), "windows", true);
 };

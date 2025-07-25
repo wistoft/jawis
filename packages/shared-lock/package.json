@@ -1,0 +1,18 @@
+{
+  "sideEffects": false,
+  "version": "0.0.1",
+  "name": "~shared-lock",
+  "description": "Locks for concurrent programs.",
+  "dependencies": {},
+  "keywords": [
+    "shared",
+    "shm",
+    "lock",
+    "concurrency",
+    "parallelism",
+    "multithreading",
+    "worker_threads",
+    "thread",
+    "Atomics"
+  ]
+}

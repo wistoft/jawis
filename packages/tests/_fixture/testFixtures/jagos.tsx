@@ -1,18 +1,23 @@
-import path from "path";
+import { assertNever, FileService } from "^jab";
 import { TestProvision } from "^jarun";
-import { ClientMessage, ScriptStatus, ServerMessage } from "^jagoc";
 import { NodeWS } from "^jab-express";
-import { assertNever, basename, FileService } from "^jab";
-import { director, DirectorDeps } from "^jagos/director";
+import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "^dev/util";
 
 import {
+  ClientMessage,
+  ScriptStatus,
+  ServerMessage,
+  director,
+  DirectorDeps,
+} from "^jagos/internal";
+
+import {
+  filterAbsoluteFilepath,
   getLogProv,
   getScriptPath,
-  getLiveMakeJacsWorker,
   WsPoolMock,
+  getTestHoneyComb2,
 } from ".";
-
-const projectConf = require("../../../../packages/dev/project.conf");
 
 /**
  *
@@ -27,30 +32,19 @@ export const getJagosDirector = (
     compareFiles: () => {},
   };
 
-  const wsPool = new WsPoolMock<ServerMessage, ClientMessage>({
-    log: prov.log,
-    filterMessage: filterJagosMessage,
-  });
-
   const d = director({
-    alwaysTypeScript: true, //development needs typescript for the preloader.
-    makeTsBee: getLiveMakeJacsWorker(),
+    scriptFolders: [],
+    scripts: [],
+    honeyComb: getTestHoneyComb2(),
+    showTime: false,
     onError: prov.onError,
     finally: prov.finally,
     logProv: getLogProv(prov),
-    wsPool: {
-      ...wsPool,
-      send: (_data) => {
-        const data = filterJagosMessage(_data);
-
-        if ("script" in data) {
-          //scripts are logged separately, because their output isn't deterministic
-          prov.log(basename(data.script), data);
-        } else {
-          prov.log("WsPoolMock.send", data);
-        }
-      },
-    },
+    wsPool: new WsPoolMock<ServerMessage, ClientMessage>({
+      log: prov.log,
+      filterMessage: filterJagosMessage,
+    }),
+    getAbsoluteSourceFile,
     ...fileService,
     ...extraDeps,
   });
@@ -75,7 +69,10 @@ export const getJagosDirector_with_script = (
   extraDeps?: Partial<DirectorDeps>
 ) =>
   getJagosDirector(prov, {
-    scripts: [{ script: getScriptPath("hello.js") }],
+    scripts: [
+      { script: getScriptPath("hello.js") },
+      { script: getScriptPath("silent.js") },
+    ],
     ...extraDeps,
   });
 
@@ -90,15 +87,15 @@ export const filterJagosMessage = (msg: ServerMessage) => {
         data: filterScriptStatuses(msg.data),
       };
     }
-    case "stdout":
-    case "stderr":
-      return {
-        ...msg,
-        script: path.relative(projectConf.projectRoot, msg.script).replace(/\\/g, "/"), // prettier-ignore
-      };
 
-    case "control":
-    case "message":
+    case "status":
+    case "html":
+    case "log":
+    case "error":
+    case "stream":
+    case "gotoUrl":
+    case "pushUrlState":
+    case "replaceUrlState":
       return msg;
 
     default:
@@ -113,7 +110,7 @@ export const filterScriptStatuses = (data: ScriptStatus[]) =>
   data.map((status) => {
     const newStatus = {
       ...status,
-      script: path.relative(projectConf.projectRoot, status.script).replace(/\\/g, "/"), // prettier-ignore
+      script: filterAbsoluteFilepath(status.script),
     };
 
     if ("id" in newStatus) {

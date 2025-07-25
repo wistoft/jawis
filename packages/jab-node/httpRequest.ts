@@ -1,5 +1,5 @@
-import http, { RequestOptions } from "http";
-import https from "https";
+import http, { RequestOptions } from "node:http";
+import https from "node:https";
 
 /**
  *

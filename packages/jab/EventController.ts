@@ -23,7 +23,5 @@ export class EventController<T> implements EventStream<T> {
     this.listeners.forEach((callback) => callback(data));
   };
 
-  public hasListeners = () => {
-    return this.listeners.length > 0;
-  };
+  public hasListeners = () => this.listeners.length > 0;
 }

@@ -10,7 +10,7 @@ export type CapturedValue =
 
 export type CapturedNonPlainObject = {
   protoChain: string[];
-  fields: { [_: string]: CapturedValue };
+  fields?: { [_: string]: CapturedValue };
   toStringValue?: string;
 };
 
@@ -34,6 +34,7 @@ export type CapturedNonPrimitiveValue =
   | ["symbol", string]
   | ["date", string]
   | ["function", string]
+  | ["resource", string]
   | ["set", CapturedValue]
   | ["map", CapturedValue]
   | ["value", Array<CapturedValue>]
@@ -42,7 +43,8 @@ export type CapturedNonPrimitiveValue =
   | ["DataView", number]
   | ["TypedArray", CapturedTypedArray]
   | ["object", CapturedNonPlainObject]
-  | ["promise", PendingCapturedPromise]; //used in capture async.
+  | ["promise", PendingCapturedPromise] //used in capture async.
+  | ["partial", CapturedValue];
 
 export type PendingCapturedPromise = {
   resolve?: CapturedValue;

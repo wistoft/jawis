@@ -2,19 +2,19 @@ import React from "react";
 
 import { TestProvision } from "^jarun";
 
-import { ViewDiff } from "^jatev/ViewDiff";
+import { ViewDiff } from "^jab-react";
 
-import { getHtmlRTR } from "^misc/node";
+import { getPrettyHtml } from "../_fixture";
 
-export default ({ imp }: TestProvision) => {
-  imp(getHtmlRTR(<ViewDiff left={"dav"} right={"dav"} />));
-  imp(getHtmlRTR(<ViewDiff left={""} right={"dav"} />));
-  imp(getHtmlRTR(<ViewDiff left={"dav"} right={""} />));
+export default async ({ imp }: TestProvision) => {
+  imp(await getPrettyHtml(<ViewDiff left={"dav"} right={"dav"} />));
+  imp(await getPrettyHtml(<ViewDiff left={""} right={"dav"} />));
+  imp(await getPrettyHtml(<ViewDiff left={"dav"} right={""} />));
 
-  imp(getHtmlRTR(<ViewDiff left={"dav"} right={"hej"} />));
+  imp(await getPrettyHtml(<ViewDiff left={"dav"} right={"hej"} />));
 
-  imp(getHtmlRTR(<ViewDiff left={"dav"} right={"dav "} />));
-  imp(getHtmlRTR(<ViewDiff left={"dav\n"} right={"dav"} />));
+  imp(await getPrettyHtml(<ViewDiff left={"dav"} right={"dav "} />));
+  imp(await getPrettyHtml(<ViewDiff left={"dav\n"} right={"dav"} />));
 
-  imp(getHtmlRTR(<ViewDiff left={"a b c"} right={"abc"} />));
+  imp(await getPrettyHtml(<ViewDiff left={"a b c"} right={"abc"} />));
 };

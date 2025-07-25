@@ -1,0 +1,1 @@
+{"user":{"inherited binary":[{"phpunit":{"absFolders":["value",["abs:packages/tests/_fixture/testsuite"]],"phpBinary":"parent-php"}}],"child overwrites binary":[{"phpunit":{"absFolders":["value",["abs:packages/tests/_fixture/testsuite"]],"phpBinary":"child-php"}}]}}

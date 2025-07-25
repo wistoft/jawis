@@ -1,0 +1,16 @@
+{
+  "sideEffects": false,
+  "version": "0.0.0",
+  "name": "~bee-php",
+  "description": "Bee implementation for php.",
+  "dependencies": {},
+  "keywords": [
+    "bee",
+    "php",
+    "development",
+    "process",
+    "thread",
+    "worker",
+    "exec"
+  ]
+}

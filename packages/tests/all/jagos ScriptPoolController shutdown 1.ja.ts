@@ -1,9 +1,6 @@
 import { TestProvision } from "^jarun";
 
-import { getJabScriptPoolController_one } from "../_fixture";
+import { getJabScriptPoolController_new } from "../_fixture";
 
-export default (prov: TestProvision) => {
-  const pool = getJabScriptPoolController_one(prov);
-
-  return pool.shutdown();
-};
+export default (prov: TestProvision) =>
+  getJabScriptPoolController_new(prov).shutdown();
