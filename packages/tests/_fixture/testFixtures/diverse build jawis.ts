@@ -34,6 +34,7 @@ export const testTransformPackageJson = async (
     packageName,
     targetFolder,
     dependencies,
-    await makeTestJawisBuildManager().getAllSiblingDeps(),
-    true
+    await makeTestJawisBuildManager().getAllSiblingDeps("1.2.3-dev"),
+    true,
+    "1.2.3-dev"
   );

@@ -215,7 +215,7 @@ export const makeJawisBuildManager = (
   /**
    *
    */
-  const getAllSiblingDeps = async () => {
+  const getAllSiblingDeps = async (prototypeVersion: string) => {
     const tmp: [string, any][] = [];
     const versions: { [_: string]: string } = {};
 
@@ -501,7 +501,8 @@ export const makeJawisBuildManager = (
     targetFolder: string,
     dependencies: Record<string, string>,
     siblingDeps: any,
-    checkSideEffects: boolean
+    checkSideEffects: boolean,
+    prototypeVersion: string
   ) => {
     json.name = getFullPackageName(packageName);
 
@@ -556,9 +557,7 @@ export const makeJawisBuildManager = (
 
     json.license = "MIT";
 
-    if (prototypeVersion) {
-      json.version = prototypeVersion;
-    }
+    json.version = prototypeVersion;
 
     return json;
   };
@@ -587,7 +586,10 @@ export const makeJawisBuildManager = (
   /**
    *
    */
-  const buildPackageJson = async (checkSideEffects = true) => {
+  const buildPackageJson = async (
+    prototypeVersion: string,
+    checkSideEffects = true
+  ) => {
     // Get root versions
 
     const rootDependencies = JSON.parse(
@@ -598,7 +600,7 @@ export const makeJawisBuildManager = (
 
     //read sibling deps
 
-    const siblingDeps = await getAllSiblingDeps();
+    const siblingDeps = await getAllSiblingDeps(prototypeVersion);
 
     //process package.json files
 
@@ -630,7 +632,8 @@ export const makeJawisBuildManager = (
           targetFolder,
           dependencies,
           siblingDeps,
-          checkSideEffects
+          checkSideEffects,
+          prototypeVersion
         ),
         undefined,
         2
@@ -717,7 +720,7 @@ export const makeJawisBuildManager = (
     await del(buildFolder);
     await checkPackages();
     await buildTs();
-    await buildPackageJson();
+    await buildPackageJson(prototypeVersion);
     await copyFiles();
     await addLicenceFiles();
   };

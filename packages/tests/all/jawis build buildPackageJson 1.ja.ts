@@ -6,7 +6,7 @@ import {
 } from "^tests/_fixture";
 
 export default async (prov: TestProvision) => {
-  await makeTestJawisBuildManager().buildPackageJson(false);
+  await makeTestJawisBuildManager().buildPackageJson("1.2.3-dev", false);
 
   logFolder(prov, getScratchPath());
 };
