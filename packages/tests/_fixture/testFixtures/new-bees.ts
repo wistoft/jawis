@@ -10,13 +10,16 @@ import { getBeeDeps, getScriptPath, TestMainProv } from ".";
 export const makePhpBee_test = (
   prov: TestMainProv,
   extraDeps?: Partial<BeeDeps<any>>
-) =>
-  makePhpBee(
+) => {
+  const proc = makePhpBee(
     getBeeDeps(prov, {
       def: { filename: getScriptPath("hello.php") },
       ...extraDeps,
     })
   );
+
+  return (proc as any).proc.waiter.await("stopped");
+};
 
 /**
  *

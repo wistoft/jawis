@@ -14,9 +14,15 @@ import {
   AbsoluteFile,
   LogEntry,
   makeJabError,
+  getRandomString,
 } from "^jab";
 import { TestProvision } from "^jarun";
-import { MainProv, httpRequest, listFilesRecursiveSync } from "^jab-node";
+import {
+  MainProv,
+  httpRequest,
+  listFilesRecursiveSync,
+  makeAbsolute,
+} from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
 
@@ -110,6 +116,17 @@ export const getTmpFolder = (sub: string) => {
   fse.ensureDirSync(folder);
 
   return folder;
+};
+
+/**
+ *
+ */
+export const makeTempFile = (content: string) => {
+  const file = makeAbsolute(getTmpFolder(""), getRandomString());
+
+  fs.writeFileSync(file, content);
+
+  return file;
 };
 
 /**

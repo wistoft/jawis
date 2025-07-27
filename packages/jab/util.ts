@@ -123,8 +123,17 @@ export const getRandomInteger = (max = Number.MAX_SAFE_INTEGER) =>
 /**
  *
  */
-export const getRandomString = (chars: string[], maxlength = 10) => {
-  const length = getRandomInteger(maxlength);
+export const getRandomLengthString = (chars: string[] = [], maxlength = 10) =>
+  getRandomString(chars, getRandomInteger(maxlength));
+
+/**
+ *
+ */
+export const getRandomString = (_chars: string[] = [], length = 10) => {
+  const chars =
+    _chars.length !== 0
+      ? _chars
+      : [ "a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","0","1","2","3","4","5","6","7","8","9" ]; // prettier-ignore
 
   let res = "";
 

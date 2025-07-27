@@ -1,0 +1,1 @@
+{"user":{},"err":["Non-static method Foo::method() cannot be called statically"]}
