@@ -934,6 +934,312 @@
     wrap-ansi "^8.1.0"
     wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
+"@jawis/console@5.0.0-dev", "@jawis/console@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/console/-/console-5.0.0-dev.tgz#e92ec418a0bfe193648af33ac547a4e37c3ef016"
+  integrity sha512-EBRV00ntJCjaClbGqg7vUCIc3Mt5jvim+fnKKtMrkJZkz/5ezWYS3lA2WvUQpp+JWnb6TuHQDJ7p4C5kpYWjgA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-react" "^5.0.0-dev"
+    "@types/react" "^18.0.0"
+    parse-captured-stack "^5.0.0-dev"
+    react "^18.0.0"
+    view-exception "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/jab-express@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-express/-/jab-express-5.0.0-dev.tgz#c4b34a4faff79532984af2341a7d1efbf260aca8"
+  integrity sha512-OQtU9hFQmK8MMkxbstJWrlIrV0ZWBS0t+WqPJEKzLJx9SFQXLNcAp98WCwmR9bDozPZ3cNcOuW/ggZ+z0b7cog==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@types/body-parser" "^1.19.2"
+    "@types/cors" "^2.8.6"
+    "@types/express" "^4.17.11"
+    "@types/express-ws" "^3.0.0"
+    "@types/ws" "^8.5.2"
+    body-parser "^1.20.1"
+    cors "^2.8.5"
+    express "^4.17.3"
+    express-ws "^5.0.2"
+    finally-provider "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+    ws "^8.5.0"
+    yapu "^5.0.0-dev"
+
+"@jawis/jab-node@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-node/-/jab-node-5.0.0-dev.tgz#723dc90c638fe6e7c1706272147fb97789755cda"
+  integrity sha512-/I9/c9Qmtu2+MdU/rOnT9GPpE/dK+21YFWceek/c8SVgalSwuH9GCxOaUxnELjEFrxk4L9ybkjEAeWC9xC9TlQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@types/fs-extra" "^11.0.4"
+    "@types/fs-readdir-recursive" "^1.0.0"
+    fast-glob "^3.2.7"
+    fs-extra "^11.2.0"
+    fs-readdir-recursive "^1.1.0"
+    yapu "^5.0.0-dev"
+
+"@jawis/jab-react@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab-react/-/jab-react-5.0.0-dev.tgz#ea73116830a3e3b4a6c07b1e18630b78fcdca94d"
+  integrity sha512-LX3vDbgmI4r7JWXgRDLjQ3X+6YgqlE3R42Zq2+P3/JzGyCiaZg4xPT9rgrhutiHKrUp2U1nYCmyOGLnHNWWlWw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@types/react" "^18.0.0"
+    "@types/react-dom" "^18.0.0"
+    assorted-algorithms "^5.0.0-dev"
+    react "^18.0.0"
+    react-dom "^18.0.0"
+    react-router-dom "^6.3.0"
+    shallow-equal "^3.1.0"
+
+"@jawis/jab@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jab/-/jab-5.0.0-dev.tgz#b172f53c21e7364a96d87e80509334ae4b5408ac"
+  integrity sha512-/Zr5IA73FhQeEFPmtfT+Ent4EvivJRJy2jJkHe2FJCmValruW1upPvQeqbooIKNUHWLkLHn2hAL23cbTHQ4Maw==
+  dependencies:
+    "@jawis/jabc" "^5.0.0-dev"
+
+"@jawis/jabc@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jabc/-/jabc-5.0.0-dev.tgz#865f49181e7e62113f78d52da7cacb6aa517d2cc"
+  integrity sha512-EJknREDs68MS8ebHLATVpHHbObB0lUSd5YXqpA6WBp3VmR8irnod/d/hdRHGiv57gF1kuajLq6XVqw2VdC0gbg==
+
+"@jawis/jabro@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jabro/-/jabro-5.0.0-dev.tgz#c822ecb09cf10e7f38254133a9ae62e0405c31a6"
+  integrity sha512-JGIGjdcuBYDHzz2UAKComHQGmkINrBXhcUAEZVFeW0thwK1sVTjXOeRDjZYCcjXhry1UhaE/l1a9p+uEB9FyLw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-express" "^5.0.0-dev"
+    "@jawis/jabroc" "^5.0.0-dev"
+    "@jawis/jabrov" "^5.0.0-dev"
+    "@jawis/javic" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+
+"@jawis/jabroc@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jabroc/-/jabroc-5.0.0-dev.tgz#c73764699d58d27aa35c9c904a82782f467cd60f"
+  integrity sha512-AiL+LN4E/BxqF2/t594IiDHuU2Pik2Zu4CG2dDS3szkrshRpBjAE7CYup5ZizWO3V0pT4SNz08RzO+wHHu/YUw==
+  dependencies:
+    "@jawis/jabc" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+
+"@jawis/jabrov@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jabrov/-/jabrov-5.0.0-dev.tgz#43b4d3db061622740f4473e550ec515d2b837a0c"
+  integrity sha512-xHcOmBe6OdiSM9l1HMuq+JWRIEIyLrmcpOjOjPXKgTAaUwKTfbvEeK0rUHww5W8cEVOL0B++MCHl1QLSfVTE+g==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-react" "^5.0.0-dev"
+    "@jawis/jabroc" "^5.0.0-dev"
+    "@types/js-string-escape" "^1.0.1"
+    bee-common "^5.0.0-dev"
+    bee-web-worker "^5.0.0-dev"
+    js-string-escape "^1.0.1"
+    parse-captured-stack "^5.0.0-dev"
+    react-use-ws "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/jacs@5.0.0-dev", "@jawis/jacs@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jacs/-/jacs-5.0.0-dev.tgz#c43f3c589b0a0cf97bbc526f9b7d9c55ff028735"
+  integrity sha512-aHGYArs33Qp6ZElEWJ5DHQPDcmsAwhlTVeu95KJFf51WC27nIDOLSWESY1f8GSw7sELw55eJtHpPi6LluK3yhA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/node-module-hooks-plus" "^5.0.0-dev"
+    "@jawis/process-util" "^5.0.0-dev"
+    "@types/source-map-support" "^0.5.3"
+    bee-common "^5.0.0-dev"
+    bee-node "^5.0.0-dev"
+    cached-resolve "^5.0.0-dev"
+    filewatcher "^3.0.1"
+    finally-provider "^5.0.0-dev"
+    lazy-require-ts "^5.0.0-dev"
+    source-map-support "^0.5.19"
+    state-waiter "^5.0.0-dev"
+    ts-config-util "^5.0.0-dev"
+    tsconfig-paths "^4.0.0"
+    typescript "^4.6.2"
+    yapu "^5.0.0-dev"
+
+"@jawis/jagoc@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagoc/-/jagoc-5.0.0-dev.tgz#b6745b388f40a668cb6040217dbc0ada235ce28d"
+  integrity sha512-2wGI+bmOrgleftioK5cMrUkROP+5+Sy0lo9xELuku/ki82KlwNaG/1pl6UV0gASsiPhOLUMd8HptzontJiaGmw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+
+"@jawis/jagos@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagos/-/jagos-5.0.0-dev.tgz#a3ff8fd7b82ee8579778036261cd608f6328d245"
+  integrity sha512-Zmo2VS5Fjfq91eujT/2aHfvQom4JzEUzMojiK0doq5yBTqZzYVQvlUFju0Nq2Dl9pz0+z8enXGh1VzHQOlXv7A==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-express" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/jagoc" "^5.0.0-dev"
+    "@jawis/javic" "^5.0.0-dev"
+    "@jawis/process-util" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    finally-provider "^5.0.0-dev"
+    long-traces "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/jagov@5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jagov/-/jagov-5.0.0-dev.tgz#271cfab91c824b83de43220ed3cc359e4283e8dd"
+  integrity sha512-HUyJLqYQISsKZbh6U1UpttbFDs4zxtv1sQkT5VxK+gS4PtopjCXcE2ndywTqOk0NY7f5tuC9okDmdSbJb+b3Zg==
+  dependencies:
+    "@jawis/console" "^5.0.0-dev"
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-react" "^5.0.0-dev"
+    "@jawis/jagoc" "^5.0.0-dev"
+    "@types/react" "^18.0.0"
+    react "^18.0.0"
+    react-router-dom "^6.3.0"
+    react-use-ws "^5.0.0-dev"
+
+"@jawis/jarun@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jarun/-/jarun-5.0.0-dev.tgz#1e023c9308118cbc02a96b96c11109b068335410"
+  integrity sha512-uHDoLvIkzmac3W67c8fiAlrctj+kIFjdoig3Cu9z470cKvzWdCAaLibbCkMGcamTjaha0EpNyoezIwCDUBgSlw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/jarunc" "^5.0.0-dev"
+    "@jawis/jatec" "^5.0.0-dev"
+    "@jawis/jates" "^5.0.0-dev"
+    "@jawis/process-util" "^5.0.0-dev"
+    "@types/fs-readdir-recursive" "^1.0.0"
+    bee-common "^5.0.0-dev"
+    finally-provider "^5.0.0-dev"
+    fs-readdir-recursive "^1.1.0"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/jarunc@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jarunc/-/jarunc-5.0.0-dev.tgz#a1bca75c5b74b3402c3805d8f36db390d275cb55"
+  integrity sha512-s6fqWTncblv1fn3NPwtacZumDwGHY/n9/nh9Zh4cxTiucF4x3gb+ybVQ/CqSgX9CEPHljpd+nTamg7j6mmvTFg==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jatec" "^5.0.0-dev"
+    "@types/deep-equal" "^1.0.1"
+    async-capture "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    deep-equal "^2.0.5"
+    finally-provider "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/jatec@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jatec/-/jatec-5.0.0-dev.tgz#d8c146d3f33c15168c32c82167b6d42933cfbed6"
+  integrity sha512-2sJ5ooIdXK63aFkp/78IGcqOfjaxGHuaA1S4rgic+n9GPSIb8HrtvDUyYUZlE5QkKSgtnuGWyK9y2qhqqjX4ZQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@types/deep-equal" "^1.0.1"
+    deep-equal "^2.0.5"
+    finally-provider "^5.0.0-dev"
+
+"@jawis/jates@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/jates/-/jates-5.0.0-dev.tgz#888104efd8c36a64aa0d2621e276247704dc2443"
+  integrity sha512-2sO2RRxypC3NIKcErYmNJMU6ORGoP0s0t3yBUnCQlJX2O2hRYvnfvWDp/5bvI6lwf1gAykCRX4pE9vu+H/wCaw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-express" "^5.0.0-dev"
+    "@jawis/jatec" "^5.0.0-dev"
+    "@types/fs-extra" "^11.0.4"
+    bee-common "^5.0.0-dev"
+    finally-provider "^5.0.0-dev"
+    fs-extra "^11.2.0"
+    loop-controller "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/javi@5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/javi/-/javi-5.0.0-dev.tgz#7201a6fdd7ccaaaf6ec3223622dd948f89bef67e"
+  integrity sha512-oMPzNKSmP7Fx0StIBvvbzpDMybpjWS4bGvnMjTL8QXX1AqoG7Cs3SVel5Lvmd2yUjub6WQbiqxIJLCpjYmgSaw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-express" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/jabro" "^5.0.0-dev"
+    "@jawis/jacs" "^5.0.0-dev"
+    "@jawis/jagos" "^5.0.0-dev"
+    "@jawis/jarun" "^5.0.0-dev"
+    "@jawis/jates" "^5.0.0-dev"
+    "@jawis/javic" "^5.0.0-dev"
+    "@jawis/process-util" "^5.0.0-dev"
+    "@jawis/webcs" "^5.0.0-dev"
+    "@types/express" "^4.17.11"
+    "@types/express-ws" "^3.0.0"
+    bee-common "^5.0.0-dev"
+    bee-node "^5.0.0-dev"
+    bee-php "^5.0.0-dev"
+    express "^4.17.3"
+    express-ws "^5.0.2"
+    finally-provider "^5.0.0-dev"
+    main-wrapper "^5.0.0-dev"
+    pack-util "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/javic@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/javic/-/javic-5.0.0-dev.tgz#82f80b63e8d37cda6bf924ed5417102b4f222f2c"
+  integrity sha512-wDy8q6fn41w40BqLWq3klow70AXOBd8gs+fTOuD0b0OfphZduvDfwtLedjRuBcv9jfxgpL5dz9QFlg3JgXcpkw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+
+"@jawis/node-module-hooks-plus@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/node-module-hooks-plus/-/node-module-hooks-plus-5.0.0-dev.tgz#7c8e53dc1085b985ec16eeda8f852683d9551646"
+  integrity sha512-m/YGcu41bccxH752kbd3VrBC3LCaIjNu5HpOCEWUz5LB/1LTM9SHgpfoTEs/Al1/WL71nU04t9QatXmc1iL+7A==
+  dependencies:
+    "@jawis/jab-node" "^5.0.0-dev"
+
+"@jawis/process-util@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/process-util/-/process-util-5.0.0-dev.tgz#f72f9d92a28537252e969579c7116d7825d667e6"
+  integrity sha512-FEHdTpV2OWdKPFrz5Cxw47EkUFsFTKa2MhqZhRG6TV81PchkLGtZf3J3z6k1g9wRZYf+0PB+W8ZT0/n1kCip3A==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/node-module-hooks-plus" "^5.0.0-dev"
+    "@jawis/stdio-protocol" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    filewatcher "^3.0.1"
+    finally-provider "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+"@jawis/stdio-protocol@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/stdio-protocol/-/stdio-protocol-5.0.0-dev.tgz#7600c22ab2f23e8785fe2655ba2ce649a6a2d545"
+  integrity sha512-4Ofaq193rOLQAW9eM2kqerVky9hI9u6CIxAqbxkjZxRofwqf3CJgJurcBhMlt10bBgdH+mb8WqH4/jZHtesXiA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+
+"@jawis/webcs@^5.0.0-dev":
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/@jawis/webcs/-/webcs-5.0.0-dev.tgz#27a4d1aa957e7051580cb880183fba15a3a77991"
+  integrity sha512-M+CVyBl2pa/0/uwO6uBJCDxL/ayYvUCcj4OTLSQ8x6yQ7ZtFeBKNBhJbhGlr6+OMFlGXEWG3fFcVzUOukyrzTQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-express" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    "@jawis/javic" "^5.0.0-dev"
+    "@types/express" "^4.17.11"
+    express "^4.17.3"
+
 "@jest/schemas@^29.6.3":
   version "29.6.3"
   resolved "https://registry.yarnpkg.com/@jest/schemas/-/schemas-29.6.3.tgz#430b5ce8a4e0044a7e3819663305a7b3091c8e03"
@@ -1976,6 +2282,21 @@ arraybuffer.prototype.slice@^1.0.4:
     get-intrinsic "^1.2.6"
     is-array-buffer "^3.0.4"
 
+assorted-algorithms@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/assorted-algorithms/-/assorted-algorithms-5.0.0-dev.tgz#3c0aeb683feca5c923b47a1c6a0cc24743906063"
+  integrity sha512-JZctox+BZfCqHs8L2Sqjh2nfRJ9tpzS7hsmSvFvyLyiNKu/HUD832Sd5O0qTjh6yeTmSdsLLPKZO8CGzdB0qxg==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+
+async-capture@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/async-capture/-/async-capture-5.0.0-dev.tgz#90cccdd2985bd8e81bab0c78fc54da69e8ed1abb"
+  integrity sha512-Bj1QhPoIwnvqs3fakHlaNvHz2EtqzULg8QB6kUERE3zm9RChdJ8eaH1BCnFTIAwtcavB1n69G+ytKJqswicNhA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
 async-function@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/async-function/-/async-function-1.0.0.tgz#509c9fca60eaf85034c6829838188e4e4c8ffb2b"
@@ -2026,6 +2347,44 @@ batch@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/batch/-/batch-0.6.1.tgz#dc34314f4e679318093fc760272525f94bf25c16"
   integrity sha512-x+VAiMRL6UPkx+kudNvxTl6hB2XNNCG2r+7wixVfIYwu/2HKRXimwQyaumLjMveWvT2Hkd/cAJw+QBMfJ/EKVw==
+
+bee-common@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/bee-common/-/bee-common-5.0.0-dev.tgz#eac30492ff51a2920d9f9f55ae2ef843268153d7"
+  integrity sha512-sMcbnUr9P+mxEG9D6EgVfZvBJYpwP/T22d1OlfqrdBzW8viR3kYZpUQWlB8K82yy2FUWSVa6AaiPa6yBqgHwTA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    finally-provider "^5.0.0-dev"
+    path-browserify "^1.0.1"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
+bee-node@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/bee-node/-/bee-node-5.0.0-dev.tgz#81d0783688de67d7d8cd0204787dbbc6ffe4bb0a"
+  integrity sha512-2TSPdeiwWFHoJq4CdZO9K1HpD0ynas0dbAnFViBUd3vNB1LlFLRtT3DkzLkqUowocAbMmyaSq8/iSbmExyUbKA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    exit "^0.1.2"
+
+bee-php@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/bee-php/-/bee-php-5.0.0-dev.tgz#e12a4ed490a97f02223d313fa46062cbeb9615c3"
+  integrity sha512-p10Tnshlvx+YYmxSjtpHGPAq3lG3xe0ZBzNCsxXzqMG6gMAi9kuZWyugDqsP80Vb7jVrxnhf0MbxJbxBjFTVcA==
+  dependencies:
+    "@jawis/process-util" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+
+bee-web-worker@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/bee-web-worker/-/bee-web-worker-5.0.0-dev.tgz#8ec70a923987f2cf314516b1799c14f5e0dd583e"
+  integrity sha512-/Z2fE30fHJpcBNKB+xE7RALl0KNGlMdKMz/EKP2NsWGARflvnZWOjG1jBVFizPJ+vNHaRMjy7wMjJcD1BKjbrg==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    yapu "^5.0.0-dev"
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -2157,6 +2516,15 @@ bytes@3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
+
+cached-resolve@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/cached-resolve/-/cached-resolve-5.0.0-dev.tgz#08306fe51a3a8a67a6d165755c4b35b479a00f92"
+  integrity sha512-azPvb5daI8rLEuU8a6aBFJjHlT1BpMzFJ/pbVC4oz2d9EnnRikrdht2vY78i+qnjRS1215Y2uPAGhcV7wrXung==
+  dependencies:
+    "@jawis/node-module-hooks-plus" "^5.0.0-dev"
+    is-builtin-module "^3.1.0"
+    sharedmap "^1.2.0"
 
 call-bind-apply-helpers@^1.0.0, call-bind-apply-helpers@^1.0.1, call-bind-apply-helpers@^1.0.2:
   version "1.0.2"
@@ -3323,6 +3691,14 @@ finalhandler@1.3.1:
     statuses "2.0.1"
     unpipe "~1.0.0"
 
+finally-provider@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/finally-provider/-/finally-provider-5.0.0-dev.tgz#ac44f8d95bbe5267fd416017e280267e651f9e2a"
+  integrity sha512-0py8lDxaSrTUZZe9zY3EiAt1YuAZzi5AxVaZwZKOWVPSbaRAg+2f7Fomoj96bY0tuhZkq7FY/uLZFh3DKZG5pQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
 find-up@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-4.1.0.tgz#97afe7d6cdc0bc5928584b7c8d7b16e8a9aa5d19"
@@ -4312,6 +4688,13 @@ launch-editor@^2.6.1:
     picocolors "^1.0.0"
     shell-quote "^1.8.1"
 
+lazy-require-ts@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/lazy-require-ts/-/lazy-require-ts-5.0.0-dev.tgz#58bacf8bed80b5ea2e11d31f76b2b7a1260fbf59"
+  integrity sha512-H+SF/JwIk3NsDJl6K++3RW02w9FA4Fayrq9gnuoCFKe/Mq1zGVptuuOuJEUYR7ZzxEVvVCDFTw1CEMUCXBiGRw==
+  dependencies:
+    is-builtin-module "^3.1.0"
+
 levn@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.4.1.tgz#ae4562c007473b932a6200d403268dd2fffc6ade"
@@ -4378,12 +4761,28 @@ log-symbols@^4.1.0:
     chalk "^4.1.0"
     is-unicode-supported "^0.1.0"
 
+long-traces@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/long-traces/-/long-traces-5.0.0-dev.tgz#a5ea687ca781648ee4defa61c361e24d4feb3212"
+  integrity sha512-S/hgWwhQEJ5TChik8065K6+wpH8/wTHEjDLZBzMB5Un11xvZQQvFgSEDZbic4sVcLTg/V1ABJQekcucLOcxSlA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+
 longjohn@^0.2.12:
   version "0.2.12"
   resolved "https://registry.yarnpkg.com/longjohn/-/longjohn-0.2.12.tgz#7ca7446b083655c377e7512213dc754d52a64a7e"
   integrity sha512-36GDBamIwXTdCikEO29GWsE3GjtNGBGKNqSwWbwXczVC3KHNA1OzzIBKc9uocjQVYAPVGf/TWn9b0aPnraPjiQ==
   dependencies:
     source-map-support "0.3.2 - 1.0.0"
+
+loop-controller@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/loop-controller/-/loop-controller-5.0.0-dev.tgz#03e259a81ab889d7968140659967df6aeeae292f"
+  integrity sha512-RI2VTJq8Or8n064PIe4juslKgfozEonAvE/ECyufkcYw6xr/J2RijQdTAo7Ef54mJICSyNx4CzrI7bpADpcz7Q==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    state-waiter "^5.0.0-dev"
+    yapu "^5.0.0-dev"
 
 loose-envify@^1.1.0:
   version "1.4.0"
@@ -4410,6 +4809,17 @@ lru-cache@^5.1.1:
   integrity sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==
   dependencies:
     yallist "^3.0.2"
+
+main-wrapper@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/main-wrapper/-/main-wrapper-5.0.0-dev.tgz#c30b751e97455b7504ab60f1509f695d13977947"
+  integrity sha512-ZdK/SypO0QgL7WyIUZBWCL1W4EXSOjFI47vSoLOYPijDuuihdxGAv2RxGa7eBXvDlib73fkYgE1oFR5Fer3mAQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    bee-common "^5.0.0-dev"
+    finally-provider "^5.0.0-dev"
+    long-traces "^5.0.0-dev"
 
 make-error@^1.1.1:
   version "1.3.6"
@@ -4859,6 +5269,23 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
+pack-util@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/pack-util/-/pack-util-5.0.0-dev.tgz#94601510e8d682702fc723cb31492de9d2a4a814"
+  integrity sha512-o96Uh8ruwO0ImvPlhMjngkpXWRH4UK0h/HhGxPR9oFh1WRM0dWbE+xbRARR5/IQFgmSOOW9MX/ldCXAScScsbQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-node" "^5.0.0-dev"
+    is-builtin-module "^3.1.0"
+    memfs "^4.7.7"
+    strip-ansi "^6.0.1"
+    terser-webpack-plugin "^5.1.1"
+    ts-config-util "^5.0.0-dev"
+    tsconfig-paths-webpack-plugin "^4.1.0"
+    typescript "^4.6.2"
+    webpack "^5.24.3"
+    yapu "^5.0.0-dev"
+
 package-json-from-dist@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz#4f1471a010827a86f94cfd9b0727e36d267de505"
@@ -4883,6 +5310,18 @@ parent-module@^1.0.0:
   integrity sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
   dependencies:
     callsites "^3.0.0"
+
+parse-captured-stack@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/parse-captured-stack/-/parse-captured-stack-5.0.0-dev.tgz#07f265f5225a1383b8581e094d362e1df88030df"
+  integrity sha512-X4WjHJwOLRgC9sRjNP6AbAR31JQ/IEKf4CDmQn2+Cevjp7OuhrNzY+7qxuc8ZARuievsRP3M2ilcMZsHdRE9AA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@types/stack-trace" "^0.0.30"
+    error-stack-parser "^2.0.6"
+    stack-trace "^0.0.10"
+    stacktrace-gps "^3.0.4"
+    stacktrace-js "^2.0.2"
 
 parseurl@~1.3.2, parseurl@~1.3.3:
   version "1.3.3"
@@ -5191,6 +5630,14 @@ react-test-renderer@^18.0.0:
     react-is "^18.3.1"
     react-shallow-renderer "^16.15.0"
     scheduler "^0.23.2"
+
+react-use-ws@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/react-use-ws/-/react-use-ws-5.0.0-dev.tgz#c50b8a0e0a7cf8d2aefaadb001262ea4ebed569d"
+  integrity sha512-Ue0oT9ySPPOn0SfrZ3iDye7a/fW5fvWG/o7BIBXgrNGNrJyCb7joRbuJsDqbi6Mp1OVMo9N7VfKIovARCxNnJQ==
+  dependencies:
+    "@types/react" "^18.0.0"
+    react "^18.0.0"
 
 react@^18.0.0:
   version "18.3.1"
@@ -5829,6 +6276,14 @@ stacktrace-js@^2.0.2:
     stack-generator "^2.0.5"
     stacktrace-gps "^3.0.4"
 
+state-waiter@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/state-waiter/-/state-waiter-5.0.0-dev.tgz#14db12af1ce6c58edcd072976227839630de9c3f"
+  integrity sha512-5UrCxpRD7nc6Ud0d4Ag2+HQ4pa/1bt9OwR1RgEZAp7lEUV+4vo3RXqtK33Cy9art94OaDjDBx7vkdLQPXpBBgQ==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    yapu "^5.0.0-dev"
+
 statuses@2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-2.0.1.tgz#55cb000ccf1d48728bd23c685a063998cf1a1b63"
@@ -6103,6 +6558,13 @@ ts-api-utils@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/ts-api-utils/-/ts-api-utils-2.1.0.tgz#595f7094e46eed364c13fd23e75f9513d29baf91"
   integrity sha512-CUgTZL1irw8u29bzrOD/nH85jqyc74D6SshFgujOIA7osm2Rz7dYH77agkx7H4FBNxDq7Cjf+IjaX/8zwFW+ZQ==
+
+ts-config-util@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/ts-config-util/-/ts-config-util-5.0.0-dev.tgz#1b8dadac764258e8734fe83247b6d1b999d97035"
+  integrity sha512-IgBAIab43E4haeSljZnghQEBP5mmRQb4b1KQIDhyObxGwUoCr5z5OJiCDXSRE/XQqyZffy40QWzqjaYRFMbMNw==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
 
 ts-loader@^9.3.1:
   version "9.5.2"
@@ -6424,6 +6886,17 @@ vary@^1, vary@~1.1.2:
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
 
+view-exception@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/view-exception/-/view-exception-5.0.0-dev.tgz#e5c4b138bbfe8c4bf354f5d9bdd9280b8fbbc3aa"
+  integrity sha512-LGQjftjb5Ap0uYi45+688a77VaWYK7cxQFCMWk7l++XuQs7P78gW3tAn+ugMLvP3h2rvqYTj+twp/hSl2D5RLg==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
+    "@jawis/jab-react" "^5.0.0-dev"
+    "@types/react" "^18.0.0"
+    path-browserify "^1.0.1"
+    react "^18.0.0"
+
 watchpack@^2.4.1:
   version "2.4.4"
   resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.4.4.tgz#473bda72f0850453da6425081ea46fc0d7602947"
@@ -6718,6 +7191,13 @@ yallist@^3.0.2:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-3.1.1.tgz#dbb7daf9bfd8bac9ab45ebf602b8cbad0d5d08fd"
   integrity sha512-a4UGQaWPH59mOXUYnAG2ewncQS4i4F43Tv3JoAM+s2VDAmS9NsK8GpDMLrCHPksFT7h3K6TOoUNn2pb7RoXx4g==
+
+yapu@^5.0.0-dev:
+  version "5.0.0-dev"
+  resolved "https://registry.yarnpkg.com/yapu/-/yapu-5.0.0-dev.tgz#7c4503d2995ad6c871f3637fd838fa83cde6653a"
+  integrity sha512-D/4v9iOLQVRU22IRF2Q3f4qATBwaLO43465mOuv8KLSOE98A9eDM/d6t3405pjBmjF+oRkA0T8brgVpjpnRAXA==
+  dependencies:
+    "@jawis/jab" "^5.0.0-dev"
 
 yargs-parser@^20.2.2:
   version "20.2.9"
