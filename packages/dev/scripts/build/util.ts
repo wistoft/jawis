@@ -27,7 +27,8 @@ export const makeLiveJawisBuildManager = () =>
     unscopedPackages,
     privatePackages,
     /* replacePathForRelease */ true,
-    phpPackages
+    phpPackages,
+    false
   );
 
 /**

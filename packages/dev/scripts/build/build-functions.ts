@@ -18,6 +18,18 @@ import { makeAbsolute } from "^jab-node";
 
 const tscBuildFolderName = "build-tsc";
 
+export type BuildDeps = {
+  projectFolder: string;
+  buildFolder: string;
+  npmScope: string;
+  scopedPackages: string[];
+  unscopedPackages: string[];
+  privatePackages: string[];
+  replacePathForRelease: boolean;
+  phpPackages: string[];
+  allowPrivate: boolean;
+};
+
 /**
  *
  */
@@ -29,7 +41,8 @@ export const makeJawisBuildManager = (
   unscopedPackages: string[],
   privatePackages: string[],
   replacePathForRelease: boolean,
-  phpPackages: string[]
+  phpPackages: string[],
+  allowPrivate: boolean
 ) => {
   const files = "{README.md,CHANGELOG.md}";
 
@@ -47,30 +60,23 @@ export const makeJawisBuildManager = (
     [...scopedPackages, ...unscopedPackages, ...privatePackages].join(",") +
     "}";
 
+  //quick fix
+
+  const deps = {
+    projectFolder,
+    buildFolder,
+    npmScope,
+    scopedPackages,
+    unscopedPackages,
+    privatePackages,
+    replacePathForRelease,
+    phpPackages,
+    allowPrivate,
+  };
+
   //
   // functions
   //
-
-  /**
-   *
-   */
-  const getFullPackageName = (packageName: string, allowPrivate = false) => {
-    if (scopedPackages.includes(packageName)) {
-      return npmScope + "/" + packageName;
-    } else if (unscopedPackages.includes(packageName)) {
-      return packageName;
-    } else if (privatePackages.includes(packageName)) {
-      if (allowPrivate) {
-        return packageName;
-      } else {
-        throw new Error(
-          "Can't get full name of a private package: " + packageName
-        );
-      }
-    } else {
-      throw new Error("Package not listed in build file: " + packageName);
-    }
-  };
 
   /**
    *
@@ -88,18 +94,19 @@ export const makeJawisBuildManager = (
 
     //gather references to local packages.
 
-    const deps: string[] = [];
+    const siblingDeps: string[] = [];
 
     if (conf.references) {
       conf.references.forEach((def: { path: string }) => {
-        const tmp = getFullPackageName(
-          def.path.replace(/^\.\.\//, ""),
-          allowPrivate
-        );
+        const tmp = getFullPackageName({
+          ...deps,
+          packageName: def.path.replace(/^\.\.\//, ""),
+          allowPrivate,
+        });
 
         const tmp2 = fullPackageName ? tmp : def.path.replace(/^\.\.\//, "");
 
-        deps.push(tmp2);
+        siblingDeps.push(tmp2);
       });
     }
 
@@ -118,7 +125,7 @@ export const makeJawisBuildManager = (
 
     //done
 
-    return deps;
+    return siblingDeps;
   };
 
   /**
@@ -142,14 +149,13 @@ export const makeJawisBuildManager = (
 
     for (const packageName of packages) {
       const tmp = fullPackageName
-        ? getFullPackageName(packageName, allowPrivate)
+        ? getFullPackageName({
+            ...deps,
+            packageName,
+          })
         : packageName;
 
-      res[tmp] = await getSiblingPackages(
-        packageName,
-        fullPackageName,
-        allowPrivate
-      );
+      res[tmp] = await getSiblingPackages(packageName, fullPackageName);
     }
 
     return res;
@@ -237,7 +243,10 @@ export const makeJawisBuildManager = (
 
       const json = JSON.parse(jsonStr.toString());
 
-      const fullName = getFullPackageName(packageName);
+      const fullName = getFullPackageName({
+        ...deps,
+        packageName,
+      });
 
       versions[fullName] = "^" + prototypeVersion;
     }
@@ -504,7 +513,10 @@ export const makeJawisBuildManager = (
     checkSideEffects: boolean,
     prototypeVersion: string
   ) => {
-    json.name = getFullPackageName(packageName);
+    json.name = getFullPackageName({
+      ...deps,
+      packageName,
+    });
 
     json.main = "./index.js";
     json.types = "./index.d.ts";
@@ -695,7 +707,16 @@ export const makeJawisBuildManager = (
 
     const code2 = code.replace(
       new RegExp('import\\("\\^([^"/]*)', "g"),
-      (match, packageName) => 'import("' + getFullPackageName(packageName)
+      (match, packageName: string) => {
+        assert(packageName !== "", "Wrong import format");
+        return (
+          'import("' +
+          getFullPackageName({
+            ...deps,
+            packageName,
+          })
+        );
+      }
     );
 
     //transform static import/require
@@ -703,12 +724,30 @@ export const makeJawisBuildManager = (
     if (file.endsWith(".js")) {
       return code2.replace(
         new RegExp('require\\("\\^([^"/]*)', "g"),
-        (match, packageName) => 'require("' + getFullPackageName(packageName)
+        (match, packageName: string) => {
+          assert(packageName !== "", "Wrong import format");
+          return (
+            'require("' +
+            getFullPackageName({
+              ...deps,
+              packageName,
+            })
+          );
+        }
       );
     } else {
       return code2.replace(
         new RegExp(' from "\\^([^"/]*)', "g"),
-        (match, packageName) => ' from "' + getFullPackageName(packageName)
+        (match, packageName: string) => {
+          assert(packageName !== "", "Wrong import format");
+          return (
+            ' from "' +
+            getFullPackageName({
+              ...deps,
+              packageName,
+            })
+          );
+        }
       );
     }
   };
@@ -743,4 +782,29 @@ export const makeJawisBuildManager = (
     buildTs,
     build,
   };
+};
+
+/**
+ *
+ */
+export const getFullPackageName = (
+  deps: {
+    packageName: string;
+  } & BuildDeps
+) => {
+  if (deps.scopedPackages.includes(deps.packageName)) {
+    return deps.npmScope + "/" + deps.packageName;
+  } else if (deps.unscopedPackages.includes(deps.packageName)) {
+    return deps.packageName;
+  } else if (deps.privatePackages.includes(deps.packageName)) {
+    if (deps.allowPrivate) {
+      return deps.packageName;
+    } else {
+      throw new Error(
+        "Can't get full name of a private package: " + deps.packageName
+      );
+    }
+  } else {
+    throw new Error("Package not listed in build file: " + deps.packageName);
+  }
 };

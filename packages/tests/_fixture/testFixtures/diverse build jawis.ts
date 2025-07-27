@@ -1,6 +1,21 @@
-import { makeJawisBuildManager } from "^dev/scripts/build";
+import { BuildDeps, makeJawisBuildManager } from "^dev/scripts/build";
 import { npmScope } from "^dev/project.conf";
 import { emptyScratchFolder, getMonorepoProjectPath, getScratchPath } from ".";
+
+/**
+ *
+ */
+export const makeJawisBuildDeps = (): BuildDeps => ({
+  projectFolder: "unused",
+  buildFolder: "unused",
+  npmScope: "@jawis",
+  scopedPackages: ["scoped-library"],
+  unscopedPackages: ["first-library", "second-library"],
+  privatePackages: [],
+  replacePathForRelease: false,
+  phpPackages: [],
+  allowPrivate: false,
+});
 
 /**
  *
@@ -16,7 +31,8 @@ export const makeTestJawisBuildManager = () => {
     ["first-library", "second-library"] /* unscopedPackages */,
     [] /* privatePackages */,
     false,
-    [] /* phpPackages */
+    [] /* phpPackages */,
+    false
   );
 };
 

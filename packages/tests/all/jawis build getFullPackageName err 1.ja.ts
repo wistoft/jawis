@@ -1,6 +1,12 @@
 import { TestProvision } from "^jarun";
-import { makeTestJawisBuildManager } from "^tests/_fixture";
+import { makeJawisBuildDeps, makeTestJawisBuildManager } from "^tests/_fixture";
 
 export default (prov: TestProvision) => {
-  makeTestJawisBuildManager().getFullPackageName("dontExist");
+  console.log(
+    makeTestJawisBuildManager().getFullPackageName({
+      ...makeJawisBuildDeps(),
+      packageName: "dontExist",
+      allowPrivate: false,
+    })
+  );
 };
