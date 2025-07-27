@@ -4,6 +4,7 @@ import { makeMakeRouter as makeDevAppRoute } from "^dev-apps";
 import { makeMakeRouter as makeDevCompRoute } from "^dev-comps";
 import { MainProv, makeAbsolute } from "^jab-node";
 import {
+  FullJaviConf,
   getFullConf,
   honeyCombService,
   makeCommandBee,
@@ -36,7 +37,12 @@ import { getAbsoluteSourceFile_dev as getAbsoluteSourceFile } from "../util";
 /**
  *
  */
-export const makeDevDeps = async (sendLog: SendLog, mainProv: MainProv) => {
+export const makeDevDeps = async (
+  sendLog: SendLog,
+  mainProv: MainProv,
+  extraConf: any = {},
+  extraServiceConfig: any = {}
+) => {
   //typescript worker threads
 
   const makeTsBee = getMakeMakeJacsWorkerBee()({
@@ -55,6 +61,7 @@ export const makeDevDeps = async (sendLog: SendLog, mainProv: MainProv) => {
       removePathPrefix: "packages",
       testFolder: getPackagePath("dev/devServer/testsuite"),
       testLogFolder: getPackagePath("dev/devServer/testsuite/_testLogs"),
+      ...extraConf,
     },
     projectRoot,
     process.platform
@@ -116,6 +123,8 @@ export const makeDevDeps = async (sendLog: SendLog, mainProv: MainProv) => {
       ".php": makePhpBee,
       ".go": makeGoBee,
     },
+
+    ...extraServiceConfig,
   };
 
   const extraClientConf: DevClientConf = {
