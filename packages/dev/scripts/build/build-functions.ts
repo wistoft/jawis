@@ -694,7 +694,7 @@ export const makeJawisBuildManager = (
     //transform dynamic import
 
     const code2 = code.replace(
-      new RegExp('import\\("\\^/([^"/]*)', "g"),
+      new RegExp('import\\("\\^([^"/]*)', "g"),
       (match, packageName) => 'import("' + getFullPackageName(packageName)
     );
 
@@ -702,12 +702,12 @@ export const makeJawisBuildManager = (
 
     if (file.endsWith(".js")) {
       return code2.replace(
-        new RegExp('require\\("\\^/([^"/]*)', "g"),
+        new RegExp('require\\("\\^([^"/]*)', "g"),
         (match, packageName) => 'require("' + getFullPackageName(packageName)
       );
     } else {
       return code2.replace(
-        new RegExp(' from "\\^/([^"/]*)', "g"),
+        new RegExp(' from "\\^([^"/]*)', "g"),
         (match, packageName) => ' from "' + getFullPackageName(packageName)
       );
     }
@@ -731,6 +731,7 @@ export const makeJawisBuildManager = (
     getSiblingPackages,
     getAllPackageDeps,
     getAllSiblingDeps,
+    transformImports,
     checkPackages,
     checkPackagesExistsInCodebase,
     checkPackageHasDeclaration,

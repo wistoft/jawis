@@ -6,4 +6,4 @@ export * from "./makeBees";
 export * from "./makeJaviDeps";
 export * from "./types";
 export * from "./util";
-export * from "^/javic";
+export * from "^javic";
