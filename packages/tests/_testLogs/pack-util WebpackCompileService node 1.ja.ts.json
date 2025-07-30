@@ -1,1 +1,1 @@
-{"user":{"console.log":[["object",{"protoChain":["null"],"fields":{".js":["function","anonymous"],".json":["function","anonymous"],".node":["function","anonymous"],".ts":["function","anonymous"],".tsx":["function","anonymous"],".dummy":["function","anonymous"]}}],"hello","webpack not used here!","npm protocol works"]}}
+{"user":{"console.log":["hello","webpack not used here!","import/from works"]}}
