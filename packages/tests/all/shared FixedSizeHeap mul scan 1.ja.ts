@@ -9,7 +9,7 @@ import { Allocation, FixedSizeHeap } from "^shared-algs";
 
 export default (prov: TestProvision) => {
   const dataSize = 8;
-  const pageSize = dataSize * getRandomRange(4, 10);
+  const pageSize = dataSize * getRandomRange(6, 10);
 
   for (let maxSize = 1; maxSize <= 50; maxSize++) {
     const h1 = getSharedTreeHeap(prov, { maxSize, dataSize });

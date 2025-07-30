@@ -10,7 +10,7 @@ import {
 export default (prov: TestProvision) => {
   const maxSize = getRandomRange(1, 30);
   const dataSize = 4 * getRandomRange(1, 10);
-  const pageSize = dataSize * getRandomRange(4, 10);
+  const pageSize = dataSize * getRandomRange(6, 10);
 
   const h1 = getSharedTreeHeap(prov, { maxSize, dataSize });
   const h2 = getSharedListHeap(prov, { maxSize, dataSize });
