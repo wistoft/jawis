@@ -30,4 +30,4 @@ jobs:
         run: yarn alpha:build
 
       - name: Run tests
-        run: yarn -s dev-test
+        run: yarn -s dev-self-test
