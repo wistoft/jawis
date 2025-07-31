@@ -328,7 +328,7 @@ export class JarunTestProvision implements TestProvision {
   /**
    * Assert that the promise rejects to the expected error message.
    *
-   * - It's not necessary to wait for the returned promise explicit.
+   * - It's not necessary to wait for the returned promise explicitly.
    * - It's an error if the promise resolves to something.
    */
   public rej = (exp: unknown, prom: Promise<unknown>) =>

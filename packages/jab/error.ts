@@ -58,6 +58,26 @@ export const assertEq = (
 };
 
 /**
+ * Assert that the function throws and match the predicate.
+ */
+export const assertException = (
+  func: () => void,
+  predicate: (error: string) => boolean
+) => {
+  try {
+    func();
+  } catch (error: any) {
+    if (predicate(error.message)) {
+      return;
+    } else {
+      err("Error ditn't match predicate", error);
+    }
+  }
+
+  throw new Error("Expected exception");
+};
+
+/**
  *
  */
 export const captureLongStack = (error: {

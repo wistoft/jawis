@@ -17,5 +17,12 @@ export const main = () => {
   const mod = require(helloScript);
   console.log("no problem yet, because of lazy.");
 
-  mod.fido; //throws here.
+  try {
+    mod.fido; //throws here.
+    console.log("Expected exception");
+  } catch (error: any) {
+    if (error.name !== "SyntaxError") {
+      console.log("Expected SyntaxError, got: " + error.message);
+    }
+  }
 };
