@@ -181,7 +181,7 @@ export class SourceFileLoader implements CompileService {
       .filter((line) => line.trim() !== "")
       .map((line) => {
         const match = line.match(
-          /^\s*export\s+\*\s+from\s+"\.\/([^"]+)"\s*;?\s*$/
+          /^\s*export\s+\*\s+from\s+"\.\/([^"]+)"\s*(;\s*)?$/
         );
 
         if (match === null) {

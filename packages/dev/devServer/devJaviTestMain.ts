@@ -15,7 +15,11 @@ if (process.env["DEV_SELF_TEST"] === "true") {
     testLogFolder: getPackagePath("tests/_testLogs"),
   };
 
-  extraServiceConfig = { "@jawis/jates/tecTimeout": 30000 };
+  extraServiceConfig = {
+    "@jawis/jates/tecTimeout": 30000,
+
+    "@jawis/service-types": [],
+  };
 }
 
 const sendBeeLog = (msg: any) => {

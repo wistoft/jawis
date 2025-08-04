@@ -233,7 +233,7 @@ export const getFunc = (frame: ParsedStackFrame) => {
     .replace(/^Object\.exports\./, "")
     .replace(/^Object\.<anonymous>$/, "ano")
     .replace(/^.* \[as ([^\]]*)/, "$1") // patterns like `^.* [as ... ]$` but ending $ is not enforceable, due to backtracking.
-    .replace(/(\/<)+$/, "")
+    .replace(/[^\/<](\/<)+$/, "")
     .replace(/\/this\./, "."); //webpack makes function name like: BrowserWebSocket/this.rawOpenWebSocket
 };
 

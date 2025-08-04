@@ -133,7 +133,7 @@ export class RustAdapter implements TestFrameworkProv {
     );
 
     //end - failed tests
-    filtered = filtered.replace(/.*FAILED(\n.*){9}$/, "");
+    filtered = filtered.replace(/^.*FAILED(\n.*){9}$/, "");
 
     if (filtered === "") {
       delete res.cur.user.stdout;
@@ -315,7 +315,7 @@ export const parse_stderr = async (stderr: string, folder: AbsoluteFile) => {
 
     // start of error
 
-    if (line.match(/thread '.+' panicked at/)) {
+    if (line.match(/^\s*thread '.+' panicked at/)) {
       tmp_info = [line];
       in_error_message = true;
       in_stack_trace = false;
@@ -368,7 +368,7 @@ export const parse_stderr = async (stderr: string, folder: AbsoluteFile) => {
 
       //2. line of stack frame
 
-      const res2 = line.match(/^\s*at\s*([^:]*):(\d*):(\d*)$/);
+      const res2 = line.match(/^\s*at\s*([^\s][^:]*):(\d*):(\d*)$/);
 
       if (res2) {
         const file = res2[1];

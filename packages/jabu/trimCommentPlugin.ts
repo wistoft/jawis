@@ -1,7 +1,7 @@
 import { PluginConstructor } from "./internal";
 
 const regexs = [
-  /(\n\/\/)+(?=\s*$)/,
+  /[^\n\/](\n\/\/)+(?=\s*$)/,
   /\r/g,
   // /( |\f|\r|\t|\v)+(?=\n)/g, //can be a problem, it's not sensitive to code structure.
 ];

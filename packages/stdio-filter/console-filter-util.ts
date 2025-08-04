@@ -169,7 +169,7 @@ export type MakeIncludeLineDeps = {
 } & MakeMapLineDeps;
 
 export const makeIncludeLine = (deps: MakeIncludeLineDeps) => {
-  const acutalIgnoreLiteralLines = (deps.ignoreLiteralLines || [])
+  const actualIgnoreLiteralLines = (deps.ignoreLiteralLines || [])
     .map(replaceForCompare)
     .filter((line) => line !== "");
 
@@ -182,7 +182,7 @@ export const makeIncludeLine = (deps: MakeIncludeLineDeps) => {
 
     //evaluated include
 
-    if (acutalIgnoreLiteralLines.includes(replaceForCompare(line))) {
+    if (actualIgnoreLiteralLines.includes(replaceForCompare(line))) {
       return false;
     }
 
@@ -205,8 +205,4 @@ export const makeIncludeLine = (deps: MakeIncludeLineDeps) => {
 };
 
 const replaceForCompare = (line: string) =>
-  line
-    .replace(/\d+/g, "")
-    .replace(/\r/g, "")
-    .replace(/^\s*/, "")
-    .replace(/\s*$/, "");
+  line.replace(/\d+/g, "").replace(/\r/g, "").trim();

@@ -1,6 +1,7 @@
-import * as echarts from "echarts";
 import { outHtml } from "^jagoc/jago-out";
 import { range } from "^jab/util";
+
+const echarts = require("echarts");
 
 export type CategoryLineChartData = {
   categories: (string | number)[];

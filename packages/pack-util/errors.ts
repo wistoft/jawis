@@ -102,7 +102,7 @@ export const filterWebpackErrorMessage = (message: string, file?: string) =>
 
     //for "Module not found" errors, that used to be polyfilled.
     .replace(
-      /BREAKING CHANGE: webpack[^]*resolve\.fallback: \{ ".*": false \}\s*/,
+      /^\s*BREAKING CHANGE: webpack[^]*resolve\.fallback: \{ "[^"]*": false \}\s*/,
       ""
     )
     .replace(/^\(\d+,\d+\)\r?\n\s*/, "");
