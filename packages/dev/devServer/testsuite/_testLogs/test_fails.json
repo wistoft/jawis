@@ -1,0 +1,1 @@
+{"user":{"stderr":["error: test failed, to rerun pass `--bin tests-rust`\n"],"exitcode":["101"]},"err":["should fail"]}

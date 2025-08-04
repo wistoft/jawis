@@ -20,6 +20,7 @@ import { AbsoluteFile, FileService, SendLog } from "^jabc";
 import { DevClientConf } from "^dev/devClient/DevDirector";
 import { assertAbsolute } from "^jab-node";
 import { makePhpBee } from "^bee-php";
+import { javiJateRust } from "^jate-rust";
 
 import {
   getMakeMakeJacsWorkerBee,
@@ -110,10 +111,15 @@ export const makeDevDeps = async (
       ww: "@jawis/makeBrowserBee",
     },
 
-    "@jawis/jate-rust/absTestFolder": makeAbsolute(projectRoot, "../xremap-dev"), // prettier-ignore
+    "@jawis/jate-rust/absTestFolder": getPackagePath(
+      "dev/devServer/tests-rust"
+    ),
 
-    // "@jawis/service-types": [javiJateRust],
-    // "@jawis/service-types": [javiJateBehat, javiJatePhpUnit],
+    "@jawis/service-types": [
+      javiJateRust,
+      //, javiJatePhpUnit
+      //, javiJateBehat
+    ],
 
     "@jawis/javi/honeyComb/suffixBees": {
       ".ww.js": "@jawis/makeBrowserBee",

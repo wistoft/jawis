@@ -12,5 +12,8 @@ lerna-debug.log
 /build-alpha
 /build-tsc
 
+#mock repos
+packages/dev/devServer/tests-rust/build
+
 #
 javi.conf.local.js

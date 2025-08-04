@@ -24,6 +24,8 @@
     { "path": "../jates" },
     { "path": "../jatev" },
     { "path": "../jate-php-unit" },
+    { "path": "../jate-rust" },
+    { "path": "../jate-behat" },
     { "path": "../javi" },
     { "path": "../javic" },
     { "path": "../javi-client" },
