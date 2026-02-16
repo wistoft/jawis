@@ -143,7 +143,10 @@ export class JarunProcessControllerInner {
         }
 
         if (this.curStderr) {
-          result.cur.user.stderr = [this.curStderr];
+          //Dirty quick fix to avoid filter with process.stderr.write, which would affect other tests.
+          if (!this.curStderr.includes("React Router Future Flag Warning")) {
+            result.cur.user.stderr = [this.curStderr];
+          }
         }
 
         //done

@@ -36,7 +36,7 @@ export const makeApp = (deps: Deps): express.Application => {
 
   // activate websocket
 
-  expressWs(app).getWss(); //do the monkey patching.
+  expressWs(app as any).getWss(); //do the monkey patching.
 
   // static files
 

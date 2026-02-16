@@ -6,7 +6,7 @@
   "dependencies": {
     "@types/react": "^16.8.0",
     "react": "^16.14.0",
-    "react-router-dom": "^6.3.0",
+    "react-router-dom": "^6.30.2",
     "shallow-equal": "^1.2.1"
   },
   "keywords": [

@@ -96,7 +96,7 @@ export const getServerDeps = (
 export const getTestApp = (prov: TestProvision) => {
   const realApp = express();
 
-  const wsInstance = expressWs(realApp);
+  const wsInstance = expressWs(realApp as any);
   const app = wsInstance.app;
 
   // front page
