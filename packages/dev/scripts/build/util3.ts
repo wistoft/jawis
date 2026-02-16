@@ -34,22 +34,7 @@ export const getLiveBuildVersionInfo = async () => {
     })
   );
 
-  //partition
-
-  const torelease: string[] = [];
-  const toignore: string[] = [];
-
-  for (const { packageName, latestVersion, repoVersion } of decorated) {
-    if (latestVersion !== repoVersion) {
-      torelease.push(packageName);
-    } else {
-      toignore.push(packageName);
-    }
-  }
-
-  //return
-
-  return { torelease, toignore };
+  return decorated;
 };
 
 /**
