@@ -105,8 +105,8 @@
     "typescript": "^4.2.3",
     "urllib": "4.0.0",
     "webpack": "^5.24.3",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^4.11.1",
+    "webpack-cli": "5.1.4",
+    "webpack-dev-server": "5.2.1",
     "ws": "^8.0.0",
     "yargs": "^17.3.0"
   }
