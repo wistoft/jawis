@@ -3,7 +3,10 @@
   "version": "3.0.1",
   "name": "~jatev",
   "description": "Jate view",
-  "dependencies": {},
+  "dependencies": {
+    "@types/react": "^16.8.0",
+    "react": "^16.14.0"
+  },
   "keywords": [
     "test runner",
     "unit test",

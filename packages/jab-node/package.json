@@ -6,7 +6,9 @@
   "version": "4.0.0",
   "name": "~jab-node",
   "description": "Collection of utilities for node environment.",
-  "dependencies": {},
+  "dependencies": {
+    "filewatcher": "^3.0.1"
+  },
   "keywords": [
     "nodejs",
     "util",

@@ -3,7 +3,9 @@
   "version": "0.0.5",
   "name": "~lazy-require-ts",
   "description": "Require node modules lazily.",
-  "dependencies": {},
+  "dependencies": {
+    "is-builtin-module": "^3.0.1"
+  },
   "keywords": [
     "import",
     "require",
