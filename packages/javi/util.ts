@@ -163,10 +163,23 @@ export const openFileInVsCode = (file: string, line?: number) => {
     fileSpec += ":" + line;
   }
 
-  const stdoutNoisy = execSyncAndGetStdout(
-    "C:\\Program Files\\Microsoft VS Code\\Code.exe",
-    ["-g", fileSpec]
-  );
+  // quick fix for flatpak
+  const flatpakFileSpec = fileSpec.replace(/^\/var\//, "/");
+
+  const stdoutNoisy =
+    process.platform === "linux"
+      ? execSyncAndGetStdout("flatpak", [
+          "run",
+          "com.vscodium.codium",
+          "--log",
+          "off",
+          "-g",
+          flatpakFileSpec,
+        ])
+      : execSyncAndGetStdout("C:\\Program Files\\Microsoft VS Code\\Code.exe", [
+          "-g",
+          fileSpec,
+        ]);
 
   //this doesn't filter exceptions in `execSyncAndGetStdout`
   const stdout = stdoutNoisy
