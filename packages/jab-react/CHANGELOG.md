@@ -13,7 +13,7 @@
 ## :boom: Breaking changes
 
 - Switch from `@reach/router` to `react-router`
-- Removed `useUseFirstRouteEffect` and `UseFirstRouteEffectContext` ther are
+- Removed `useUseFirstRouteEffect` and `UseFirstRouteEffectContext` there are
   implementation details.
 
 # 2.0.0
