@@ -3,7 +3,7 @@ import { makeMakeJacsWorkerBee } from "@jawis/jacs";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { TestProvision } from "@jawis/jarun";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { mainProvToConsole } from "@jawis/jab-node";
+import { mainProvToConsole } from "main-wrapper";
 
 //compile service
 

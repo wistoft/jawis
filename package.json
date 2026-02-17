@@ -34,11 +34,9 @@
     "alpha:build:client": "webpack -o build-alpha/javi/client -c packages/javi-client/webpack.javi.js"
   },
   "dependencies": {
-    "@jawis/console": "^1.0.3",
-    "@jawis/jab-node": "^2.0.0",
-    "@jawis/jacs": "^2.0.0",
-    "@jawis/jagov": "^2.0.0",
-    "@jawis/javi": "^1.0.3",
+    "@jawis/jacs": "^0.38.0",
+    "@jawis/jarun": "^0.38.0",
+    "@jawis/javi": "^0.38.0",
     "@testing-library/react-hooks": "^5.1.0",
     "@types/copyfiles": "^2.4.1",
     "@types/cors": "^2.8.6",
@@ -80,6 +78,7 @@
     "html-webpack-plugin": "^5.5.0",
     "is-builtin-module": "^3.0.1",
     "js-string-escape": "^1.0.1",
+    "main-wrapper": "^0.38.0",
     "path-browserify": "^1.0.1",
     "prettier": "^2.0.5",
     "pretty-format": "^28.1.3",
