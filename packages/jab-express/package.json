@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "2.1.0",
+  "version": "0.38.0",
   "name": "~jab-express",
   "description": "Collection of utilities for express apps.",
   "dependencies": {

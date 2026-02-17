@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.3",
+  "version": "0.38.0",
   "name": "~ts-config-util",
   "description": "Utillities for working with TypeScript configuration.",
   "keywords": [

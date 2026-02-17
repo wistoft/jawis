@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.1",
+  "version": "0.38.0",
   "name": "~long-traces",
   "description": "Adds asynchronous stack traces to error objects.",
   "dependencies": {},

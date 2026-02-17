@@ -2,7 +2,7 @@
   "sideEffects": [
     "./ScriptWrapperMain.ts"
   ],
-  "version": "3.1.0",
+  "version": "0.38.0",
   "name": "~jagos",
   "description": "Show output from both node and browser in the browser",
   "dependencies": {

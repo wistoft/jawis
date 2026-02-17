@@ -1,6 +1,6 @@
 {
   "sideEffects": false,
-  "version": "0.0.5",
+  "version": "0.38.0",
   "name": "~lazy-require-ts",
   "description": "Require node modules lazily.",
   "dependencies": {
