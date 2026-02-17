@@ -1,4 +1,4 @@
-import { assert, basename, err } from "@jawis/jab";
+import { assert, basename, err } from "^jab";
 
 import { ownExec } from "./util-exec";
 
