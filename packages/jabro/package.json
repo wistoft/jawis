@@ -1,6 +1,7 @@
 {
+  "private": true,
   "sideEffects": false,
-  "version": "0.0.1",
+  "version": "0.0.0",
   "name": "~jabro",
   "description": "Bee implementation for browsers.",
   "dependencies": {},

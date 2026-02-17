@@ -1,6 +1,7 @@
 {
+  "private": true,
   "sideEffects": false,
-  "version": "3.0.1",
+  "version": "0.0.0",
   "name": "~jagov",
   "description": "Show output from both node and browser in the browser",
   "dependencies": {

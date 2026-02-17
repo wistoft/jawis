@@ -1,6 +1,7 @@
 {
+  "private": true,
   "sideEffects": false,
-  "version": "0.0.3",
+  "version": "0.0.0",
   "name": "~dev-compv",
   "description": "Dev commponent panel view",
   "dependencies": {

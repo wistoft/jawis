@@ -16,3 +16,4 @@ lerna-debug.log
 
 #
 javi.conf.local.js
+release.sh

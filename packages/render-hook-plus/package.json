@@ -1,6 +1,7 @@
 {
+  "private": true,
   "sideEffects": false,
-  "version": "0.0.3",
+  "version": "0.0.0",
   "name": "~render-hook-plus",
   "description": "Improved version of `renderHook` from the library @testing-library/react-hooks",
   "peerDependencies": {
