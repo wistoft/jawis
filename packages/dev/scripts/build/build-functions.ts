@@ -1,25 +1,53 @@
-const path = require("path");
-const fs = require("fs");
-const fastGlob = require("fast-glob");
-const fse = require("fs-extra");
-const del = require("del");
+import path from "path";
+import fs from "fs";
+import fastGlob from "fast-glob";
+import fse from "fs-extra";
+import del from "del";
 
-const { copyingFiles, sortObject, emitVsCodeError } = require("./util");
+import { copyingFiles, sortObject, emitVsCodeError } from "./util";
 
 const tscBuildFolderName = "build-tsc";
+
+type AllSiblingDeps = Record<string, Record<string, string>>;
+
+type PackageJson = {
+  name: string;
+  sideEffects: false | string[];
+  version: string;
+  private: boolean;
+  description: string;
+  repository: {
+    type: string;
+    url: string;
+    directory: string;
+  };
+  homepage: string;
+  license: string;
+  keywords: string[];
+  main: string;
+  types: string;
+  dependencies: Record<string, string>;
+};
+
+type TsconfigJson = {
+  references: { path: string }[];
+  compilerOptions: {
+    outDir: string;
+  };
+};
 
 /**
  *
  */
-const makeJawisBuildManager = (
-  projectFolder,
-  buildFolder,
-  npmScope,
-  scopedPackages,
-  unscopedPackages,
-  privatePackages,
-  replacePathForRelease,
-  phpPackages
+export const makeJawisBuildManager = (
+  projectFolder: string,
+  buildFolder: string,
+  npmScope: string,
+  scopedPackages: string[],
+  unscopedPackages: string[],
+  privatePackages: string[],
+  replacePathForRelease: boolean,
+  phpPackages: string[]
 ) => {
   const files = "{README.md,CHANGELOG.md}";
 
@@ -44,7 +72,7 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const getFullPackageName = (packageName, allowPrivate = false) => {
+  const getFullPackageName = (packageName: string, allowPrivate = false) => {
     if (scopedPackages.includes(packageName)) {
       return npmScope + "/" + packageName;
     } else if (unscopedPackages.includes(packageName)) {
@@ -66,7 +94,7 @@ const makeJawisBuildManager = (
    *
    */
   const getSiblingPackages = async (
-    packageName,
+    packageName: string,
     fullPackageName = true,
     allowPrivate = false
   ) => {
@@ -74,11 +102,11 @@ const makeJawisBuildManager = (
       path.join(projectFolder, "./packages/" + packageName + "/tsconfig.json")
     );
 
-    const conf = JSON.parse(confStr);
+    const conf = JSON.parse(confStr.toString()) as TsconfigJson;
 
     //gather references to local packages.
 
-    const deps = [];
+    const deps: string[] = [];
 
     if (conf.references) {
       conf.references.forEach((def) => {
@@ -124,7 +152,7 @@ const makeJawisBuildManager = (
       ? packagesPatternIncludingPrivate
       : packagesPattern;
 
-    const res = {};
+    const res: Record<string, string[]> = {};
     const packages = await fastGlob([pattern], {
       cwd: packageFolder,
       onlyDirectories: true,
@@ -149,8 +177,8 @@ const makeJawisBuildManager = (
    *
    */
   const getAllSiblingDeps = async () => {
-    const tmp = [];
-    const versions = {};
+    const tmp: [string, string[]][] = [];
+    const versions: Record<string, string> = {};
 
     const packages = await fastGlob([packagesPattern], {
       cwd: packageFolder,
@@ -168,7 +196,7 @@ const makeJawisBuildManager = (
         path.join(packageFolder, packageName, "package.json")
       );
 
-      const json = JSON.parse(jsonStr);
+      const json = JSON.parse(jsonStr.toString()) as PackageJson;
 
       const fullName = getFullPackageName(packageName);
 
@@ -177,10 +205,10 @@ const makeJawisBuildManager = (
 
     //make deps with right versions.
 
-    const res = {};
+    const res: AllSiblingDeps = {};
 
     for (const [packageName, deps] of tmp) {
-      const versionDeps = {};
+      const versionDeps: Record<string, string> = {};
 
       for (const dep of deps) {
         versionDeps[dep] = versions[dep];
@@ -225,7 +253,7 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const checkPackagesExistsInCodebase = async (packages) => {
+  const checkPackagesExistsInCodebase = async (packages: string[]) => {
     for (const packageName of packages) {
       if (
         !(await fse.pathExists(
@@ -242,7 +270,7 @@ const makeJawisBuildManager = (
   /*
    *
    */
-  const checkPackageHasDeclaration = (packageName) => {
+  const checkPackageHasDeclaration = (packageName: string) => {
     let count = 0;
 
     if (scopedPackages.includes(packageName)) {
@@ -277,7 +305,7 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const checkPackageHasReadme = async (packageName) => {
+  const checkPackageHasReadme = async (packageName: string) => {
     if (
       !(await fse.pathExists(
         path.join(projectFolder, "./packages/" + packageName + "/README.md")
@@ -294,18 +322,21 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const checkPackageJsonFile = async (packageName) => {
+  const checkPackageJsonFile = async (packageName: string) => {
     const confStr = await fs.promises.readFile(
       path.join(projectFolder, "./packages/" + packageName + "/package.json")
     );
 
-    return checkPackageJson(JSON.parse(confStr), packageName);
+    return checkPackageJson(
+      JSON.parse(confStr.toString()) as PackageJson,
+      packageName
+    );
   };
 
   /**
    *
    */
-  const checkPackageJson = async (json, packageName) => {
+  const checkPackageJson = async (json: PackageJson, packageName: string) => {
     const file = path.join(packageFolder, packageName, "package.json");
 
     //package name
@@ -393,12 +424,12 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const checkRootTsConfigHasPackage = async (packageName) => {
+  const checkRootTsConfigHasPackage = async (packageName: string) => {
     const confStr = await fs.promises.readFile(
       path.join(projectFolder, "./tsconfig.json")
     );
 
-    const conf = JSON.parse(confStr);
+    const conf = JSON.parse(confStr.toString()) as TsconfigJson;
 
     const found = conf.references.some(
       (obj) => obj.path === "./packages/" + packageName
@@ -415,10 +446,10 @@ const makeJawisBuildManager = (
    *
    */
   const transformPackageJson = async (
-    json,
-    packageName,
-    targetFolder,
-    siblingDeps,
+    json: PackageJson,
+    packageName: string,
+    targetFolder: string,
+    siblingDeps: AllSiblingDeps,
     checkSideEffects = true
   ) => {
     json.name = getFullPackageName(packageName);
@@ -437,7 +468,7 @@ const makeJawisBuildManager = (
     };
 
     if (json.sideEffects) {
-      json.sideEffects = json.sideEffects.map((file) =>
+      json.sideEffects = json.sideEffects.map((file: string) =>
         file.replace(/\.ts$/, ".js")
       );
 
@@ -523,7 +554,7 @@ const makeJawisBuildManager = (
         path.join(packageFolder, file)
       );
 
-      const json = JSON.parse(jsonStr);
+      const json = JSON.parse(jsonStr.toString()) as PackageJson;
 
       //transform
 
@@ -590,7 +621,7 @@ const makeJawisBuildManager = (
   /**
    *
    */
-  const transformImports = (file, code) => {
+  const transformImports = (file: string, code: string) => {
     //transform dynamic import
 
     const code2 = code.replace(
@@ -642,12 +673,4 @@ const makeJawisBuildManager = (
     buildTs,
     build,
   };
-};
-
-//
-// exports
-//
-
-module.exports = {
-  makeJawisBuildManager,
 };
