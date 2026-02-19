@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import fse from "fs-extra";
 import urllib from "urllib";
-import del from "del";
+import { rimraf } from "rimraf";
 import compressing from "compressing";
 
 import { assert } from "^jab";
@@ -71,8 +71,8 @@ const downloadLatestNpmPackage = async (
 
   const tmpOutdir = outdir + "-tmp";
 
-  await del(outdir, { force: true });
-  await del(tmpOutdir, { force: true });
+  await rimraf(outdir);
+  await rimraf(tmpOutdir);
 
   const data = await getNpmLatestInfo(packageName);
 

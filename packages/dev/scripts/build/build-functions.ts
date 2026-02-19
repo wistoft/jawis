@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 import fastGlob from "fast-glob";
 import fse from "fs-extra";
-import del from "del";
+import { rimraf } from "rimraf";
 
 import { assert } from "^jab";
 import { assertAbsolute, copyFilesBetweenFoldersSync } from "^jab-node";
@@ -670,7 +670,7 @@ export const makeJawisBuildManager = (
    *
    */
   const build = async () => {
-    await del(buildFolder);
+    await rimraf(buildFolder);
     await checkPackages();
     await copyFiles();
     await addLicenceFiles();
