@@ -1,0 +1,31 @@
+name: Linting
+
+on: push
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install npm dependencies
+        run: yarn -s install --frozen-lockfile --non-interactive
+
+      - run: yarn build
+
+      - run: yarn alpha:build
+
+      - run: yarn pretty
+
+      - run: |
+          yarn custom:fix
+          [ "`git status --porcelain`" = "" ] || { git status; exit 1; }
