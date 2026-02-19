@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "name": "project-esm",
+  "sideEffects": false,
+  "imports": {
+    "#*": "./*.js",
+    "#$*": "./*"
+  },
+  "type": "module"
+}
