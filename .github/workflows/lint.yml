@@ -22,7 +22,7 @@ jobs:
 
       - run: yarn build
 
-      - run: yarn alpha:build
+      - run: yarn lint
 
       - run: yarn pretty
 
