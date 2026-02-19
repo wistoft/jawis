@@ -3,7 +3,7 @@
   "private": true,
   "description": "Jawis monorepo",
   "scripts": {
-    "start": "concurrently --kill-others \"yarn -s javi\" \"yarn -s start:client\"",
+    "start": "yarn && concurrently --kill-others \"yarn -s javi\" \"yarn -s start:client\"",
     "start:client": "webpack serve -c packages/dev/devClient/webpack.dev.js",
     "": "",
     "dev-test": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/devServer/devJaviTestMain.ts",
@@ -23,7 +23,7 @@
     "build:extra": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-jawis.ts",
     "build:client": "webpack -o build/publish/javi/client -c packages/javi-client/webpack.javi.js",
     "....": "",
-    "alpha:start": "concurrently --kill-others \"yarn -s alpha:start:alone\" \"yarn -s start:client\"",
+    "alpha:start": "yarn && concurrently --kill-others \"yarn -s alpha:start:alone\" \"yarn -s start:client\"",
     "alpha:start:alone": "echo alpha && node build-alpha/javi/javiServerMain",
     "alpha:build": "yarn && yarn recompile && yarn alpha:build:fast",
     "alpha:build:fast": "yarn alpha:build:extra && yarn alpha:build:paths && yarn alpha:build:client",
