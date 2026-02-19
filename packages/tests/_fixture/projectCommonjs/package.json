@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "project-commonjs",
+  "sideEffects": false,
+  "imports": {
+    "#*": "./*.js",
+    "#$*": "./*"
+  },
+  "scripts": {},
+  "dependencies": {}
+}

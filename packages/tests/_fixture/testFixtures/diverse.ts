@@ -12,8 +12,14 @@ import {
   OnError,
   assert,
   AbsoluteFile,
+  getRandomInteger,
 } from "^jab";
-import { MainProv, httpRequest, listFilesRecursiveSync } from "^jab-node";
+import {
+  MainProv,
+  httpRequest,
+  listFilesRecursiveSync,
+  makeAbsolute,
+} from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
 import { setGlobalHardTimeout_experimental } from "^state-waiter";
@@ -60,20 +66,75 @@ export const getTsProjectPath = (file: string) =>
 /**
  *
  */
+export const getEsmProjectPath = (file = "") =>
+  path.join(__dirname, "../projectEsm", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getCommonJsProjectPath = (file = "") =>
+  path.join(__dirname, "../projectCommonjs", file) as AbsoluteFile;
+
+/**
+ *
+ */
 export const getMonorepoProjectPath = (file = "") =>
   path.join(__dirname, "../monorepo", file) as AbsoluteFile;
 
 /**
  *
  */
-export const getFixturePath = (file?: string) =>
-  path.join(__dirname, "..", file || "");
+export const getFixturePath = (file = "") =>
+  path.join(__dirname, "..", file) as AbsoluteFile;
 
 /**
  *
  */
 export const getProjectPath = (file = "") =>
-  path.join(__dirname, "../../../../", file);
+  path.join(__dirname, "../../../../", file) as AbsoluteFile;
+
+/**
+ *
+ */
+export const getTmpFolder = (sub: string) => {
+  const folder = path.join(os.tmpdir(), "jawis", sub);
+
+  fse.ensureDirSync(folder);
+
+  return folder;
+};
+
+/**
+ *
+ */
+export const makeTempFile = (content: string) => {
+  const file = makeAbsolute(getTmpFolder(""), "" + getRandomInteger());
+
+  fs.writeFileSync(file, content);
+
+  return file;
+};
+
+/**
+ * - ensure it exists, because it might get deleted.
+ */
+export const getScratchPath = (script = "") => {
+  const folder = path.join(os.tmpdir(), "jawis-tests-scratchFolder");
+
+  fse.ensureDirSync(folder);
+
+  return path.join(folder, script) as AbsoluteFile;
+};
+
+/**
+ *
+ */
+export const emptyScratchFolder = () => {
+  const folder = getScratchPath();
+  fse.emptyDirSync(folder);
+
+  return folder;
+};
 
 /**
  *
@@ -204,27 +265,6 @@ export class ThrowInToString {
  *
  */
 export const removeCarriageReturn = (data: string) => data.replace(/\r/g, "");
-
-/**
- * - ensure it exists, because it might get deleted.
- */
-export const getScratchPath = (script = "") => {
-  const folder = path.join(os.tmpdir(), "jawis-tests-scratchFolder");
-
-  fse.ensureDirSync(folder);
-
-  return path.join(folder, script) as AbsoluteFile;
-};
-
-/**
- *
- */
-export const emptyScratchFolder = () => {
-  const folder = getScratchPath();
-  fse.emptyDirSync(folder);
-
-  return folder;
-};
 
 /**
  *
