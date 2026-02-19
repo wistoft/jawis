@@ -29,7 +29,8 @@
     "alpha:build:fast": "yarn alpha:build:extra && yarn alpha:build:paths && yarn alpha:build:client",
     "alpha:build:extra": "ts-node --transpile-only -r tsconfig-paths/register packages/dev/scripts/build-jawis-alpha.ts",
     "alpha:build:paths": "yarn -s tsc-alias -p tsconfig.alpha.paths.json",
-    "alpha:build:client": "webpack -o build-alpha/javi/client -c packages/javi-client/webpack.javi.js"
+    "alpha:build:client": "webpack -o build-alpha/javi/client -c packages/javi-client/webpack.javi.js",
+    "alpha:test": "echo alpha && node build-alpha/javi/javiTestMainExperimental"
   },
   "dependencies": {
     "@jawis/jacs": "^0.38.0",
