@@ -4,6 +4,7 @@ import fastGlob from "fast-glob";
 import fse from "fs-extra";
 import del from "del";
 
+import { assert } from "^jab";
 import { copyingFiles, sortObject, emitVsCodeError } from "./util";
 
 const tscBuildFolderName = "build-tsc";
@@ -106,7 +107,7 @@ export const makeJawisBuildManager = (
 
     //gather references to local packages.
 
-    const deps: string[] = [];
+    const siblingDeps: string[] = [];
 
     if (conf.references) {
       conf.references.forEach((def) => {
@@ -117,7 +118,7 @@ export const makeJawisBuildManager = (
 
         const tmp2 = fullPackageName ? tmp : def.path.replace(/^\.\.\//, "");
 
-        deps.push(tmp2);
+        siblingDeps.push(tmp2);
       });
     }
 
@@ -136,7 +137,7 @@ export const makeJawisBuildManager = (
 
     //done
 
-    return deps;
+    return siblingDeps;
   };
 
   /**
@@ -233,7 +234,11 @@ export const makeJawisBuildManager = (
 
     //check all packages in the codebase
 
-    for (const packageName of fs.readdirSync("./packages/")) {
+    for (const packageName of fs.readdirSync(packageFolder)) {
+      if (!fs.lstatSync(path.join(packageFolder, packageName)).isDirectory()) {
+        continue;
+      }
+
       checkPackageHasDeclaration(packageName);
 
       if (phpPackages.includes(packageName)) {
@@ -626,7 +631,10 @@ export const makeJawisBuildManager = (
 
     const code2 = code.replace(
       new RegExp('import\\("\\^([^"/]*)', "g"),
-      (match, packageName) => 'import("' + getFullPackageName(packageName)
+      (match, packageName) => {
+        assert(packageName !== "", "Wrong import format");
+        return 'import("' + getFullPackageName(packageName);
+      }
     );
 
     //transform static import/require
@@ -634,12 +642,18 @@ export const makeJawisBuildManager = (
     if (file.endsWith(".js")) {
       return code2.replace(
         new RegExp('require\\("\\^([^"/]*)', "g"),
-        (match, packageName) => 'require("' + getFullPackageName(packageName)
+        (match, packageName) => {
+          assert(packageName !== "", "Wrong import format");
+          return 'require("' + getFullPackageName(packageName);
+        }
       );
     } else {
       return code2.replace(
         new RegExp(' from "\\^([^"/]*)', "g"),
-        (match, packageName) => ' from "' + getFullPackageName(packageName)
+        (match, packageName) => {
+          assert(packageName !== "", "Wrong import format");
+          return ' from "' + getFullPackageName(packageName);
+        }
       );
     }
   };
@@ -662,6 +676,7 @@ export const makeJawisBuildManager = (
     getSiblingPackages,
     getAllPackageDeps,
     getAllSiblingDeps,
+    transformImports,
     checkPackages,
     checkPackagesExistsInCodebase,
     checkPackageHasDeclaration,
