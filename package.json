@@ -57,7 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^5.30.6",
     "@typescript-eslint/parser": "^5.30.6",
     "compressing": "^1.6.2",
-    "concurrently": "^7.2.2",
+    "concurrently": "^9.2.1",
     "cors": "^2.8.5",
     "css-loader": "^6.7.1",
     "deep-equal": "^2.0.5",
