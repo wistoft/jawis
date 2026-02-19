@@ -9,7 +9,7 @@ const {
   phpPackages,
 } = require("../../project.conf");
 
-module.exports.makeLiveJawisBuildManager = () =>
+export const makeLiveJawisBuildManager = () =>
   makeJawisBuildManager(
     projectRoot,
     publishBuildFolder,
