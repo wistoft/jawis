@@ -129,7 +129,7 @@ const checkRelativeImportsInPackage = async (
 
   const siblings = new Set(
     (await buildManager.getSiblingPackages(basename(folder), false, true)).map(
-      (sibling) => "^" + sibling
+      (sibling: any) => "^" + sibling
     )
   );
 
