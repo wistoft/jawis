@@ -43,7 +43,6 @@
     { "path": "./packages/state-waiter" },
     { "path": "./packages/tests" },
     { "path": "./packages/ts-config-util" },
-    { "path": "./packages/ts-reload" },
     { "path": "./packages/view-exception" },
     { "path": "./packages/yapu" }
   ]

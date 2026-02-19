@@ -46,7 +46,6 @@ const privatePackages = [
   "javi-client",
   "misc",
   "tests",
-  "ts-reload",
   "render-hook-plus",
   "pack-util",
   "dev-compv",
