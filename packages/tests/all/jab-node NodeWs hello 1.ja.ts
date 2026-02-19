@@ -8,14 +8,8 @@ export default (prov: TestProvision) =>
       nws
         .send({ type: "dummy" })
         .then(() => nws.waiter.await("data"))
-        .then((data: any) => {
-          prov.imp(data);
-        })
-        .finally(() => {
-          return nws.shutdown();
-        })
-        .finally(() => {
-          return server.shutdown();
-        })
+        .then(prov.imp)
+        .finally(nws.shutdown)
+        .finally(server.shutdown)
     )
   );

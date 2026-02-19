@@ -5,3 +5,4 @@ export * from "./mess";
 export * from "./node-module-util";
 export * from "./process";
 export * from "./types";
+export * from "./util-fs";

@@ -17,3 +17,11 @@ export type FileService = {
 export type CompileService = {
   load: (absPath: string) => Promise<string>;
 };
+
+export type AbsoluteFile = string & {
+  type: "absolute-file";
+};
+
+export type CanonicalFile = string & {
+  type: "canonical-file";
+};

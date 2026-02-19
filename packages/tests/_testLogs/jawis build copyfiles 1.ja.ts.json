@@ -1,0 +1,10 @@
+{
+  "user": {
+    "tests-scratchFolder/first-library/CHANGELOG.md": [
+      "# upcoming\n"
+    ],
+    "tests-scratchFolder/first-library/README.md": [
+      "# first-library\n"
+    ]
+  }
+}

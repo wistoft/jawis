@@ -1,15 +1,6 @@
 import fs, { PathLike } from "fs";
 
 /**
- *
- */
-export const ensureMkdirSync = (path: PathLike) => {
-  if (!fs.existsSync(path)) {
-    fs.mkdirSync(path);
-  }
-};
-
-/**
  * Flush stdout and stderr, before exit is called.
  *
  * - Exits after 300ms if streams doesn't end within.
