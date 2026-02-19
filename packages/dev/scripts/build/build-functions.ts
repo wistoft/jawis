@@ -6,7 +6,7 @@ import del from "del";
 
 import { assert } from "^jab";
 import { assertAbsolute, copyFilesBetweenFoldersSync } from "^jab-node";
-import { copyingFiles, sortObject, emitVsCodeError } from "./util";
+import { sortObject, emitVsCodeError } from "./util";
 
 const tscBuildFolderName = "build-tsc";
 

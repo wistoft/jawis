@@ -1,25 +1,4 @@
 import assert from "assert";
-import copyfiles from "copyfiles";
-
-/**
- * Make copyfiles use promise.
- */
-export const copyingFiles = (paths: any, options: any) =>
-  new Promise<void>((res, rej) => {
-    const callback = (err: any) => {
-      if (err) {
-        rej(err);
-      } else {
-        res();
-      }
-    };
-
-    if (options) {
-      copyfiles(paths, options, callback);
-    } else {
-      copyfiles(paths, callback);
-    }
-  });
 
 /**
  *
