@@ -5,8 +5,15 @@ import os from "os";
 import fse from "fs-extra";
 
 import { TestProvision } from "^jarun";
-import { LogProv, tryProp, ErrorData, OnError, assert } from "^jab";
-import { MainProv, httpRequest } from "^jab-node";
+import {
+  LogProv,
+  tryProp,
+  ErrorData,
+  OnError,
+  assert,
+  AbsoluteFile,
+} from "^jab";
+import { MainProv, httpRequest, listFilesRecursiveSync } from "^jab-node";
 import { WsUrl } from "^jab-express";
 import { FinallyFunc, FinallyProvider } from "^finally-provider";
 import { setGlobalHardTimeout_experimental } from "^state-waiter";
@@ -49,6 +56,12 @@ export const getScriptPath = (script?: string) =>
  */
 export const getTsProjectPath = (file: string) =>
   path.join(__dirname, "../tsProject", file);
+
+/**
+ *
+ */
+export const getMonorepoProjectPath = (file = "") =>
+  path.join(__dirname, "../monorepo", file) as AbsoluteFile;
 
 /**
  *
@@ -200,7 +213,7 @@ export const getScratchPath = (script = "") => {
 
   fse.ensureDirSync(folder);
 
-  return path.join(folder, script);
+  return path.join(folder, script) as AbsoluteFile;
 };
 
 /**
@@ -225,6 +238,21 @@ export const filterAbsoluteFilepath = (file: string) => {
 /**
  *
  */
+export const filterAbsoluteFilepathInFreetext = (text: string) =>
+  text.replace(/\\/g, "/").replaceAll(getProjectPath(), "abs:");
+
+/**
+ *
+ */
+export const filterAbsoluteFilesInStdout = (prov: TestProvision) => {
+  prov.filter("console.log", (...val: unknown[]) =>
+    val.map(filterAbsoluteFilepathInFreetext as any)
+  );
+};
+
+/**
+ *
+ */
 export const writeScriptFileThatChanges2 = (value: number) => {
   writeScriptFileThatChanges(value, "FileThatChanges2.js");
 };
@@ -238,4 +266,16 @@ export const writeScriptFileThatChanges = (
 ) => {
   const code = "module.exports = " + value + ";";
   fs.writeFileSync(getScratchPath(name), code);
+};
+
+/**
+ *
+ */
+export const logFolder = (prov: TestProvision, folder: AbsoluteFile) => {
+  for (const file of listFilesRecursiveSync(folder)) {
+    prov.log(
+      file.replace(new RegExp("^.*(tests-scratchFolder.*$)"), "$1"),
+      fs.readFileSync(file).toString()
+    );
+  }
 };

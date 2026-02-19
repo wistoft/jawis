@@ -5,6 +5,7 @@ import fse from "fs-extra";
 import del from "del";
 
 import { assert } from "^jab";
+import { assertAbsolute, copyFilesBetweenFoldersSync } from "^jab-node";
 import { copyingFiles, sortObject, emitVsCodeError } from "./util";
 
 const tscBuildFolderName = "build-tsc";
@@ -516,10 +517,17 @@ export const makeJawisBuildManager = (
   /**
    *
    */
-  const copyFiles = () =>
-    copyingFiles(["packages/" + packagesPattern + "/" + files, buildFolder], {
-      up: 1,
+  const copyFiles = async () => {
+    assertAbsolute(buildFolder);
+
+    const sourceFolder = path.join(projectFolder, "packages");
+
+    const filesToCopy = await fastGlob([packagesPattern + "/" + files], {
+      cwd: sourceFolder,
     });
+
+    copyFilesBetweenFoldersSync(sourceFolder, buildFolder, filesToCopy);
+  };
 
   /**
    *

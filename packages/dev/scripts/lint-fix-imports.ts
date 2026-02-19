@@ -2,14 +2,16 @@ import isBuiltin from "is-builtin-module";
 import fs from "fs";
 import path, { basename } from "path";
 
-import { err } from "^jab/error";
-import { assertNever, setDifference } from "^jab/util";
+import { err, assertNever, setDifference } from "^jab";
 
-import { makeLiveJawisBuildManager } from "./build/util2";
 import { allPackagesIncludingPrivate, projectRoot } from "../project.conf";
-import { emitVsCodeError } from "./build/util";
-import { getPackageDependencies } from "./build/util3";
-import { tryGetCommonPackage } from "./build/util3";
+import {
+  makeLiveJawisBuildManager,
+  emitVsCodeError,
+  getPackageDependencies,
+  tryGetCommonPackage,
+  specifierToNpmPackage,
+} from "./build";
 
 /**
  *
@@ -219,17 +221,6 @@ const transformImport = (
 
     default:
       return assertNever(cat);
-  }
-};
-
-/**
- *
- */
-const specifierToNpmPackage = (specifier: string) => {
-  if (specifier.startsWith("@")) {
-    return specifier.replace(/(^@[^/]+\/[^/]+).*$/, "$1");
-  } else {
-    return specifier.replace(/(^[^/]+).*$/, "$1");
   }
 };
 

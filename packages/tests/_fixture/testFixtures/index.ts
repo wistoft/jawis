@@ -1,4 +1,5 @@
 export * from "./diverse";
+export * from "./diverse build jawis";
 export * from "./diverse jacs compile";
 export * from "./dtp";
 export * from "./jab ReusableWPP";
