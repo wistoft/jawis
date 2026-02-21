@@ -1,5 +1,3 @@
-import fs, { PathLike } from "fs";
-
 /**
  * Flush stdout and stderr, before exit is called.
  *
