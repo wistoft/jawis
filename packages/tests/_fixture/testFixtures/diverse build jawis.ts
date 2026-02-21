@@ -1,9 +1,8 @@
+import { emptyScratchFolder, getMonorepoProjectPath, getScratchPath } from ".";
 const { npmScope } = require("../../../../packages/dev/project.conf");
 const {
   makeJawisBuildManager,
 } = require("../../../../packages/dev/scripts/build/build-functions");
-
-import { emptyScratchFolder, getMonorepoProjectPath, getScratchPath } from ".";
 
 /**
  *

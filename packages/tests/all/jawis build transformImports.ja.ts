@@ -1,9 +1,5 @@
 import { TestProvision } from "^jarun";
-import {
-  getScriptPath,
-  makeTestJawisBuildManager,
-  testTransformPackageJson,
-} from "^tests/_fixture";
+import { makeTestJawisBuildManager } from "^tests/_fixture";
 
 export default (prov: TestProvision) => {
   //

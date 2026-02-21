@@ -1,5 +1,5 @@
-const { specifierToNpmPackage } = require("../../dev/scripts/build");
 import { TestProvision } from "^jarun";
+const { specifierToNpmPackage } = require("../../dev/scripts/build");
 
 export default async (prov: TestProvision) => {
   prov.eq("fs", specifierToNpmPackage("fs"));

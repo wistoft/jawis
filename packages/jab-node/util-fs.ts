@@ -1,9 +1,9 @@
 import fs, { PathLike } from "node:fs";
 import path, { basename, dirname } from "node:path";
+import os from "node:os";
 import fse from "fs-extra";
 import fastGlob from "fast-glob";
 import readdirRecursive from "fs-readdir-recursive";
-import os from "node:os";
 
 import { AbsoluteFile, assert, CanonicalFile } from "^jab";
 
@@ -44,7 +44,7 @@ export const assertAbsolute = (file: string) => {
  *
  */
 export const ensureMkdirSync = (path: PathLike) => {
-  let folders = getParentFolders(path.toString()).reverse();
+  const folders = getParentFolders(path.toString()).reverse();
   for (const folder of folders) {
     if (!fs.existsSync(folder)) {
       fs.mkdirSync(folder);
