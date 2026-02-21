@@ -9,7 +9,7 @@ jobs:
   test:
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     runs-on: ubuntu-latest
 
@@ -31,7 +31,7 @@ jobs:
   self_test:
     strategy:
       matrix:
-        node-version: [18, 20, 22]
+        node-version: [20, 22]
 
     runs-on: ubuntu-latest
 
